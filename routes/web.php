@@ -48,5 +48,5 @@ Route::get('/verify-code', [RouteController::class, 'Frontend_VerifyCode'])->nam
 Route::get('/reset-password', [RouteController::class, 'Frontend_ResetPassword'])->name('reset-password');
 
 // User Account
-Route::get('/profile', [RouteController::class, 'Frontend_Profile'])->name('profile');
+Route::match(['get', 'post'], '/profile', [RouteController::class, 'Frontend_Profile'])->name('profile');
 Route::get('/notifications', [RouteController::class, 'Frontend_Notifications'])->name('notifications');
