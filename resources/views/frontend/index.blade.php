@@ -374,7 +374,7 @@
                                         (8k)</span></div>
                                 <div class="testi-card-profile">
                                     <div class="box-thumb"><img src="{{ asset('frontend/img/testimonial/testi_2_1.png') }}"
-                                            alt="img"></div>
+                                            alt="img" style="width: 60px; height: 60px; object-fit: cover; border-radius: 50%;"></div>
                                     <div class="media-left">
                                         <h4 class="testi-card_name">Alex James</h4><span class="testi-card_desig">MDCAT
                                             Student 2025</span>
@@ -398,7 +398,7 @@
                                         (5k)</span></div>
                                 <div class="testi-card-profile">
                                     <div class="box-thumb"><img src="{{ asset('frontend/img/testimonial/testi_2_2.png') }}"
-                                            alt="img"></div>
+                                            alt="img" style="width: 60px; height: 60px; object-fit: cover; border-radius: 50%;"></div>
                                     <div class="media-left">
                                         <h4 class="testi-card_name">Maria Gonzalez</h4><span class="testi-card_desig">NUMS
                                             Qualifier 2025</span>
@@ -422,7 +422,7 @@
                                         (10k)</span></div>
                                 <div class="testi-card-profile">
                                     <div class="box-thumb"><img src="{{ asset('frontend/img/testimonial/testi_2_3.png') }}"
-                                            alt="img"></div>
+                                            alt="img" style="width: 60px; height: 60px; object-fit: cover; border-radius: 50%;"></div>
                                     <div class="media-left">
                                         <h4 class="testi-card_name">David Lee</h4><span class="testi-card_desig">MDCAT
                                             Aspirant 2026</span>
@@ -446,7 +446,7 @@
                                         (8k)</span></div>
                                 <div class="testi-card-profile">
                                     <div class="box-thumb"><img src="{{ asset('frontend/img/testimonial/testi_2_1.png') }}"
-                                            alt="img"></div>
+                                            alt="img" style="width: 60px; height: 60px; object-fit: cover; border-radius: 50%;"></div>
                                     <div class="media-left">
                                         <h4 class="testi-card_name">Alex James</h4><span class="testi-card_desig">MDCAT
                                             Student 2025</span>
@@ -470,7 +470,7 @@
                                         (5k)</span></div>
                                 <div class="testi-card-profile">
                                     <div class="box-thumb"><img src="{{ asset('frontend/img/testimonial/testi_2_2.png') }}"
-                                            alt="img"></div>
+                                            alt="img" style="width: 60px; height: 60px; object-fit: cover; border-radius: 50%;"></div>
                                     <div class="media-left">
                                         <h4 class="testi-card_name">Maria Gonzalez</h4><span class="testi-card_desig">NUMS
                                             Qualifier 2025</span>
@@ -494,7 +494,7 @@
                                         (10k)</span></div>
                                 <div class="testi-card-profile">
                                     <div class="box-thumb"><img src="{{ asset('frontend/img/testimonial/testi_2_3.png') }}"
-                                            alt="img"></div>
+                                            alt="img" style="width: 60px; height: 60px; object-fit: cover; border-radius: 50%;"></div>
                                     <div class="media-left">
                                         <h4 class="testi-card_name">David Lee</h4><span class="testi-card_desig">MDCAT
                                             Aspirant 2026</span>
@@ -518,7 +518,7 @@
             <img src="{{ asset('frontend/img/home/icons/wave_shape_2.svg') }}" alt="img">
         </div>
         <div class="faq-bg-shape1-2 shape-mockup th_fade_anim" data-speed="0.9" data-right="-15%" data-bottom="5%"><img
-                src="{{ asset('frontend/img/home/icons/wave_bg_3.svg') }}" alt="img"></div>
+                src="{{ asset('frontend/img/home/icons/wave_bg_3.svg') }}" alt="img" style="width: 60px; height: 60px; object-fit: cover; border-radius: 50%;"></div>
         <div class="container">
             <div class="row gy-40">
                 <div class="col-xl-6">
@@ -526,12 +526,12 @@
                         <div class="img1 th--hover-item th_fade_anim">
                             <div class="thumb th--hover-img" data-displacement="{{ asset('frontend/img/imghover/fluid.jpg') }}"
                                 data-intensity="0.2" data-speedin="1" data-speedout="1"><img class="img-cover"
-                                    src="{{ asset('frontend/img/normal/faq_1_1.jpg') }}" alt="img"></div>
+                                    src="{{ asset('frontend/img/normal/faq_1_1.jpg') }}" alt="img" style="width: 60px; height: 60px; object-fit: cover; border-radius: 50%;"></div>
                         </div>
                         <div class="img2 th--hover-item th_fade_anim">
                             <div class="thumb th--hover-img" data-displacement="{{ asset('frontend/img/imghover/fluid.jpg') }}"
                                 data-intensity="0.2" data-speedin="1" data-speedout="1"><img class="img-cover"
-                                    src="{{ asset('frontend/img/normal/faq_1_2.jpg') }}" alt="img"></div>
+                                    src="{{ asset('frontend/img/normal/faq_1_2.jpg') }}" alt="img" style="width: 60px; height: 60px; object-fit: cover; border-radius: 50%;"></div>
                         </div>
                         <div class="faq-counter-wrap jump">
                             <div class="thumb"><img src="{{ asset('frontend/img/normal/volunteer-group2.png') }}" alt="img">
