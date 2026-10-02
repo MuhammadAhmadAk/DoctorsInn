@@ -334,7 +334,7 @@
                     </div>
                 </div>
                 <div class="col-xl-6 align-self-end">
-                    <div class="process-img-box2 th_fade_anim"><img src="{{ asset('frontend/img/normal/process-thumb2-1.png') }}"
+                    <div class="process-img-box2 th_fade_anim"><img src="{{ asset('frontend/img/normal/mdcat_student.jpg') }}"
                             alt="img">
                     </div>
                 </div>
