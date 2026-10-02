@@ -20,7 +20,7 @@
                             <div class="team-card2 th_fade_anim th--hover-item">
                                 <div class="box-img th--hover-img" data-displacement="{{ asset('frontend/img/imghover/fluid.jpg') }}"
                                     data-intensity="0.2" data-speedin="1" data-speedout="1">
-                                    <img src="{{ asset('frontend/img/team/team_2_1.jpg') }}" alt="Sanderling Jui">
+                                    <img src="{{ asset('frontend/img/team/team_2_1.jpg') }}" alt="Salman Jamil">
                                     <div class="th-social">
                                         <a target="_blank" href="https://facebook.com/" rel="noopener"><i class="fab fa-facebook-f"></i></a>
                                         <a target="_blank" href="https://twitter.com/" rel="noopener"><i class="fab fa-twitter"></i></a>
@@ -29,7 +29,7 @@
                                     </div>
                                 </div>
                                 <div class="box-content">
-                                    <h3 class="box-title">Sanderling Jui</h3>
+                                    <h3 class="box-title">Salman Jamil</h3>
                                     <p class="box-text">Instructor</p>
                                     <div class="box-rating"><i class="fas fa-star"></i> <i class="fas fa-star"></i>
                                         <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i>
@@ -86,7 +86,7 @@
                             <div class="team-card2 th_fade_anim th--hover-item">
                                 <div class="box-img th--hover-img" data-displacement="{{ asset('frontend/img/imghover/fluid.jpg') }}"
                                     data-intensity="0.2" data-speedin="1" data-speedout="1">
-                                    <img src="{{ asset('frontend/img/team/team_2_4.jpg') }}" alt="Emely Adamp">
+                                    <img src="{{ asset('frontend/img/team/team_2_4.jpg') }}" alt="Emad Ahmed">
                                     <div class="th-social">
                                         <a target="_blank" href="https://facebook.com/" rel="noopener"><i class="fab fa-facebook-f"></i></a>
                                         <a target="_blank" href="https://twitter.com/" rel="noopener"><i class="fab fa-twitter"></i></a>
@@ -95,7 +95,7 @@
                                     </div>
                                 </div>
                                 <div class="box-content">
-                                    <h3 class="box-title">Emely Adamp</h3>
+                                    <h3 class="box-title">Emad Ahmed</h3>
                                     <p class="box-text">Instructor</p>
                                     <div class="box-rating"><i class="fas fa-star"></i> <i class="fas fa-star"></i>
                                         <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i>
