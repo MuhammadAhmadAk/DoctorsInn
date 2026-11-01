@@ -1,7 +1,7 @@
 <div class="course-card">
     <div class="box-img">
         <a href="{{ route('course-details', $courseItem['slug']) }}">
-            <img src="{{ asset($courseItem['image']) }}" alt="{{ $courseItem['title'] }}">
+            <img src="{{ asset($courseItem['image']) }}" alt="{{ $courseItem['title'] }}" loading="lazy" decoding="async">
         </a>
         @if (!empty($courseItem['success_badge']))
             <span class="course-success-badge">
@@ -45,7 +45,7 @@
     <div class="btn-wrap">
         <div class="meta-box">
             <div class="meta-thumb">
-                <img src="{{ asset($courseItem['instructor_image']) }}" alt="{{ $courseItem['instructor'] }}">
+                <img src="{{ asset($courseItem['instructor_image']) }}" alt="{{ $courseItem['instructor'] }}" loading="lazy" decoding="async">
             </div>
             <div class="media-body">
                 <h5 class="box-name"><a href="#">{{ $courseItem['instructor'] }}</a></h5>

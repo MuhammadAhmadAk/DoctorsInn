@@ -20,7 +20,7 @@
                             <div class="team-card2 th_fade_anim th--hover-item">
                                 <div class="box-img th--hover-img" data-displacement="{{ asset('frontend/img/imghover/fluid.jpg') }}"
                                     data-intensity="0.2" data-speedin="1" data-speedout="1">
-                                    <img src="{{ asset('frontend/img/team/team_2_1.jpg') }}" alt="Sanderling Jui">
+                                    <img src="{{ asset('frontend/img/team/team_2_1.jpg') }}" alt="Sanderling Jui" loading="lazy" decoding="async">
                                     <div class="th-social">
                                         <a target="_blank" href="https://facebook.com/" rel="noopener"><i class="fab fa-facebook-f"></i></a>
                                         <a target="_blank" href="https://twitter.com/" rel="noopener"><i class="fab fa-twitter"></i></a>
@@ -42,7 +42,7 @@
                             <div class="team-card2 th_fade_anim th--hover-item">
                                 <div class="box-img th--hover-img" data-displacement="{{ asset('frontend/img/imghover/fluid.jpg') }}"
                                     data-intensity="0.2" data-speedin="1" data-speedout="1">
-                                    <img src="{{ asset('frontend/img/team/team_2_2.jpg') }}" alt="Michel Jemison">
+                                    <img src="{{ asset('frontend/img/team/team_2_2.jpg') }}" alt="Michel Jemison" loading="lazy" decoding="async">
                                     <div class="th-social">
                                         <a target="_blank" href="https://facebook.com/" rel="noopener"><i class="fab fa-facebook-f"></i></a>
                                         <a target="_blank" href="https://twitter.com/" rel="noopener"><i class="fab fa-twitter"></i></a>
@@ -64,7 +64,7 @@
                             <div class="team-card2 th_fade_anim th--hover-item">
                                 <div class="box-img th--hover-img" data-displacement="{{ asset('frontend/img/imghover/fluid.jpg') }}"
                                     data-intensity="0.2" data-speedin="1" data-speedout="1">
-                                    <img src="{{ asset('frontend/img/team/team_2_3.jpg') }}" alt="Jacob Jones">
+                                    <img src="{{ asset('frontend/img/team/team_2_3.jpg') }}" alt="Jacob Jones" loading="lazy" decoding="async">
                                     <div class="th-social">
                                         <a target="_blank" href="https://facebook.com/" rel="noopener"><i class="fab fa-facebook-f"></i></a>
                                         <a target="_blank" href="https://twitter.com/" rel="noopener"><i class="fab fa-twitter"></i></a>
@@ -86,7 +86,7 @@
                             <div class="team-card2 th_fade_anim th--hover-item">
                                 <div class="box-img th--hover-img" data-displacement="{{ asset('frontend/img/imghover/fluid.jpg') }}"
                                     data-intensity="0.2" data-speedin="1" data-speedout="1">
-                                    <img src="{{ asset('frontend/img/team/team_2_4.jpg') }}" alt="Emely Adamp">
+                                    <img src="{{ asset('frontend/img/team/team_2_4.jpg') }}" alt="Emely Adamp" loading="lazy" decoding="async">
                                     <div class="th-social">
                                         <a target="_blank" href="https://facebook.com/" rel="noopener"><i class="fab fa-facebook-f"></i></a>
                                         <a target="_blank" href="https://twitter.com/" rel="noopener"><i class="fab fa-twitter"></i></a>

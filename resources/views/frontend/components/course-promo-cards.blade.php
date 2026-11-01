@@ -24,7 +24,7 @@
                         </div>
                     </div>
                     <div class="box-thumb th_fade_anim">
-                        <img src="{{ asset('frontend/img/normal/cta-thumb2-1.png') }}" alt="">
+                        <img src="{{ asset('frontend/img/normal/cta-thumb2-1.png') }}" alt="" loading="lazy" decoding="async">
                     </div>
                 </div>
             </div>
@@ -48,7 +48,7 @@
                         </div>
                     </div>
                     <div class="box-thumb th_fade_anim">
-                        <img src="{{ asset('frontend/img/normal/cta-thumb2-2.png') }}" alt="">
+                        <img src="{{ asset('frontend/img/normal/cta-thumb2-2.png') }}" alt="" loading="lazy" decoding="async">
                     </div>
                 </div>
             </div>
