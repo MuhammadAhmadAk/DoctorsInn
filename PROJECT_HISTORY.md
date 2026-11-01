@@ -14,3 +14,5 @@
 - `6b792ee` :: "2026-11-01 | 09:06 PM" - "feat: implement clean modern Admin Panel with dashboard, course studio, and LMS management"
 - `74332d8` :: "2026-11-01 | 09:07 PM" - "docs: update PROJECT_HISTORY.md with Admin Panel release"
 - `defe4fc` :: "2026-11-01 | 09:20 PM" - "perf: enable Gzip, browser cache, lazy loading and fast preloader release"
+- `d8939b1` :: "2026-11-01 | 09:21 PM" - "docs: update PROJECT_HISTORY.md with performance optimization release"
+- `ad222a4` :: "2026-11-01 | 09:32 PM" - "feat: create dedicated Admin Login page, authentication middleware, and session management"
