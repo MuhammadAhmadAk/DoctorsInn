@@ -10,6 +10,7 @@
     <link rel="shortcut icon" href="{{ asset('frontend/img/logo/favicon.svg') }}" type="image/x-icon">
 
     <!-- CSS Assets -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
     <link rel="stylesheet" href="{{ asset('frontend/css/app.min.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/css/fontawesome.min.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/css/fonts.css') }}">
@@ -121,15 +122,21 @@
         .input-box i.input-icon {
             position: absolute;
             left: 12px;
-            font-size: 13px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 14px;
             color: #94a3b8;
             pointer-events: none;
+            z-index: 5;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .form-control-custom {
             width: 100%;
             height: 38px;
-            padding: 6px 36px 6px 34px;
+            padding: 6px 36px 6px 36px;
             font-size: 13px;
             color: #0f172a;
             background: #fbfbfe;
@@ -137,6 +144,8 @@
             border-radius: 7px;
             transition: all 0.15s ease;
             outline: none;
+            position: relative;
+            z-index: 1;
         }
 
         .form-control-custom:focus {
@@ -148,12 +157,18 @@
         .btn-eye {
             position: absolute;
             right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
             background: none;
             border: none;
             color: #94a3b8;
             cursor: pointer;
-            padding: 4px;
+            padding: 6px;
             font-size: 13px;
+            z-index: 5;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .btn-eye:hover {
@@ -291,7 +306,7 @@
                 <div class="form-group-custom">
                     <label class="form-label-custom" for="email">Email</label>
                     <div class="input-box">
-                        <i class="fa-regular fa-envelope input-icon"></i>
+                        <i class="fa-solid fa-envelope input-icon"></i>
                         <input type="email" id="email" name="email" class="form-control-custom"
                             placeholder="admin@doctorsinn.pk" value="{{ old('email', 'admin@doctorsinn.pk') }}" required autofocus>
                     </div>
@@ -300,11 +315,11 @@
                 <div class="form-group-custom">
                     <label class="form-label-custom" for="password">Password</label>
                     <div class="input-box">
-                        <i class="fa-regular fa-lock input-icon"></i>
+                        <i class="fa-solid fa-lock input-icon"></i>
                         <input type="password" id="password" name="password" class="form-control-custom"
                             placeholder="••••••••" value="admin123" required>
                         <button type="button" class="btn-eye" onclick="togglePassword()" aria-label="Toggle password">
-                            <i class="fa-regular fa-eye" id="eyeIcon"></i>
+                            <i class="fa-solid fa-eye" id="eyeIcon"></i>
                         </button>
                     </div>
                 </div>
