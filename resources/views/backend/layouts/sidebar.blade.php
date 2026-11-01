@@ -61,6 +61,13 @@
                 <span>Settings</span>
             </a>
         </li>
+
+        <li class="sidebar-item">
+            <a href="{{ route('admin.logout') }}" class="sidebar-link text-danger text-opacity-75">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                <span>Sign Out</span>
+            </a>
+        </li>
     </ul>
 
     <!-- Footer Action -->

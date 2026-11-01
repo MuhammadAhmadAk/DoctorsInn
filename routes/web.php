@@ -71,16 +71,24 @@ Route::get('/reset-password', [RouteController::class, 'Frontend_ResetPassword']
 Route::match(['get', 'post'], '/profile', [RouteController::class, 'Frontend_Profile'])->name('profile');
 Route::get('/notifications', [RouteController::class, 'Frontend_Notifications'])->name('notifications');
 
-// Admin Panel Routes (Design & Prototype - Local Only)
+// Admin Panel Routes
 Route::prefix('admin')->name('admin.')->group(function () {
-    Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
-    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard.index');
-    Route::get('/courses', [AdminController::class, 'courses'])->name('courses');
-    Route::get('/courses/create', [AdminController::class, 'createCourse'])->name('courses.create');
-    Route::post('/courses', [AdminController::class, 'storeCourse'])->name('courses.store');
-    Route::get('/tests', [AdminController::class, 'tests'])->name('tests');
-    Route::get('/elibrary', [AdminController::class, 'elibrary'])->name('elibrary');
-    Route::get('/blogs', [AdminController::class, 'blogs'])->name('blogs');
-    Route::get('/students', [AdminController::class, 'students'])->name('students');
-    Route::get('/settings', [AdminController::class, 'settings'])->name('settings');
+    // Guest Admin Auth
+    Route::get('/login', [AdminController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [AdminController::class, 'login'])->name('login.submit');
+    Route::match(['get', 'post'], '/logout', [AdminController::class, 'logout'])->name('logout');
+
+    // Protected Admin Studio Routes
+    Route::middleware(['admin.auth'])->group(function () {
+        Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
+        Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard.index');
+        Route::get('/courses', [AdminController::class, 'courses'])->name('courses');
+        Route::get('/courses/create', [AdminController::class, 'createCourse'])->name('courses.create');
+        Route::post('/courses', [AdminController::class, 'storeCourse'])->name('courses.store');
+        Route::get('/tests', [AdminController::class, 'tests'])->name('tests');
+        Route::get('/elibrary', [AdminController::class, 'elibrary'])->name('elibrary');
+        Route::get('/blogs', [AdminController::class, 'blogs'])->name('blogs');
+        Route::get('/students', [AdminController::class, 'students'])->name('students');
+        Route::get('/settings', [AdminController::class, 'settings'])->name('settings');
+    });
 });
