@@ -32,7 +32,9 @@
                             <ul class="menu">
                                 <li><a href="{{ route('about') }}">About Us</a></li>
                                 <li><a href="{{ route('course') }}">Courses</a></li>
-                                <li><a href="{{ route('e-library') }}">E-Library</a></li>
+                                <li><a href="{{ route('e-library') }}">E-Library (Free Notes)</a></li>
+                                <li><a href="{{ route('tests') }}">Online Mock Tests</a></li>
+                                <li><a href="{{ route('blog') }}">Blog & Articles</a></li>
                                 <li><a href="{{ route('faq') }}">FAQS</a></li>
                                 <li><a href="{{ route('contact') }}">Contact Us</a></li>
                             </ul>
@@ -136,6 +138,25 @@
 </div>
 </div>
 
+@yield('extra_modal')
+
+{{-- Floating WhatsApp Chat Button --}}
+@php
+    $waNumber = config('services.whatsapp.number', '923001234567');
+    $waMessage = config('services.whatsapp.message', 'Hello DoctorsInn, I want to inquire about MDCAT and medical prep courses.');
+    $waCleanNumber = preg_replace('/[^0-9]/', '', $waNumber);
+    $waLink = "https://wa.me/{$waCleanNumber}?text=" . urlencode($waMessage);
+@endphp
+<div class="floating-whatsapp-wrap">
+    <a href="{{ $waLink }}" target="_blank" rel="noopener noreferrer" class="floating-whatsapp-btn" title="Chat on WhatsApp" aria-label="Chat on WhatsApp">
+        <span class="floating-whatsapp-pulse"></span>
+        <i class="fab fa-whatsapp"></i>
+        <span class="floating-whatsapp-tooltip">
+            <span class="online-dot"></span>
+            Chat with us
+        </span>
+    </a>
+</div>
 
 <div class="scroll-top">
     <svg class="progress-circle svg-content" width="100%" height="100%" viewbox="-1 -1 102 102">

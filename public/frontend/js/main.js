@@ -4,3 +4,655 @@
 ,window.addEventListener("contextmenu",(function(t){t.preventDefault()}),!1),document.onkeydown=function(t){return 123!=event.keyCode&&((!t.ctrlKey||!t.shiftKey||t.keyCode!="I".charCodeAt(0))&&((!t.ctrlKey||!t.shiftKey||t.keyCode!="C".charCodeAt(0))&&((!t.ctrlKey||!t.shiftKey||t.keyCode!="J".charCodeAt(0))&&((!t.ctrlKey||t.keyCode!="U".charCodeAt(0))&&void 0))))}
 */
 }(jQuery);
+
+/* ==========================================================================
+   DoctorsInn Custom Modules (Merged into main.js)
+   ========================================================================== */
+
+/* --- Module: home.js --- */
+/**
+ * Home Page - Course Category Tabs & Sliders
+ */
+document.addEventListener('DOMContentLoaded', function () {
+    const tabButtons = document.querySelectorAll('.course-category-tabs .tab-btn');
+    const tabPanes = document.querySelectorAll('.course-tab-pane');
+
+    function activateCourseCategoryTab(cat) {
+        tabButtons.forEach(function (btn) {
+            if (btn.getAttribute('data-category') === cat) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+
+        tabPanes.forEach(function (pane) {
+            if (pane.id === 'tab-pane-' + cat) {
+                pane.classList.add('active');
+
+                setTimeout(function () {
+                    const swiperEl = pane.querySelector('.swiper');
+                    if (swiperEl && swiperEl.swiper) {
+                        swiperEl.swiper.update();
+                        swiperEl.swiper.slideTo(0, 0);
+                    }
+                    window.dispatchEvent(new Event('resize'));
+                }, 50);
+            } else {
+                pane.classList.remove('active');
+            }
+        });
+    }
+
+    tabButtons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            const cat = this.getAttribute('data-category');
+            if (cat) {
+                activateCourseCategoryTab(cat);
+            }
+        });
+    });
+
+    // Expose globally if needed by any other components
+    window.activateCourseCategoryTab = activateCourseCategoryTab;
+});
+
+/* --- Module: course-details.js --- */
+/**
+ * Course Details - WhatsApp Proof Gallery Modal
+ */
+document.addEventListener('DOMContentLoaded', function () {
+    const dataEl = document.getElementById('wa-proofs-data');
+    let waProofs = [];
+    if (dataEl) {
+        try {
+            waProofs = JSON.parse(dataEl.textContent);
+        } catch (e) {
+            waProofs = [];
+        }
+    }
+
+    let currentWaIndex = 0;
+    const modal = document.getElementById('waProofModal');
+
+    function ensureModalInBody() {
+        if (modal && modal.parentElement !== document.body) {
+            document.body.appendChild(modal);
+        }
+        return modal;
+    }
+
+    ensureModalInBody();
+
+    function renderWhatsAppModal() {
+        if (!waProofs || waProofs.length === 0) return;
+        const data = waProofs[currentWaIndex];
+        if (!data) return;
+
+        const nameEl = document.getElementById('waModalStudentName');
+        if (nameEl) nameEl.textContent = data.name + ' (' + data.college + ')';
+
+        const selEl = document.getElementById('waModalSelection');
+        if (selEl) selEl.textContent = data.selection;
+
+        const scoreEl = document.getElementById('waModalScore');
+        if (scoreEl) scoreEl.textContent = data.score;
+
+        const imgEl = document.getElementById('waModalProofImg');
+        if (imgEl) {
+            imgEl.src = data.img;
+            imgEl.alt = data.name + ' WhatsApp Result Proof';
+        }
+
+        const linkEl = document.getElementById('waModalFullLink');
+        if (linkEl) linkEl.href = data.img;
+
+        const counterEl = document.getElementById('waModalCounter');
+        if (counterEl) counterEl.textContent = (currentWaIndex + 1) + ' / ' + waProofs.length;
+    }
+
+    function openWhatsAppProofModalByIndex(index) {
+        if (waProofs && waProofs.length > 0) {
+            if (index >= 0 && index < waProofs.length) {
+                currentWaIndex = index;
+            }
+            renderWhatsAppModal();
+        }
+        ensureModalInBody();
+        if (modal) {
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    function closeWhatsAppProofModal() {
+        if (modal) {
+            modal.classList.remove('show');
+        }
+        document.body.style.overflow = '';
+    }
+
+    function navWhatsAppProof(direction) {
+        if (!waProofs || waProofs.length === 0) return;
+        currentWaIndex = (currentWaIndex + direction + waProofs.length) % waProofs.length;
+        renderWhatsAppModal();
+    }
+
+    // Bind triggers on proof buttons
+    document.querySelectorAll('.whatsapp-proof-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const idx = parseInt(this.getAttribute('data-proof-index') || '0', 10);
+            openWhatsAppProofModalByIndex(idx);
+        });
+    });
+
+    // Close buttons & modal overlay click
+    if (modal) {
+        modal.addEventListener('click', function (e) {
+            if (e.target === modal) {
+                closeWhatsAppProofModal();
+            }
+        });
+
+        const closeBtns = modal.querySelectorAll('.wa-proof-modal-close, #waProofCloseFooterBtn');
+        closeBtns.forEach(btn => {
+            btn.addEventListener('click', function () {
+                closeWhatsAppProofModal();
+            });
+        });
+
+        const prevBtn = document.getElementById('waProofNavPrev');
+        if (prevBtn) {
+            prevBtn.addEventListener('click', function () {
+                navWhatsAppProof(-1);
+            });
+        }
+
+        const nextBtn = document.getElementById('waProofNavNext');
+        if (nextBtn) {
+            nextBtn.addEventListener('click', function () {
+                navWhatsAppProof(1);
+            });
+        }
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', function (e) {
+        if (modal && modal.classList.contains('show')) {
+            if (e.key === 'Escape') {
+                closeWhatsAppProofModal();
+            } else if (e.key === 'ArrowLeft') {
+                navWhatsAppProof(-1);
+            } else if (e.key === 'ArrowRight') {
+                navWhatsAppProof(1);
+            }
+        }
+    });
+
+    // Global handles if needed
+    window.openWhatsAppProofModalByIndex = openWhatsAppProofModalByIndex;
+    window.closeWhatsAppProofModal = closeWhatsAppProofModal;
+    window.navWhatsAppProof = navWhatsAppProof;
+});
+
+/* --- Module: course-filter.js --- */
+/**
+ * Course List - Filter by Category
+ */
+document.addEventListener('DOMContentLoaded', function () {
+    const filterBtns = document.querySelectorAll('.course-filter-btn');
+    const items = document.querySelectorAll('.course-filter-item');
+
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            filterBtns.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+
+            const filter = this.getAttribute('data-filter');
+            items.forEach(item => {
+                const itemCat = item.getAttribute('data-category');
+                if (filter === 'all' || itemCat === filter) {
+                    item.style.display = '';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+    });
+});
+
+/* --- Module: elibrary.js --- */
+/**
+ * E-Library - Search, Category Filter & Reset
+ */
+document.addEventListener('DOMContentLoaded', function () {
+    const filterBtns = document.querySelectorAll('.elib-filter-btn');
+    const items = document.querySelectorAll('.elib-resource-item');
+    const searchInput = document.getElementById('elibSearchInput');
+    const searchClear = document.getElementById('elibSearchClear');
+    const noResults = document.getElementById('elibNoResults');
+    const resetBtn = document.getElementById('elibResetFilterBtn');
+
+    let currentFilter = 'all';
+
+    function applyFilters() {
+        const query = (searchInput ? searchInput.value || '' : '').trim().toLowerCase();
+        let visibleCount = 0;
+
+        items.forEach(item => {
+            const itemCat = (item.getAttribute('data-category') || '').toLowerCase().trim();
+            const itemExam = (item.getAttribute('data-exam') || '').toLowerCase().trim();
+            const itemTitle = (item.getAttribute('data-title') || '').toLowerCase().trim();
+            const itemSubject = (item.getAttribute('data-subject') || '').toLowerCase().trim();
+
+            const filter = currentFilter.toLowerCase().trim();
+            const matchesCategory = (filter === 'all') || 
+                                    (itemCat === filter) || 
+                                    (itemExam === filter);
+
+            const matchesQuery = !query || 
+                                 itemTitle.includes(query) || 
+                                 itemSubject.includes(query) ||
+                                 itemCat.includes(query) ||
+                                 itemExam.includes(query);
+
+            if (matchesCategory && matchesQuery) {
+                item.classList.remove('d-none');
+                visibleCount++;
+            } else {
+                item.classList.add('d-none');
+            }
+        });
+
+        if (noResults) {
+            if (visibleCount === 0) {
+                noResults.classList.remove('d-none');
+            } else {
+                noResults.classList.add('d-none');
+            }
+        }
+
+        if (searchClear) {
+            if (query.length > 0) {
+                searchClear.classList.remove('d-none');
+            } else {
+                searchClear.classList.add('d-none');
+            }
+        }
+    }
+
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            filterBtns.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            currentFilter = this.getAttribute('data-filter') || 'all';
+            applyFilters();
+        });
+    });
+
+    if (searchInput) {
+        searchInput.addEventListener('input', applyFilters);
+    }
+
+    if (searchClear) {
+        searchClear.addEventListener('click', function () {
+            searchInput.value = '';
+            applyFilters();
+            searchInput.focus();
+        });
+    }
+
+    function resetElibFilters() {
+        if (searchInput) searchInput.value = '';
+        currentFilter = 'all';
+        filterBtns.forEach(b => {
+            if (b.getAttribute('data-filter') === 'all') {
+                b.classList.add('active');
+            } else {
+                b.classList.remove('active');
+            }
+        });
+        applyFilters();
+    }
+
+    document.querySelectorAll('#elibResetFilterBtn, .elib-reset-all-btn').forEach(btn => {
+        btn.addEventListener('click', resetElibFilters);
+    });
+
+    window.resetElibFilters = resetElibFilters;
+});
+
+/* --- Module: tests-index.js --- */
+/**
+ * Tests Index - Filter Tests by Category
+ */
+document.addEventListener('DOMContentLoaded', function () {
+    const filterBtns = document.querySelectorAll('.test-filter-btn');
+    const items = document.querySelectorAll('.test-filter-item');
+
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            filterBtns.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+
+            const filter = (this.getAttribute('data-filter') || 'all').toLowerCase().trim();
+
+            items.forEach(item => {
+                const itemCat = (item.getAttribute('data-category') || '').toLowerCase().trim();
+                if (filter === 'all' || itemCat === filter) {
+                    item.classList.remove('d-none');
+                } else {
+                    item.classList.add('d-none');
+                }
+            });
+        });
+    });
+});
+
+/* --- Module: take-test.js --- */
+/**
+ * Take Test - Timer, Question Navigation, Answer Tracking & Submission Modal
+ */
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('mcqExamForm');
+    if (!form) return;
+
+    const totalQuestions = parseInt(form.getAttribute('data-total-questions') || '0', 10);
+    const durationMinutes = parseInt(form.getAttribute('data-duration-minutes') || '15', 10);
+    let remainingSeconds = durationMinutes * 60;
+    let elapsedSeconds = 0;
+
+    let currentQuestion = 1;
+    const timerDisplay = document.getElementById('timerDisplay');
+    const timeSpentInput = document.getElementById('timeSpentSeconds');
+    const answeredCounter = document.getElementById('answeredCount');
+    const currentQText = document.getElementById('currentQText');
+    const progressBar = document.getElementById('examProgressBar');
+
+    // Initialize progress bar
+    if (progressBar && totalQuestions > 0) {
+        progressBar.style.width = Math.round(100 / totalQuestions) + '%';
+    }
+
+    // Exit test confirm
+    document.querySelectorAll('.btn-back-test, .btn-exit-test, #btnExitTest').forEach(btn => {
+        btn.addEventListener('click', function (e) {
+            if (!confirm('Leaving now will forfeit your unsaved progress. Are you sure you want to exit the test?')) {
+                e.preventDefault();
+            }
+        });
+    });
+
+    // Timer Interval
+    const timerInterval = setInterval(function () {
+        if (remainingSeconds <= 0) {
+            clearInterval(timerInterval);
+            if (timerDisplay) timerDisplay.textContent = '00:00';
+            alert('Time has expired! Your test is being automatically submitted.');
+            submitExam();
+            return;
+        }
+
+        remainingSeconds--;
+        elapsedSeconds++;
+        if (timeSpentInput) timeSpentInput.value = elapsedSeconds;
+
+        const mins = Math.floor(remainingSeconds / 60);
+        const secs = remainingSeconds % 60;
+        if (timerDisplay) {
+            timerDisplay.textContent = 
+                (mins < 10 ? '0' : '') + mins + ':' + (secs < 10 ? '0' : '') + secs;
+        }
+
+        if (remainingSeconds <= 120) {
+            const timerBox = document.getElementById('timerBox');
+            if (timerBox) timerBox.classList.add('timer-warning');
+        }
+    }, 1000);
+
+    // Switch active question
+    function goToQuestion(targetIndex) {
+        if (targetIndex < 1 || targetIndex > totalQuestions) return;
+
+        // Hide previous question
+        const currentCard = document.querySelector(`.q-card-item[data-qindex="${currentQuestion}"]`);
+        if (currentCard) {
+            currentCard.classList.remove('active');
+            currentCard.classList.add('d-none');
+        }
+
+        // Show target question
+        const targetCard = document.querySelector(`.q-card-item[data-qindex="${targetIndex}"]`);
+        if (targetCard) {
+            targetCard.classList.remove('d-none');
+            targetCard.classList.add('active');
+        }
+
+        currentQuestion = targetIndex;
+
+        // Update header & progress bar
+        if (currentQText) currentQText.textContent = currentQuestion;
+        if (progressBar && totalQuestions > 0) {
+            const progress = (currentQuestion / totalQuestions) * 100;
+            progressBar.style.width = progress + '%';
+        }
+
+        // Update palette active states
+        document.querySelectorAll('.palette-bubble').forEach(b => {
+            const bIdx = parseInt(b.getAttribute('data-qindex'), 10);
+            if (bIdx === currentQuestion) {
+                b.classList.add('current');
+            } else {
+                b.classList.remove('current');
+            }
+        });
+
+        // Smooth scroll to top of questions area on mobile
+        const questionArea = document.querySelector('.exam-question-area');
+        if (questionArea && window.innerWidth < 992) {
+            questionArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }
+
+    // Palette Click Navigation
+    document.querySelectorAll('.palette-bubble').forEach(b => {
+        b.addEventListener('click', function () {
+            const targetIdx = parseInt(this.getAttribute('data-qindex'), 10);
+            goToQuestion(targetIdx);
+        });
+    });
+
+    // Next / Prev Buttons
+    document.querySelectorAll('.btn-next-q').forEach(btn => {
+        btn.addEventListener('click', function () {
+            goToQuestion(currentQuestion + 1);
+        });
+    });
+
+    document.querySelectorAll('.btn-prev-q').forEach(btn => {
+        btn.addEventListener('click', function () {
+            goToQuestion(currentQuestion - 1);
+        });
+    });
+
+    // Answer Tracking
+    function updateAnsweredCount() {
+        const checkedRadios = document.querySelectorAll('.mcq-radio-input:checked');
+        const answeredQIds = new Set();
+
+        // Reset all bubbles answered class
+        document.querySelectorAll('.palette-bubble').forEach(b => b.classList.remove('answered'));
+
+        checkedRadios.forEach(radio => {
+            const qId = radio.getAttribute('name').replace('answers[', '').replace(']', '');
+            const qIndex = radio.getAttribute('data-qindex');
+            answeredQIds.add(qId);
+
+            const bubble = document.querySelector(`.palette-bubble[data-qindex="${qIndex}"]`);
+            if (bubble) bubble.classList.add('answered');
+        });
+
+        if (answeredCounter) answeredCounter.textContent = answeredQIds.size;
+
+        const isAllAnswered = answeredQIds.size === totalQuestions;
+        const submitTriggers = [
+            document.getElementById('btnSubmitExamTrigger'),
+            document.getElementById('btnFinishSidebarTrigger')
+        ];
+
+        submitTriggers.forEach(btn => {
+            if (!btn) return;
+            if (isAllAnswered) {
+                btn.classList.remove('disabled');
+                btn.removeAttribute('disabled');
+                btn.removeAttribute('title');
+            } else {
+                btn.classList.add('disabled');
+                btn.setAttribute('disabled', 'disabled');
+                const remaining = totalQuestions - answeredQIds.size;
+                btn.setAttribute('title', `Answer all questions to finish (${remaining} remaining)`);
+            }
+        });
+
+        return answeredQIds.size;
+    }
+
+    document.querySelectorAll('.mcq-radio-input').forEach(radio => {
+        radio.addEventListener('change', function () {
+            updateAnsweredCount();
+        });
+    });
+
+    // Clear Selection
+    document.querySelectorAll('.btn-clear-q').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const qId = this.getAttribute('data-qid');
+            document.querySelectorAll(`input[name="answers[${qId}]"]`).forEach(radio => {
+                radio.checked = false;
+            });
+            updateAnsweredCount();
+        });
+    });
+
+    // Submission Logic & Modal Controls
+    function submitExam() {
+        clearInterval(timerInterval);
+        form.submit();
+    }
+
+    const modalEl = document.getElementById('submitConfirmModal');
+
+    // Move modal directly to body so no parent container clips or restricts its backdrop
+    if (modalEl && modalEl.parentNode !== document.body) {
+        document.body.appendChild(modalEl);
+    }
+
+    function openConfirmModal(e) {
+        if (e && e.preventDefault) e.preventDefault();
+
+        const answered = updateAnsweredCount();
+        const unanswered = Math.max(0, totalQuestions - answered);
+
+        if (unanswered > 0) {
+            // Find first unanswered question and jump to it
+            for (let i = 1; i <= totalQuestions; i++) {
+                const hasAns = document.querySelector(`.mcq-radio-input[data-qindex="${i}"]:checked`);
+                if (!hasAns) {
+                    goToQuestion(i);
+                    alert(`Please answer all questions before submitting. You have ${unanswered} unanswered question(s). Question ${i} has not been answered yet.`);
+                    return;
+                }
+            }
+            return;
+        }
+        
+        const answeredEl = document.getElementById('modalStatAnswered');
+        if (answeredEl) answeredEl.textContent = answered;
+
+        const unansweredEl = document.getElementById('modalStatUnanswered');
+        if (unansweredEl) unansweredEl.textContent = unanswered;
+
+        const timeSpentEl = document.getElementById('modalStatTimeSpent');
+        if (timeSpentEl) {
+            const mins = Math.floor(elapsedSeconds / 60);
+            const secs = elapsedSeconds % 60;
+            timeSpentEl.textContent = (mins < 10 ? '0' : '') + mins + ':' + (secs < 10 ? '0' : '') + secs;
+        }
+
+        if (modalEl) {
+            modalEl.classList.add('show');
+            modalEl.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    function closeConfirmModal() {
+        if (modalEl) {
+            modalEl.classList.remove('show');
+            modalEl.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+    }
+
+    window.triggerSubmitConfirmation = openConfirmModal;
+
+    const triggerBtn = document.getElementById('btnSubmitExamTrigger');
+    if (triggerBtn) {
+        triggerBtn.addEventListener('click', openConfirmModal);
+    }
+
+    const sidebarTriggerBtn = document.getElementById('btnFinishSidebarTrigger');
+    if (sidebarTriggerBtn) {
+        sidebarTriggerBtn.addEventListener('click', openConfirmModal);
+    }
+
+    const cancelModalBtn = document.getElementById('cancelModalBtn');
+    if (cancelModalBtn) {
+        cancelModalBtn.addEventListener('click', closeConfirmModal);
+    }
+
+    const closeXBtn = document.getElementById('closeModalXBtn');
+    if (closeXBtn) {
+        closeXBtn.addEventListener('click', closeConfirmModal);
+    }
+
+    // Close on clicking backdrop
+    if (modalEl) {
+        modalEl.addEventListener('click', function (e) {
+            if (e.target === modalEl) {
+                closeConfirmModal();
+            }
+        });
+    }
+
+    const confirmBtn = document.getElementById('confirmFinalSubmitBtn');
+    if (confirmBtn) {
+        confirmBtn.addEventListener('click', function () {
+            this.disabled = true;
+            this.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Submitting...';
+            submitExam();
+        });
+    }
+
+    // Initialize state on page load
+    updateAnsweredCount();
+});
+
+/* --- Module: blog-details.js --- */
+/**
+ * Blog Details - Comment Form Handler
+ */
+document.addEventListener('DOMContentLoaded', function () {
+    const commentForm = document.getElementById('blogCommentForm') || document.querySelector('.blog-comment-form form');
+    if (commentForm) {
+        commentForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            alert('Thank you for your comment! It has been submitted for moderation.');
+            this.reset();
+        });
+    }
+});
+

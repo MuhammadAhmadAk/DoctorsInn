@@ -10,33 +10,56 @@
                 <div class="col-xl-6 col-lg-8">
                     <div class="contact-page-form-wrap">
                         <div class="contact-form contact-page-form">
-                            <form action="{{ route('profile') }}" method="POST" class="contact-form">
+                            @if (session('warning'))
+                                <div class="alert alert-warning auth-alert auth-alert-warning d-flex align-items-center mb-4" role="alert">
+                                    <i class="fa-solid fa-triangle-exclamation me-3 fs-4"></i>
+                                    <div>{{ session('warning') }}</div>
+                                </div>
+                            @endif
+
+                            @if (session('error'))
+                                <div class="alert alert-danger auth-alert d-flex align-items-center mb-4" role="alert">
+                                    <i class="fa-solid fa-circle-exclamation me-3 fs-4"></i>
+                                    <div>{{ session('error') }}</div>
+                                </div>
+                            @endif
+
+                            @if (session('success'))
+                                <div class="alert alert-success auth-alert d-flex align-items-center mb-4" role="alert">
+                                    <i class="fa-solid fa-circle-check me-3 fs-4"></i>
+                                    <div>{{ session('success') }}</div>
+                                </div>
+                            @endif
+
+                            <form action="{{ route('login.submit') }}" method="POST" class="contact-form">
+                                @csrf
+                                <input type="hidden" name="redirect" value="{{ request('redirect') }}">
+
                                 <div class="auth-form-header text-center mb-4">
-                                    <h3 class="auth-form-title">Welcome Back</h3>
-                                    <p class="auth-form-desc">Login to access your MDCAT course, mock tests, and study
-                                        dashboard.</p>
+                                    <h3 class="auth-form-title">Student Login</h3>
+                                    <p class="auth-form-desc">Login to access online mock tests, MCQs practice, and free study dashboard.</p>
                                 </div>
                                 <div class="row">
                                     <div class="col-12 form-group style-border3">
-                                        <input type="email" name="email" id="email" placeholder="Your Email"
-                                            class="form-control" required>
+                                        <input type="email" name="email" id="email" placeholder="Your Email (e.g. student@doctorsinn.pk)"
+                                            class="form-control" value="student@doctorsinn.pk" required>
                                         <i class="fal fa-envelope"></i>
                                     </div>
                                     <div class="col-12 form-group style-border3">
                                         <input type="password" name="password" id="password" placeholder="Your Password"
-                                            class="form-control" required>
+                                            class="form-control" value="12345678" required>
                                         <i class="fal fa-lock"></i>
                                     </div>
                                     <div
                                         class="form-group col-12 d-flex flex-wrap justify-content-between align-items-center gap-2">
                                         <div class="custom-checkbox">
-                                            <input type="checkbox" id="rememberMe" name="remember">
+                                            <input type="checkbox" id="rememberMe" name="remember" checked>
                                             <label for="rememberMe">Remember me</label>
                                         </div>
                                         <a href="{{ route('forgot-password') }}" class="text-theme">Forgot Password?</a>
                                     </div>
                                     <div class="form-btn col-12">
-                                        <button type="submit" class="th-btn w-100">LOGIN <svg class="ms-2" width="16"
+                                        <button type="submit" class="th-btn w-100">LOGIN & CONTINUE <svg class="ms-2" width="16"
                                                 height="16" viewbox="0 0 16 16" fill="none"
                                                 xmlns="http://www.w3.org/2000/svg">
                                                 <g clip-path="url(#clip0_458_9379)">
@@ -57,7 +80,7 @@
                                     </div>
                                     <div class="col-12 text-center mt-3">
                                         <p class="mb-0">Don't have an account? <a href="{{ route('register') }}"
-                                                class="text-theme fw-semibold">Register</a></p>
+                                                class="text-theme fw-semibold">Register Free</a></p>
                                     </div>
                                 </div>
                                 <p class="form-messages mb-0 mt-3"></p>

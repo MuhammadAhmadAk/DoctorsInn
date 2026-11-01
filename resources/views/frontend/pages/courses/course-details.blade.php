@@ -327,17 +327,34 @@
     </section>
 
     @php
-        $successStories = collect($courses)
+        $currentStories = collect($course['success_stories'] ?? [])->map(function ($story) use ($course) {
+            $story['course_title'] = $course['title'];
+            return $story;
+        });
+
+        $otherStories = collect($courses)
+            ->filter(fn($c) => ($c['slug'] ?? '') !== ($course['slug'] ?? ''))
             ->flatMap(function ($storyCourse) {
                 return collect($storyCourse['success_stories'] ?? [])->map(function ($story) use ($storyCourse) {
                     $story['course_title'] = $storyCourse['title'];
                     return $story;
                 });
-            })
-            ->take(4);
+            });
+
+        $successStories = $currentStories->concat($otherStories)->take(6)->values();
+
+        $proofJsonData = $successStories->map(function ($story) {
+            return [
+                'name' => $story['name'],
+                'college' => $story['college'],
+                'selection' => $story['selection'],
+                'score' => $story['score'],
+                'quote' => $story['quote'],
+                'img' => asset($story['proof_image'] ?? 'frontend/img/proof/proof-1.png'),
+            ];
+        })->values();
     @endphp
 
- 
     <section class="overflow-hidden space bg-color overflow-hidden">
         <div class="container">
             <div class="title-area text-center"><span class="sub-title text-theme th_fade_anim"><img
@@ -370,12 +387,11 @@
                                         <strong>{{ $story['score'] }}</strong>
                                     </div>
                                     <p class="course-success-quote">“{{ $story['quote'] }}”</p>
-                                    @if (!empty($story['proof_image']))
-                                        <a class="course-success-proof-link" href="{{ asset($story['proof_image']) }}"
-                                            target="_blank" rel="noopener">
-                                            <i class="fa-regular fa-image" aria-hidden="true"></i> View result proof
-                                        </a>
-                                    @endif
+                                    <button type="button" 
+                                            class="whatsapp-proof-btn" data-proof-index="{{ $loop->index }}">
+                                        <i class="fab fa-whatsapp me-2" aria-hidden="true"></i> View WhatsApp Proof
+                                        <span class="proof-verified-chip ms-auto"><i class="fa-solid fa-check-double me-1"></i> Verified</span>
+                                    </button>
                                 </div>
                             </article>
                         </div>
@@ -390,4 +406,64 @@
         </div>
     </section>
 
+@endsection
+
+@section('extra_modal')
+    <!-- WhatsApp Proof Modal Popup (Rendered outside smooth-wrapper) -->
+    <div class="wa-proof-modal-overlay" id="waProofModal" >
+        <div class="wa-proof-modal-card" >
+            <div class="wa-proof-modal-header">
+                <div class="wa-brand">
+                    <div class="wa-icon-box">
+                        <i class="fab fa-whatsapp" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <h4 class="mb-0 text-white font-weight-bold" id="waModalStudentName" class="wa-modal-student-title">Student Name</h4>
+                        <small class="text-white-50" class="wa-modal-subtext"><i class="fa-solid fa-shield-halved me-1"></i> Verified WhatsApp Chat Record</small>
+                    </div>
+                </div>
+                <button type="button" class="wa-proof-modal-close"  aria-label="Close">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            
+            <div class="wa-proof-modal-meta">
+                <div>
+                    <span class="me-3"><i class="fa-solid fa-graduation-cap me-1 text-success"></i> <strong id="waModalSelection">Selected</strong></span>
+                    <span><i class="fa-solid fa-star me-1 text-warning"></i> <strong id="waModalScore">Status: PASS</strong></span>
+                </div>
+                <div class="d-flex align-items-center gap-1">
+                    <button type="button" class="wa-proof-nav-btn" id="waProofNavPrev" title="Previous Proof">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </button>
+                    <span id="waModalCounter" class="px-2" class="wa-modal-counter-badge px-2">1 / 6</span>
+                    <button type="button" class="wa-proof-nav-btn" id="waProofNavNext" title="Next Proof">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="wa-proof-modal-body">
+                <div class="wa-proof-img-frame">
+                    <img id="waModalProofImg" src="" alt="WhatsApp Result Proof">
+                </div>
+            </div>
+
+            <div class="wa-proof-modal-footer">
+                <small class="text-muted" class="wa-modal-meta-hint">
+                    <i class="fa-solid fa-circle-check text-success me-1"></i> 100% Authentic Result Feedback
+                </small>
+                <div class="d-flex gap-2">
+                    <a id="waModalFullLink" href="#" target="_blank" class="btn btn-sm btn-outline-secondary" class="wa-modal-btn-view btn btn-sm btn-outline-secondary">
+                        <i class="fa-solid fa-expand me-1"></i> Full Size
+                    </a>
+                    <button type="button" class="btn btn-sm btn-dark"  class="wa-modal-btn-view btn btn-sm btn-outline-secondary">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="application/json" id="wa-proofs-data">@json($proofJsonData)</script>
 @endsection

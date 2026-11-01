@@ -8,7 +8,7 @@
     <div class="breadcumb-wrapper">
         <div class="container">
             <div class="row">
-                <div class="col-lg-8">
+                <div class="col-lg-7">
                     <div class="breadcumb-content">
                         <h1 class="breadcumb-title" id="course-title-banner">{{ $activeCourse['title'] ?? 'My Courses' }}</h1>
                         <ul class="breadcumb-menu">
@@ -94,7 +94,7 @@
 
                         <!-- Video Player container (only displays for video-type lectures) -->
                         <div id="video-player-container" class="video-player-container mb-4 d-none">
-                            <video id="main-video-player" controls controlslist="nodownload" oncontextmenu="return false;"
+                            <video id="main-video-player" controls controlslist="nodownload" 
                                 class="legacy-inline-d2688296bc">
                                 <source src="" type="video/mp4">
                                 Your browser does not support the video tag.

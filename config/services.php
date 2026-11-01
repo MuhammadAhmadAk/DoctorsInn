@@ -31,4 +31,9 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'whatsapp' => [
+        'number' => env('WHATSAPP_NUMBER', '923001234567'),
+        'message' => env('WHATSAPP_MESSAGE', 'Hello DoctorsInn, I want to inquire about MDCAT and medical prep courses.'),
+    ],
+
 ];

@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RouteController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,16 +25,33 @@ Route::get('/privacy-policy', [RouteController::class, 'Frontend_PrivacyPolicy']
 Route::get('/terms-conditions', [RouteController::class, 'Frontend_TermsConditions'])->name('terms-conditions');
 Route::get('/error', [RouteController::class, 'Frontend_Error'])->name('error');
 Route::get('/e-library', [RouteController::class, 'Frontend_ELibrary'])->name('e-library');
+Route::get('/e-library/download/{slug}', [RouteController::class, 'Frontend_DownloadResource'])->name('e-library.download');
+
+// Online Mock Tests & MCQs
+Route::get('/tests', [RouteController::class, 'Frontend_Tests'])->name('tests');
+Route::get('/test/{slug}', [RouteController::class, 'Frontend_TakeTest'])->name('test.take');
+Route::post('/test/{slug}/submit', [RouteController::class, 'Frontend_SubmitTest'])->name('test.submit');
+
+// Blog
+Route::get('/blog', [RouteController::class, 'Frontend_Blog'])->name('blog');
+Route::get('/blog/{slug}', [RouteController::class, 'Frontend_BlogDetails'])->name('blog-details');
+Route::get('/blog-details/{slug?}', function ($slug = null) {
+    $slug = $slug ?? array_key_first(config('blogs', []));
+
+    return $slug
+        ? redirect()->route('blog-details', $slug, 301)
+        : redirect()->route('blog');
+});
 
 // Courses
 Route::get('/course', [RouteController::class, 'Frontend_Course'])->name('course');
 Route::get('/courses/{slug}', [RouteController::class, 'Frontend_CourseDetails'])->name('course-details');
 Route::get('/course-details/{slug?}', function ($slug = null) {
-	$slug = $slug ?? array_key_first(config('courses', []));
+    $slug = $slug ?? array_key_first(config('courses', []));
 
-	return $slug
-		? redirect()->route('course-details', $slug, 301)
-		: redirect()->route('course');
+    return $slug
+        ? redirect()->route('course-details', $slug, 301)
+        : redirect()->route('course');
 });
 Route::get('/my-courses/{slug?}', [RouteController::class, 'Frontend_MyCourses'])->name('my-courses');
 Route::get('/cart', [RouteController::class, 'Frontend_Cart'])->name('cart');
@@ -42,6 +59,8 @@ Route::get('/checkout', [RouteController::class, 'Frontend_Checkout'])->name('ch
 
 // Authentication
 Route::get('/login', [RouteController::class, 'Frontend_Login'])->name('login');
+Route::post('/login', [RouteController::class, 'Frontend_LoginSubmit'])->name('login.submit');
+Route::get('/logout', [RouteController::class, 'Frontend_Logout'])->name('logout');
 Route::get('/register', [RouteController::class, 'Frontend_Register'])->name('register');
 Route::get('/forgot-password', [RouteController::class, 'Frontend_ForgotPassword'])->name('forgot-password');
 Route::get('/verify-code', [RouteController::class, 'Frontend_VerifyCode'])->name('verify-code');

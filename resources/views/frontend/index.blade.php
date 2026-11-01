@@ -132,114 +132,104 @@
                 </div>
             </div>
         </div>
-    </div> --}}
-
-    <section class="overflow-hidden space bg-color overflow-hidden" id="course-sec">
+    </div> --}}    
+    
+    <section class="overflow-hidden space bg-color" id="course-sec">
         <div class="container">
-            <div class="title-area text-center"><span class="sub-title text-theme th_fade_anim"><img
-                        src="{{ asset('frontend/img/logo/logo-icon.svg') }}" alt="img">Our course</span>
-                <h2 class="sec-title th_fade_anim"><span class="th-text-perspective">Our Featured course</span>
+            <div class="title-area text-center mb-35">
+                <span class="sub-title text-theme th_fade_anim">
+                    <img src="{{ asset('frontend/img/logo/logo-icon.svg') }}" alt="img">Our Courses
+                </span>
+                <h2 class="sec-title th_fade_anim">
+                    <span class="th-text-perspective">Our Featured Courses</span>
                 </h2>
             </div>
-            <div class="slider-area">
-                <div class="swiper th-slider course-slider2 has-shadow" id="courselider2"
-                    data-slider-options='{"autoHeight": "true","breakpoints":{"0":{"slidesPerView":1},"576":{"slidesPerView":"1"},"768":{"slidesPerView":"2"},"992":{"slidesPerView":"2"},"1200":{"slidesPerView":"3"}}}'>
-                    <div class="swiper-wrapper">
-                        @php
-                            $sliderCourses = $courses ?? config('courses', []);
-                        @endphp
-                        @foreach ($sliderCourses as $courseItem)
-                            <div class="swiper-slide th_fade_anim" data-delay=".3">
-                                <div class="course-card">
-                                    <div class="box-img">
-                                        <a href="{{ route('course-details', $courseItem['slug']) }}"><img
-                                                src="{{ asset($courseItem['image']) }}"
-                                                alt="{{ $courseItem['title'] }}"></a>
-                                        @if (!empty($courseItem['success_badge']))
-                                            <span class="course-success-badge"><i class="fa-solid fa-award"
-                                                aria-hidden="true"></i>{{ $courseItem['success_badge'] }}</span>
-                                        @endif
-                                        <span class="box-price">
-                                            {{ $courseItem['price'] }}
-                                            @if (!empty($courseItem['original_price']))
-                                                <del class="text-muted ms-1 small legacy-inline-c3b97501f8"
-                                                   >{{ $courseItem['original_price'] }}</del>
-                                            @endif
-                                        </span>
-                                    </div>
-                                    <h3 class="box-title"><a
-                                            href="{{ route('course-details', $courseItem['slug']) }}">{{ $courseItem['title'] }}</a>
-                                    </h3>
-                                    <div class="box-rating">
-                                        <div class="star-rating" role="img"
-                                            aria-label="Rated {{ $courseItem['rating'] }} out of 5"><span
-                                                class="star-rating-full">Rated <strong
-                                                    class="rating">{{ $courseItem['rating'] }}</strong> out of
-                                                5</span></div><span class="ms-2">⭐ {{ $courseItem['rating'] }}
-                                            ({{ $courseItem['rating_count'] ?? '1k+' }})
-                                        </span>
-                                    </div>
-                                    <div class="box-content">
-                                        <div class="course-info">
-                                            <div class="box-icon"><i class="fal fa-file-lines"></i></div>
-                                            <div class="course-info-details"><span
-                                                    class="course-info-title">Lessons:</span>
-                                                <h4 class="course-info-text">{{ $courseItem['lessons'] }}</h4>
-                                            </div>
+
+            @php
+                $sliderCourses = $courses ?? config('courses', []);
+                $courseCategories = [
+                    'all' => [
+                        'label' => 'All Courses',
+                        'icon' => 'fa-solid fa-layer-group',
+                        'courses' => collect($sliderCourses),
+                    ],
+                    'mdcat' => [
+                        'label' => 'MDCAT',
+                        'icon' => 'fa-solid fa-stethoscope',
+                        'courses' => collect($sliderCourses)->where('category', 'mdcat'),
+                    ],
+                    'nums' => [
+                        'label' => 'NUMS',
+                        'icon' => 'fa-solid fa-hospital-user',
+                        'courses' => collect($sliderCourses)->where('category', 'nums'),
+                    ],
+                    'army' => [
+                        'label' => 'Army / AMC',
+                        'icon' => 'fa-solid fa-shield-halved',
+                        'courses' => collect($sliderCourses)->where('category', 'army'),
+                    ],
+                ];
+            @endphp
+
+            <!-- Course Category Tabs -->
+            <div class="course-tab-wrap text-center mb-45 th_fade_anim" data-delay=".2">
+                <div class="tab-menu1 course-category-tabs" role="tablist">
+                    @foreach ($courseCategories as $catKey => $catData)
+                        <button class="tab-btn {{ $loop->first ? 'active' : '' }}" 
+                                id="tab-btn-{{ $catKey }}" 
+                                data-category="{{ $catKey }}"
+                                type="button">
+                            <i class="{{ $catData['icon'] }} me-2"></i>{{ $catData['label'] }}
+                            <span class="tab-badge ms-2">{{ $catData['courses']->count() }}</span>
+                        </button>
+                    @endforeach
+                </div>
+            </div>
+
+            <!-- Tab Panes with Sliders -->
+            <div class="tab-content" id="courseCategoryTabContent">
+                @foreach ($courseCategories as $catKey => $catData)
+                    <div class="course-tab-pane {{ $loop->first ? 'active' : '' }}" 
+                         id="tab-pane-{{ $catKey }}" 
+                         >
+                        <div class="slider-area">
+                            <div class="swiper th-slider course-slider2 has-shadow" id="courselider-{{ $catKey }}"
+                                data-slider-options='{"observer": true, "observeParents": true, "autoHeight": "true", "breakpoints": {"0": {"slidesPerView": 1}, "576": {"slidesPerView": "1"}, "768": {"slidesPerView": "2"}, "992": {"slidesPerView": "2"}, "1200": {"slidesPerView": "3"}}}'>
+                                <div class="swiper-wrapper">
+                                    @forelse ($catData['courses'] as $courseItem)
+                                        <div class="swiper-slide">
+                                            @include('frontend.components.course-card', ['courseItem' => $courseItem])
                                         </div>
-                                        <div class="course-info">
-                                            <div class="box-icon"><i class="fal fa-users"></i></div>
-                                            <div class="course-info-details"><span
-                                                    class="course-info-title">Students:</span>
-                                                <h4 class="course-info-text">{{ $courseItem['students'] }}</h4>
-                                            </div>
+                                    @empty
+                                        <div class="text-center py-5 w-100">
+                                            <p class="text-muted">No courses available in this category yet.</p>
                                         </div>
-                                    </div>
-                                    <div class="btn-wrap">
-                                        <div class="meta-box">
-                                            <div class="meta-thumb"><img
-                                                    src="{{ asset($courseItem['instructor_image']) }}"
-                                                    alt="{{ $courseItem['instructor'] }}">
-                                            </div>
-                                            <div class="media-body">
-                                                <h5 class="box-name"><a
-                                                        href="#">{{ $courseItem['instructor'] }}</a></h5>
-                                            </div>
-                                        </div><a href="{{ route('course-details', $courseItem['slug']) }}"
-                                            class="th-btn btn-sm style-border2">VIEW
-                                            DETAILS<svg class="ms-2" width="16" height="14" viewbox="0 0 16 14"
-                                                fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M7.5264 0C7.5264 0.6962 8.21633 1.738 8.9138 2.61293C9.81193 3.7394 10.8838 4.72347 12.1137 5.4748C13.0351 6.0374 14.154 6.57747 15.0528 6.57747M7.5264 13.1712C7.5264 12.475 8.21633 11.4332 8.9138 10.5583C9.81193 9.43187 10.8838 8.44773 12.1137 7.6964C13.0351 7.1338 14.154 6.59373 15.0528 6.59373M15.0528 6.5856H0"
-                                                    stroke="currentColor" stroke-width="1.5"></path>
-                                            </svg></a>
-                                    </div>
+                                    @endforelse
                                 </div>
                             </div>
-                        @endforeach
+                            <button data-slider-prev="#courselider-{{ $catKey }}" class="slider-arrow style5 slider-prev" aria-label="Previous">
+                                <svg width="17" height="15" viewBox="0 0 17 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M8.4672 0C8.4672 0.783225 7.69103 1.95525 6.90638 2.93955C5.89598 4.20682 4.69013 5.3139 3.30645 6.15915C2.26988 6.79208 1.01115 7.39965 1.90735e-06 7.39965M8.4672 14.8176C8.4672 14.0344 7.69103 12.8623 6.90638 11.878C5.89598 10.6108 4.69013 9.5037 3.30645 8.65845C2.26988 8.02552 1.01115 7.41795 1.90735e-06 7.41795M1.90735e-06 7.4088H16.9344" stroke="currentColor"></path>
+                                </svg>
+                            </button>
+                            <button data-slider-next="#courselider-{{ $catKey }}" class="slider-arrow style5 slider-next" aria-label="Next">
+                                <svg width="17" height="15" viewBox="0 0 17 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M8.4672 0C8.4672 0.783225 9.24338 1.95525 10.028 2.93955C11.0384 4.20682 12.2443 5.3139 13.628 6.15915C14.6645 6.79208 15.9233 7.39965 16.9344 7.39965M8.4672 14.8176C8.4672 14.0344 9.24338 12.8623 10.028 11.878C11.0384 10.6108 12.2443 9.5037 13.628 8.65845C14.6645 8.02552 15.9233 7.41795 16.9344 7.41795M16.9344 7.4088H0" stroke="currentColor"></path>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
-                </div><button data-slider-prev="#courselider2" class="slider-arrow style5 slider-prev"><svg
-                        width="17" height="15" viewbox="0 0 17 15" fill="none"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path
-                            d="M8.4672 0C8.4672 0.783225 7.69103 1.95525 6.90638 2.93955C5.89598 4.20682 4.69013 5.3139 3.30645 6.15915C2.26988 6.79208 1.01115 7.39965 1.90735e-06 7.39965M8.4672 14.8176C8.4672 14.0344 7.69103 12.8623 6.90638 11.878C5.89598 10.6108 4.69013 9.5037 3.30645 8.65845C2.26988 8.02552 1.01115 7.41795 1.90735e-06 7.41795M1.90735e-06 7.4088H16.9344"
-                            stroke="currentColor"></path>
-                    </svg></button> <button data-slider-next="#courselider2" class="slider-arrow style5 slider-next"><svg
-                        width="17" height="15" viewbox="0 0 17 15" fill="none"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path
-                            d="M8.4672 0C8.4672 0.783225 9.24338 1.95525 10.028 2.93955C11.0384 4.20682 12.2443 5.3139 13.628 6.15915C14.6645 6.79208 15.9233 7.39965 16.9344 7.39965M8.4672 14.8176C8.4672 14.0344 9.24338 12.8623 10.028 11.878C11.0384 10.6108 12.2443 9.5037 13.628 8.65845C14.6645 8.02552 15.9233 7.41795 16.9344 7.41795M16.9344 7.4088H0"
-                            stroke="currentColor"></path>
-                    </svg></button>
+                @endforeach
             </div>
-            <div class="btn-wrap mt-60 justify-content-center th_fade_anim"><a href="{{ route('course') }}"
-                    class="th-btn">VIEW ALL
-                    COURSE<svg class="ms-2" width="16" height="14" viewbox="0 0 16 14" fill="none"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path
-                            d="M7.5264 0C7.5264 0.6962 8.21633 1.738 8.9138 2.61293C9.81193 3.7394 10.8838 4.72347 12.1137 5.4748C13.0351 6.0374 14.154 6.57747 15.0528 6.57747M7.5264 13.1712C7.5264 12.475 8.21633 11.4332 8.9138 10.5583C9.81193 9.43187 10.8838 8.44773 12.1137 7.6964C13.0351 7.1338 14.154 6.59373 15.0528 6.59373M15.0528 6.5856H0"
-                            stroke="currentColor" stroke-width="1.5"></path>
-                    </svg></a></div>
+
+            <div class="btn-wrap mt-60 justify-content-center th_fade_anim">
+                <a href="{{ route('course') }}" class="th-btn">
+                    VIEW ALL COURSES
+                    <svg class="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M7.5264 0C7.5264 0.6962 8.21633 1.738 8.9138 2.61293C9.81193 3.7394 10.8838 4.72347 12.1137 5.4748C13.0351 6.0374 14.154 6.57747 15.0528 6.57747M7.5264 13.1712C7.5264 12.475 8.21633 11.4332 8.9138 10.5583C9.81193 9.43187 10.8838 8.44773 12.1137 7.6964C13.0351 7.1338 14.154 6.59373 15.0528 6.59373M15.0528 6.5856H0" stroke="currentColor" stroke-width="1.5"></path>
+                    </svg>
+                </a>
+            </div>
         </div>
     </section>
 
@@ -294,7 +284,7 @@
                             <div class="process-card2 th_fade_anim">
                                 <div class="box-number">01</div>
                                 <div class="process-card-content">
-                                    <div class="box-icon"><img src="{{ asset('frontend/img/home/icons/process-card-icon1.svg') }}"
+                                    <div class="box-icon"><img src="{{ asset('frontend/img/icon/process-card-icon1.svg') }}"
                                             alt="img">
                                     </div>
                                     <div class="box-content">
@@ -307,7 +297,7 @@
                             <div class="process-card2 th_fade_anim">
                                 <div class="box-number">02</div>
                                 <div class="process-card-content">
-                                    <div class="box-icon"><img src="{{ asset('frontend/img/home/icons/process-card-icon2.svg') }}"
+                                    <div class="box-icon"><img src="{{ asset('frontend/img/icon/process-card-icon2.svg') }}"
                                             alt="img">
                                     </div>
                                     <div class="box-content">
@@ -320,7 +310,7 @@
                             <div class="process-card2 th_fade_anim">
                                 <div class="box-number">03</div>
                                 <div class="process-card-content">
-                                    <div class="box-icon"><img src="{{ asset('frontend/img/home/icons/process-card-icon3.svg') }}"
+                                    <div class="box-icon"><img src="{{ asset('frontend/img/icon/process-card-icon3.svg') }}"
                                             alt="img">
                                     </div>
                                     <div class="box-content">
@@ -334,7 +324,7 @@
                     </div>
                 </div>
                 <div class="col-xl-6 align-self-end">
-                    <div class="process-img-box2 th_fade_anim"><img src="{{ asset('frontend/img/normal/mdcat_student.jpg') }}"
+                    <div class="process-img-box2 th_fade_anim"><img src="{{ asset('frontend/img/normal/process-thumb2-1.png') }}"
                             alt="img">
                     </div>
                 </div>
@@ -361,23 +351,18 @@
 
                         <div class="swiper-slide th_fade_anim">
                             <div class="testi-card2">
-                                <div class="box-icon"><img src="{{ asset('frontend/img/home/icons/quote.svg') }}" alt="icon">
+                                <div class="box-icon"><img src="{{ asset('frontend/img/icon/quote.svg') }}" alt="icon">
                                 </div>
-                                <h3 class="box-title">Best MDCAT Prep Platform!</h3>
-                                <p class="box-text">DoctorsInnElite gave me the structure I needed. Their mock
-                                    tests were exactly like the real exam!</p>
-                                <div class="testi-review-wrap"><span class="testi-card_review"><i
-                                            class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i
-                                            class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i> </span><span class="rating-title">4.8
-                                        (8k)</span></div>
+                                <h3 class="box-title">AMC Exam Mein Pass Ho Gaya!</h3>
+                                <p class="box-text">Every topic ka lecture, notes, aur MCQ practice sab kuch tha. Koi bhi problem hoti toh turant solve ho jati. Only because of this course I passed the AMC test!</p>
+                                <div class="testi-review-wrap"><span class="testi-card_review"><i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i> </span><span class="rating-title">5.0</span></div>
                                 <div class="testi-card-profile">
                                     <div class="box-thumb"><img src="{{ asset('frontend/img/testimonial/testi_2_1.png') }}"
-                                            alt="img" style="width: 60px; height: 60px; object-fit: cover; border-radius: 50%;"></div>
+                                            alt="img"></div>
                                     <div class="media-left">
-                                        <h4 class="testi-card_name">Alex James</h4><span class="testi-card_desig">MDCAT
-                                            Student 2025</span>
+                                        <h4 class="testi-card_name">Muhammad Abdul Rafay</h4><span class="testi-card_desig">AMC — Ansaar Batch | Gujrat</span>
                                     </div>
                                 </div>
                             </div>
@@ -385,23 +370,18 @@
 
                         <div class="swiper-slide th_fade_anim">
                             <div class="testi-card2">
-                                <div class="box-icon"><img src="{{ asset('frontend/img/home/icons/quote.svg') }}" alt="icon">
+                                <div class="box-icon"><img src="{{ asset('frontend/img/icon/quote.svg') }}" alt="icon">
                                 </div>
-                                <h3 class="box-title">Cracked MDCAT With Their Help!</h3>
-                                <p class="box-text">The 60-day program kept me consistent. I improved my score
-                                    by 40 marks in just 3 weeks!</p>
-                                <div class="testi-review-wrap"><span class="testi-card_review"><i
-                                            class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i
-                                            class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i> </span><span class="rating-title">4.6
-                                        (5k)</span></div>
+                                <h3 class="box-title">Best Choice for PMA Preparation!</h3>
+                                <p class="box-text">Lessons were clear, well-structured and easy to follow. I passed all my tests with excellent results. Truly the best choice for PMA prep!</p>
+                                <div class="testi-review-wrap"><span class="testi-card_review"><i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i> </span><span class="rating-title">5.0</span></div>
                                 <div class="testi-card-profile">
                                     <div class="box-thumb"><img src="{{ asset('frontend/img/testimonial/testi_2_2.png') }}"
-                                            alt="img" style="width: 60px; height: 60px; object-fit: cover; border-radius: 50%;"></div>
+                                            alt="img"></div>
                                     <div class="media-left">
-                                        <h4 class="testi-card_name">Maria Gonzalez</h4><span class="testi-card_desig">NUMS
-                                            Qualifier 2025</span>
+                                        <h4 class="testi-card_name">Hammad Gulzar</h4><span class="testi-card_desig">PMA — Iqbal Batch | Bahawalpur</span>
                                     </div>
                                 </div>
                             </div>
@@ -409,23 +389,18 @@
 
                         <div class="swiper-slide th_fade_anim">
                             <div class="testi-card2">
-                                <div class="box-icon"><img src="{{ asset('frontend/img/home/icons/quote.svg') }}" alt="icon">
+                                <div class="box-icon"><img src="{{ asset('frontend/img/icon/quote.svg') }}" alt="icon">
                                 </div>
-                                <h3 class="box-title">Affordable & Super Effective!</h3>
-                                <p class="box-text">Amazing course quality at a very affordable price. The
-                                    instructor support is outstanding!</p>
-                                <div class="testi-review-wrap"><span class="testi-card_review"><i
-                                            class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i
-                                            class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i> </span><span class="rating-title">4.9
-                                        (10k)</span></div>
+                                <h3 class="box-title">Anytime Support — Always Available!</h3>
+                                <p class="box-text">Lectures include all books and they give their best to make us understand everything. We asked any question anytime and they were always available. Thanks Sir!</p>
+                                <div class="testi-review-wrap"><span class="testi-card_review"><i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i> </span><span class="rating-title">5.0</span></div>
                                 <div class="testi-card-profile">
                                     <div class="box-thumb"><img src="{{ asset('frontend/img/testimonial/testi_2_3.png') }}"
-                                            alt="img" style="width: 60px; height: 60px; object-fit: cover; border-radius: 50%;"></div>
+                                            alt="img"></div>
                                     <div class="media-left">
-                                        <h4 class="testi-card_name">David Lee</h4><span class="testi-card_desig">MDCAT
-                                            Aspirant 2026</span>
+                                        <h4 class="testi-card_name">Amna</h4><span class="testi-card_desig">MDCAT Student</span>
                                     </div>
                                 </div>
                             </div>
@@ -433,23 +408,18 @@
 
                         <div class="swiper-slide th_fade_anim">
                             <div class="testi-card2">
-                                <div class="box-icon"><img src="{{ asset('frontend/img/home/icons/quote.svg') }}" alt="icon">
+                                <div class="box-icon"><img src="{{ asset('frontend/img/icon/quote.svg') }}" alt="icon">
                                 </div>
-                                <h3 class="box-title">Best MDCAT Prep Platform!</h3>
-                                <p class="box-text">DoctorsInnElite gave me the structure I needed. Their mock
-                                    tests were exactly like the real exam!</p>
-                                <div class="testi-review-wrap"><span class="testi-card_review"><i
-                                            class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i
-                                            class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i> </span><span class="rating-title">4.8
-                                        (8k)</span></div>
+                                <h3 class="box-title">Yaqeen Batch Bohat Zabardast Hai!</h3>
+                                <p class="box-text">MDCAT ke liye yahan bahut zaroori information aur helpful resources milte hain. Group administration friendly hai aur overall bahut useful Online Educational Centre hai.</p>
+                                <div class="testi-review-wrap"><span class="testi-card_review"><i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i> </span><span class="rating-title">5.0</span></div>
                                 <div class="testi-card-profile">
                                     <div class="box-thumb"><img src="{{ asset('frontend/img/testimonial/testi_2_1.png') }}"
-                                            alt="img" style="width: 60px; height: 60px; object-fit: cover; border-radius: 50%;"></div>
+                                            alt="img"></div>
                                     <div class="media-left">
-                                        <h4 class="testi-card_name">Alex James</h4><span class="testi-card_desig">MDCAT
-                                            Student 2025</span>
+                                        <h4 class="testi-card_name">Ali Khan</h4><span class="testi-card_desig">MDCAT — Yaqeen Batch Group B | Quetta</span>
                                     </div>
                                 </div>
                             </div>
@@ -457,23 +427,18 @@
 
                         <div class="swiper-slide th_fade_anim">
                             <div class="testi-card2">
-                                <div class="box-icon"><img src="{{ asset('frontend/img/home/icons/quote.svg') }}" alt="icon">
+                                <div class="box-icon"><img src="{{ asset('frontend/img/icon/quote.svg') }}" alt="icon">
                                 </div>
-                                <h3 class="box-title">Cracked MDCAT With Their Help!</h3>
-                                <p class="box-text">The 60-day program kept me consistent. I improved my score
-                                    by 40 marks in just 3 weeks!</p>
-                                <div class="testi-review-wrap"><span class="testi-card_review"><i
-                                            class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i
-                                            class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i> </span><span class="rating-title">4.6
-                                        (5k)</span></div>
+                                <h3 class="box-title">Outstanding Teachers &amp; Methodology!</h3>
+                                <p class="box-text">The teachers are highly professional, cooperative and supportive. Test sessions are very helpful. Highly recommended for serious aspirants!</p>
+                                <div class="testi-review-wrap"><span class="testi-card_review"><i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i> </span><span class="rating-title">5.0</span></div>
                                 <div class="testi-card-profile">
                                     <div class="box-thumb"><img src="{{ asset('frontend/img/testimonial/testi_2_2.png') }}"
-                                            alt="img" style="width: 60px; height: 60px; object-fit: cover; border-radius: 50%;"></div>
+                                            alt="img"></div>
                                     <div class="media-left">
-                                        <h4 class="testi-card_name">Maria Gonzalez</h4><span class="testi-card_desig">NUMS
-                                            Qualifier 2025</span>
+                                        <h4 class="testi-card_name">Noor Khan</h4><span class="testi-card_desig">MDCAT Enrolled Student | Swat</span>
                                     </div>
                                 </div>
                             </div>
@@ -481,29 +446,101 @@
 
                         <div class="swiper-slide th_fade_anim">
                             <div class="testi-card2">
-                                <div class="box-icon"><img src="{{ asset('frontend/img/home/icons/quote.svg') }}" alt="icon">
+                                <div class="box-icon"><img src="{{ asset('frontend/img/icon/quote.svg') }}" alt="icon">
                                 </div>
-                                <h3 class="box-title">Affordable & Super Effective!</h3>
-                                <p class="box-text">Amazing course quality at a very affordable price. The
-                                    instructor support is outstanding!</p>
-                                <div class="testi-review-wrap"><span class="testi-card_review"><i
-                                            class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i
-                                            class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i> </span><span class="rating-title">4.9
-                                        (10k)</span></div>
+                                <h3 class="box-title">High-Quality Notes &amp; Strong Commitment!</h3>
+                                <p class="box-text">Impressed with this platform! High-quality notes and strong commitment to users. Truly delivered on its promise!</p>
+                                <div class="testi-review-wrap"><span class="testi-card_review"><i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i> </span><span class="rating-title">5.0</span></div>
                                 <div class="testi-card-profile">
                                     <div class="box-thumb"><img src="{{ asset('frontend/img/testimonial/testi_2_3.png') }}"
-                                            alt="img" style="width: 60px; height: 60px; object-fit: cover; border-radius: 50%;"></div>
+                                            alt="img"></div>
                                     <div class="media-left">
-                                        <h4 class="testi-card_name">David Lee</h4><span class="testi-card_desig">MDCAT
-                                            Aspirant 2026</span>
+                                        <h4 class="testi-card_name">Armish Shoukat</h4><span class="testi-card_desig">AFNS — Afaaq Batch | Abbottabad</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="swiper-slide th_fade_anim">
+                            <div class="testi-card2">
+                                <div class="box-icon"><img src="{{ asset('frontend/img/icon/quote.svg') }}" alt="icon">
+                                </div>
+                                <h3 class="box-title">Concept Clear Karne Ka Tareeqa Unique Hai!</h3>
+                                <p class="box-text">MDCAT ka syllabus samajhna bohot easy ho gaya. Har concept clear kiya jata hai. Group bohot kind aur cooperative hai — bohot motivate bhi karte hain!</p>
+                                <div class="testi-review-wrap"><span class="testi-card_review"><i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i> </span><span class="rating-title">5.0</span></div>
+                                <div class="testi-card-profile">
+                                    <div class="box-thumb"><img src="{{ asset('frontend/img/testimonial/testi_2_1.png') }}"
+                                            alt="img"></div>
+                                    <div class="media-left">
+                                        <h4 class="testi-card_name">Amina Tousif</h4><span class="testi-card_desig">MDCAT — Yaqeen Batch Group B | Chawinda, Punjab</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="swiper-slide th_fade_anim">
+                            <div class="testi-card2">
+                                <div class="box-icon"><img src="{{ asset('frontend/img/icon/quote.svg') }}" alt="icon">
+                                </div>
+                                <h3 class="box-title">Learning Made Easy!</h3>
+                                <p class="box-text">DoctorsInn mein joining ke baad MDCAT notes milte hain, doubts discuss kar sakte hain, aur learning bohot easy ho jati hai. Highly recommended!</p>
+                                <div class="testi-review-wrap"><span class="testi-card_review"><i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i> </span><span class="rating-title">5.0</span></div>
+                                <div class="testi-card-profile">
+                                    <div class="box-thumb"><img src="{{ asset('frontend/img/testimonial/testi_2_2.png') }}"
+                                            alt="img"></div>
+                                    <div class="media-left">
+                                        <h4 class="testi-card_name">Asma Barkat</h4><span class="testi-card_desig">MDCAT Student | Turbat</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="swiper-slide th_fade_anim">
+                            <div class="testi-card2">
+                                <div class="box-icon"><img src="{{ asset('frontend/img/icon/quote.svg') }}" alt="icon">
+                                </div>
+                                <h3 class="box-title">Turned Our Dreams Into Reality!</h3>
+                                <p class="box-text">It's incredible to join Doctor's Inn. Amazing methodology and cooperation with students. Truly turns dreams into reality!</p>
+                                <div class="testi-review-wrap"><span class="testi-card_review"><i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i> </span><span class="rating-title">5.0</span></div>
+                                <div class="testi-card-profile">
+                                    <div class="box-thumb"><img src="{{ asset('frontend/img/testimonial/testi_2_3.png') }}"
+                                            alt="img"></div>
+                                    <div class="media-left">
+                                        <h4 class="testi-card_name">Madeha</h4><span class="testi-card_desig">DoctorsInn Student | Muzaffargarh</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="swiper-slide th_fade_anim">
+                            <div class="testi-card2">
+                                <div class="box-icon"><img src="{{ asset('frontend/img/icon/quote.svg') }}" alt="icon">
+                                </div>
+                                <h3 class="box-title">Blown Away by Academy's Excellence!</h3>
+                                <p class="box-text">Instructors are super knowledgeable, patient and genuinely invested in our growth. Gained so much confidence and insight. Huge thumbs up!</p>
+                                <div class="testi-review-wrap"><span class="testi-card_review"><i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i> </span><span class="rating-title">5.0</span></div>
+                                <div class="testi-card-profile">
+                                    <div class="box-thumb"><img src="{{ asset('frontend/img/testimonial/testi_2_1.png') }}"
+                                            alt="img"></div>
+                                    <div class="media-left">
+                                        <h4 class="testi-card_name">Malaika</h4><span class="testi-card_desig">MDCAT Student</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                     </div>
+
                 </div>
                 <button data-slider-prev="#testiSlide2" class="slider-arrow style3 slider-prev"><i
                         class="far fa-arrow-left"></i></button>
@@ -515,10 +552,10 @@
 
     <div class="space overflow-hidden">
         <div class="faq-bg-shape1-1 shape-mockup th_fade_anim" data-speed="0.9" data-left="4%" data-top="10%">
-            <img src="{{ asset('frontend/img/home/icons/wave_shape_2.svg') }}" alt="img">
+            <img src="{{ asset('frontend/img/icon/wave_shape_2.svg') }}" alt="img">
         </div>
         <div class="faq-bg-shape1-2 shape-mockup th_fade_anim" data-speed="0.9" data-right="-15%" data-bottom="5%"><img
-                src="{{ asset('frontend/img/home/icons/wave_bg_3.svg') }}" alt="img" style="width: 60px; height: 60px; object-fit: cover; border-radius: 50%;"></div>
+                src="{{ asset('frontend/img/icon/wave_bg_3.svg') }}" alt="img"></div>
         <div class="container">
             <div class="row gy-40">
                 <div class="col-xl-6">
@@ -526,12 +563,12 @@
                         <div class="img1 th--hover-item th_fade_anim">
                             <div class="thumb th--hover-img" data-displacement="{{ asset('frontend/img/imghover/fluid.jpg') }}"
                                 data-intensity="0.2" data-speedin="1" data-speedout="1"><img class="img-cover"
-                                    src="{{ asset('frontend/img/normal/faq_1_1.jpg') }}" alt="img" style="width: 60px; height: 60px; object-fit: cover; border-radius: 50%;"></div>
+                                    src="{{ asset('frontend/img/normal/faq_1_1.jpg') }}" alt="img"></div>
                         </div>
                         <div class="img2 th--hover-item th_fade_anim">
                             <div class="thumb th--hover-img" data-displacement="{{ asset('frontend/img/imghover/fluid.jpg') }}"
                                 data-intensity="0.2" data-speedin="1" data-speedout="1"><img class="img-cover"
-                                    src="{{ asset('frontend/img/normal/faq_1_2.jpg') }}" alt="img" style="width: 60px; height: 60px; object-fit: cover; border-radius: 50%;"></div>
+                                    src="{{ asset('frontend/img/normal/faq_1_2.jpg') }}" alt="img"></div>
                         </div>
                         <div class="faq-counter-wrap jump">
                             <div class="thumb"><img src="{{ asset('frontend/img/normal/volunteer-group2.png') }}" alt="img">
@@ -603,5 +640,85 @@
         </div>
     </div>
 
+    <!--==============================
+    Blog Area
+    ==============================-->
+    <section class="space overflow-hidden bg-color" id="blog-sec">
+        <div class="container">
+            <div class="title-area text-center">
+                <span class="sub-title text-theme th_fade_anim">
+                    <img src="{{ asset('frontend/img/logo/logo-icon.svg') }}" alt="img">Latest News & Articles
+                </span>
+                <h2 class="sec-title th_fade_anim">
+                    <span class="th-text-perspective">Our Latest Blogs & Updates</span>
+                </h2>
+            </div>
+            @php
+                $homeBlogs = array_slice(config('blogs', []), 0, 3);
+            @endphp
+            <div class="row gy-40 justify-content-center">
+                @foreach ($homeBlogs as $blog)
+                    <div class="col-lg-4 col-md-6 th_fade_anim" data-delay=".2">
+                        <div class="modern-blog-card">
+                            <div class="blog-img">
+                                <a href="{{ route('blog-details', $blog['slug']) }}">
+                                    <img src="{{ url($blog['image']) }}" alt="{{ $blog['title'] }}">
+                                </a>
+                                <div class="blog-date-badge">
+                                    <span class="date-day">{{ $blog['date_day'] }}</span>
+                                    <span class="date-my">
+                                        <span>{{ $blog['date_month'] }}</span>
+                                        <span>{{ $blog['date_year'] }}</span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="blog-content">
+                                <div class="blog-meta-wrapper">
+                                    <a href="{{ route('blog', ['category' => $blog['category']]) }}" class="blog-meta-pill">
+                                        <i class="fal fa-folder-open"></i>{{ $blog['category'] }}
+                                    </a>
+                                    @if (!empty($blog['read_time']))
+                                        <span class="blog-meta-pill">
+                                            <i class="fal fa-clock"></i>{{ $blog['read_time'] }}
+                                        </span>
+                                    @endif
+                                </div>
+                                <h3 class="box-title">
+                                    <a href="{{ route('blog-details', $blog['slug']) }}" title="{{ $blog['title'] }}">
+                                        {{ $blog['title'] }}
+                                    </a>
+                                </h3>
+                                <p class="blog-text">
+                                    {{ $blog['short_description'] }}
+                                </p>
+                                <div class="mt-auto pt-2">
+                                    <a href="{{ route('blog-details', $blog['slug']) }}" class="blog-read-more-btn">
+                                        READ MORE
+                                        <svg width="14" height="12" viewbox="0 0 16 14" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M7.5264 0C7.5264 0.6962 8.21633 1.738 8.9138 2.61293C9.81193 3.7394 10.8838 4.72347 12.1137 5.4748C13.0351 6.0374 14.154 6.57747 15.0528 6.57747M7.5264 13.1712C7.5264 12.475 8.21633 11.4332 8.9138 10.5583C9.81193 9.43187 10.8838 8.44773 12.1137 7.6964C13.0351 7.1338 14.154 6.59373 15.0528 6.59373M15.0528 6.5856H0"
+                                                stroke="currentColor" stroke-width="1.8"></path>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+            <div class="text-center mt-50 th_fade_anim">
+                <a href="{{ route('blog') }}" class="th-btn">
+                    VIEW ALL ARTICLES
+                    <svg class="ms-2" width="16" height="14" viewbox="0 0 16 14" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M7.5264 0C7.5264 0.6962 8.21633 1.738 8.9138 2.61293C9.81193 3.7394 10.8838 4.72347 12.1137 5.4748C13.0351 6.0374 14.154 6.57747 15.0528 6.57747M7.5264 13.1712C7.5264 12.475 8.21633 11.4332 8.9138 10.5583C9.81193 9.43187 10.8838 8.44773 12.1137 7.6964C13.0351 7.1338 14.154 6.59373 15.0528 6.59373M15.0528 6.5856H0"
+                            stroke="currentColor" stroke-width="1.5"></path>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </section>
 
 @endsection

@@ -22,7 +22,7 @@
 
     <section class="space">
         <div class="container">
-            <div class="error-img"><img src="{{ asset('frontend/img/home/icons/error.svg') }}" alt="404 image"></div>
+            <div class="error-img"><img src="{{ asset('frontend/img/icons/error.svg') }}" alt="404 image"></div>
             <div class="error-content">
                 <h2 class="error-title fw-extrabold mt-50">Oops! That Page Can't Be Found</h2>
                 <p class="error-text">It looks like nothing was found at this location. Try going back to the

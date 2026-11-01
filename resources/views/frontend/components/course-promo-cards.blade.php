@@ -1,6 +1,6 @@
 <section class="cta-area-2 space overflow-hidden" id="contact-sec">
     <div class="cta-bg-shape2-1 shape-mockup th_fade_anim" data-speed="0.9" data-right="6%" data-top="20%">
-        <img src="{{ asset('frontend/img/home/icons/wave_shape_1.svg') }}" alt="">
+        <img src="{{ asset('frontend/img/icons/wave_shape_1.svg') }}" alt="">
     </div>
     <div class="container">
         <div class="row gy-30 justify-content-center">

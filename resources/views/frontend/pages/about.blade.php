@@ -153,10 +153,10 @@
 
     <section class="feature-area-1 position-relative bg-color space overflow-hidden">
         <div class="about-bg-shape3-1 shape-mockup th_fade_anim" data-speed="0.9" data-left="6%" data-top="20%">
-            <img src="{{ asset('frontend/img/home/icons/wave_shape_2.svg') }}" alt="img">
+            <img src="{{ asset('frontend/img/icon/wave_shape_2.svg') }}" alt="img">
         </div>
         <div class="about-bg-shape3-2 shape-mockup th_fade_anim" data-speed="0.9" data-right="6%" data-bottom="20%"><img
-                src="{{ asset('frontend/img/home/icons/wave_shape_1.svg') }}" alt="img"></div>
+                src="{{ asset('frontend/img/icon/wave_shape_1.svg') }}" alt="img"></div>
         <div class="container">
             <div class="title-area text-center"><span class="sub-title text-theme th_fade_anim"><img
                         src="{{ asset('frontend/img/logo/logo-icon.svg') }}" alt="img">What we do</span>
@@ -166,7 +166,7 @@
             <div class="row gy-4 justify-content-center">
                 <div class="col-lg-4 col-md-6 th_fade_anim" data-delay=".3">
                     <div class="feature-card">
-                        <div class="box-icon"><img src="{{ asset('frontend/img/home/icons/feature_card_icon1.svg') }}" alt="icon">
+                        <div class="box-icon"><img src="{{ asset('frontend/img/icon/feature_card_icon1.svg') }}" alt="icon">
                         </div>
                         <h3 class="box-title">Learn From Anywhere</h3>
                         <p class="box-text">Study MDCAT, NUMS, and AMC course online — anytime, anywhere, at your own pace.
@@ -175,7 +175,7 @@
                 </div>
                 <div class="col-lg-4 col-md-6 th_fade_anim" data-delay=".5">
                     <div class="feature-card">
-                        <div class="box-icon"><img src="{{ asset('frontend/img/home/icons/feature_card_icon2.svg') }}" alt="icon">
+                        <div class="box-icon"><img src="{{ asset('frontend/img/icon/feature_card_icon2.svg') }}" alt="icon">
                         </div>
                         <h3 class="box-title">Expert Instructor</h3>
                         <p class="box-text">Learn from experienced medical educators who know exactly what it takes to
@@ -184,7 +184,7 @@
                 </div>
                 <div class="col-lg-4 col-md-6 th_fade_anim" data-delay=".7">
                     <div class="feature-card">
-                        <div class="box-icon"><img src="{{ asset('frontend/img/home/icons/feature_card_icon3.svg') }}" alt="icon">
+                        <div class="box-icon"><img src="{{ asset('frontend/img/icon/feature_card_icon3.svg') }}" alt="icon">
                         </div>
                         <h3 class="box-title">24/7 Student Support</h3>
                         <p class="box-text">Got a question? Our support team is available around the clock via WhatsApp and
@@ -211,7 +211,7 @@
 
                         <div class="swiper-slide th_fade_anim">
                             <div class="testi-card2">
-                                <div class="box-icon"><img src="{{ asset('frontend/img/home/icons/quote.svg') }}" alt="icon">
+                                <div class="box-icon"><img src="{{ asset('frontend/img/icon/quote.svg') }}" alt="icon">
                                 </div>
                                 <h3 class="box-title">Best MDCAT Prep Platform!</h3>
                                 <p class="box-text">DoctorsInnElite gave me the structure I needed. Their mock tests were
@@ -233,7 +233,7 @@
 
                         <div class="swiper-slide th_fade_anim">
                             <div class="testi-card2">
-                                <div class="box-icon"><img src="{{ asset('frontend/img/home/icons/quote.svg') }}" alt="icon">
+                                <div class="box-icon"><img src="{{ asset('frontend/img/icon/quote.svg') }}" alt="icon">
                                 </div>
                                 <h3 class="box-title">Cracked MDCAT With Their Help!</h3>
                                 <p class="box-text">The 60-day program kept me consistent. I improved my score by 40 marks
@@ -256,7 +256,7 @@
 
                         <div class="swiper-slide th_fade_anim">
                             <div class="testi-card2">
-                                <div class="box-icon"><img src="{{ asset('frontend/img/home/icons/quote.svg') }}" alt="icon">
+                                <div class="box-icon"><img src="{{ asset('frontend/img/icon/quote.svg') }}" alt="icon">
                                 </div>
                                 <h3 class="box-title">Affordable & Super Effective!</h3>
                                 <p class="box-text">Amazing course quality at a very affordable price. The instructor
@@ -279,7 +279,7 @@
 
                         <div class="swiper-slide th_fade_anim">
                             <div class="testi-card2">
-                                <div class="box-icon"><img src="{{ asset('frontend/img/home/icons/quote.svg') }}" alt="icon">
+                                <div class="box-icon"><img src="{{ asset('frontend/img/icon/quote.svg') }}" alt="icon">
                                 </div>
                                 <h3 class="box-title">Best MDCAT Prep Platform!</h3>
                                 <p class="box-text">DoctorsInnElite gave me the structure I needed. Their mock tests were
@@ -302,7 +302,7 @@
 
                         <div class="swiper-slide th_fade_anim">
                             <div class="testi-card2">
-                                <div class="box-icon"><img src="{{ asset('frontend/img/home/icons/quote.svg') }}" alt="icon">
+                                <div class="box-icon"><img src="{{ asset('frontend/img/icon/quote.svg') }}" alt="icon">
                                 </div>
                                 <h3 class="box-title">Cracked MDCAT With Their Help!</h3>
                                 <p class="box-text">The 60-day program kept me consistent. I improved my score by 40 marks
@@ -325,7 +325,7 @@
 
                         <div class="swiper-slide th_fade_anim">
                             <div class="testi-card2">
-                                <div class="box-icon"><img src="{{ asset('frontend/img/home/icons/quote.svg') }}" alt="icon">
+                                <div class="box-icon"><img src="{{ asset('frontend/img/icon/quote.svg') }}" alt="icon">
                                 </div>
                                 <h3 class="box-title">Affordable & Super Effective!</h3>
                                 <p class="box-text">Amazing course quality at a very affordable price. The instructor
@@ -347,6 +347,221 @@
                         </div>
 
                     </div>
+                </div>
+                <button data-slider-prev="#testiSlide2" class="slider-arrow style3 slider-prev"><i
+                        class="far fa-arrow-left"></i></button>
+                <button data-slider-next="#testiSlide2" class="slider-arrow style3 slider-next"><i
+                        class="far fa-arrow-right"></i></button>
+            </div>
+        </div>
+    </section>
+
+    <section class="testi-area-2 bg-color space overflow-hidden" id="testi-sec">
+        <div class="container">
+
+            <div class="title-area text-center"><span class="sub-title text-theme th_fade_anim"><img
+                        src="{{ asset('frontend/img/logo/logo-icon.svg') }}" alt="img">Testimonials</span>
+                <h2 class="sec-title th_fade_anim"><span class="th-text-perspective">What Our Students
+                        Say!</span></h2>
+            </div>
+
+            <div class="testi-slider2 slider-area">
+                <div class="swiper th-slider has-shadow" id="testiSlide2"
+                    data-slider-options='{"breakpoints":{"0":{"slidesPerView":1},"576":{"slidesPerView":"1"},"768":{"slidesPerView":"1"},"992":{"slidesPerView":"2"},"1200":{"slidesPerView":"3"}},"autoHeight": "true"}'>
+                    <div class="swiper-wrapper">
+
+                        <div class="swiper-slide th_fade_anim">
+                            <div class="testi-card2">
+                                <div class="box-icon"><img src="{{ asset('frontend/img/icon/quote.svg') }}" alt="icon">
+                                </div>
+                                <h3 class="box-title">AMC Exam Mein Pass Ho Gaya!</h3>
+                                <p class="box-text">Every topic ka lecture, notes, aur MCQ practice sab kuch tha. Koi bhi problem hoti toh turant solve ho jati. Only because of this course I passed the AMC test!</p>
+                                <div class="testi-review-wrap"><span class="testi-card_review"><i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i> </span><span class="rating-title">5.0</span></div>
+                                <div class="testi-card-profile">
+                                    <div class="box-thumb"><img src="{{ asset('frontend/img/testimonial/testi_2_1.png') }}"
+                                            alt="img"></div>
+                                    <div class="media-left">
+                                        <h4 class="testi-card_name">Muhammad Abdul Rafay</h4><span class="testi-card_desig">AMC — Ansaar Batch | Gujrat</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="swiper-slide th_fade_anim">
+                            <div class="testi-card2">
+                                <div class="box-icon"><img src="{{ asset('frontend/img/icon/quote.svg') }}" alt="icon">
+                                </div>
+                                <h3 class="box-title">Best Choice for PMA Preparation!</h3>
+                                <p class="box-text">Lessons were clear, well-structured and easy to follow. I passed all my tests with excellent results. Truly the best choice for PMA prep!</p>
+                                <div class="testi-review-wrap"><span class="testi-card_review"><i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i> </span><span class="rating-title">5.0</span></div>
+                                <div class="testi-card-profile">
+                                    <div class="box-thumb"><img src="{{ asset('frontend/img/testimonial/testi_2_2.png') }}"
+                                            alt="img"></div>
+                                    <div class="media-left">
+                                        <h4 class="testi-card_name">Hammad Gulzar</h4><span class="testi-card_desig">PMA — Iqbal Batch | Bahawalpur</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="swiper-slide th_fade_anim">
+                            <div class="testi-card2">
+                                <div class="box-icon"><img src="{{ asset('frontend/img/icon/quote.svg') }}" alt="icon">
+                                </div>
+                                <h3 class="box-title">Anytime Support — Always Available!</h3>
+                                <p class="box-text">Lectures include all books and they give their best to make us understand everything. We asked any question anytime and they were always available. Thanks Sir!</p>
+                                <div class="testi-review-wrap"><span class="testi-card_review"><i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i> </span><span class="rating-title">5.0</span></div>
+                                <div class="testi-card-profile">
+                                    <div class="box-thumb"><img src="{{ asset('frontend/img/testimonial/testi_2_3.png') }}"
+                                            alt="img"></div>
+                                    <div class="media-left">
+                                        <h4 class="testi-card_name">Amna</h4><span class="testi-card_desig">MDCAT Student</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="swiper-slide th_fade_anim">
+                            <div class="testi-card2">
+                                <div class="box-icon"><img src="{{ asset('frontend/img/icon/quote.svg') }}" alt="icon">
+                                </div>
+                                <h3 class="box-title">Yaqeen Batch Bohat Zabardast Hai!</h3>
+                                <p class="box-text">MDCAT ke liye yahan bahut zaroori information aur helpful resources milte hain. Group administration friendly hai aur overall bahut useful Online Educational Centre hai.</p>
+                                <div class="testi-review-wrap"><span class="testi-card_review"><i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i> </span><span class="rating-title">5.0</span></div>
+                                <div class="testi-card-profile">
+                                    <div class="box-thumb"><img src="{{ asset('frontend/img/testimonial/testi_2_1.png') }}"
+                                            alt="img"></div>
+                                    <div class="media-left">
+                                        <h4 class="testi-card_name">Ali Khan</h4><span class="testi-card_desig">MDCAT — Yaqeen Batch Group B | Quetta</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="swiper-slide th_fade_anim">
+                            <div class="testi-card2">
+                                <div class="box-icon"><img src="{{ asset('frontend/img/icon/quote.svg') }}" alt="icon">
+                                </div>
+                                <h3 class="box-title">Outstanding Teachers &amp; Methodology!</h3>
+                                <p class="box-text">The teachers are highly professional, cooperative and supportive. Test sessions are very helpful. Highly recommended for serious aspirants!</p>
+                                <div class="testi-review-wrap"><span class="testi-card_review"><i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i> </span><span class="rating-title">5.0</span></div>
+                                <div class="testi-card-profile">
+                                    <div class="box-thumb"><img src="{{ asset('frontend/img/testimonial/testi_2_2.png') }}"
+                                            alt="img"></div>
+                                    <div class="media-left">
+                                        <h4 class="testi-card_name">Noor Khan</h4><span class="testi-card_desig">MDCAT Enrolled Student | Swat</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="swiper-slide th_fade_anim">
+                            <div class="testi-card2">
+                                <div class="box-icon"><img src="{{ asset('frontend/img/icon/quote.svg') }}" alt="icon">
+                                </div>
+                                <h3 class="box-title">High-Quality Notes &amp; Strong Commitment!</h3>
+                                <p class="box-text">Impressed with this platform! High-quality notes and strong commitment to users. Truly delivered on its promise!</p>
+                                <div class="testi-review-wrap"><span class="testi-card_review"><i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i> </span><span class="rating-title">5.0</span></div>
+                                <div class="testi-card-profile">
+                                    <div class="box-thumb"><img src="{{ asset('frontend/img/testimonial/testi_2_3.png') }}"
+                                            alt="img"></div>
+                                    <div class="media-left">
+                                        <h4 class="testi-card_name">Armish Shoukat</h4><span class="testi-card_desig">AFNS — Afaaq Batch | Abbottabad</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="swiper-slide th_fade_anim">
+                            <div class="testi-card2">
+                                <div class="box-icon"><img src="{{ asset('frontend/img/icon/quote.svg') }}" alt="icon">
+                                </div>
+                                <h3 class="box-title">Concept Clear Karne Ka Tareeqa Unique Hai!</h3>
+                                <p class="box-text">MDCAT ka syllabus samajhna bohot easy ho gaya. Har concept clear kiya jata hai. Group bohot kind aur cooperative hai — bohot motivate bhi karte hain!</p>
+                                <div class="testi-review-wrap"><span class="testi-card_review"><i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i> </span><span class="rating-title">5.0</span></div>
+                                <div class="testi-card-profile">
+                                    <div class="box-thumb"><img src="{{ asset('frontend/img/testimonial/testi_2_1.png') }}"
+                                            alt="img"></div>
+                                    <div class="media-left">
+                                        <h4 class="testi-card_name">Amina Tousif</h4><span class="testi-card_desig">MDCAT — Yaqeen Batch Group B | Chawinda, Punjab</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="swiper-slide th_fade_anim">
+                            <div class="testi-card2">
+                                <div class="box-icon"><img src="{{ asset('frontend/img/icon/quote.svg') }}" alt="icon">
+                                </div>
+                                <h3 class="box-title">Learning Made Easy!</h3>
+                                <p class="box-text">DoctorsInn mein joining ke baad MDCAT notes milte hain, doubts discuss kar sakte hain, aur learning bohot easy ho jati hai. Highly recommended!</p>
+                                <div class="testi-review-wrap"><span class="testi-card_review"><i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i> </span><span class="rating-title">5.0</span></div>
+                                <div class="testi-card-profile">
+                                    <div class="box-thumb"><img src="{{ asset('frontend/img/testimonial/testi_2_2.png') }}"
+                                            alt="img"></div>
+                                    <div class="media-left">
+                                        <h4 class="testi-card_name">Asma Barkat</h4><span class="testi-card_desig">MDCAT Student | Turbat</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="swiper-slide th_fade_anim">
+                            <div class="testi-card2">
+                                <div class="box-icon"><img src="{{ asset('frontend/img/icon/quote.svg') }}" alt="icon">
+                                </div>
+                                <h3 class="box-title">Turned Our Dreams Into Reality!</h3>
+                                <p class="box-text">It's incredible to join Doctor's Inn. Amazing methodology and cooperation with students. Truly turns dreams into reality!</p>
+                                <div class="testi-review-wrap"><span class="testi-card_review"><i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i> </span><span class="rating-title">5.0</span></div>
+                                <div class="testi-card-profile">
+                                    <div class="box-thumb"><img src="{{ asset('frontend/img/testimonial/testi_2_3.png') }}"
+                                            alt="img"></div>
+                                    <div class="media-left">
+                                        <h4 class="testi-card_name">Madeha</h4><span class="testi-card_desig">DoctorsInn Student | Muzaffargarh</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="swiper-slide th_fade_anim">
+                            <div class="testi-card2">
+                                <div class="box-icon"><img src="{{ asset('frontend/img/icon/quote.svg') }}" alt="icon">
+                                </div>
+                                <h3 class="box-title">Blown Away by Academy's Excellence!</h3>
+                                <p class="box-text">Instructors are super knowledgeable, patient and genuinely invested in our growth. Gained so much confidence and insight. Huge thumbs up!</p>
+                                <div class="testi-review-wrap"><span class="testi-card_review"><i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i> </span><span class="rating-title">5.0</span></div>
+                                <div class="testi-card-profile">
+                                    <div class="box-thumb"><img src="{{ asset('frontend/img/testimonial/testi_2_1.png') }}"
+                                            alt="img"></div>
+                                    <div class="media-left">
+                                        <h4 class="testi-card_name">Malaika</h4><span class="testi-card_desig">MDCAT Student</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
                 </div>
                 <button data-slider-prev="#testiSlide2" class="slider-arrow style3 slider-prev"><i
                         class="far fa-arrow-left"></i></button>

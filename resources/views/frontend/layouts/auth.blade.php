@@ -37,9 +37,6 @@
 
     <div id="smooth-wrapper">
         <div id="smooth-content">
-
-
-
             @yield('content')
         </div>
     </div>

@@ -94,7 +94,7 @@
                                         <p class="text-muted text-sm mb-0">Select a course to resume your lessons, notes,
                                             and mock tests.</p>
                                     </div>
-                                    <span class="badge bg-primary text-white px-3 py-2 radius-4"><i
+                                    <span class="badge-enrolled-count text-white px-3 py-2 radius-4"><i
                                             class="fal fa-shield-check me-1"></i> {{ count($courses) }} Enrolled</span>
                                 </div>
 
@@ -108,9 +108,6 @@
                                                         class="rounded-3 legacy-inline-c39ed86628"
                                                        >
                                                     <div class="flex-grow-1 overflow-hidden">
-                                                        <span
-                                                            class="badge bg-success-subtle text-xs px-2 py-1 radius-4 font-semibold mb-1">Active
-                                                            Enrollment</span>
                                                         <h5 class="text-sm fw-bold text-title mb-1 text-truncate legacy-inline-40138cfd60"
                                                             title="{{ $c['title'] }}">
                                                             {{ $c['title'] }}</h5>
