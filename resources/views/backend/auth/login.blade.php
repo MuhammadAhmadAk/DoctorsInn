@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Admin Sign In — DoctorsInn Studio</title>
+    <title>Admin Login — DoctorsInn</title>
 
     <link rel="shortcut icon" href="{{ asset('frontend/img/logo/favicon.svg') }}" type="image/x-icon">
 
@@ -16,16 +16,12 @@
 
     <style>
         :root {
-            --adm-bg: #080c16;
-            --adm-card-bg: #0f172a;
-            --adm-card-border: rgba(255, 255, 255, 0.08);
-            --adm-input-bg: #141f36;
-            --adm-input-border: #1e293b;
-            --adm-primary: #0284c7;
-            --adm-primary-hover: #0369a1;
-            --adm-accent: #10b981;
-            --adm-text: #f1f5f9;
-            --adm-muted: #94a3b8;
+            --theme-color: #5C32FF;
+            --theme-color-hover: #4b26df;
+            --theme-bg: #F6F6FE;
+            --title-color: #050310;
+            --text-muted: #64748b;
+            --border-color: rgba(92, 50, 255, 0.15);
         }
 
         * {
@@ -34,508 +30,319 @@
             padding: 0;
         }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background-color: var(--adm-bg);
+        html, body {
+            height: 100%;
+            width: 100%;
+            overflow: hidden !important;
+            font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: var(--theme-bg);
             background-image:
-                radial-gradient(circle at 15% 15%, rgba(14, 165, 233, 0.12) 0%, transparent 40%),
-                radial-gradient(circle at 85% 85%, rgba(16, 185, 129, 0.08) 0%, transparent 40%),
-                linear-gradient(180deg, #070a12 0%, #0d1527 100%);
-            min-height: 100vh;
+                radial-gradient(circle at 12% 18%, rgba(92, 50, 255, 0.07) 0%, transparent 40%),
+                radial-gradient(circle at 88% 82%, rgba(239, 172, 6, 0.05) 0%, transparent 40%);
+        }
+
+        .login-wrapper {
+            height: 100vh;
+            width: 100vw;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 24px 16px;
-            color: var(--adm-text);
-            position: relative;
-            overflow-x: hidden;
+            padding: 16px;
         }
 
-        /* Subtle grid background pattern */
-        body::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background-image:
-                linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-            background-size: 32px 32px;
-            pointer-events: none;
-        }
-
-        .auth-container {
+        .login-card {
             width: 100%;
-            max-width: 440px;
-            position: relative;
-            z-index: 10;
+            max-width: 380px;
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 26px 24px;
+            box-shadow: 0 10px 30px rgba(92, 50, 255, 0.08), 0 2px 6px rgba(0, 0, 0, 0.03);
+            border: 1px solid var(--border-color);
         }
 
-        .auth-brand-wrap {
+        .brand-header {
             text-align: center;
-            margin-bottom: 24px;
-        }
-
-        .auth-brand-logo {
-            height: 38px;
-            width: auto;
-            max-width: 180px;
-            object-fit: contain;
-            display: inline-block;
-            margin-bottom: 12px;
-        }
-
-        .auth-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            padding: 4px 10px;
-            border-radius: 9999px;
-            background: rgba(14, 165, 233, 0.12);
-            color: #38bdf8;
-            border: 1px solid rgba(14, 165, 233, 0.3);
-        }
-
-        .auth-badge-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: #38bdf8;
-            box-shadow: 0 0 8px #38bdf8;
-        }
-
-        .auth-card {
-            background: var(--adm-card-bg);
-            border: 1px solid var(--adm-card-border);
-            border-radius: 16px;
-            padding: 32px 28px;
-            box-shadow:
-                0 25px 50px -12px rgba(0, 0, 0, 0.7),
-                0 0 0 1px rgba(255, 255, 255, 0.04);
-            position: relative;
-            backdrop-filter: blur(8px);
-        }
-
-        .auth-card::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 32px;
-            right: 32px;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, #0284c7, #10b981, transparent);
-        }
-
-        .auth-card-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: #ffffff;
-            letter-spacing: -0.3px;
-            margin-bottom: 6px;
-        }
-
-        .auth-card-sub {
-            font-size: 13px;
-            color: var(--adm-muted);
-            margin-bottom: 20px;
-            line-height: 1.5;
-        }
-
-        /* Demo Credentials Pill */
-        .demo-pill {
-            background: rgba(2, 132, 199, 0.08);
-            border: 1px dashed rgba(2, 132, 199, 0.3);
-            border-radius: 10px;
-            padding: 10px 14px;
-            margin-bottom: 22px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-            font-size: 12px;
-        }
-
-        .demo-pill-info {
-            color: #cbd5e1;
-        }
-
-        .demo-pill-info code {
-            color: #38bdf8;
-            background: rgba(14, 165, 233, 0.15);
-            padding: 1px 6px;
-            border-radius: 4px;
-            font-family: monospace;
-            font-size: 11.5px;
-        }
-
-        .btn-autofill {
-            background: #0284c7;
-            color: #ffffff;
-            border: none;
-            border-radius: 6px;
-            padding: 4px 10px;
-            font-size: 11px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.15s ease;
-            white-space: nowrap;
-        }
-
-        .btn-autofill:hover {
-            background: #0369a1;
-            transform: translateY(-1px);
-        }
-
-        /* Form Controls */
-        .form-group-adm {
             margin-bottom: 18px;
         }
 
-        .form-label-adm {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-size: 12.5px;
-            font-weight: 600;
-            color: #cbd5e1;
-            margin-bottom: 6px;
+        .brand-logo {
+            height: 32px;
+            width: auto;
+            max-width: 140px;
+            object-fit: contain;
+            display: inline-block;
+            margin-bottom: 8px;
         }
 
-        .input-wrap-adm {
+        .badge-admin {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 2px 8px;
+            border-radius: 4px;
+            background: rgba(92, 50, 255, 0.08);
+            color: var(--theme-color);
+        }
+
+        .login-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--title-color);
+            margin-top: 6px;
+            margin-bottom: 2px;
+        }
+
+        .login-sub {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .form-group-custom {
+            margin-bottom: 13px;
+            position: relative;
+        }
+
+        .form-label-custom {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 4px;
+        }
+
+        .input-box {
             position: relative;
             display: flex;
             align-items: center;
         }
 
-        .input-icon-left {
+        .input-box i.input-icon {
             position: absolute;
-            left: 14px;
-            color: #64748b;
-            font-size: 14px;
+            left: 12px;
+            font-size: 13px;
+            color: #94a3b8;
             pointer-events: none;
-            transition: color 0.15s;
         }
 
-        .form-control-adm {
+        .form-control-custom {
             width: 100%;
-            background: var(--adm-input-bg);
-            border: 1px solid var(--adm-input-border);
-            border-radius: 8px;
-            color: #ffffff;
-            font-size: 13.5px;
-            padding: 11px 40px 11px 38px;
-            outline: none;
+            height: 38px;
+            padding: 6px 36px 6px 34px;
+            font-size: 13px;
+            color: #0f172a;
+            background: #fbfbfe;
+            border: 1px solid #e2e8f0;
+            border-radius: 7px;
             transition: all 0.15s ease;
+            outline: none;
         }
 
-        .form-control-adm:focus {
-            background: #17243e;
-            border-color: #38bdf8;
-            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
+        .form-control-custom:focus {
+            background: #ffffff;
+            border-color: var(--theme-color);
+            box-shadow: 0 0 0 3px rgba(92, 50, 255, 0.12);
         }
 
-        .form-control-adm:focus ~ .input-icon-left {
-            color: #38bdf8;
-        }
-
-        .btn-password-toggle {
+        .btn-eye {
             position: absolute;
-            right: 12px;
+            right: 10px;
             background: none;
             border: none;
-            color: #64748b;
+            color: #94a3b8;
             cursor: pointer;
             padding: 4px;
-            font-size: 14px;
-            transition: color 0.15s;
+            font-size: 13px;
         }
 
-        .btn-password-toggle:hover {
-            color: #cbd5e1;
+        .btn-eye:hover {
+            color: var(--theme-color);
         }
 
-        /* Checkbox & Options */
-        .form-row-between {
+        .options-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 22px;
-            font-size: 12.5px;
+            font-size: 11.5px;
+            margin-bottom: 16px;
+            color: var(--text-muted);
         }
 
-        .checkbox-label {
+        .options-row label {
             display: flex;
             align-items: center;
-            gap: 8px;
-            color: #94a3b8;
+            gap: 6px;
             cursor: pointer;
             user-select: none;
         }
 
-        .checkbox-label input {
-            accent-color: #0284c7;
-            width: 14px;
-            height: 14px;
+        .options-row input[type="checkbox"] {
+            accent-color: var(--theme-color);
+            width: 13px;
+            height: 13px;
             cursor: pointer;
         }
 
-        .link-help {
-            color: #38bdf8;
-            text-decoration: none;
-            font-weight: 500;
+        .demo-tag {
+            background: #f1f5f9;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #475569;
+            font-size: 11px;
+            font-family: monospace;
         }
 
-        .link-help:hover {
-            text-decoration: underline;
-        }
-
-        /* Submit Button */
-        .btn-submit-adm {
+        .btn-theme-login {
             width: 100%;
-            background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            height: 40px;
+            background: var(--theme-color);
             color: #ffffff;
-            font-size: 13.5px;
+            border: none;
+            border-radius: 7px;
+            font-size: 13px;
             font-weight: 600;
-            letter-spacing: 0.2px;
-            padding: 12px 18px;
-            border-radius: 8px;
             cursor: pointer;
-            display: inline-flex;
+            display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
-            transition: all 0.15s ease;
+            transition: background 0.15s, transform 0.1s;
         }
 
-        .btn-submit-adm:hover {
-            background: linear-gradient(135deg, #0369a1 0%, #075985 100%);
+        .btn-theme-login:hover {
+            background: var(--theme-color-hover);
             transform: translateY(-1px);
-            box-shadow: 0 6px 18px rgba(2, 132, 199, 0.45);
         }
 
-        .btn-submit-adm:active {
+        .btn-theme-login:active {
             transform: translateY(0);
         }
 
-        /* Alerts */
-        .adm-alert {
-            padding: 10px 14px;
-            border-radius: 8px;
-            font-size: 12.5px;
-            margin-bottom: 18px;
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            line-height: 1.4;
-        }
-
-        .adm-alert-danger {
-            background: rgba(239, 68, 68, 0.12);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            color: #fca5a5;
-        }
-
-        .adm-alert-warning {
-            background: rgba(245, 158, 11, 0.12);
-            border: 1px solid rgba(245, 158, 11, 0.3);
-            color: #fcd34d;
-        }
-
-        .adm-alert-success {
-            background: rgba(16, 185, 129, 0.12);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            color: #6ee7b7;
-        }
-
-        /* Card Footer */
-        .auth-footer {
-            margin-top: 24px;
+        .back-link {
+            display: block;
             text-align: center;
-            font-size: 12.5px;
-        }
-
-        .link-back {
-            color: #94a3b8;
+            margin-top: 13px;
+            font-size: 11.5px;
+            color: var(--text-muted);
             text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            transition: color 0.15s;
         }
 
-        .link-back:hover {
-            color: #ffffff;
+        .back-link:hover {
+            color: var(--theme-color);
         }
 
-        .auth-security-notice {
-            margin-top: 14px;
-            font-size: 11px;
-            color: #64748b;
+        .alert-mini {
+            padding: 7px 10px;
+            border-radius: 6px;
+            font-size: 11.5px;
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 6px;
+            gap: 8px;
+            line-height: 1.3;
+        }
+
+        .alert-mini-danger {
+            background: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        .alert-mini-success {
+            background: #f0fdf4;
+            color: #166534;
+            border: 1px solid #bbf7d0;
         }
     </style>
 </head>
 
 <body>
-
-    <div class="auth-container">
-        <!-- Brand Header -->
-        <div class="auth-brand-wrap">
-            <a href="{{ route('home') }}" title="DoctorsInn Home">
-                <img src="{{ asset('frontend/img/logo/logo-white.svg') }}?v={{ time() }}" alt="DoctorsInn" class="auth-brand-logo">
-            </a>
-            <div>
-                <span class="auth-badge">
-                    <span class="auth-badge-dot"></span>
-                    Admin Console
-                </span>
+    <div class="login-wrapper">
+        <div class="login-card">
+            <!-- Brand Header -->
+            <div class="brand-header">
+                <a href="{{ route('home') }}">
+                    <img src="{{ asset('frontend/img/logo/logo.svg') }}" alt="DoctorsInn" class="brand-logo">
+                </a>
+                <div><span class="badge-admin">Admin Portal</span></div>
+                <h1 class="login-title">Sign In</h1>
+                <p class="login-sub">Enter credentials to manage courses & LMS</p>
             </div>
-        </div>
-
-        <!-- Login Card -->
-        <div class="auth-card">
-            <h1 class="auth-card-title">Executive Sign In</h1>
-            <p class="auth-card-sub">Authenticate to access DoctorsInn course studio, mock tests, and student records.</p>
 
             <!-- Alerts -->
             @if (session('error'))
-                <div class="adm-alert adm-alert-danger">
-                    <i class="fa-solid fa-circle-exclamation mt-1"></i>
+                <div class="alert-mini alert-mini-danger">
+                    <i class="fa-solid fa-circle-exclamation"></i>
                     <div>{{ session('error') }}</div>
                 </div>
             @endif
 
-            @if (session('warning'))
-                <div class="adm-alert adm-alert-warning">
-                    <i class="fa-solid fa-triangle-exclamation mt-1"></i>
-                    <div>{{ session('warning') }}</div>
-                </div>
-            @endif
-
             @if (session('success'))
-                <div class="adm-alert adm-alert-success">
-                    <i class="fa-solid fa-circle-check mt-1"></i>
+                <div class="alert-mini alert-mini-success">
+                    <i class="fa-solid fa-circle-check"></i>
                     <div>{{ session('success') }}</div>
                 </div>
             @endif
 
-            @if ($errors->any())
-                <div class="adm-alert adm-alert-danger">
-                    <i class="fa-solid fa-circle-exclamation mt-1"></i>
-                    <div>{{ $errors->first() }}</div>
-                </div>
-            @endif
-
-            <!-- Demo Quick Fill Pill -->
-            <div class="demo-pill">
-                <div class="demo-pill-info">
-                    <i class="fa-solid fa-key me-1 text-primary"></i>
-                    <strong>Demo:</strong> <code>admin@doctorsinn.pk</code> • <code>admin123</code>
-                </div>
-                <button type="button" class="btn-autofill" onclick="autoFillDemo()">
-                    <i class="fa-solid fa-wand-magic-sparkles me-1"></i> Auto-Fill
-                </button>
-            </div>
-
-            <!-- Login Form -->
-            <form action="{{ route('admin.login.submit') }}" method="POST" id="adminLoginForm">
+            <!-- Form -->
+            <form action="{{ route('admin.login.submit') }}" method="POST">
                 @csrf
-
-                <!-- Email -->
-                <div class="form-group-adm">
-                    <label class="form-label-adm" for="adminEmail">
-                        <span>Work Email</span>
-                    </label>
-                    <div class="input-wrap-adm">
-                        <i class="fa-regular fa-envelope input-icon-left"></i>
-                        <input type="email" id="adminEmail" name="email" class="form-control-adm"
+                <div class="form-group-custom">
+                    <label class="form-label-custom" for="email">Email</label>
+                    <div class="input-box">
+                        <i class="fa-regular fa-envelope input-icon"></i>
+                        <input type="email" id="email" name="email" class="form-control-custom"
                             placeholder="admin@doctorsinn.pk" value="{{ old('email', 'admin@doctorsinn.pk') }}" required autofocus>
                     </div>
                 </div>
 
-                <!-- Password -->
-                <div class="form-group-adm">
-                    <div class="form-label-adm">
-                        <label for="adminPassword">Password</label>
-                    </div>
-                    <div class="input-wrap-adm">
-                        <i class="fa-regular fa-lock input-icon-left"></i>
-                        <input type="password" id="adminPassword" name="password" class="form-control-adm"
+                <div class="form-group-custom">
+                    <label class="form-label-custom" for="password">Password</label>
+                    <div class="input-box">
+                        <i class="fa-regular fa-lock input-icon"></i>
+                        <input type="password" id="password" name="password" class="form-control-custom"
                             placeholder="••••••••" value="admin123" required>
-                        <button type="button" class="btn-password-toggle" onclick="togglePasswordVisibility()" aria-label="Toggle password visibility">
-                            <i class="fa-regular fa-eye" id="togglePasswordIcon"></i>
+                        <button type="button" class="btn-eye" onclick="togglePassword()" aria-label="Toggle password">
+                            <i class="fa-regular fa-eye" id="eyeIcon"></i>
                         </button>
                     </div>
                 </div>
 
-                <!-- Remember & Help -->
-                <div class="form-row-between">
-                    <label class="checkbox-label">
+                <div class="options-row">
+                    <label>
                         <input type="checkbox" name="remember" value="1" checked>
-                        <span>Keep me signed in</span>
+                        <span>Remember me</span>
                     </label>
-                    <span class="text-muted font-11">TLS 1.3 Active</span>
+                    <span class="demo-tag" title="Demo password">admin123</span>
                 </div>
 
-                <!-- Submit Button -->
-                <button type="submit" class="btn-submit-adm" id="submitBtn">
-                    <i class="fa-solid fa-arrow-right-to-bracket"></i>
-                    <span id="btnText">Sign In to Dashboard</span>
+                <button type="submit" class="btn-theme-login">
+                    <span>Sign In</span>
+                    <i class="fa-solid fa-arrow-right font-11"></i>
                 </button>
             </form>
-        </div>
 
-        <!-- Footer -->
-        <div class="auth-footer">
-            <a href="{{ route('home') }}" class="link-back">
-                <i class="fa-solid fa-arrow-left font-11"></i>
-                <span>Return to DoctorsInn Public Website</span>
+            <a href="{{ route('home') }}" class="back-link">
+                <i class="fa-solid fa-arrow-left font-10 me-1"></i> Return to Website
             </a>
-
-            <div class="auth-security-notice">
-                <i class="fa-solid fa-shield-halved text-success"></i>
-                <span>Protected Executive Management Gateway</span>
-            </div>
         </div>
     </div>
 
     <script>
-        function togglePasswordVisibility() {
-            const pwdInput = document.getElementById('adminPassword');
-            const icon = document.getElementById('togglePasswordIcon');
-            if (pwdInput.type === 'password') {
-                pwdInput.type = 'text';
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
+        function togglePassword() {
+            const pwd = document.getElementById('password');
+            const eye = document.getElementById('eyeIcon');
+            if (pwd.type === 'password') {
+                pwd.type = 'text';
+                eye.classList.remove('fa-eye');
+                eye.classList.add('fa-eye-slash');
             } else {
-                pwdInput.type = 'password';
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
+                pwd.type = 'password';
+                eye.classList.remove('fa-eye-slash');
+                eye.classList.add('fa-eye');
             }
         }
-
-        function autoFillDemo() {
-            const emailInput = document.getElementById('adminEmail');
-            const pwdInput = document.getElementById('adminPassword');
-            emailInput.value = 'admin@doctorsinn.pk';
-            pwdInput.value = 'admin123';
-            emailInput.focus();
-        }
-
-        document.getElementById('adminLoginForm').addEventListener('submit', function () {
-            const btn = document.getElementById('submitBtn');
-            const btnText = document.getElementById('btnText');
-            btn.disabled = true;
-            btnText.textContent = 'Verifying Credentials...';
-        });
     </script>
 </body>
 
