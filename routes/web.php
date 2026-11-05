@@ -59,10 +59,19 @@ Route::get('/cart', [RouteController::class, 'Frontend_Cart'])->name('cart');
 Route::get('/checkout', [RouteController::class, 'Frontend_Checkout'])->name('checkout');
 
 // Authentication
-Route::get('/login', [RouteController::class, 'Frontend_Login'])->name('login');
-Route::post('/login', [RouteController::class, 'Frontend_LoginSubmit'])->name('login.submit');
-Route::get('/logout', [RouteController::class, 'Frontend_Logout'])->name('logout');
-Route::get('/register', [RouteController::class, 'Frontend_Register'])->name('register');
+use App\Http\Controllers\Auth\StudentAuthController;
+
+Route::get('/login', [StudentAuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [StudentAuthController::class, 'login'])->name('login.submit');
+Route::get('/register', [StudentAuthController::class, 'showRegisterForm'])->name('register');
+Route::post('/register', [StudentAuthController::class, 'register'])->name('register.submit');
+Route::match(['get', 'post'], '/logout', [StudentAuthController::class, 'logout'])->name('logout');
+
+// Google OAuth
+Route::get('/auth/google', [StudentAuthController::class, 'redirectToGoogle'])->name('auth.google');
+Route::get('/auth/google/callback', [StudentAuthController::class, 'handleGoogleCallback'])->name('auth.google.callback');
+
+// Password Reset Flow
 Route::get('/forgot-password', [RouteController::class, 'Frontend_ForgotPassword'])->name('forgot-password');
 Route::get('/verify-code', [RouteController::class, 'Frontend_VerifyCode'])->name('verify-code');
 Route::get('/reset-password', [RouteController::class, 'Frontend_ResetPassword'])->name('reset-password');

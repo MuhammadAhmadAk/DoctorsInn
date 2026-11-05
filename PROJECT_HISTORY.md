@@ -24,3 +24,4 @@
 - `1da7b49` :: "2026-11-05 | 06:56 PM" - "docs: update PROJECT_HISTORY.md with database schema release"
 - `0f9a342` :: "2026-11-05 | 09:37 PM" - "cleanup: remove adminer, retain official phpMyAdmin 5.2.1, and restore clean WP schema"
 - `77351a0` :: "2026-11-05 | 09:51 PM" - "docs: add DATABASE_CREDENTIALS.txt with full credentials for Main WP and Dev Laravel databases"
+- `6c6ca80` :: "2026-11-05 | 11:27 PM" - "feat: implement 1-Click Google Sign-In, student registration and database authentication"

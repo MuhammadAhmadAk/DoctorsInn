@@ -36,4 +36,10 @@ return [
         'message' => env('WHATSAPP_MESSAGE', 'Hello DoctorsInn, I want to inquire about MDCAT and medical prep courses.'),
     ],
 
+    'google' => [
+        'client_id' => env('GOOGLE_CLIENT_ID'),
+        'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+        'redirect' => env('GOOGLE_REDIRECT_URI', '/auth/google/callback'),
+    ],
+
 ];
