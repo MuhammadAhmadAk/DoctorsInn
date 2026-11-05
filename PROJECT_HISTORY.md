@@ -35,3 +35,4 @@
 - `cf5a732` :: "2026-11-06 | 12:52 AM" - "fix: prevent navbar profile and student pill from wrapping below logo on desktop"
 - `6e12e0d` :: "2026-11-06 | 01:05 AM" - "feat: implement unified clickable student profile dropdown and clean navbar without dashboard"
 - `e0b4404` :: "2026-11-06 | 01:09 AM" - "style: display clean circular profile avatar only and attach dropdown directly to avatar"
+- `3c68056` :: "2026-11-06 | 01:14 AM" - "style: match avatar and notification circle sizes to 38px, remove grey bg for pure white header controls and dropdown"
