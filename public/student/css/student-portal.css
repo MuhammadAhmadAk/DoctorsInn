@@ -1,53 +1,65 @@
 /* ==========================================================================
-   DOCTORSINN ELITE STUDENT LMS PORTAL - SAAS STYLESHEET
-   Brand Palette:
-   - Primary: #5C32FF
-   - Accent: #EFAC06
-   - Sidebar: #0B0E14
-   - Body BG: #F6F7FC
-   - Card BG: #FFFFFF
+   DOCTORSINN ELITE - STUDENT LMS PORTAL
+   Refined, Human-Crafted SaaS Design System (Clean, Minimal, Utilitarian)
    ========================================================================== */
 
 :root {
-    --std-primary: #5C32FF;
-    --std-primary-rgb: 92, 50, 255;
-    --std-primary-hover: #4822e0;
-    --std-primary-light: rgba(92, 50, 255, 0.08);
-    --std-primary-border: rgba(92, 50, 255, 0.16);
+    /* Brand Colors */
+    --std-primary: #4F46E5;
+    --std-primary-hover: #4338CA;
+    --std-primary-light: #EEF2FF;
+    --std-primary-border: #C7D2FE;
 
-    --std-secondary: #EFAC06;
-    --std-secondary-light: rgba(239, 172, 6, 0.12);
-
-    --std-success: #10B981;
-    --std-success-light: rgba(16, 185, 129, 0.12);
-    --std-warning: #F59E0B;
-    --std-warning-light: rgba(245, 158, 11, 0.12);
-    --std-danger: #EF4444;
-    --std-danger-light: rgba(239, 68, 68, 0.12);
-
-    --std-sidebar-bg: #0B0E14;
-    --std-sidebar-hover: rgba(255, 255, 255, 0.05);
-    --std-sidebar-active: #5C32FF;
-
-    --std-body-bg: #F6F7FC;
-    --std-card-bg: #FFFFFF;
-    --std-title-color: #0F172A;
+    /* Neutrals (Zinc/Slate) */
+    --std-bg: #F8FAFC;
+    --std-surface: #FFFFFF;
+    --std-border: #E2E8F0;
+    --std-border-subtle: #F1F5F9;
+    
+    --std-text-title: #0F172A;
+    --std-text-body: #334155;
     --std-text-muted: #64748B;
-    --std-border-color: #E2E8F0;
+    --std-text-faint: #94A3B8;
 
-    --std-radius-lg: 14px;
-    --std-radius-md: 10px;
+    /* Semantic States (Muted, Professional) */
+    --std-success-bg: #F0FDF4;
+    --std-success-text: #166534;
+    --std-success-border: #BBF7D0;
+    
+    --std-warning-bg: #FFFBEB;
+    --std-warning-text: #92400E;
+    --std-warning-border: #FDE68A;
+
+    --std-danger-bg: #FEF2F2;
+    --std-danger-text: #991B1B;
+    --std-danger-border: #FECACA;
+
+    --std-info-bg: #F0F9FF;
+    --std-info-text: #075985;
+    --std-info-border: #BAE6FD;
+
+    /* Sidebar (Calm Dark Charcoal) */
+    --std-sidebar-bg: #0F172A;
+    --std-sidebar-surface: #1E293B;
+    --std-sidebar-border: #1E293B;
+    --std-sidebar-text: #94A3B8;
+    --std-sidebar-active: #4F46E5;
+
+    /* Geometry & Shadows */
+    --std-radius: 10px;
     --std-radius-sm: 6px;
-    --std-shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.04);
-    --std-shadow: 0 4px 18px rgba(92, 50, 255, 0.05);
+    --std-radius-lg: 14px;
+    --std-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.05), 0 1px 2px -1px rgba(15, 23, 42, 0.05);
+    --std-shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.05), 0 2px 4px -2px rgba(15, 23, 42, 0.05);
 }
 
 body {
-    background-color: var(--std-body-bg);
-    color: #334155;
+    background-color: var(--std-bg);
+    color: var(--std-text-body);
     font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     font-size: 13.5px;
     line-height: 1.5;
+    letter-spacing: -0.01em;
     margin: 0;
     padding: 0;
     overflow-x: hidden;
@@ -68,7 +80,7 @@ body {
 .student-sidebar {
     width: 250px;
     background: var(--std-sidebar-bg);
-    color: #94A3B8;
+    color: var(--std-sidebar-text);
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
@@ -77,53 +89,52 @@ body {
     bottom: 0;
     left: 0;
     z-index: 1050;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 2px 0 16px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    border-right: 1px solid var(--std-sidebar-border);
     overflow-y: auto;
     overflow-x: hidden;
     scrollbar-width: none;
 }
 .student-sidebar::-webkit-scrollbar {
     display: none;
-    width: 0;
 }
 
 .student-sidebar .sidebar-brand {
     padding: 18px 20px;
     display: flex;
     align-items: center;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 .student-sidebar .brand-badge {
-    font-size: 9.5px;
-    font-weight: 800;
-    letter-spacing: 0.8px;
-    background: linear-gradient(135deg, #5C32FF, #4822e0);
-    color: #ffffff;
-    padding: 3px 8px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #F8FAFC;
+    padding: 2px 7px;
     border-radius: 4px;
-    text-transform: uppercase;
+    border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .student-sidebar .sidebar-profile-card {
     padding: 16px 20px;
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(255, 255, 255, 0.02);
     border-bottom: 1px solid rgba(255, 255, 255, 0.06);
     display: flex;
     align-items: center;
     gap: 12px;
 }
 .student-sidebar .sidebar-profile-card img {
-    width: 42px;
-    height: 42px;
+    width: 38px;
+    height: 38px;
     border-radius: 50%;
-    border: 2px solid #5C32FF;
+    border: 1.5px solid rgba(255, 255, 255, 0.2);
     object-fit: cover;
 }
 .student-sidebar .sidebar-profile-name {
     font-size: 13.5px;
-    font-weight: 700;
-    color: #ffffff;
+    font-weight: 600;
+    color: #F8FAFC;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -131,70 +142,70 @@ body {
 }
 .student-sidebar .sidebar-profile-exam {
     font-size: 11px;
-    color: #EFAC06;
-    font-weight: 700;
+    color: #94A3B8;
+    font-weight: 500;
 }
 
 .student-sidebar .sidebar-menu {
     list-style: none;
-    padding: 14px 10px;
+    padding: 12px 10px;
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 2px;
     flex-grow: 1;
 }
 
 .student-sidebar .menu-label {
     font-size: 10px;
     text-transform: uppercase;
-    font-weight: 800;
-    letter-spacing: 1px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
     color: #64748B;
-    padding: 12px 14px 6px 14px;
+    padding: 12px 12px 6px 12px;
 }
 
 .student-sidebar .sidebar-link {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 10px 14px;
+    padding: 9px 12px;
     color: #94A3B8;
     text-decoration: none;
-    font-size: 13.5px;
-    font-weight: 600;
-    border-radius: 8px;
-    transition: all 0.2s ease;
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: 6px;
+    transition: all 0.15s ease;
 }
 .student-sidebar .sidebar-link i {
-    width: 20px;
-    font-size: 15px;
+    width: 18px;
+    font-size: 14px;
     text-align: center;
     color: #64748B;
-    transition: color 0.2s ease;
+    transition: color 0.15s ease;
 }
 .student-sidebar .sidebar-link:hover {
-    color: #ffffff;
-    background: var(--std-sidebar-hover);
+    color: #F8FAFC;
+    background: rgba(255, 255, 255, 0.05);
 }
 .student-sidebar .sidebar-link:hover i {
-    color: #ffffff;
+    color: #F8FAFC;
 }
 .student-sidebar .sidebar-link.active {
-    color: #ffffff;
+    color: #FFFFFF;
     background: var(--std-primary);
-    box-shadow: 0 4px 12px rgba(92, 50, 255, 0.35);
+    font-weight: 600;
 }
 .student-sidebar .sidebar-link.active i {
-    color: #ffffff;
+    color: #FFFFFF;
 }
 .student-sidebar .badge-counter {
     margin-left: auto;
-    background: rgba(255, 255, 255, 0.15);
-    color: #ffffff;
+    background: rgba(255, 255, 255, 0.1);
+    color: #CBD5E1;
     font-size: 11px;
-    font-weight: 700;
-    padding: 2px 7px;
+    font-weight: 600;
+    padding: 1px 7px;
     border-radius: 10px;
 }
 
@@ -207,13 +218,13 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    transition: margin-left 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: margin-left 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .student-navbar {
-    height: 64px;
-    background: #ffffff;
-    border-bottom: 1px solid var(--std-border-color);
+    height: 58px;
+    background: #FFFFFF;
+    border-bottom: 1px solid var(--std-border);
     padding: 0 28px;
     display: flex;
     align-items: center;
@@ -221,23 +232,23 @@ body {
     position: sticky;
     top: 0;
     z-index: 1020;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
 }
 
 .navbar-countdown-pill {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: rgba(92, 50, 255, 0.06);
-    border: 1px solid rgba(92, 50, 255, 0.15);
-    padding: 6px 14px;
-    border-radius: 20px;
-    font-size: 12.5px;
-    color: #1e1b4b;
-    font-weight: 600;
+    background: var(--std-bg);
+    border: 1px solid var(--std-border);
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    color: var(--std-text-title);
+    font-weight: 500;
 }
 .navbar-countdown-pill b {
-    color: #5C32FF;
+    color: var(--std-primary);
+    font-weight: 700;
 }
 
 .navbar-user-btn {
@@ -246,232 +257,186 @@ body {
     gap: 10px;
     background: none;
     border: none;
-    padding: 4px 8px;
-    border-radius: 8px;
+    padding: 4px 6px;
+    border-radius: 6px;
     cursor: pointer;
-    transition: background 0.2s ease;
+    transition: background 0.15s ease;
 }
 .navbar-user-btn:hover {
-    background: #f1f5f9;
+    background: #F1F5F9;
 }
 .navbar-user-avatar {
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid var(--std-primary);
+    border: 1px solid var(--std-border);
 }
 
 .student-content {
-    padding: 26px 28px;
+    padding: 24px 28px;
     flex-grow: 1;
 }
 
 /* ----------------------------------------------------
-   COMPACT CARDS & KPIS
+   CLEAN STANDARD CARDS
 ---------------------------------------------------- */
 .std-card {
-    background: #ffffff;
-    border-radius: var(--std-radius-lg);
-    border: 1px solid var(--std-border-color);
-    box-shadow: var(--std-shadow-sm);
-    padding: 22px 24px;
-    margin-bottom: 22px;
-    transition: box-shadow 0.2s ease;
-}
-.std-card:hover {
+    background: var(--std-surface);
+    border-radius: var(--std-radius);
+    border: 1px solid var(--std-border);
     box-shadow: var(--std-shadow);
+    padding: 20px 22px;
+    margin-bottom: 20px;
 }
 
-.std-kpi {
-    background: #ffffff;
-    border-radius: var(--std-radius-lg);
-    border: 1px solid var(--std-border-color);
-    padding: 18px 20px;
+.std-card-header {
     display: flex;
     align-items: center;
-    gap: 16px;
-    box-shadow: var(--std-shadow-sm);
-    transition: transform 0.2s ease;
+    justify-content: space-between;
+    padding-bottom: 14px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--std-border-subtle);
+}
+
+/* ----------------------------------------------------
+   METRIC KPIS (Minimal, Clean Numbers)
+---------------------------------------------------- */
+.std-kpi {
+    background: var(--std-surface);
+    border-radius: var(--std-radius);
+    border: 1px solid var(--std-border);
+    box-shadow: var(--std-shadow);
+    padding: 16px 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    transition: border-color 0.15s ease;
 }
 .std-kpi:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--std-shadow);
+    border-color: #CBD5E1;
 }
 .std-kpi-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 20px;
+    font-size: 16px;
     flex-shrink: 0;
+    background: #F1F5F9;
+    color: var(--std-text-title);
 }
 .std-kpi-val {
-    font-size: 22px;
-    font-weight: 800;
-    color: var(--std-title-color);
-    line-height: 1.1;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--std-text-title);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
 }
 .std-kpi-lbl {
-    font-size: 12.5px;
-    font-weight: 600;
+    font-size: 12px;
+    font-weight: 500;
     color: var(--std-text-muted);
     margin-top: 2px;
 }
 
 /* ----------------------------------------------------
-   STATUS BADGES & PILLS - HIGH CONTRAST & CRYSTAL CLEAR READABILITY
+   STATUS BADGES & PILLS (Calm, High Contrast)
 ---------------------------------------------------- */
-.badge,
-.badge-status,
-.std-status-badge {
-    display: inline-flex !important;
-    align-items: center !important;
-    gap: 5px !important;
-    font-size: 11.5px !important;
-    font-weight: 700 !important;
-    line-height: 1.2 !important;
-    padding: 4px 10px !important;
-    border-radius: 20px !important;
-    letter-spacing: 0.2px !important;
-    white-space: nowrap !important;
+.badge-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1;
+    padding: 3px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
 }
 
-/* Success / Passed / Strong / Active */
-.badge-status-success,
-.status-pill-success,
-.badge.bg-success,
-.badge.bg-success-subtle,
-.badge.text-success {
-    background-color: #dcfce7 !important;
-    color: #14532d !important; /* Deep forest green - 100% visible */
-    border: 1px solid #86efac !important;
+.badge-status-success {
+    background-color: var(--std-success-bg);
+    color: var(--std-success-text);
+    border: 1px solid var(--std-success-border);
 }
-.badge-status-success i,
-.badge.text-success i {
-    color: #16a34a !important;
+.badge-status-warning {
+    background-color: var(--std-warning-bg);
+    color: var(--std-warning-text);
+    border: 1px solid var(--std-warning-border);
 }
-
-/* Warning / Review / Needs Work / Streak */
-.badge-status-warning,
-.status-pill-warning,
-.badge.bg-warning,
-.badge.bg-warning-subtle,
-.badge.text-warning {
-    background-color: #fef3c7 !important;
-    color: #78350f !important; /* Deep dark amber/brown - 100% visible */
-    border: 1px solid #fcd34d !important;
+.badge-status-danger {
+    background-color: var(--std-danger-bg);
+    color: var(--std-danger-text);
+    border: 1px solid var(--std-danger-border);
 }
-.badge-status-warning i,
-.badge.text-warning i {
-    color: #d97706 !important;
+.badge-status-primary {
+    background-color: var(--std-primary-light);
+    color: var(--std-primary-hover);
+    border: 1px solid var(--std-primary-border);
 }
-
-/* Danger / Hard / Failed / High Priority */
-.badge-status-danger,
-.status-pill-danger,
-.badge.bg-danger,
-.badge.bg-danger-subtle,
-.badge.text-danger {
-    background-color: #fee2e2 !important;
-    color: #991b1b !important; /* Deep dark crimson red */
-    border: 1px solid #fca5a5 !important;
+.badge-status-info {
+    background-color: var(--std-info-bg);
+    color: var(--std-info-text);
+    border: 1px solid var(--std-info-border);
 }
-.badge-status-danger i,
-.badge.text-danger i {
-    color: #dc2626 !important;
-}
-
-/* Primary / Purple */
-.badge-status-primary,
-.status-pill-primary,
-.badge.bg-primary,
-.badge.bg-primary-subtle,
-.badge.text-primary {
-    background-color: #ede9fe !important;
-    color: #4338ca !important; /* Deep rich violet indigo */
-    border: 1px solid #c4b5fd !important;
-}
-.badge-status-primary i,
-.badge.text-primary i {
-    color: #6366f1 !important;
-}
-
-/* Info / Cyan / Blue */
-.badge-status-info,
-.status-pill-info,
-.badge.bg-info,
-.badge.bg-info-subtle,
-.badge.text-info {
-    background-color: #e0f2fe !important;
-    color: #0369a1 !important; /* Deep rich ocean blue */
-    border: 1px solid #7dd3fc !important;
-}
-.badge-status-info i,
-.badge.text-info i {
-    color: #0284c7 !important;
-}
-
-/* Light / Neutral Badge */
-.badge-status-light,
-.badge.bg-light {
-    background-color: #f1f5f9 !important;
-    color: #334155 !important;
-    border: 1px solid #cbd5e1 !important;
+.badge-status-light {
+    background-color: #F8FAFC;
+    color: #475569;
+    border: 1px solid var(--std-border);
 }
 
 /* ----------------------------------------------------
-   PROGRESS & STATUS BARS - RICH GRADIENTS & VISIBILITY
+   PROGRESS TRACKS (Hairline, Clean)
 ---------------------------------------------------- */
 .std-progress-track,
 .progress {
-    height: 9px !important;
-    background-color: #e2e8f0 !important;
-    border-radius: 20px !important;
+    height: 6px !important;
+    background-color: #E2E8F0 !important;
+    border-radius: 4px !important;
     overflow: hidden !important;
-    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.08) !important;
-    margin-top: 8px !important;
+    margin-top: 6px !important;
+    box-shadow: none !important;
 }
 
 .std-progress-fill,
 .progress-bar {
     height: 100% !important;
-    border-radius: 20px !important;
-    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    border-radius: 4px !important;
+    background: var(--std-primary) !important;
+    transition: width 0.3s ease !important;
 }
 
-/* Progress Bar Color Classes */
-.progress-bar.bg-success,
-.std-progress-fill.fill-success {
-    background: linear-gradient(90deg, #10b981, #059669) !important;
+.std-progress-fill.fill-success,
+.progress-bar.bg-success {
+    background: #16A34A !important;
 }
-.progress-bar.bg-primary,
-.std-progress-fill.fill-primary {
-    background: linear-gradient(90deg, #5C32FF, #4338ca) !important;
+.std-progress-fill.fill-info,
+.progress-bar.bg-info {
+    background: #2563EB !important;
 }
-.progress-bar.bg-warning,
-.std-progress-fill.fill-warning {
-    background: linear-gradient(90deg, #f59e0b, #d97706) !important;
+.std-progress-fill.fill-warning,
+.progress-bar.bg-warning {
+    background: #D97706 !important;
 }
-.progress-bar.bg-info,
-.std-progress-fill.fill-info {
-    background: linear-gradient(90deg, #3b82f6, #1d4ed8) !important;
-}
-.progress-bar.bg-danger,
-.std-progress-fill.fill-danger {
-    background: linear-gradient(90deg, #ef4444, #b91c1c) !important;
+.std-progress-fill.fill-danger,
+.progress-bar.bg-danger {
+    background: #DC2626 !important;
 }
 
-/* Navbar Countdown Pill High Contrast */
-.navbar-countdown-pill {
-    background: #f5f3ff !important;
-    border: 1.5px solid #c4b5fd !important;
-    color: #1e1b4b !important;
+/* Buttons */
+.btn-primary {
+    background-color: var(--std-primary);
+    border-color: var(--std-primary);
+    color: #FFFFFF;
+    font-weight: 600;
 }
-.navbar-countdown-pill b {
-    color: #4338ca !important;
+.btn-primary:hover {
+    background-color: var(--std-primary-hover);
+    border-color: var(--std-primary-hover);
+    color: #FFFFFF;
 }
 
 /* ----------------------------------------------------
@@ -491,6 +456,6 @@ body {
         padding: 0 16px;
     }
     .student-content {
-        padding: 20px 16px;
+        padding: 18px 16px;
     }
 }

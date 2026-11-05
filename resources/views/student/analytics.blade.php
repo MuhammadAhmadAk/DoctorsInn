@@ -6,52 +6,33 @@
     .analytics-metric-box {
         background: #ffffff;
         border: 1px solid var(--std-border);
-        border-radius: var(--std-radius-lg);
-        padding: 22px;
-        transition: transform 0.2s ease;
-    }
-    .analytics-metric-box:hover {
-        transform: translateY(-2px);
+        border-radius: var(--std-radius);
+        padding: 18px 20px;
+        box-shadow: var(--std-shadow);
     }
     .subject-stat-card {
-        background: #ffffff;
-        border: 1px solid var(--std-border);
-        border-radius: var(--std-radius-md);
-        padding: 18px 20px;
-        margin-bottom: 14px;
-        transition: all 0.2s ease;
-    }
-    .subject-stat-card:hover {
-        border-color: rgba(92, 50, 255, 0.3);
-        box-shadow: 0 4px 16px rgba(92, 50, 255, 0.05);
-    }
-    .accuracy-track {
-        height: 8px;
-        border-radius: 10px;
-        background: #e2e8f0;
-        overflow: hidden;
-        margin-top: 8px;
-    }
-    .accuracy-fill {
-        height: 100%;
-        border-radius: 10px;
+        background: #FAFAFA;
+        border: 1px solid var(--std-border-subtle);
+        border-radius: 8px;
+        padding: 14px 16px;
+        margin-bottom: 10px;
     }
     .action-plan-item {
         background: #ffffff;
         border: 1px solid var(--std-border);
-        border-left: 4px solid var(--std-primary);
-        border-radius: 10px;
-        padding: 16px 20px;
-        margin-bottom: 12px;
+        border-left: 3px solid var(--std-primary);
+        border-radius: 8px;
+        padding: 14px 16px;
+        margin-bottom: 10px;
     }
     .action-plan-item.priority-danger {
-        border-left-color: #ef4444;
+        border-left-color: #DC2626;
     }
     .action-plan-item.priority-warning {
-        border-left-color: #f59e0b;
+        border-left-color: #D97706;
     }
     .action-plan-item.priority-success {
-        border-left-color: #10b981;
+        border-left-color: #16A34A;
     }
 </style>
 @endsection
@@ -61,13 +42,13 @@
     {{-- Page Header --}}
     <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3">
         <div>
-            <h1 class="h4 fw-bold text-dark mb-1">Performance &amp; Diagnostic Analytics</h1>
-            <p class="text-muted text-sm mb-0">Detailed breakdown of your mock test scores, subject accuracy, and personalized weak-area revision plan.</p>
+            <h1 class="h5 fw-bold text-dark mb-1" style="letter-spacing: -0.015em;">Performance &amp; Diagnostics</h1>
+            <p class="text-muted text-xs mb-0">Mock test scores, subject accuracy, and personalized revision advice.</p>
         </div>
         <div class="d-flex align-items-center gap-2">
-            <a href="{{ route('student.tests') }}" class="btn btn-outline-primary d-inline-flex align-items-center gap-2 px-3 py-2 fw-semibold" style="font-size: 13px; border-radius: 8px;">
-                <i class="fa-solid fa-play"></i>
-                <span>Attempt New Mock Test</span>
+            <a href="{{ route('student.tests') }}" class="btn btn-sm btn-outline-primary fw-semibold px-3 py-2" style="border-radius: 6px;">
+                <span>Solve New Mock Test</span>
+                <i class="fa-solid fa-arrow-right text-xs ms-1"></i>
             </a>
         </div>
     </div>
@@ -77,52 +58,44 @@
         <div class="col-sm-6 col-xl-3">
             <div class="analytics-metric-box">
                 <div class="d-flex align-items-center justify-content-between mb-2">
-                    <span class="text-xs fw-bold text-uppercase text-muted">Overall Accuracy</span>
-                    <span class="badge-status badge-status-success">
-                        <i class="fa-solid fa-arrow-trend-up"></i> Top 15%
-                    </span>
+                    <span class="text-xs fw-semibold text-muted">Overall Accuracy</span>
+                    <span class="badge-status badge-status-success">Top 15%</span>
                 </div>
-                <div class="h3 fw-bold text-dark mb-1">{{ $stats['accuracy_rate'] }}%</div>
-                <p class="text-muted text-xs mb-0">{{ $stats['correct_mcqs'] }} Correct out of 600 MCQs</p>
+                <div class="h4 fw-bold text-dark mb-1">{{ $stats['accuracy_rate'] }}%</div>
+                <p class="text-muted text-xs mb-0">{{ $stats['correct_mcqs'] }} of 600 MCQs correct</p>
             </div>
         </div>
 
         <div class="col-sm-6 col-xl-3">
             <div class="analytics-metric-box">
                 <div class="d-flex align-items-center justify-content-between mb-2">
-                    <span class="text-xs fw-bold text-uppercase text-muted">Average Score</span>
-                    <span class="badge-status badge-status-primary">
-                        <i class="fa-solid fa-chart-line"></i> Steady
-                    </span>
+                    <span class="text-xs fw-semibold text-muted">Average Score</span>
+                    <span class="badge-status badge-status-primary">Steady</span>
                 </div>
-                <div class="h3 fw-bold text-dark mb-1">{{ $stats['avg_score'] }}%</div>
-                <p class="text-muted text-xs mb-0">Based on 6 grand &amp; unit tests</p>
+                <div class="h4 fw-bold text-dark mb-1">{{ $stats['avg_score'] }}%</div>
+                <p class="text-muted text-xs mb-0">Across 6 solved tests</p>
             </div>
         </div>
 
         <div class="col-sm-6 col-xl-3">
             <div class="analytics-metric-box">
                 <div class="d-flex align-items-center justify-content-between mb-2">
-                    <span class="text-xs fw-bold text-uppercase text-muted">Study Dedication</span>
-                    <span class="badge-status badge-status-warning">
-                        <i class="fa-solid fa-fire"></i> 5-Day Streak
-                    </span>
+                    <span class="text-xs fw-semibold text-muted">Study Hours</span>
+                    <span class="badge-status badge-status-warning">5-Day Streak</span>
                 </div>
-                <div class="h3 fw-bold text-dark mb-1">{{ $stats['hours_studied'] }} hrs</div>
-                <p class="text-muted text-xs mb-0">Video lectures &amp; practice hours</p>
+                <div class="h4 fw-bold text-dark mb-1">{{ $stats['hours_studied'] }} hrs</div>
+                <p class="text-muted text-xs mb-0">Lectures &amp; practice time</p>
             </div>
         </div>
 
         <div class="col-sm-6 col-xl-3">
             <div class="analytics-metric-box">
                 <div class="d-flex align-items-center justify-content-between mb-2">
-                    <span class="text-xs fw-bold text-uppercase text-muted">Projected MDCAT</span>
-                    <span class="badge-status badge-status-info">
-                        <i class="fa-solid fa-bullseye"></i> Target Ready
-                    </span>
+                    <span class="text-xs fw-semibold text-muted">Projected MDCAT</span>
+                    <span class="badge-status badge-status-info">Target Ready</span>
                 </div>
-                <div class="h3 fw-bold text-dark mb-1">168 - 176</div>
-                <p class="text-muted text-xs mb-0">Out of 200 (Medical College Merit Zone)</p>
+                <div class="h4 fw-bold text-dark mb-1">168 - 176</div>
+                <p class="text-muted text-xs mb-0">Out of 200 (Merit Zone)</p>
             </div>
         </div>
     </div>
@@ -131,44 +104,37 @@
 
         {{-- Left Column: Subject Mastery Analysis --}}
         <div class="col-lg-6">
-            <div class="std-card p-4 h-100">
-                <div class="d-flex align-items-center justify-content-between pb-3 mb-3 border-bottom">
+            <div class="std-card h-100">
+                <div class="std-card-header">
                     <div>
-                        <h2 class="h5 fw-bold text-dark mb-0">Subject Accuracy &amp; Mastery</h2>
-                        <span class="text-muted text-xs">Derived from your mock tests and quizzes</span>
+                        <h2 class="h6 fw-bold text-dark mb-0">Subject Accuracy</h2>
+                        <span class="text-muted text-xs">Calculated from mock test question history</span>
                     </div>
-                    <span class="badge-status badge-status-light">PMDC Weightage</span>
+                    <span class="badge-status badge-status-light">PMDC Pattern</span>
                 </div>
 
                 @foreach ($subjectReadiness as $subKey => $subject)
                     @php
                         $statusClass = $subject['status'] === 'Strong' ? 'badge-status-success' : ($subject['status'] === 'Good' ? 'badge-status-info' : 'badge-status-warning');
-                        $fillGradient = $subject['status'] === 'Strong' 
-                            ? 'linear-gradient(90deg, #10b981, #059669)' 
-                            : ($subject['status'] === 'Good' ? 'linear-gradient(90deg, #3b82f6, #2563eb)' : 'linear-gradient(90deg, #f59e0b, #d97706)');
+                        $fillClass = $subject['status'] === 'Strong' ? 'fill-success' : ($subject['status'] === 'Good' ? 'fill-info' : 'fill-warning');
                     @endphp
                     <div class="subject-stat-card">
-                        <div class="d-flex align-items-center justify-content-between mb-2">
+                        <div class="d-flex align-items-center justify-content-between mb-1">
+                            <span class="fw-semibold text-dark text-xs">{{ $subject['name'] }}</span>
                             <div class="d-flex align-items-center gap-2">
-                                <i class="{{ $subject['icon'] }}" style="color: {{ $subject['color'] }}; font-size: 16px;"></i>
-                                <span class="fw-bold text-dark" style="font-size: 14.5px;">{{ $subject['name'] }}</span>
-                            </div>
-                            <div class="d-flex align-items-center gap-2">
-                                <span class="badge-status {{ $statusClass }}" style="font-size: 11px;">
-                                    {{ $subject['status'] }}
-                                </span>
-                                <span class="fw-bold text-dark" style="font-size: 14px;">{{ $subject['percentage'] }}%</span>
+                                <span class="badge-status {{ $statusClass }}">{{ $subject['status'] }}</span>
+                                <span class="fw-bold text-dark text-xs">{{ $subject['percentage'] }}%</span>
                             </div>
                         </div>
 
                         {{-- Progress Track --}}
                         <div class="std-progress-track">
-                            <div class="std-progress-fill" style="width: {{ $subject['percentage'] }}%; background: {{ $fillGradient }};"></div>
+                            <div class="std-progress-fill {{ $fillClass }}" style="width: {{ $subject['percentage'] }}%;"></div>
                         </div>
 
-                        <div class="d-flex align-items-center justify-content-between text-xs text-dark mt-2 pt-1 font-semibold">
+                        <div class="d-flex align-items-center justify-content-between text-xs text-muted mt-2 pt-1" style="font-size: 11.5px;">
                             <span><b>Solved:</b> {{ $subject['correct'] }}/{{ $subject['attempted'] }} Correct</span>
-                            <span class="text-danger fw-bold"><i class="fa-solid fa-triangle-exclamation me-1"></i> Focus: {{ $subject['weak_areas'] }}</span>
+                            <span class="text-danger fw-semibold">Focus: {{ $subject['weak_areas'] }}</span>
                         </div>
                     </div>
                 @endforeach
@@ -177,13 +143,13 @@
 
         {{-- Right Column: Diagnostic Revision Plan --}}
         <div class="col-lg-6">
-            <div class="std-card p-4 h-100">
-                <div class="d-flex align-items-center justify-content-between pb-3 mb-3 border-bottom">
+            <div class="std-card h-100">
+                <div class="std-card-header">
                     <div>
-                        <h2 class="h5 fw-bold text-dark mb-0">Diagnostic Revision Plan</h2>
-                        <span class="text-muted text-xs">Targeted weak areas that will raise your score</span>
+                        <h2 class="h6 fw-bold text-dark mb-0">Recommended Revision</h2>
+                        <span class="text-muted text-xs">Priority topics to raise your test percentage</span>
                     </div>
-                    <span class="badge-status badge-status-primary">Action Items</span>
+                    <span class="badge-status badge-status-primary">Action List</span>
                 </div>
 
                 <div class="d-flex flex-column gap-2 mb-3">
@@ -193,38 +159,24 @@
                         @endphp
                         <div class="action-plan-item priority-{{ $plan['badge_color'] }}">
                             <div class="d-flex align-items-center justify-content-between mb-1">
-                                <span class="fw-bold text-dark" style="font-size: 14px;">
-                                    <i class="fa-solid fa-triangle-exclamation text-{{ $plan['badge_color'] }} me-1"></i>
-                                    {{ $plan['subject'] }}: {{ $plan['topic'] }}
+                                <span class="fw-semibold text-dark text-xs">
+                                    {{ $plan['subject'] }} • {{ $plan['topic'] }}
                                 </span>
-                                <span class="badge-status {{ $planBadgeClass }}" style="font-size: 10.5px;">
+                                <span class="badge-status {{ $planBadgeClass }}">
                                     {{ $plan['badge'] }}
                                 </span>
                             </div>
                             <p class="text-muted text-xs mb-2">{{ $plan['recommendation'] }}</p>
                             <div class="d-flex align-items-center gap-2">
-                                <a href="{{ route('student.classroom') }}" class="btn btn-sm btn-light border py-1 px-2 text-xs fw-semibold">
-                                    <i class="fa-solid fa-play text-primary me-1"></i> Watch Topic
+                                <a href="{{ route('student.classroom') }}" class="btn btn-sm btn-light border py-1 px-2 text-xs fw-medium text-dark">
+                                    Lecture
                                 </a>
-                                <a href="{{ route('student.elibrary') }}" class="btn btn-sm btn-light border py-1 px-2 text-xs fw-semibold">
-                                    <i class="fa-solid fa-file-pdf text-danger me-1"></i> Topic Notes
+                                <a href="{{ route('student.elibrary') }}" class="btn btn-sm btn-light border py-1 px-2 text-xs fw-medium text-dark">
+                                    PDF Notes
                                 </a>
                             </div>
                         </div>
                     @endforeach
-                </div>
-
-                {{-- Teacher Consultation Banner --}}
-                <div class="p-3 rounded-3 mt-auto" style="background: #f8fafc; border: 1px dashed #cbd5e1;">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div>
-                            <span class="fw-bold text-dark text-xs d-block">Stuck on Physics Formulas?</span>
-                            <span class="text-muted text-xs">Request 1-on-1 problem breakdown session.</span>
-                        </div>
-                        <a href="https://wa.me/923001234567?text=Hello%20DoctorsInn%2C%20I%20need%20help%20with%20Physics%20numerical%20formulas." target="_blank" class="btn btn-sm btn-success px-3 fw-semibold text-xs">
-                            <i class="fa-brands fa-whatsapp me-1"></i> Ask Faculty
-                        </a>
-                    </div>
                 </div>
             </div>
         </div>
@@ -232,61 +184,55 @@
     </div>
 
     {{-- Past Tests Performance History Table --}}
-    <div class="std-card p-4">
-        <div class="d-flex align-items-center justify-content-between pb-3 mb-3 border-bottom">
+    <div class="std-card">
+        <div class="std-card-header">
             <div>
-                <h2 class="h5 fw-bold text-dark mb-0">Recent Mock Test Submissions</h2>
-                <span class="text-muted text-xs">Review your questions, wrong options, and timing analysis</span>
+                <h2 class="h6 fw-bold text-dark mb-0">Mock Test History</h2>
+                <span class="text-muted text-xs">Review questions and score breakdown</span>
             </div>
-            <a href="{{ route('student.tests') }}" class="btn btn-sm btn-primary px-3 py-1 fw-semibold text-xs" style="border-radius: 6px;">
-                Attempt More Tests
+            <a href="{{ route('student.tests') }}" class="text-primary text-xs fw-semibold text-decoration-none">
+                Take Test →
             </a>
         </div>
 
         <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0" style="font-size: 13.5px;">
-                <thead class="table-light">
-                    <tr>
-                        <th class="border-0">Mock Test Name</th>
-                        <th class="border-0">Attempt Date</th>
-                        <th class="border-0">Raw Score</th>
-                        <th class="border-0">Percentage</th>
-                        <th class="border-0">Result Status</th>
-                        <th class="border-0 text-end">Action</th>
+            <table class="table table-hover align-middle mb-0" style="font-size: 13px;">
+                <thead>
+                    <tr class="text-muted text-xs border-bottom">
+                        <th class="fw-semibold pb-2">Test Name</th>
+                        <th class="fw-semibold pb-2">Attempt Date</th>
+                        <th class="fw-semibold pb-2">Raw Score</th>
+                        <th class="fw-semibold pb-2">Percentage</th>
+                        <th class="fw-semibold pb-2">Status</th>
+                        <th class="fw-semibold pb-2 text-end">Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($recentTestHistory as $test)
                         <tr>
-                            <td class="fw-semibold text-dark">
-                                <i class="fa-regular fa-file-lines text-primary me-2"></i> {{ $test['title'] }}
+                            <td class="fw-medium text-dark py-3">{{ $test['title'] }}</td>
+                            <td class="text-muted text-xs py-3">{{ $test['date'] }}</td>
+                            <td class="py-3">
+                                <span class="fw-bold text-dark">{{ $test['score'] }}</span><span class="text-muted text-xs">/{{ $test['total'] }}</span>
                             </td>
-                            <td class="text-muted text-xs">{{ $test['date'] }}</td>
-                            <td>
-                                <b>{{ $test['score'] }}</b> <span class="text-muted text-xs">/ {{ $test['total'] }}</span>
-                            </td>
-                            <td>
+                            <td class="py-3">
                                 <div class="d-flex align-items-center gap-2">
-                                    <span class="fw-bold">{{ $test['percentage'] }}%</span>
-                                    <div class="progress" style="width: 60px; height: 5px;">
-                                        <div class="progress-bar {{ $test['percentage'] >= 70 ? 'bg-success' : 'bg-warning' }}" style="width: {{ $test['percentage'] }}%;"></div>
+                                    <span class="fw-semibold text-dark">{{ $test['percentage'] }}%</span>
+                                    <div class="std-progress-track mt-0" style="width: 50px; height: 5px;">
+                                        <div class="std-progress-fill {{ $test['percentage'] >= 70 ? 'fill-success' : 'fill-warning' }}" style="width: {{ $test['percentage'] }}%;"></div>
                                     </div>
                                 </div>
                             </td>
-                            <td>
+                            <td class="py-3">
                                 @if ($test['status'] === 'Passed')
-                                    <span class="badge-status badge-status-success">
-                                        <i class="fa-solid fa-circle-check"></i> Passed
-                                    </span>
+                                    <span class="badge-status badge-status-success">Passed</span>
                                 @else
-                                    <span class="badge-status badge-status-warning">
-                                        <i class="fa-solid fa-rotate-left"></i> Needs Review
-                                    </span>
+                                    <span class="badge-status badge-status-warning">Review</span>
                                 @endif
                             </td>
-                            <td class="text-end">
-                                <a href="{{ route('student.tests') }}" class="btn btn-sm btn-light border py-1 px-3 text-xs fw-semibold text-primary">
-                                    Retake Test
+                            <td class="text-end py-3">
+                                <a href="{{ route('student.tests') }}" class="text-primary text-xs fw-semibold text-decoration-none">
+                                    Retake
                                 </a>
                             </td>
                         </tr>

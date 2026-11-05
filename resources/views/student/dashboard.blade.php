@@ -1,279 +1,241 @@
 @extends('student.layouts.master')
-@section('title', 'Student LMS Dashboard')
+@section('title', 'Student Dashboard — DoctorsInn Elite')
 
 @section('extra_css')
 <style>
-    .std-header-box {
-        background: linear-gradient(135deg, #1e1b4b 0%, #312e81 60%, #4338ca 100%);
-        border-radius: var(--std-radius-lg);
-        padding: 28px 30px;
-        color: #ffffff;
-        position: relative;
-        overflow: hidden;
-        margin-bottom: 24px;
-        box-shadow: 0 8px 24px rgba(30, 27, 75, 0.18);
+    .dash-welcome-card {
+        background: #ffffff;
+        border: 1px solid var(--std-border);
+        border-radius: var(--std-radius);
+        padding: 24px 28px;
+        margin-bottom: 20px;
+        box-shadow: var(--std-shadow);
     }
-    .std-header-box::after {
-        content: "";
-        position: absolute;
-        right: -40px;
-        top: -40px;
-        width: 180px;
-        height: 180px;
-        background: radial-gradient(circle, rgba(239, 172, 6, 0.25) 0%, transparent 70%);
-        pointer-events: none;
+    .dash-avatar {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 1px solid var(--std-border);
     }
-    .std-target-pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        background: rgba(239, 172, 6, 0.25);
-        border: 1.5px solid #EFAC06;
-        color: #FDE047;
-        font-weight: 800;
-        font-size: 12px;
-        padding: 4px 12px;
-        border-radius: 20px;
+    .countdown-widget {
+        background: #F8FAFC;
+        border: 1px solid var(--std-border);
+        border-radius: 8px;
+        padding: 10px 18px;
+        text-align: right;
     }
-    .std-countdown-pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-        background: rgba(0, 0, 0, 0.35);
-        backdrop-filter: blur(10px);
-        padding: 8px 16px;
-        border-radius: 12px;
-        border: 1.5px solid rgba(239, 172, 6, 0.5);
-        font-size: 13px;
-        color: #ffffff;
+    .countdown-num {
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--std-text-title);
+        letter-spacing: -0.02em;
+        line-height: 1.1;
     }
-    .std-countdown-pill b {
-        color: #FBBF24;
+    .countdown-label {
+        font-size: 11.5px;
+        color: var(--std-text-muted);
+        font-weight: 500;
+        margin-top: 2px;
     }
-    .std-resume-banner {
-        background: linear-gradient(135deg, #ffffff 0%, #fbfaff 100%);
-        border: 1.5px solid #5C32FF;
-        border-radius: var(--std-radius-lg);
-        padding: 20px 24px;
+    .resume-course-card {
+        background: #ffffff;
+        border: 1px solid var(--std-border);
+        border-radius: var(--std-radius);
+        padding: 18px 22px;
+        margin-bottom: 20px;
+        box-shadow: var(--std-shadow);
         display: flex;
         align-items: center;
         justify-content: space-between;
         gap: 16px;
-        margin-bottom: 24px;
-        box-shadow: 0 4px 18px rgba(92, 50, 255, 0.06);
     }
-    .subject-radar-card {
-        border-radius: 12px;
-        padding: 16px;
-        border: 1px solid #e2e8f0;
-        background: #ffffff;
-        margin-bottom: 12px;
-        transition: transform 0.15s ease;
-    }
-    .subject-radar-card:hover {
-        transform: translateY(-2px);
-    }
-    .std-progress-track {
-        height: 7px;
+    .subject-row {
+        padding: 12px 14px;
+        border: 1px solid var(--std-border-subtle);
         border-radius: 8px;
-        background: #e2e8f0;
-        overflow: hidden;
-        margin-top: 8px;
-    }
-    .std-progress-fill {
-        height: 100%;
-        border-radius: 8px;
+        background: #FAFAFA;
+        margin-bottom: 8px;
     }
 </style>
 @endsection
 
 @section('content')
 
-    {{-- Top Student Welcome & Countdown Banner --}}
-    <div class="std-header-box">
-        <div class="row align-items-center gy-3 position-relative z-index-1">
-            <div class="col-lg-7 d-flex align-items-center gap-3">
-                <img src="{{ asset($studentData['avatar']) }}" alt="{{ $studentData['name'] }}" style="width: 60px; height: 60px; border-radius: 50%; border: 3px solid rgba(255,255,255,0.3); object-fit: cover;">
+    {{-- 1. Calm Welcome Header & Countdown --}}
+    <div class="dash-welcome-card">
+        <div class="row align-items-center gy-3">
+            <div class="col-lg-8 d-flex align-items-center gap-3">
+                <img src="{{ asset($studentData['avatar']) }}" alt="{{ $studentData['name'] }}" class="dash-avatar">
                 <div>
                     <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
-                        <h2 class="mb-0 text-white fw-bold" style="font-size: 22px;">Welcome back, {{ $studentData['name'] }}!</h2>
-                        <span class="std-target-pill"><i class="fa-solid fa-stethoscope"></i> Target: {{ $studentData['target_exam'] }} 2026</span>
+                        <h1 class="h5 fw-bold text-dark mb-0" style="letter-spacing: -0.015em;">Welcome back, {{ $studentData['name'] }}</h1>
+                        <span class="badge-status badge-status-primary">
+                            <i class="fa-solid fa-stethoscope"></i> {{ $studentData['target_exam'] }} 2026 Batch
+                        </span>
                     </div>
-                    <p class="mb-0 text-white text-opacity-75" style="font-size: 13px;">
-                        <i class="fa-solid fa-shield-halved me-1 text-warning"></i> Enrolled in DoctorsInn Elite Preparation Program • Session {{ date('Y') }}
-                    </p>
+                    <p class="text-muted text-xs mb-0">DoctorsInn Medical Entry Test Preparation • Session {{ date('Y') }}</p>
                 </div>
             </div>
-            <div class="col-lg-5 text-lg-end">
-                <div class="std-countdown-pill">
-                    <i class="fa-solid fa-hourglass-half text-warning fs-5"></i>
-                    <div>
-                        <span>MDCAT 2026: <b>{{ $daysRemaining }} Days Remaining</b></span>
-                    </div>
+
+            <div class="col-lg-4 text-lg-end">
+                <div class="countdown-widget d-inline-block">
+                    <div class="countdown-num text-primary">{{ $daysRemaining }} Days</div>
+                    <div class="countdown-label">Until MDCAT 2026 Exam</div>
                 </div>
             </div>
         </div>
     </div>
 
-    {{-- 4 Metric Cards --}}
+    {{-- 2. Clean 4 Metrics Overview --}}
     <div class="row g-3 mb-4">
         <div class="col-xl-3 col-sm-6">
             <div class="std-kpi">
-                <div class="std-kpi-icon" style="background: rgba(92, 50, 255, 0.1); color: #5C32FF;">
+                <div class="std-kpi-icon">
                     <i class="fa-solid fa-graduation-cap"></i>
                 </div>
                 <div>
-                    <div class="std-kpi-val">{{ $stats['enrolled_batches'] }} Batch</div>
-                    <div class="std-kpi-lbl">Active Enrolled Course</div>
+                    <div class="std-kpi-val">{{ $stats['enrolled_batches'] }}</div>
+                    <div class="std-kpi-lbl">Active Enrolled Batch</div>
                 </div>
             </div>
         </div>
+
         <div class="col-xl-3 col-sm-6">
             <div class="std-kpi">
-                <div class="std-kpi-icon" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">
+                <div class="std-kpi-icon">
                     <i class="fa-solid fa-clipboard-check"></i>
                 </div>
                 <div>
-                    <div class="std-kpi-val">{{ $stats['tests_completed'] }} Tests</div>
+                    <div class="std-kpi-val">{{ $stats['tests_completed'] }}</div>
                     <div class="std-kpi-lbl">Mock Tests Solved</div>
                 </div>
             </div>
         </div>
+
         <div class="col-xl-3 col-sm-6">
             <div class="std-kpi">
-                <div class="std-kpi-icon" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6;">
+                <div class="std-kpi-icon">
                     <i class="fa-solid fa-chart-line"></i>
                 </div>
                 <div>
                     <div class="std-kpi-val">{{ $stats['avg_score'] }}%</div>
-                    <div class="std-kpi-lbl">Average Testing Score</div>
+                    <div class="std-kpi-lbl">Average Test Score</div>
                 </div>
             </div>
         </div>
+
         <div class="col-xl-3 col-sm-6">
             <div class="std-kpi">
-                <div class="std-kpi-icon" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b;">
-                    <i class="fa-solid fa-fire"></i>
+                <div class="std-kpi-icon">
+                    <i class="fa-solid fa-fire text-warning"></i>
                 </div>
                 <div>
                     <div class="std-kpi-val">{{ $stats['study_streak_days'] }} Days</div>
-                    <div class="std-kpi-lbl">Continuous Study Streak</div>
+                    <div class="std-kpi-lbl">Study Streak</div>
                 </div>
             </div>
         </div>
     </div>
 
-    {{-- Hero "Continue Learning" Quick Action --}}
-    <div class="std-resume-banner">
+    {{-- 3. Resume Active Classroom --}}
+    <div class="resume-course-card">
         <div class="d-flex align-items-center gap-3">
-            <div class="d-none d-md-flex align-items-center justify-content-center rounded-3 flex-shrink-0" style="width: 48px; height: 48px; background: rgba(92, 50, 255, 0.1); color: #5C32FF; font-size: 20px;">
-                <i class="fa-solid fa-circle-play"></i>
+            <div class="d-none d-sm-flex align-items-center justify-content-center rounded-2 bg-light border" style="width: 44px; height: 44px; font-size: 16px; color: var(--std-primary);">
+                <i class="fa-solid fa-play"></i>
             </div>
             <div>
-                <span class="badge-status badge-status-primary mb-1" style="font-size: 10.5px;">
-                    <i class="fa-solid fa-circle-play"></i> CONTINUE WATCHING
-                </span>
-                <h4 class="mb-1 fw-bold text-dark" style="font-size: 16px;">MDCAT Reboot: 60-Day Prep Program</h4>
-                <p class="mb-0 text-muted" style="font-size: 12.5px;">
-                    <i class="fa-solid fa-video me-1 text-primary"></i> Week 1-2 • Biology: Cell Structure, Organelles &amp; Biological Molecules
-                </p>
+                <span class="badge-status badge-status-primary mb-1">Ongoing Lecture</span>
+                <h2 class="h6 fw-bold text-dark mb-1">MDCAT Reboot: 60-Day Prep Program</h2>
+                <div class="text-muted text-xs">Biology • Cell Structure, Organelles &amp; Biological Molecules</div>
             </div>
         </div>
         <div>
-            <a href="{{ route('student.classroom', 'mdcat-reboot-60-day') }}" class="btn btn-primary px-4 py-2 fw-bold d-inline-flex align-items-center gap-2 rounded-3 text-nowrap" style="background: #5C32FF; border: none; font-size: 13.5px;">
-                <i class="fa-solid fa-play"></i>
-                <span>Resume Classroom</span>
+            <a href="{{ route('student.classroom', 'mdcat-reboot-60-day') }}" class="btn btn-sm btn-primary px-3 py-2 fw-semibold d-inline-flex align-items-center gap-2" style="border-radius: 6px;">
+                <span>Continue Lesson</span>
+                <i class="fa-solid fa-arrow-right text-xs"></i>
             </a>
         </div>
     </div>
 
-    {{-- Main Grid: Left Diagnostic & History + Right Notices & Vault --}}
+    {{-- 4. Main Two-Column Layout --}}
     <div class="row g-4">
+
         {{-- Left: Subject Readiness & Test History --}}
         <div class="col-lg-7">
-            {{-- Readiness Radar --}}
+            {{-- Subject Readiness --}}
             <div class="std-card">
-                <div class="d-flex align-items-center justify-content-between mb-3">
+                <div class="std-card-header">
                     <div>
-                        <h4 class="fw-bold mb-1" style="font-size: 17px; color: #0f172a;">Subject Readiness Diagnosis</h4>
-                        <p class="text-muted mb-0" style="font-size: 12.5px;">Performance analysis calculated from your solved practice MCQs.</p>
+                        <h3 class="h6 fw-bold text-dark mb-0">Subject Readiness</h3>
+                        <span class="text-muted text-xs">Performance computed from solved mock tests</span>
                     </div>
                     <span class="badge-status badge-status-success">
-                        <i class="fa-solid fa-circle-check"></i> On Track
+                        <i class="fa-solid fa-check"></i> On Track
                     </span>
                 </div>
 
-                <div class="row g-2">
+                <div class="d-flex flex-column gap-2">
                     @foreach ($subjectReadiness as $subKey => $subject)
                         @php
                             $statusClass = $subject['status'] === 'Strong' ? 'badge-status-success' : ($subject['status'] === 'Good' ? 'badge-status-info' : 'badge-status-warning');
-                            $fillGradient = $subject['status'] === 'Strong' 
-                                ? 'linear-gradient(90deg, #10b981, #059669)' 
-                                : ($subject['status'] === 'Good' ? 'linear-gradient(90deg, #3b82f6, #2563eb)' : 'linear-gradient(90deg, #f59e0b, #d97706)');
+                            $fillClass = $subject['status'] === 'Strong' ? 'fill-success' : ($subject['status'] === 'Good' ? 'fill-info' : 'fill-warning');
                         @endphp
-                        <div class="col-sm-6">
-                            <div class="subject-radar-card">
-                                <div class="d-flex align-items-center justify-content-between mb-2">
-                                    <div class="d-flex align-items-center gap-2">
-                                        <div style="color: {{ $subject['color'] }}; font-size: 16px;">
-                                            <i class="{{ $subject['icon'] }}"></i>
-                                        </div>
-                                        <span class="fw-bold text-dark" style="font-size: 14px;">{{ $subject['name'] }}</span>
-                                    </div>
-                                    <div class="d-flex align-items-center gap-2">
-                                        <span class="badge-status {{ $statusClass }}" style="font-size: 10.5px; padding: 2px 8px;">
-                                            {{ $subject['status'] }}
-                                        </span>
-                                        <span class="fw-bold text-dark" style="font-size: 14px;">{{ $subject['percentage'] }}%</span>
-                                    </div>
+                        <div class="subject-row">
+                            <div class="d-flex align-items-center justify-content-between mb-1">
+                                <span class="fw-semibold text-dark text-xs">{{ $subject['name'] }}</span>
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="badge-status {{ $statusClass }}">{{ $subject['status'] }}</span>
+                                    <span class="fw-bold text-dark text-xs">{{ $subject['percentage'] }}%</span>
                                 </div>
-                                <div class="std-progress-track">
-                                    <div class="std-progress-fill" style="width: {{ $subject['percentage'] }}%; background: {{ $fillGradient }};"></div>
-                                </div>
-                                <div class="mt-2 text-dark" style="font-size: 11.5px; font-weight: 500;">
-                                    <span class="text-danger fw-bold"><i class="fa-solid fa-triangle-exclamation me-1"></i> Focus:</span> {{ $subject['weak_areas'] }}
-                                </div>
+                            </div>
+                            <div class="std-progress-track">
+                                <div class="std-progress-fill {{ $fillClass }}" style="width: {{ $subject['percentage'] }}%;"></div>
+                            </div>
+                            <div class="text-muted text-xs mt-2" style="font-size: 11px;">
+                                <span class="text-danger fw-semibold">Review:</span> {{ $subject['weak_areas'] }}
                             </div>
                         </div>
                     @endforeach
                 </div>
             </div>
 
-            {{-- Recent Test History --}}
+            {{-- Recent Tests Table --}}
             <div class="std-card">
-                <div class="d-flex align-items-center justify-content-between mb-3">
-                    <h4 class="fw-bold mb-0" style="font-size: 17px; color: #0f172a;">Recent Mock Test History</h4>
-                    <a href="{{ route('student.tests') }}" class="text-primary fw-bold text-decoration-none" style="font-size: 12.5px;">Open Test Center →</a>
+                <div class="std-card-header">
+                    <div>
+                        <h3 class="h6 fw-bold text-dark mb-0">Recent Mock Tests</h3>
+                        <span class="text-muted text-xs">Submissions &amp; scores</span>
+                    </div>
+                    <a href="{{ route('student.tests') }}" class="text-primary text-xs fw-semibold text-decoration-none">
+                        View All →
+                    </a>
                 </div>
 
-                <div class="table-responsive rounded-3 border">
+                <div class="table-responsive">
                     <table class="table table-hover align-middle mb-0" style="font-size: 13px;">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Test Title</th>
-                                <th>Date</th>
-                                <th>Score</th>
-                                <th>Status</th>
+                        <thead>
+                            <tr class="text-muted text-xs border-bottom">
+                                <th class="fw-semibold pb-2">Test Name</th>
+                                <th class="fw-semibold pb-2">Date</th>
+                                <th class="fw-semibold pb-2">Score</th>
+                                <th class="fw-semibold pb-2 text-end">Status</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($recentTestHistory as $test)
                                 <tr>
-                                    <td class="fw-semibold text-dark">{{ $test['title'] }}</td>
-                                    <td class="text-muted">{{ $test['date'] }}</td>
-                                    <td>
-                                        <span class="fw-bold text-dark">{{ $test['score'] }}/{{ $test['total'] }}</span>
+                                    <td class="fw-medium text-dark py-3">{{ $test['title'] }}</td>
+                                    <td class="text-muted text-xs py-3">{{ $test['date'] }}</td>
+                                    <td class="py-3">
+                                        <span class="fw-bold text-dark">{{ $test['score'] }}</span><span class="text-muted text-xs">/{{ $test['total'] }}</span>
                                         <span class="text-muted text-xs ms-1">({{ $test['percentage'] }}%)</span>
                                     </td>
-                                    <td>
+                                    <td class="text-end py-3">
                                         @if ($test['status'] === 'Passed')
-                                            <span class="badge-status badge-status-success">
-                                                <i class="fa-solid fa-circle-check"></i> Passed
-                                            </span>
+                                            <span class="badge-status badge-status-success">Passed</span>
                                         @else
-                                            <span class="badge-status badge-status-warning">
-                                                <i class="fa-solid fa-rotate-left"></i> Needs Review
-                                            </span>
+                                            <span class="badge-status badge-status-warning">Review</span>
                                         @endif
                                     </td>
                                 </tr>
@@ -284,52 +246,56 @@
             </div>
         </div>
 
-        {{-- Right: Notice Board & E-Library Vault --}}
+        {{-- Right: Notices & Resources --}}
         <div class="col-lg-5">
-            {{-- Academy Notice Board --}}
+            {{-- Notice Board --}}
             <div class="std-card">
-                <h4 class="fw-bold mb-3" style="font-size: 17px; color: #0f172a;">
-                    <i class="fa-solid fa-bullhorn text-warning me-2"></i> Academy Notice Board
-                </h4>
+                <div class="std-card-header">
+                    <h3 class="h6 fw-bold text-dark mb-0">Announcements</h3>
+                    <span class="badge-status badge-status-light">Academy Desk</span>
+                </div>
 
-                @foreach ($announcements as $ann)
-                    <div class="p-3 mb-2 rounded-3 border bg-light bg-opacity-50">
-                        <div class="d-flex align-items-center justify-content-between mb-1">
-                            <span class="badge bg-primary text-white" style="font-size: 10px;">{{ $ann['badge'] }}</span>
-                            <span class="text-muted" style="font-size: 11px;">{{ $ann['date'] }}</span>
+                <div class="d-flex flex-column gap-3">
+                    @foreach ($announcements as $ann)
+                        <div class="pb-3 border-bottom last-border-0">
+                            <div class="d-flex align-items-center justify-content-between mb-1">
+                                <span class="badge-status badge-status-primary">{{ $ann['badge'] }}</span>
+                                <span class="text-muted text-xs">{{ $ann['date'] }}</span>
+                            </div>
+                            <h4 class="fw-semibold text-dark mb-0" style="font-size: 13px; line-height: 1.4;">{{ $ann['title'] }}</h4>
                         </div>
-                        <h6 class="mb-0 fw-semibold text-dark" style="font-size: 13px;">{{ $ann['title'] }}</h6>
-                    </div>
-                @endforeach
+                    @endforeach
+                </div>
             </div>
 
-            {{-- E-Library Vault Quick Downloads --}}
+            {{-- Study Vault Downloads --}}
             <div class="std-card">
-                <div class="d-flex align-items-center justify-content-between mb-3">
-                    <h4 class="fw-bold mb-0" style="font-size: 17px; color: #0f172a;">
-                        <i class="fa-solid fa-bookmark text-primary me-2"></i> High-Yield PDF Vault
-                    </h4>
-                    <a href="{{ route('student.elibrary') }}" class="text-primary fw-bold text-decoration-none" style="font-size: 12.5px;">All PDFs →</a>
+                <div class="std-card-header">
+                    <h3 class="h6 fw-bold text-dark mb-0">Study Material Vault</h3>
+                    <a href="{{ route('student.elibrary') }}" class="text-primary text-xs fw-semibold text-decoration-none">
+                        All PDFs →
+                    </a>
                 </div>
 
                 <div class="d-flex flex-column gap-2">
                     @foreach (array_slice($resources, 0, 4) as $res)
-                        <div class="d-flex align-items-center justify-content-between p-2 rounded-3 border bg-white">
+                        <div class="d-flex align-items-center justify-content-between p-2 rounded-2 border" style="background: #FAFAFA;">
                             <div class="d-flex align-items-center gap-2 overflow-hidden">
-                                <i class="fa-solid fa-file-pdf text-danger fs-5 flex-shrink-0"></i>
+                                <i class="fa-regular fa-file-pdf text-danger fs-5 flex-shrink-0"></i>
                                 <div class="overflow-hidden">
-                                    <div class="fw-semibold text-dark text-truncate" style="font-size: 13px;">{{ $res['title'] }}</div>
-                                    <div class="text-muted text-xs">PDF Document • High Yield</div>
+                                    <div class="fw-medium text-dark text-truncate text-xs">{{ $res['title'] }}</div>
+                                    <div class="text-muted" style="font-size: 11px;">Official PMC Solved PDF</div>
                                 </div>
                             </div>
-                            <a href="{{ route('e-library.download', $res['slug']) }}" class="btn btn-sm btn-outline-primary py-1 px-2 rounded-2 flex-shrink-0" style="font-size: 12px;">
-                                <i class="fa-solid fa-download"></i>
+                            <a href="{{ route('e-library.download', $res['slug']) }}" class="btn btn-sm btn-light border py-1 px-2 rounded-1 flex-shrink-0 text-muted" title="Download">
+                                <i class="fa-solid fa-download text-xs"></i>
                             </a>
                         </div>
                     @endforeach
                 </div>
             </div>
         </div>
+
     </div>
 
 @endsection

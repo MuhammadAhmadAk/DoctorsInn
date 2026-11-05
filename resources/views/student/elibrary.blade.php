@@ -1,65 +1,56 @@
 @extends('student.layouts.master')
-@section('title', 'E-Library Vault & Study Notes — DoctorsInn Elite')
+@section('title', 'E-Library Study Vault — DoctorsInn Elite')
 
 @section('extra_css')
 <style>
     .elib-portal-card {
         background: #ffffff;
         border: 1px solid var(--std-border);
-        border-radius: var(--std-radius-lg);
+        border-radius: var(--std-radius);
         overflow: hidden;
-        transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease;
         display: flex;
         flex-direction: column;
         height: 100%;
+        box-shadow: var(--std-shadow);
     }
     .elib-portal-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 25px rgba(92, 50, 255, 0.08);
-        border-color: rgba(92, 50, 255, 0.3);
+        border-color: #CBD5E1;
+        box-shadow: var(--std-shadow-md);
     }
     .elib-thumb-wrap {
         position: relative;
-        height: 160px;
-        background: #0b0e14;
+        height: 150px;
+        background: #0f172a;
         overflow: hidden;
     }
     .elib-thumb-wrap img {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        opacity: 0.9;
-        transition: transform 0.3s ease;
-    }
-    .elib-portal-card:hover .elib-thumb-wrap img {
-        transform: scale(1.05);
     }
     .elib-badge-pill {
         position: absolute;
-        top: 12px;
-        left: 12px;
-        background: rgba(11, 14, 20, 0.85);
-        backdrop-filter: blur(6px);
-        color: #FBBF24;
-        font-weight: 700;
-        font-size: 11px;
-        padding: 4px 10px;
-        border-radius: 6px;
-        border: 1px solid rgba(251, 191, 36, 0.3);
-    }
-    .elib-format-pill {
-        position: absolute;
-        bottom: 12px;
-        right: 12px;
-        background: #ef4444;
-        color: #ffffff;
-        font-weight: 700;
+        top: 10px;
+        left: 10px;
+        background: rgba(15, 23, 42, 0.85);
+        color: #F8FAFC;
+        font-weight: 600;
         font-size: 11px;
         padding: 3px 8px;
         border-radius: 4px;
-        display: flex;
-        align-items: center;
-        gap: 4px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+    .elib-format-pill {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        background: #DC2626;
+        color: #ffffff;
+        font-weight: 700;
+        font-size: 10px;
+        padding: 2px 6px;
+        border-radius: 4px;
     }
     .elib-card-body {
         padding: 18px;
@@ -67,29 +58,26 @@
         flex-direction: column;
         flex-grow: 1;
     }
-    .elib-meta-chip {
-        font-size: 11.5px;
-        color: var(--std-text-muted);
-        display: flex;
-        align-items: center;
-        gap: 5px;
-    }
     .elib-filter-pill {
         border: 1px solid var(--std-border);
         background: #ffffff;
-        color: var(--std-text-dark);
-        border-radius: 30px;
-        padding: 6px 16px;
+        color: var(--std-text-body);
+        border-radius: 6px;
+        padding: 5px 14px;
         font-size: 12.5px;
-        font-weight: 600;
+        font-weight: 500;
         cursor: pointer;
-        transition: all 0.2s ease;
+        transition: all 0.15s ease;
     }
-    .elib-filter-pill:hover,
+    .elib-filter-pill:hover {
+        background: #F8FAFC;
+        border-color: #CBD5E1;
+    }
     .elib-filter-pill.active {
         background: var(--std-primary);
         color: #ffffff;
         border-color: var(--std-primary);
+        font-weight: 600;
     }
 </style>
 @endsection
@@ -99,12 +87,12 @@
     {{-- Page Header --}}
     <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3">
         <div>
-            <h1 class="h4 fw-bold text-dark mb-1">E-Library Study Vault</h1>
-            <p class="text-muted text-sm mb-0">Official PMC syllabus guidelines, solved past papers, formula sheets, and chapter summaries in 1-click PDF.</p>
+            <h1 class="h5 fw-bold text-dark mb-1" style="letter-spacing: -0.015em;">E-Library Vault</h1>
+            <p class="text-muted text-xs mb-0">Official PMC syllabus guidelines, solved past papers, formula sheets, and chapter summaries in PDF.</p>
         </div>
         <div class="d-flex align-items-center gap-2">
-            <span class="badge bg-primary bg-opacity-10 text-primary fw-bold px-3 py-2 rounded-pill" style="font-size: 12.5px;">
-                <i class="fa-solid fa-cloud-arrow-down me-1"></i> 100% Free Student Access
+            <span class="badge-status badge-status-primary">
+                <i class="fa-solid fa-cloud-arrow-down"></i> Free Student Downloads
             </span>
         </div>
     </div>
@@ -114,21 +102,21 @@
         <div class="row align-items-center gy-3">
             <div class="col-lg-5">
                 <div class="input-group">
-                    <span class="input-group-text bg-white border-end-0 text-muted" style="border-radius: 10px 0 0 10px;">
-                        <i class="fa-solid fa-magnifying-glass"></i>
+                    <span class="input-group-text bg-white border-end-0 text-muted" style="border-radius: 6px 0 0 6px;">
+                        <i class="fa-solid fa-magnifying-glass text-xs"></i>
                     </span>
-                    <input type="text" id="elibSearchInput" class="form-control border-start-0" placeholder="Search past papers, formula sheets, notes (e.g. Biology, 2025)..." style="border-radius: 0 10px 10px 0; font-size: 13.5px;">
+                    <input type="text" id="elibSearchInput" class="form-control border-start-0" placeholder="Search notes, past papers, subjects..." style="border-radius: 0 6px 6px 0; font-size: 13px;">
                 </div>
             </div>
             <div class="col-lg-7">
                 <div class="d-flex align-items-center gap-2 flex-wrap justify-content-lg-end" id="elibFilterButtons">
                     <button type="button" class="elib-filter-pill active" data-filter="all">
-                        <i class="fa-solid fa-border-all me-1"></i> All ({{ count($resources) }})
+                        All ({{ count($resources) }})
                     </button>
                     @foreach ($categories as $catKey => $cat)
                         @if ($catKey !== 'all')
                             <button type="button" class="elib-filter-pill" data-filter="{{ $catKey }}">
-                                <i class="{{ $cat['icon'] ?? 'fa-solid fa-tag' }} me-1"></i> {{ $cat['label'] }}
+                                {{ $cat['label'] }}
                             </button>
                         @endif
                     @endforeach
@@ -138,7 +126,7 @@
     </div>
 
     {{-- Resource Cards Grid --}}
-    <div class="row gy-4 mb-5" id="elibResourceGrid">
+    <div class="row gy-4 mb-4" id="elibResourceGrid">
         @forelse ($resources as $res)
             @php
                 $category = $res['category'] ?? 'notes';
@@ -152,41 +140,39 @@
                         <img src="{{ asset($res['image'] ?? 'frontend/img/course/course1-1.jpg') }}" alt="{{ $res['title'] }}">
                         @if (!empty($res['badge']))
                             <span class="elib-badge-pill">
-                                <i class="fa-solid fa-award me-1"></i> {{ $res['badge'] }}
+                                {{ $res['badge'] }}
                             </span>
                         @endif
-                        <span class="elib-format-pill">
-                            <i class="fa-solid fa-file-pdf"></i> PDF
-                        </span>
+                        <span class="elib-format-pill">PDF</span>
                     </div>
 
                     {{-- Body --}}
                     <div class="elib-card-body">
                         <div class="d-flex align-items-center justify-content-between text-xs text-muted mb-2">
                             <span><i class="fa-solid fa-book-open text-primary me-1"></i> {{ $res['subject'] ?? 'General' }}</span>
-                            <span>⭐ {{ $res['rating'] ?? '4.9' }}</span>
+                            <span>{{ $res['downloads'] ?? '5k+' }} downloads</span>
                         </div>
 
-                        <h3 class="fw-bold text-dark mb-2" style="font-size: 15px; line-height: 1.4; min-height: 42px;">
+                        <h2 class="fw-bold text-dark mb-1" style="font-size: 14.5px; line-height: 1.4; min-height: 40px;">
                             {{ $res['title'] }}
-                        </h3>
+                        </h2>
 
-                        <p class="text-muted text-xs mb-3" style="line-height: 1.5; min-height: 36px;">
-                            {{ Str::limit($res['description'] ?? 'Official high-yield PDF resource for medical entrance test preparations.', 80) }}
+                        <p class="text-muted text-xs mb-3" style="line-height: 1.5; min-height: 34px;">
+                            {{ Str::limit($res['description'] ?? 'Official high-yield PDF resource for medical entrance test preparations.', 75) }}
                         </p>
 
                         {{-- Metadata Row --}}
-                        <div class="d-flex align-items-center justify-content-between border-top border-bottom py-2 mb-3">
-                            <span class="elib-meta-chip"><i class="fa-regular fa-file-lines text-primary"></i> {{ $res['pages'] ?? '40+ Pages' }}</span>
-                            <span class="elib-meta-chip"><i class="fa-solid fa-hard-drive text-warning"></i> {{ $res['size'] ?? '5 MB' }}</span>
-                            <span class="elib-meta-chip"><i class="fa-solid fa-download text-success"></i> {{ $res['downloads'] ?? '5k+' }}</span>
+                        <div class="d-flex align-items-center justify-content-between border-top border-bottom py-2 mb-3 text-xs text-muted">
+                            <span><i class="fa-regular fa-file-lines me-1"></i> {{ $res['pages'] ?? '40+ Pages' }}</span>
+                            <span><i class="fa-solid fa-hard-drive me-1"></i> {{ $res['size'] ?? '5 MB' }}</span>
+                            <span>⭐ {{ $res['rating'] ?? '4.9' }}</span>
                         </div>
 
                         {{-- Action Button --}}
                         <div class="mt-auto">
-                            <a href="{{ route('e-library.download', $res['slug']) }}" target="_blank" class="btn btn-primary w-100 py-2 fw-semibold d-inline-flex align-items-center justify-content-center gap-2" style="border-radius: 8px; font-size: 13px;">
-                                <i class="fa-solid fa-arrow-down-to-bracket"></i>
-                                <span>Download PDF Free</span>
+                            <a href="{{ route('e-library.download', $res['slug']) }}" target="_blank" class="btn btn-sm btn-primary w-100 py-2 fw-semibold d-inline-flex align-items-center justify-content-center gap-2" style="border-radius: 6px;">
+                                <i class="fa-solid fa-arrow-down-to-bracket text-xs"></i>
+                                <span>Download PDF</span>
                             </a>
                         </div>
                     </div>
@@ -195,29 +181,28 @@
         @empty
             <div class="col-12">
                 <div class="std-card text-center py-5">
-                    <i class="fa-solid fa-book-bookmark text-muted mb-3" style="font-size: 44px;"></i>
                     <h4 class="fw-bold text-dark">No Resources Available</h4>
                 </div>
             </div>
         @endforelse
     </div>
 
-    {{-- Request Resource Box --}}
-    <div class="std-card p-4 border" style="background: #ffffff;">
+    {{-- Request Resource Box (Clean, Minimalist) --}}
+    <div class="std-card p-4">
         <div class="row align-items-center gy-3">
             <div class="col-lg-8">
                 <div class="d-flex align-items-center gap-3">
-                    <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(16, 185, 129, 0.12); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                        <i class="fa-solid fa-file-circle-question text-success fs-4"></i>
+                    <div style="width: 44px; height: 44px; border-radius: 8px; background: #F1F5F9; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--std-text-title);">
+                        <i class="fa-solid fa-file-circle-question fs-5"></i>
                     </div>
                     <div>
-                        <h4 class="fw-bold text-dark mb-1" style="font-size: 16px;">Can't Find a Specific Past Paper or Chapter Summary?</h4>
-                        <p class="text-muted text-xs mb-0">Drop the book name or past paper year on our WhatsApp help desk. Our academic team will upload it within 24 hours.</p>
+                        <h3 class="h6 fw-bold text-dark mb-1">Looking for a Specific Past Paper or Chapter Summary?</h3>
+                        <p class="text-muted text-xs mb-0">Send the title or past paper year to our academic desk. We will verify and upload it to the study vault.</p>
                     </div>
                 </div>
             </div>
             <div class="col-lg-4 text-lg-end">
-                <a href="https://wa.me/923001234567?text=Hello%20DoctorsInn%2C%20I%20am%20requesting%20a%20study%20resource%20PDF." target="_blank" class="btn btn-success fw-bold px-4 py-2" style="border-radius: 8px; font-size: 13px;">
+                <a href="https://wa.me/923001234567?text=Hello%20DoctorsInn%2C%20I%20am%20requesting%20a%20study%20resource%20PDF." target="_blank" class="btn btn-sm btn-outline-success fw-semibold px-3 py-2" style="border-radius: 6px;">
                     <i class="fa-brands fa-whatsapp me-1"></i> Request Resource
                 </a>
             </div>

@@ -9,15 +9,16 @@
     .classroom-header-bar {
         background: #ffffff;
         border: 1px solid var(--std-border);
-        border-radius: var(--std-radius-md);
-        padding: 16px 20px;
+        border-radius: var(--std-radius);
+        padding: 14px 18px;
         margin-bottom: 20px;
+        box-shadow: var(--std-shadow);
     }
     .classroom-video-box {
         background: #000000;
-        border-radius: var(--std-radius-lg);
+        border-radius: var(--std-radius);
         overflow: hidden;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        box-shadow: var(--std-shadow-md);
         position: relative;
     }
     .classroom-video-box video {
@@ -30,11 +31,12 @@
     .syllabus-card {
         background: #ffffff;
         border: 1px solid var(--std-border);
-        border-radius: var(--std-radius-lg);
+        border-radius: var(--std-radius);
         padding: 18px;
         height: 100%;
         display: flex;
         flex-direction: column;
+        box-shadow: var(--std-shadow);
     }
     .syllabus-accordion-wrap {
         max-height: 650px;
