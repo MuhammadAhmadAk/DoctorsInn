@@ -20,3 +20,4 @@
 - `f3abaa6` :: "2026-11-01 | 09:38 PM" - "style: redesign admin login to match website theme, compact form without scrolling"
 - `976920a` :: "2026-11-01 | 09:53 PM" - "fix: eliminate /public/ URL redirect in .htaccess and fix icon visibility with FontAwesome 6 CDN and z-index"
 - `6017264` :: "2026-11-05 | 06:34 PM" - "feat: install secure phpMyAdmin on live server, configure live MySQL database, and establish automated database backups"
+- `c13d0df` :: "2026-11-05 | 06:55 PM" - "feat: prepare Laravel database schema with users, roles, and admin seeders"
