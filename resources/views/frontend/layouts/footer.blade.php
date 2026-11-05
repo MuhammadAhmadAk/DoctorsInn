@@ -169,7 +169,7 @@
 <script src="{{ asset('frontend/js/app.min.js') }}"></script>
 <script src="{{ asset('frontend/js/hover-effect.umd.js') }}"></script>
 <script src="{{ asset('frontend/js/main.js') }}"></script>
-<script src="{{ asset('frontend/js/profile-header.js') }}"></script>
+<script src="{{ asset('frontend/js/profile-header.js') }}?v={{ file_exists(public_path('frontend/js/profile-header.js')) ? filemtime(public_path('frontend/js/profile-header.js')) : time() }}"></script>
 <script src="{{ asset('frontend/js/preloader.js') }}"></script>
 <script src="{{ asset('frontend/js/course-pagination.js') }}"></script>
 

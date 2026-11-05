@@ -21,7 +21,7 @@
 
     <link rel="stylesheet" href="{{ asset('frontend/css/app.min.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/css/fontawesome.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('frontend/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('frontend/css/style.css') }}?v={{ file_exists(public_path('frontend/css/style.css')) ? filemtime(public_path('frontend/css/style.css')) : time() }}">
     <link rel="stylesheet" href="{{ asset('frontend/css/fonts.css') }}">
 
     @yield('extra_css')
@@ -124,20 +124,20 @@
                             <div class="header-profile-wrap">
                                 @if ($currentUser)
                                     {{-- Authenticated Student Profile & Dropdown --}}
-                                    <div class="header-profile-controls">
-                                        <a href="{{ route('notifications') }}" class="notification-btn" title="Notifications">
-                                            <i class="fa-regular fa-bell"></i>
-                                            <span class="notification-dot"></span>
+                                    <div class="header-profile-controls d-inline-flex align-items-center" style="gap: 10px;">
+                                        <a href="{{ route('notifications') }}" class="notification-btn" title="Notifications" style="width: 38px !important; height: 38px !important; min-width: 38px !important; border-radius: 50% !important; background-color: #ffffff !important; border: 1.5px solid #e2e8f0 !important; color: #475569 !important; display: inline-flex !important; align-items: center !important; justify-content: center !important; position: relative !important; text-decoration: none !important; box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;">
+                                            <i class="fa-regular fa-bell" style="font-size: 15px !important; color: #475569 !important;"></i>
+                                            <span class="notification-dot" style="position: absolute !important; top: 8px !important; right: 9px !important; width: 7px !important; height: 7px !important; background-color: #ef4444 !important; border-radius: 50% !important; border: 1.5px solid #ffffff !important;"></span>
                                         </a>
 
-                                        {{-- Clickable Circular Profile Avatar --}}
-                                        <div class="dropdown header-user-dropdown position-relative">
-                                            <button class="header-profile-avatar-btn" type="button" id="headerUserMenuBtn" data-bs-toggle="dropdown" aria-expanded="false" title="{{ $currentUserName }}">
-                                                <img src="{{ asset($currentUserAvatar) }}" alt="{{ $currentUserName }}" class="header-avatar-circle">
+                                        {{-- Clickable Circular Profile Avatar (Strict 38px Pure Circle) --}}
+                                        <div class="dropdown header-user-dropdown position-relative" style="display: inline-flex; align-items: center;">
+                                            <button class="header-profile-avatar-btn" type="button" id="headerUserMenuBtn" data-bs-toggle="dropdown" aria-expanded="false" title="{{ $currentUserName }}" style="width: 38px !important; height: 38px !important; min-width: 38px !important; max-width: 38px !important; border-radius: 50% !important; background: transparent !important; border: none !important; padding: 0 !important; margin: 0 !important; outline: none !important; box-shadow: none !important; display: inline-flex !important; align-items: center !important; justify-content: center !important; cursor: pointer !important; overflow: hidden !important;">
+                                                <img src="{{ asset($currentUserAvatar) }}" alt="{{ $currentUserName }}" class="header-avatar-circle" style="width: 38px !important; height: 38px !important; min-width: 38px !important; max-width: 38px !important; border-radius: 50% !important; object-fit: cover !important; border: 1.5px solid #e2e8f0 !important; display: block !important; box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;">
                                             </button>
 
                                             <!-- Dropdown Menu -->
-                                            <ul class="dropdown-menu dropdown-menu-end header-profile-menu shadow-lg border-0" aria-labelledby="headerUserMenuBtn">
+                                            <ul class="dropdown-menu dropdown-menu-end header-profile-menu shadow-lg border-0" aria-labelledby="headerUserMenuBtn" style="background: #ffffff !important; border: 1px solid #e2e8f0 !important; border-radius: 14px !important; box-shadow: 0 12px 30px rgba(0,0,0,0.08) !important; min-width: 220px !important; padding: 8px !important;">
                                                 <li class="header-dropdown-user-info">
                                                     <div class="user-info-name">{{ $currentUserName }}</div>
                                                     @if (!empty($currentUserEmail))
