@@ -53,6 +53,7 @@
                             $loggedInUser = auth()->user() ?? session('user');
                         @endphp
                         @if ($loggedInUser)
+                            <li><a href="{{ route('student.dashboard') }}" class="fw-bold" style="color: #5C32FF;">Student Portal</a></li>
                             <li><a href="{{ route('my-courses') }}">My Courses</a></li>
                             <li><a href="{{ route('profile') }}">My Profile ({{ $loggedInUser['name'] ?? 'Student' }})</a></li>
                             <li><a href="{{ route('logout') }}">Logout</a></li>
@@ -103,8 +104,15 @@
                                     <li><a href="{{ route('about') }}">About Us</a></li>
                                     <li><a href="{{ route('course') }}">Courses</a></li>
                                     <li><a href="{{ route('e-library') }}">E-Library</a></li>
-                                    {{-- <li><a href="{{ route('tests') }}">Mock Tests</a></li> --}}
-                                    <li><a href="{{ route('my-courses') }}">My Courses</a></li>
+                                    <li><a href="{{ route('tests') }}">Mock Tests</a></li>
+                                    @php
+                                        $currentUser = $loggedInUser ?? (auth()->user() ?? session('user'));
+                                    @endphp
+                                    @if ($currentUser)
+                                        <li><a href="{{ route('student.dashboard') }}" class="fw-bold" style="color: #5C32FF;"><i class="fa-solid fa-gauge-high me-1"></i> Dashboard</a></li>
+                                    @else
+                                        <li><a href="{{ route('my-courses') }}">My Courses</a></li>
+                                    @endif
                                     <li><a href="{{ route('contact') }}">Contact Us</a></li>
                                 </ul>
                             </nav>
@@ -114,10 +122,6 @@
 
                         <div class="col-auto d-none d-xl-block">
                             <div class="header-profile-wrap">
-                                @php
-                                    $currentUser = $loggedInUser ?? (auth()->user() ?? session('user'));
-                                @endphp
-
                                 @if ($currentUser)
                                     {{-- Authenticated Student View --}}
                                     <div class="header-student-pill">
@@ -137,6 +141,10 @@
 
                                             <!-- Dropdown Menu -->
                                             <div class="profile-dropdown-menu">
+                                                <a href="{{ route('student.dashboard') }}" class="dropdown-item fw-bold" style="color: #5C32FF;">
+                                                    <i class="fa-solid fa-gauge-high"></i>
+                                                    <span>Student Portal</span>
+                                                </a>
                                                 <a href="{{ route('profile') }}" class="dropdown-item">
                                                     <i class="fa-regular fa-user"></i>
                                                     <span>My Profile</span>

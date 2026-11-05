@@ -76,7 +76,14 @@ Route::get('/forgot-password', [RouteController::class, 'Frontend_ForgotPassword
 Route::get('/verify-code', [RouteController::class, 'Frontend_VerifyCode'])->name('verify-code');
 Route::get('/reset-password', [RouteController::class, 'Frontend_ResetPassword'])->name('reset-password');
 
-// User Account
+// User Account & Student LMS Portal
+use App\Http\Controllers\Student\StudentDashboardController;
+
+Route::get('/student/dashboard', [StudentDashboardController::class, 'dashboard'])->name('student.dashboard');
+Route::get('/dashboard', function () {
+    return redirect()->route('student.dashboard');
+})->name('dashboard');
+
 Route::match(['get', 'post'], '/profile', [RouteController::class, 'Frontend_Profile'])->name('profile');
 Route::get('/notifications', [RouteController::class, 'Frontend_Notifications'])->name('notifications');
 
