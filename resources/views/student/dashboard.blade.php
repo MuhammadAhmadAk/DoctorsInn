@@ -27,25 +27,28 @@
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        background: rgba(239, 172, 6, 0.18);
-        border: 1px solid rgba(239, 172, 6, 0.4);
-        color: #FBBF24;
-        font-weight: 700;
+        background: rgba(239, 172, 6, 0.25);
+        border: 1.5px solid #EFAC06;
+        color: #FDE047;
+        font-weight: 800;
         font-size: 12px;
-        padding: 3px 10px;
+        padding: 4px 12px;
         border-radius: 20px;
     }
     .std-countdown-pill {
         display: inline-flex;
         align-items: center;
-        gap: 8px;
-        background: rgba(255, 255, 255, 0.1);
+        gap: 10px;
+        background: rgba(0, 0, 0, 0.35);
         backdrop-filter: blur(10px);
-        padding: 7px 14px;
-        border-radius: 10px;
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        font-size: 12.5px;
-        color: #f8fafc;
+        padding: 8px 16px;
+        border-radius: 12px;
+        border: 1.5px solid rgba(239, 172, 6, 0.5);
+        font-size: 13px;
+        color: #ffffff;
+    }
+    .std-countdown-pill b {
+        color: #FBBF24;
     }
     .std-resume-banner {
         background: linear-gradient(135deg, #ffffff 0%, #fbfaff 100%);
@@ -105,7 +108,7 @@
                 <div class="std-countdown-pill">
                     <i class="fa-solid fa-hourglass-half text-warning fs-5"></i>
                     <div>
-                        <span class="fw-bold fs-6 text-white">{{ $daysRemaining }} Days</span> remaining to MDCAT 2026
+                        <span>MDCAT 2026: <b>{{ $daysRemaining }} Days Remaining</b></span>
                     </div>
                 </div>
             </div>
@@ -167,7 +170,9 @@
                 <i class="fa-solid fa-circle-play"></i>
             </div>
             <div>
-                <span class="badge bg-primary bg-opacity-10 text-primary fw-semibold px-2 py-1 mb-1" style="font-size: 11px;">CONTINUE WATCHING</span>
+                <span class="badge-status badge-status-primary mb-1" style="font-size: 10.5px;">
+                    <i class="fa-solid fa-circle-play"></i> CONTINUE WATCHING
+                </span>
                 <h4 class="mb-1 fw-bold text-dark" style="font-size: 16px;">MDCAT Reboot: 60-Day Prep Program</h4>
                 <p class="mb-0 text-muted" style="font-size: 12.5px;">
                     <i class="fa-solid fa-video me-1 text-primary"></i> Week 1-2 • Biology: Cell Structure, Organelles &amp; Biological Molecules
@@ -193,27 +198,40 @@
                         <h4 class="fw-bold mb-1" style="font-size: 17px; color: #0f172a;">Subject Readiness Diagnosis</h4>
                         <p class="text-muted mb-0" style="font-size: 12.5px;">Performance analysis calculated from your solved practice MCQs.</p>
                     </div>
-                    <span class="badge bg-success bg-opacity-10 text-success px-2 py-1 fw-bold" style="font-size: 11.5px;">On Track</span>
+                    <span class="badge-status badge-status-success">
+                        <i class="fa-solid fa-circle-check"></i> On Track
+                    </span>
                 </div>
 
                 <div class="row g-2">
                     @foreach ($subjectReadiness as $subKey => $subject)
+                        @php
+                            $statusClass = $subject['status'] === 'Strong' ? 'badge-status-success' : ($subject['status'] === 'Good' ? 'badge-status-info' : 'badge-status-warning');
+                            $fillGradient = $subject['status'] === 'Strong' 
+                                ? 'linear-gradient(90deg, #10b981, #059669)' 
+                                : ($subject['status'] === 'Good' ? 'linear-gradient(90deg, #3b82f6, #2563eb)' : 'linear-gradient(90deg, #f59e0b, #d97706)');
+                        @endphp
                         <div class="col-sm-6">
                             <div class="subject-radar-card">
-                                <div class="d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center justify-content-between mb-2">
                                     <div class="d-flex align-items-center gap-2">
-                                        <div style="color: {{ $subject['color'] }}; font-size: 15px;">
+                                        <div style="color: {{ $subject['color'] }}; font-size: 16px;">
                                             <i class="{{ $subject['icon'] }}"></i>
                                         </div>
-                                        <span class="fw-bold text-dark" style="font-size: 13.5px;">{{ $subject['name'] }}</span>
+                                        <span class="fw-bold text-dark" style="font-size: 14px;">{{ $subject['name'] }}</span>
                                     </div>
-                                    <span class="fw-bold" style="color: {{ $subject['color'] }}; font-size: 13.5px;">{{ $subject['percentage'] }}%</span>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="badge-status {{ $statusClass }}" style="font-size: 10.5px; padding: 2px 8px;">
+                                            {{ $subject['status'] }}
+                                        </span>
+                                        <span class="fw-bold text-dark" style="font-size: 14px;">{{ $subject['percentage'] }}%</span>
+                                    </div>
                                 </div>
                                 <div class="std-progress-track">
-                                    <div class="std-progress-fill" style="width: {{ $subject['percentage'] }}%; background: {{ $subject['color'] }};"></div>
+                                    <div class="std-progress-fill" style="width: {{ $subject['percentage'] }}%; background: {{ $fillGradient }};"></div>
                                 </div>
-                                <div class="mt-2 text-muted" style="font-size: 11px;">
-                                    <i class="fa-solid fa-triangle-exclamation me-1 text-warning"></i> Weakness: {{ $subject['weak_areas'] }}
+                                <div class="mt-2 text-dark" style="font-size: 11.5px; font-weight: 500;">
+                                    <span class="text-danger fw-bold"><i class="fa-solid fa-triangle-exclamation me-1"></i> Focus:</span> {{ $subject['weak_areas'] }}
                                 </div>
                             </div>
                         </div>
@@ -248,9 +266,15 @@
                                         <span class="text-muted text-xs ms-1">({{ $test['percentage'] }}%)</span>
                                     </td>
                                     <td>
-                                        <span class="badge {{ $test['status'] === 'Passed' ? 'bg-success' : 'bg-warning' }} bg-opacity-10 {{ $test['status'] === 'Passed' ? 'text-success' : 'text-warning' }} px-2 py-1">
-                                            {{ $test['status'] }}
-                                        </span>
+                                        @if ($test['status'] === 'Passed')
+                                            <span class="badge-status badge-status-success">
+                                                <i class="fa-solid fa-circle-check"></i> Passed
+                                            </span>
+                                        @else
+                                            <span class="badge-status badge-status-warning">
+                                                <i class="fa-solid fa-rotate-left"></i> Needs Review
+                                            </span>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach

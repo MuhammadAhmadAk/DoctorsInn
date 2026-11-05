@@ -78,7 +78,9 @@
             <div class="analytics-metric-box">
                 <div class="d-flex align-items-center justify-content-between mb-2">
                     <span class="text-xs fw-bold text-uppercase text-muted">Overall Accuracy</span>
-                    <span class="badge bg-success bg-opacity-10 text-success fw-bold">Top 15%</span>
+                    <span class="badge-status badge-status-success">
+                        <i class="fa-solid fa-arrow-trend-up"></i> Top 15%
+                    </span>
                 </div>
                 <div class="h3 fw-bold text-dark mb-1">{{ $stats['accuracy_rate'] }}%</div>
                 <p class="text-muted text-xs mb-0">{{ $stats['correct_mcqs'] }} Correct out of 600 MCQs</p>
@@ -89,7 +91,9 @@
             <div class="analytics-metric-box">
                 <div class="d-flex align-items-center justify-content-between mb-2">
                     <span class="text-xs fw-bold text-uppercase text-muted">Average Score</span>
-                    <span class="badge bg-primary bg-opacity-10 text-primary fw-bold">Steady</span>
+                    <span class="badge-status badge-status-primary">
+                        <i class="fa-solid fa-chart-line"></i> Steady
+                    </span>
                 </div>
                 <div class="h3 fw-bold text-dark mb-1">{{ $stats['avg_score'] }}%</div>
                 <p class="text-muted text-xs mb-0">Based on 6 grand &amp; unit tests</p>
@@ -100,7 +104,9 @@
             <div class="analytics-metric-box">
                 <div class="d-flex align-items-center justify-content-between mb-2">
                     <span class="text-xs fw-bold text-uppercase text-muted">Study Dedication</span>
-                    <span class="badge bg-warning bg-opacity-10 text-warning fw-bold">5-Day Streak</span>
+                    <span class="badge-status badge-status-warning">
+                        <i class="fa-solid fa-fire"></i> 5-Day Streak
+                    </span>
                 </div>
                 <div class="h3 fw-bold text-dark mb-1">{{ $stats['hours_studied'] }} hrs</div>
                 <p class="text-muted text-xs mb-0">Video lectures &amp; practice hours</p>
@@ -111,7 +117,9 @@
             <div class="analytics-metric-box">
                 <div class="d-flex align-items-center justify-content-between mb-2">
                     <span class="text-xs fw-bold text-uppercase text-muted">Projected MDCAT</span>
-                    <span class="badge bg-info bg-opacity-10 text-info fw-bold">Target Ready</span>
+                    <span class="badge-status badge-status-info">
+                        <i class="fa-solid fa-bullseye"></i> Target Ready
+                    </span>
                 </div>
                 <div class="h3 fw-bold text-dark mb-1">168 - 176</div>
                 <p class="text-muted text-xs mb-0">Out of 200 (Medical College Merit Zone)</p>
@@ -129,18 +137,24 @@
                         <h2 class="h5 fw-bold text-dark mb-0">Subject Accuracy &amp; Mastery</h2>
                         <span class="text-muted text-xs">Derived from your mock tests and quizzes</span>
                     </div>
-                    <span class="badge bg-light text-dark border px-2 py-1 text-xs fw-semibold">PMDC Weightage</span>
+                    <span class="badge-status badge-status-light">PMDC Weightage</span>
                 </div>
 
                 @foreach ($subjectReadiness as $subKey => $subject)
+                    @php
+                        $statusClass = $subject['status'] === 'Strong' ? 'badge-status-success' : ($subject['status'] === 'Good' ? 'badge-status-info' : 'badge-status-warning');
+                        $fillGradient = $subject['status'] === 'Strong' 
+                            ? 'linear-gradient(90deg, #10b981, #059669)' 
+                            : ($subject['status'] === 'Good' ? 'linear-gradient(90deg, #3b82f6, #2563eb)' : 'linear-gradient(90deg, #f59e0b, #d97706)');
+                    @endphp
                     <div class="subject-stat-card">
-                        <div class="d-flex align-items-center justify-content-between mb-1">
+                        <div class="d-flex align-items-center justify-content-between mb-2">
                             <div class="d-flex align-items-center gap-2">
                                 <i class="{{ $subject['icon'] }}" style="color: {{ $subject['color'] }}; font-size: 16px;"></i>
                                 <span class="fw-bold text-dark" style="font-size: 14.5px;">{{ $subject['name'] }}</span>
                             </div>
                             <div class="d-flex align-items-center gap-2">
-                                <span class="badge" style="background: {{ $subject['color'] }}20; color: {{ $subject['color'] }}; font-size: 11px;">
+                                <span class="badge-status {{ $statusClass }}" style="font-size: 11px;">
                                     {{ $subject['status'] }}
                                 </span>
                                 <span class="fw-bold text-dark" style="font-size: 14px;">{{ $subject['percentage'] }}%</span>
@@ -148,13 +162,13 @@
                         </div>
 
                         {{-- Progress Track --}}
-                        <div class="accuracy-track">
-                            <div class="accuracy-fill" style="width: {{ $subject['percentage'] }}%; background: {{ $subject['color'] }};"></div>
+                        <div class="std-progress-track">
+                            <div class="std-progress-fill" style="width: {{ $subject['percentage'] }}%; background: {{ $fillGradient }};"></div>
                         </div>
 
-                        <div class="d-flex align-items-center justify-content-between text-xs text-muted mt-2 pt-1">
+                        <div class="d-flex align-items-center justify-content-between text-xs text-dark mt-2 pt-1 font-semibold">
                             <span><b>Solved:</b> {{ $subject['correct'] }}/{{ $subject['attempted'] }} Correct</span>
-                            <span class="text-danger text-opacity-80"><b>Weak:</b> {{ $subject['weak_areas'] }}</span>
+                            <span class="text-danger fw-bold"><i class="fa-solid fa-triangle-exclamation me-1"></i> Focus: {{ $subject['weak_areas'] }}</span>
                         </div>
                     </div>
                 @endforeach
@@ -169,18 +183,21 @@
                         <h2 class="h5 fw-bold text-dark mb-0">Diagnostic Revision Plan</h2>
                         <span class="text-muted text-xs">Targeted weak areas that will raise your score</span>
                     </div>
-                    <span class="badge bg-primary bg-opacity-10 text-primary px-2 py-1 text-xs fw-semibold">Action Items</span>
+                    <span class="badge-status badge-status-primary">Action Items</span>
                 </div>
 
                 <div class="d-flex flex-column gap-2 mb-3">
                     @foreach ($actionPlan as $plan)
+                        @php
+                            $planBadgeClass = $plan['badge_color'] === 'danger' ? 'badge-status-danger' : ($plan['badge_color'] === 'warning' ? 'badge-status-warning' : 'badge-status-success');
+                        @endphp
                         <div class="action-plan-item priority-{{ $plan['badge_color'] }}">
                             <div class="d-flex align-items-center justify-content-between mb-1">
                                 <span class="fw-bold text-dark" style="font-size: 14px;">
                                     <i class="fa-solid fa-triangle-exclamation text-{{ $plan['badge_color'] }} me-1"></i>
                                     {{ $plan['subject'] }}: {{ $plan['topic'] }}
                                 </span>
-                                <span class="badge bg-{{ $plan['badge_color'] }} bg-opacity-10 text-{{ $plan['badge_color'] }} text-xs">
+                                <span class="badge-status {{ $planBadgeClass }}" style="font-size: 10.5px;">
                                     {{ $plan['badge'] }}
                                 </span>
                             </div>
@@ -257,9 +274,15 @@
                                 </div>
                             </td>
                             <td>
-                                <span class="badge {{ $test['status'] === 'Passed' ? 'bg-success-subtle text-success' : 'bg-warning-subtle text-warning' }} px-2 py-1 rounded-pill fw-semibold text-xs">
-                                    {{ $test['status'] }}
-                                </span>
+                                @if ($test['status'] === 'Passed')
+                                    <span class="badge-status badge-status-success">
+                                        <i class="fa-solid fa-circle-check"></i> Passed
+                                    </span>
+                                @else
+                                    <span class="badge-status badge-status-warning">
+                                        <i class="fa-solid fa-rotate-left"></i> Needs Review
+                                    </span>
+                                @endif
                             </td>
                             <td class="text-end">
                                 <a href="{{ route('student.tests') }}" class="btn btn-sm btn-light border py-1 px-3 text-xs fw-semibold text-primary">

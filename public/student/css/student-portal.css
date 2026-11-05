@@ -322,6 +322,159 @@ body {
 }
 
 /* ----------------------------------------------------
+   STATUS BADGES & PILLS - HIGH CONTRAST & CRYSTAL CLEAR READABILITY
+---------------------------------------------------- */
+.badge,
+.badge-status,
+.std-status-badge {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 5px !important;
+    font-size: 11.5px !important;
+    font-weight: 700 !important;
+    line-height: 1.2 !important;
+    padding: 4px 10px !important;
+    border-radius: 20px !important;
+    letter-spacing: 0.2px !important;
+    white-space: nowrap !important;
+}
+
+/* Success / Passed / Strong / Active */
+.badge-status-success,
+.status-pill-success,
+.badge.bg-success,
+.badge.bg-success-subtle,
+.badge.text-success {
+    background-color: #dcfce7 !important;
+    color: #14532d !important; /* Deep forest green - 100% visible */
+    border: 1px solid #86efac !important;
+}
+.badge-status-success i,
+.badge.text-success i {
+    color: #16a34a !important;
+}
+
+/* Warning / Review / Needs Work / Streak */
+.badge-status-warning,
+.status-pill-warning,
+.badge.bg-warning,
+.badge.bg-warning-subtle,
+.badge.text-warning {
+    background-color: #fef3c7 !important;
+    color: #78350f !important; /* Deep dark amber/brown - 100% visible */
+    border: 1px solid #fcd34d !important;
+}
+.badge-status-warning i,
+.badge.text-warning i {
+    color: #d97706 !important;
+}
+
+/* Danger / Hard / Failed / High Priority */
+.badge-status-danger,
+.status-pill-danger,
+.badge.bg-danger,
+.badge.bg-danger-subtle,
+.badge.text-danger {
+    background-color: #fee2e2 !important;
+    color: #991b1b !important; /* Deep dark crimson red */
+    border: 1px solid #fca5a5 !important;
+}
+.badge-status-danger i,
+.badge.text-danger i {
+    color: #dc2626 !important;
+}
+
+/* Primary / Purple */
+.badge-status-primary,
+.status-pill-primary,
+.badge.bg-primary,
+.badge.bg-primary-subtle,
+.badge.text-primary {
+    background-color: #ede9fe !important;
+    color: #4338ca !important; /* Deep rich violet indigo */
+    border: 1px solid #c4b5fd !important;
+}
+.badge-status-primary i,
+.badge.text-primary i {
+    color: #6366f1 !important;
+}
+
+/* Info / Cyan / Blue */
+.badge-status-info,
+.status-pill-info,
+.badge.bg-info,
+.badge.bg-info-subtle,
+.badge.text-info {
+    background-color: #e0f2fe !important;
+    color: #0369a1 !important; /* Deep rich ocean blue */
+    border: 1px solid #7dd3fc !important;
+}
+.badge-status-info i,
+.badge.text-info i {
+    color: #0284c7 !important;
+}
+
+/* Light / Neutral Badge */
+.badge-status-light,
+.badge.bg-light {
+    background-color: #f1f5f9 !important;
+    color: #334155 !important;
+    border: 1px solid #cbd5e1 !important;
+}
+
+/* ----------------------------------------------------
+   PROGRESS & STATUS BARS - RICH GRADIENTS & VISIBILITY
+---------------------------------------------------- */
+.std-progress-track,
+.progress {
+    height: 9px !important;
+    background-color: #e2e8f0 !important;
+    border-radius: 20px !important;
+    overflow: hidden !important;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.08) !important;
+    margin-top: 8px !important;
+}
+
+.std-progress-fill,
+.progress-bar {
+    height: 100% !important;
+    border-radius: 20px !important;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* Progress Bar Color Classes */
+.progress-bar.bg-success,
+.std-progress-fill.fill-success {
+    background: linear-gradient(90deg, #10b981, #059669) !important;
+}
+.progress-bar.bg-primary,
+.std-progress-fill.fill-primary {
+    background: linear-gradient(90deg, #5C32FF, #4338ca) !important;
+}
+.progress-bar.bg-warning,
+.std-progress-fill.fill-warning {
+    background: linear-gradient(90deg, #f59e0b, #d97706) !important;
+}
+.progress-bar.bg-info,
+.std-progress-fill.fill-info {
+    background: linear-gradient(90deg, #3b82f6, #1d4ed8) !important;
+}
+.progress-bar.bg-danger,
+.std-progress-fill.fill-danger {
+    background: linear-gradient(90deg, #ef4444, #b91c1c) !important;
+}
+
+/* Navbar Countdown Pill High Contrast */
+.navbar-countdown-pill {
+    background: #f5f3ff !important;
+    border: 1.5px solid #c4b5fd !important;
+    color: #1e1b4b !important;
+}
+.navbar-countdown-pill b {
+    color: #4338ca !important;
+}
+
+/* ----------------------------------------------------
    RESPONSIVE MOBILE
 ---------------------------------------------------- */
 @media (max-width: 991.98px) {

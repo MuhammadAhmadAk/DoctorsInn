@@ -149,12 +149,12 @@
                 <div class="d-flex align-items-center justify-content-lg-end gap-3">
                     {{-- Progress Summary --}}
                     <div class="text-end d-none d-sm-block">
-                        <div class="text-xs text-muted mb-1" id="progress-ratio">0/0 Lessons Done</div>
-                        <div class="progress" style="width: 140px; height: 6px; border-radius: 10px;">
-                            <div class="progress-bar bg-success rounded-pill" id="study-progress-bar" style="width: 0%;"></div>
+                        <div class="text-xs text-dark fw-bold mb-1" id="progress-ratio">0/0 Lessons Done</div>
+                        <div class="std-progress-track mt-0" style="width: 140px; height: 8px;">
+                            <div class="std-progress-fill fill-success" id="study-progress-bar" style="width: 0%;"></div>
                         </div>
                     </div>
-                    <span class="badge bg-primary px-3 py-2 rounded-pill fw-bold" id="progress-percent" style="font-size: 12px;">0% Complete</span>
+                    <span class="badge-status badge-status-primary px-3 py-2 fw-bold" id="progress-percent" style="font-size: 12px;">0% Complete</span>
                 </div>
             </div>
         </div>

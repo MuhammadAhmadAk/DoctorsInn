@@ -7,7 +7,9 @@
 
         <div class="d-none d-sm-block">
             <span class="text-muted fw-semibold" style="font-size: 13px;">Portal Session:</span>
-            <span class="badge bg-success bg-opacity-10 text-success fw-bold ms-1" style="font-size: 11.5px;">Active Student</span>
+            <span class="badge-status badge-status-success ms-1" style="font-size: 11px;">
+                <i class="fa-solid fa-circle-check"></i> Active Student
+            </span>
         </div>
     </div>
 

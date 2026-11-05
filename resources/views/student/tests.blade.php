@@ -65,7 +65,7 @@
             <p class="text-muted text-sm mb-0">Simulate real PMDC &amp; NUMS computer-based exams with timer, negative marking, and instant solutions.</p>
         </div>
         <div class="d-flex align-items-center gap-2">
-            <span class="badge bg-success bg-opacity-10 text-success fw-bold px-3 py-2 rounded-pill" style="font-size: 12.5px;">
+            <span class="badge-status badge-status-success px-3 py-2" style="font-size: 12.5px;">
                 <i class="fa-solid fa-circle-check me-1"></i> PMDC 2026 Test Engine Active
             </span>
         </div>
@@ -156,7 +156,10 @@
                             <i class="fa-solid fa-stethoscope"></i>
                             <span>{{ strtoupper($test['category_name'] ?? $category) }}</span>
                         </span>
-                        <span class="badge {{ $difficulty === 'Hard' ? 'bg-danger-subtle text-danger' : 'bg-success-subtle text-success' }} px-2 py-1 rounded-2 fw-bold" style="font-size: 11px;">
+                        @php
+                            $diffClass = $difficulty === 'Hard' ? 'badge-status-danger' : 'badge-status-success';
+                        @endphp
+                        <span class="badge-status {{ $diffClass }}" style="font-size: 11px; padding: 2px 8px;">
                             {{ $difficulty }}
                         </span>
                     </div>

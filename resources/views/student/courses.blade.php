@@ -102,8 +102,12 @@
         <div class="row align-items-center gy-2">
             <div class="col-md-6">
                 <div class="d-flex align-items-center gap-2">
-                    <span class="badge bg-primary px-3 py-2 rounded-pill fw-bold" style="font-size: 12px;">Active Enrolled ({{ count($courses) }})</span>
-                    <span class="badge bg-light text-muted px-3 py-2 rounded-pill fw-semibold border" style="font-size: 12px;">MDCAT / NUMS Track</span>
+                    <span class="badge-status badge-status-primary px-3 py-2" style="font-size: 12px;">
+                        <i class="fa-solid fa-graduation-cap me-1"></i> Active Enrolled ({{ count($courses) }})
+                    </span>
+                    <span class="badge-status badge-status-light px-3 py-2" style="font-size: 12px;">
+                        <i class="fa-solid fa-stethoscope me-1 text-primary"></i> MDCAT / NUMS Track
+                    </span>
                 </div>
             </div>
             <div class="col-md-6 text-md-end">
@@ -153,12 +157,13 @@
 
                         {{-- Progress Bar --}}
                         <div class="mt-auto">
-                            <div class="d-flex align-items-center justify-content-between text-xs fw-semibold mb-1">
-                                <span class="text-primary">{{ $progressPercent }}% Syllabus Covered</span>
-                                <span class="text-muted">{{ $completedLessons }}/{{ $totalLessons }} Units</span>
+                            <div class="d-flex align-items-center justify-content-between text-xs fw-bold mb-1">
+                                <span style="color: #4338ca !important;">{{ $progressPercent }}% Syllabus Covered</span>
+                                <span class="text-dark fw-bold">{{ $completedLessons }}/{{ $totalLessons }} Units</span>
                             </div>
-                            <div class="course-progress-bar">
-                                <div class="course-progress-fill" style="width: {{ $progressPercent }}%;"></div>
+                            <div class="std-progress-track mb-3">
+                                <div class="std-progress-fill fill-primary" style="width: {{ $progressPercent }}%;"></div>
+                            </div>
                             </div>
 
                             {{-- Chips --}}
