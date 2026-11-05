@@ -33,3 +33,4 @@
 - `f9c6c5a` :: "2026-11-06 | 12:32 AM" - "style: fix status bars, badges, and progress tracks with high-contrast text and vibrant gradient fills"
 - `19deb81` :: "2026-11-06 | 12:42 AM" - "style: clean student portal UI from AI tropes into human-designed minimal SaaS aesthetic"
 - `cf5a732` :: "2026-11-06 | 12:52 AM" - "fix: prevent navbar profile and student pill from wrapping below logo on desktop"
+- `6e12e0d` :: "2026-11-06 | 01:05 AM" - "feat: implement unified clickable student profile dropdown and clean navbar without dashboard"
