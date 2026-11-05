@@ -106,6 +106,16 @@ class StudentAuthController extends Controller
      */
     public function register(Request $request)
     {
+        $fullName = trim($request->input('name') ?: trim($request->input('firstname', '') . ' ' . $request->input('lastname', '')));
+        if (empty($fullName)) {
+            $fullName = 'Student';
+        }
+        $request->merge(['name' => $fullName]);
+
+        if ($request->filled('confirm_password') && !$request->filled('password_confirmation')) {
+            $request->merge(['password_confirmation' => $request->input('confirm_password')]);
+        }
+
         $request->validate([
             'name' => 'required|string|max:120',
             'email' => 'required|string|email|max:150|unique:users,email',
