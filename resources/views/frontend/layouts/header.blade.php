@@ -130,12 +130,10 @@
                                             <span class="notification-dot"></span>
                                         </a>
 
-                                        {{-- Clickable Profile Trigger & Menu --}}
+                                        {{-- Clickable Circular Profile Avatar --}}
                                         <div class="dropdown header-user-dropdown position-relative">
-                                            <button class="header-profile-btn" type="button" id="headerUserMenuBtn" data-bs-toggle="dropdown" aria-expanded="false">
-                                                <img src="{{ asset($currentUserAvatar) }}" alt="{{ $currentUserName }}" class="header-profile-avatar">
-                                                <span class="header-profile-name d-none d-sm-inline">{{ Str::limit($currentUserName, 15) }}</span>
-                                                <i class="fa-solid fa-chevron-down header-profile-chevron ms-1"></i>
+                                            <button class="header-profile-avatar-btn" type="button" id="headerUserMenuBtn" data-bs-toggle="dropdown" aria-expanded="false" title="{{ $currentUserName }}">
+                                                <img src="{{ asset($currentUserAvatar) }}" alt="{{ $currentUserName }}" class="header-avatar-circle">
                                             </button>
 
                                             <!-- Dropdown Menu -->

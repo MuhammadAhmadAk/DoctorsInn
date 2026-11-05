@@ -36858,69 +36858,48 @@ textarea.custom-form-control {
    HEADER PROFILE & AUTH ACTIONS (PIXEL PERFECT LAYOUT)
    ======================================================== */
 
-/* Header User Dropdown & Interactive Profile Button */
+/* Header User Dropdown & Interactive Profile Avatar Button */
 .header-user-dropdown {
     position: relative !important;
-    display: inline-block !important;
-}
-
-.header-profile-btn {
     display: inline-flex !important;
     align-items: center !important;
-    gap: 8px !important;
-    padding: 3px 12px 3px 3px !important;
-    background: #ffffff !important;
-    border: 1.5px solid rgba(92, 50, 255, 0.25) !important;
-    border-radius: 50px !important;
-    color: #1e293b !important;
+}
+
+.header-profile-avatar-btn {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
     cursor: pointer !important;
-    transition: all 0.2s ease !important;
-    box-shadow: 0 2px 6px rgba(92, 50, 255, 0.08) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 50% !important;
     outline: none !important;
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
-.header-profile-btn:hover,
-.header-profile-btn[aria-expanded="true"],
-.header-user-dropdown.show .header-profile-btn {
-    background: #f5f3ff !important;
-    border-color: #5C32FF !important;
-    box-shadow: 0 4px 14px rgba(92, 50, 255, 0.16) !important;
-}
-
-.header-profile-btn::after {
+.header-profile-avatar-btn::after {
     display: none !important;
 }
 
-.header-profile-avatar {
-    width: 32px !important;
-    height: 32px !important;
+.header-avatar-circle {
+    width: 40px !important;
+    height: 40px !important;
     border-radius: 50% !important;
     object-fit: cover !important;
-    border: 1.5px solid #5C32FF !important;
-    flex-shrink: 0 !important;
+    border: 2px solid #5C32FF !important;
+    box-shadow: 0 2px 8px rgba(92, 50, 255, 0.18) !important;
+    transition: all 0.2s ease !important;
+    display: block !important;
 }
 
-.header-profile-name {
-    color: #0f172a !important;
-    font-size: 13px !important;
-    font-weight: 700 !important;
-    font-family: var(--title-font, sans-serif) !important;
-    line-height: 1 !important;
-    white-space: nowrap !important;
-    max-width: 140px !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-}
-
-.header-profile-chevron {
-    font-size: 10px !important;
-    color: #64748b !important;
-    transition: transform 0.2s ease !important;
-}
-
-.header-profile-btn[aria-expanded="true"] .header-profile-chevron,
-.header-user-dropdown.show .header-profile-chevron {
-    transform: rotate(180deg) !important;
+.header-profile-avatar-btn:hover .header-avatar-circle,
+.header-profile-avatar-btn[aria-expanded="true"] .header-avatar-circle,
+.header-user-dropdown.show .header-avatar-circle {
+    transform: scale(1.06) !important;
+    box-shadow: 0 4px 14px rgba(92, 50, 255, 0.35) !important;
+    border-color: #4a24db !important;
 }
 
 /* SaaS Profile Dropdown Menu */

@@ -6,7 +6,7 @@
     function initHeaderProfileDropdown() {
         // Handle click on profile button or trigger
         document.addEventListener('click', function (e) {
-            var trigger = e.target.closest('#headerUserMenuBtn, .header-profile-btn, .profile-avatar-trigger');
+            var trigger = e.target.closest('#headerUserMenuBtn, .header-profile-avatar-btn, .header-profile-btn, .profile-avatar-trigger');
             
             if (trigger) {
                 e.preventDefault();
@@ -55,7 +55,7 @@
         document.querySelectorAll('.header-user-dropdown.show, .dropdown.show').forEach(function (d) {
             d.classList.remove('show');
         });
-        document.querySelectorAll('#headerUserMenuBtn, .header-profile-btn, .profile-avatar-trigger').forEach(function (btn) {
+        document.querySelectorAll('#headerUserMenuBtn, .header-profile-avatar-btn, .header-profile-btn, .profile-avatar-trigger').forEach(function (btn) {
             btn.setAttribute('aria-expanded', 'false');
         });
     }
