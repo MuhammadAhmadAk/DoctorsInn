@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -12,11 +13,30 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
+        // 1. Executive Administrator
+        User::updateOrCreate(
+            ['email' => 'admin@doctorsinn.pk'],
+            [
+                'name' => 'Dr. M. Ahmad',
+                'phone' => '+92 300 1234567',
+                'role' => 'admin',
+                'avatar' => 'frontend/img/team/team_2_1.jpg',
+                'password' => Hash::make('admin123'),
+                'email_verified_at' => now(),
+            ]
+        );
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        // 2. Demo Student Account
+        User::updateOrCreate(
+            ['email' => 'student@doctorsinn.pk'],
+            [
+                'name' => 'MDCAT Aspirant',
+                'phone' => '+92 312 9876543',
+                'role' => 'student',
+                'avatar' => 'frontend/img/testimonial/testi_2_1.png',
+                'password' => Hash::make('12345678'),
+                'email_verified_at' => now(),
+            ]
+        );
     }
 }
