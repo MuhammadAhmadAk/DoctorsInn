@@ -30,12 +30,14 @@
         box-shadow: 0 10px 30px rgba(92, 50, 255, 0.08), 0 2px 8px rgba(0, 0, 0, 0.03);
         border: 1px solid rgba(92, 50, 255, 0.12);
     }
-    .auth-brand-logo {
-        height: 28px;
-        width: auto;
-        display: block;
-        margin: 0 auto 12px auto;
-        object-fit: contain;
+    .auth-brand-logo, img.auth-brand-logo {
+        height: 26px !important;
+        max-height: 26px !important;
+        width: auto !important;
+        max-width: 130px !important;
+        display: block !important;
+        margin: 0 auto 8px auto !important;
+        object-fit: contain !important;
     }
     .auth-card-title {
         font-size: 20px;
@@ -197,8 +199,8 @@
         <div class="auth-compact-card">
 
             {{-- Brand Logo --}}
-            <a href="{{ route('home') }}">
-                <img src="{{ asset('frontend/img/logo/logo.svg') }}" alt="DoctorsInn" class="auth-brand-logo">
+            <a href="{{ route('home') }}" class="d-block text-center mb-2 text-decoration-none">
+                <img src="{{ asset('frontend/img/logo/logo.svg') }}" alt="DoctorsInn" class="auth-brand-logo" style="height: 26px !important; max-height: 26px !important; width: auto !important; max-width: 130px !important; display: inline-block !important; margin: 0 auto !important; object-fit: contain !important;">
             </a>
 
             {{-- Title & Subtitle --}}
