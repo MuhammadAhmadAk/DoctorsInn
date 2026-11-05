@@ -18,7 +18,7 @@ class StudentAuthController extends Controller
     {
         if (Auth::check() || session()->has('user')) {
             $redirect = $request->query('redirect');
-            return $redirect ? redirect($redirect) : redirect()->route('student.dashboard');
+            return $redirect ? redirect($redirect) : redirect()->route('home');
         }
 
         return view('frontend.pages.authentication.login');
@@ -63,7 +63,7 @@ class StudentAuthController extends Controller
                 return redirect($redirectUrl)->with('success', 'Welcome back, ' . $user->name . '!');
             }
 
-            return redirect()->route('student.dashboard')->with('success', 'Welcome back, ' . $user->name . '!');
+            return redirect()->route('home')->with('success', 'Welcome back, ' . $user->name . '!');
         }
 
         // 2. Demo fallback for student@doctorsinn.pk
@@ -81,7 +81,7 @@ class StudentAuthController extends Controller
                 ],
             ]);
 
-            return redirect()->route('student.dashboard')->with('success', 'Welcome back, MDCAT Aspirant!');
+            return redirect()->route('home')->with('success', 'Welcome back, MDCAT Aspirant!');
         }
 
         return back()
@@ -95,7 +95,7 @@ class StudentAuthController extends Controller
     public function showRegisterForm(Request $request)
     {
         if (Auth::check() || session()->has('user')) {
-            return redirect()->route('student.dashboard');
+            return redirect()->route('home');
         }
 
         return view('frontend.pages.authentication.register');
@@ -168,7 +168,7 @@ class StudentAuthController extends Controller
             return redirect($redirectUrl)->with('success', 'Account created successfully! Welcome to DoctorsInn, ' . $user->name . '.');
         }
 
-        return redirect()->route('student.dashboard')->with('success', 'Account created successfully! Welcome to DoctorsInn, ' . $user->name . '. Explore your courses below.');
+        return redirect()->route('home')->with('success', 'Account created successfully! Welcome to DoctorsInn, ' . $user->name . '.');
     }
 
     /**
@@ -200,7 +200,7 @@ class StudentAuthController extends Controller
      */
     public function handleGoogleCallback(Request $request)
     {
-        $redirectUrl = session()->pull('auth_redirect', route('student.dashboard'));
+        $redirectUrl = session()->pull('auth_redirect', route('home'));
 
         try {
             $googleUser = Socialite::driver('google')->user();

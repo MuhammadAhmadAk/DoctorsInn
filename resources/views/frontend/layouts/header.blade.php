@@ -59,12 +59,9 @@
                             $loggedInUser = auth()->user() ?? session('user');
                         @endphp
                         @if ($loggedInUser)
-                            <li><a href="{{ route('student.dashboard') }}" class="fw-bold" style="color: #5C32FF;">Student LMS Portal</a></li>
-                            <li><a href="{{ route('student.courses') }}">My Courses</a></li>
-                            <li><a href="{{ route('student.tests') }}">Mock Tests</a></li>
-                            <li><a href="{{ route('student.elibrary') }}">E-Library Vault</a></li>
-                            <li><a href="{{ route('student.settings') }}">Profile &amp; Settings ({{ $loggedInUser['name'] ?? 'Student' }})</a></li>
-                            <li><a href="{{ route('logout') }}">Logout</a></li>
+                            <li><a href="{{ route('student.dashboard') }}" class="fw-bold" style="color: #5C32FF;"><i class="fa-solid fa-gauge-high me-2"></i> LMS Dashboard</a></li>
+                            <li><a href="{{ route('student.settings') }}"><i class="fa-regular fa-user me-2"></i> Profile &amp; Settings</a></li>
+                            <li><a href="{{ route('logout') }}" class="text-danger"><i class="fa-solid fa-arrow-right-from-bracket me-2"></i> Logout</a></li>
                         @else
                             <li><a href="{{ route('login') }}">Login</a></li>
                             <li><a href="{{ route('register') }}">Register</a></li>
@@ -157,32 +154,14 @@
                                                 <li>
                                                     <a href="{{ route('student.settings') }}" class="dropdown-item profile-menu-item">
                                                         <i class="fa-regular fa-user me-2 text-info"></i>
-                                                        <span>My Profile &amp; Settings</span>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{ route('student.courses') }}" class="dropdown-item profile-menu-item">
-                                                        <i class="fa-solid fa-graduation-cap me-2 text-warning"></i>
-                                                        <span>My Courses</span>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{ route('student.tests') }}" class="dropdown-item profile-menu-item">
-                                                        <i class="fa-solid fa-list-check me-2 text-success"></i>
-                                                        <span>Mock Tests</span>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{ route('student.elibrary') }}" class="dropdown-item profile-menu-item">
-                                                        <i class="fa-solid fa-book-medical me-2 text-secondary"></i>
-                                                        <span>E-Library Vault</span>
+                                                        <span>Profile</span>
                                                     </a>
                                                 </li>
                                                 <li><hr class="dropdown-divider my-1"></li>
                                                 <li>
                                                     <a href="{{ route('logout') }}" class="dropdown-item profile-menu-item text-danger">
                                                         <i class="fa-solid fa-arrow-right-from-bracket me-2 text-danger"></i>
-                                                        <span>Log Out</span>
+                                                        <span>Logout</span>
                                                     </a>
                                                 </li>
                                             </ul>
