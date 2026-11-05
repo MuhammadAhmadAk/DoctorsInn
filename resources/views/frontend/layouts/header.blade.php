@@ -1,3 +1,9 @@
+@php
+    $currentUser = auth()->user() ?? session('user');
+    $currentUserName = is_array($currentUser) ? ($currentUser['name'] ?? 'Student') : ($currentUser->name ?? 'Student');
+    $currentUserEmail = is_array($currentUser) ? ($currentUser['email'] ?? '') : ($currentUser->email ?? '');
+    $currentUserAvatar = is_array($currentUser) ? ($currentUser['avatar'] ?? 'frontend/img/testimonial/testi_2_1.png') : ($currentUser->avatar ?? 'frontend/img/testimonial/testi_2_1.png');
+@endphp
 <!doctype html>
 <html class="no-js" lang="zxx" dir="ltr">
 
@@ -107,14 +113,6 @@
                                     <li><a href="{{ route('course') }}">Courses</a></li>
                                     <li><a href="{{ route('e-library') }}">E-Library</a></li>
                                     <li><a href="{{ route('tests') }}">Mock Tests</a></li>
-                                    @php
-                                        $currentUser = $loggedInUser ?? (auth()->user() ?? session('user'));
-                                    @endphp
-                                    @if ($currentUser)
-                                        <li><a href="{{ route('student.dashboard') }}" class="fw-bold" style="color: #5C32FF;"><i class="fa-solid fa-gauge-high me-1"></i> Dashboard</a></li>
-                                    @else
-                                        <li><a href="{{ route('my-courses') }}">My Courses</a></li>
-                                    @endif
                                     <li><a href="{{ route('contact') }}">Contact Us</a></li>
                                 </ul>
                             </nav>
@@ -122,53 +120,74 @@
                                      class="fal fa-bars"></i></button>
                         </div>
 
-                        <div class="col-auto flex-shrink-0 d-none d-lg-block">
+                        <div class="col-auto flex-shrink-0">
                             <div class="header-profile-wrap">
                                 @if ($currentUser)
-                                    {{-- Authenticated Student View --}}
-                                    <div class="header-student-pill">
-                                        <i class="fa-solid fa-user-check me-1"></i>
-                                        <span>{{ $currentUser['name'] ?? 'Student' }}</span>
-                                    </div>
-
+                                    {{-- Authenticated Student Profile & Dropdown --}}
                                     <div class="header-profile-controls">
                                         <a href="{{ route('notifications') }}" class="notification-btn" title="Notifications">
                                             <i class="fa-regular fa-bell"></i>
                                             <span class="notification-dot"></span>
                                         </a>
 
-                                        <div class="profile-avatar-trigger">
-                                            <img src="{{ asset('frontend/img/testimonial/testi_2_1.png') }}"
-                                                alt="{{ $currentUser['name'] ?? 'Student' }}" class="avatar-img">
+                                        {{-- Clickable Profile Trigger & Menu --}}
+                                        <div class="dropdown header-user-dropdown position-relative">
+                                            <button class="header-profile-btn" type="button" id="headerUserMenuBtn" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <img src="{{ asset($currentUserAvatar) }}" alt="{{ $currentUserName }}" class="header-profile-avatar">
+                                                <span class="header-profile-name d-none d-sm-inline">{{ Str::limit($currentUserName, 15) }}</span>
+                                                <i class="fa-solid fa-chevron-down header-profile-chevron ms-1"></i>
+                                            </button>
 
                                             <!-- Dropdown Menu -->
-                                            <div class="profile-dropdown-menu">
-                                                <a href="{{ route('student.dashboard') }}" class="dropdown-item fw-bold" style="color: #5C32FF;">
-                                                    <i class="fa-solid fa-gauge-high"></i>
-                                                    <span>LMS Dashboard</span>
-                                                </a>
-                                                <a href="{{ route('student.courses') }}" class="dropdown-item">
-                                                    <i class="fa-solid fa-graduation-cap"></i>
-                                                    <span>My Courses</span>
-                                                </a>
-                                                <a href="{{ route('student.tests') }}" class="dropdown-item">
-                                                    <i class="fa-solid fa-list-check"></i>
-                                                    <span>Mock Tests</span>
-                                                </a>
-                                                <a href="{{ route('student.elibrary') }}" class="dropdown-item">
-                                                    <i class="fa-solid fa-book-medical"></i>
-                                                    <span>E-Library Vault</span>
-                                                </a>
-                                                <a href="{{ route('student.settings') }}" class="dropdown-item">
-                                                    <i class="fa-regular fa-user"></i>
-                                                    <span>Profile &amp; Settings</span>
-                                                </a>
-                                                <div class="dropdown-divider my-1"></div>
-                                                <a href="{{ route('logout') }}" class="dropdown-item logout-link text-danger">
-                                                    <i class="fa-regular fa-power-off"></i>
-                                                    <span>Log Out</span>
-                                                </a>
-                                            </div>
+                                            <ul class="dropdown-menu dropdown-menu-end header-profile-menu shadow-lg border-0" aria-labelledby="headerUserMenuBtn">
+                                                <li class="header-dropdown-user-info">
+                                                    <div class="user-info-name">{{ $currentUserName }}</div>
+                                                    @if (!empty($currentUserEmail))
+                                                        <div class="user-info-email">{{ $currentUserEmail }}</div>
+                                                    @endif
+                                                    <span class="user-info-badge">
+                                                        <i class="fa-solid fa-circle-check me-1"></i> MDCAT Student
+                                                    </span>
+                                                </li>
+                                                <li><hr class="dropdown-divider my-1"></li>
+                                                <li>
+                                                    <a href="{{ route('student.dashboard') }}" class="dropdown-item profile-menu-item">
+                                                        <i class="fa-solid fa-gauge-high me-2 text-primary"></i>
+                                                        <span>LMS Dashboard</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="{{ route('student.settings') }}" class="dropdown-item profile-menu-item">
+                                                        <i class="fa-regular fa-user me-2 text-info"></i>
+                                                        <span>My Profile &amp; Settings</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="{{ route('student.courses') }}" class="dropdown-item profile-menu-item">
+                                                        <i class="fa-solid fa-graduation-cap me-2 text-warning"></i>
+                                                        <span>My Courses</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="{{ route('student.tests') }}" class="dropdown-item profile-menu-item">
+                                                        <i class="fa-solid fa-list-check me-2 text-success"></i>
+                                                        <span>Mock Tests</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="{{ route('student.elibrary') }}" class="dropdown-item profile-menu-item">
+                                                        <i class="fa-solid fa-book-medical me-2 text-secondary"></i>
+                                                        <span>E-Library Vault</span>
+                                                    </a>
+                                                </li>
+                                                <li><hr class="dropdown-divider my-1"></li>
+                                                <li>
+                                                    <a href="{{ route('logout') }}" class="dropdown-item profile-menu-item text-danger">
+                                                        <i class="fa-solid fa-arrow-right-from-bracket me-2 text-danger"></i>
+                                                        <span>Log Out</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
                                         </div>
                                     </div>
                                 @else
