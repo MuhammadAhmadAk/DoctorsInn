@@ -53,9 +53,11 @@
                             $loggedInUser = auth()->user() ?? session('user');
                         @endphp
                         @if ($loggedInUser)
-                            <li><a href="{{ route('student.dashboard') }}" class="fw-bold" style="color: #5C32FF;">Student Portal</a></li>
-                            <li><a href="{{ route('my-courses') }}">My Courses</a></li>
-                            <li><a href="{{ route('profile') }}">My Profile ({{ $loggedInUser['name'] ?? 'Student' }})</a></li>
+                            <li><a href="{{ route('student.dashboard') }}" class="fw-bold" style="color: #5C32FF;">Student LMS Portal</a></li>
+                            <li><a href="{{ route('student.courses') }}">My Courses</a></li>
+                            <li><a href="{{ route('student.tests') }}">Mock Tests</a></li>
+                            <li><a href="{{ route('student.elibrary') }}">E-Library Vault</a></li>
+                            <li><a href="{{ route('student.settings') }}">Profile &amp; Settings ({{ $loggedInUser['name'] ?? 'Student' }})</a></li>
                             <li><a href="{{ route('logout') }}">Logout</a></li>
                         @else
                             <li><a href="{{ route('login') }}">Login</a></li>
@@ -143,23 +145,23 @@
                                             <div class="profile-dropdown-menu">
                                                 <a href="{{ route('student.dashboard') }}" class="dropdown-item fw-bold" style="color: #5C32FF;">
                                                     <i class="fa-solid fa-gauge-high"></i>
-                                                    <span>Student Portal</span>
+                                                    <span>LMS Dashboard</span>
                                                 </a>
-                                                <a href="{{ route('profile') }}" class="dropdown-item">
-                                                    <i class="fa-regular fa-user"></i>
-                                                    <span>My Profile</span>
-                                                </a>
-                                                <a href="{{ route('my-courses') }}" class="dropdown-item">
+                                                <a href="{{ route('student.courses') }}" class="dropdown-item">
                                                     <i class="fa-solid fa-graduation-cap"></i>
                                                     <span>My Courses</span>
                                                 </a>
-                                                <a href="{{ route('tests') }}" class="dropdown-item">
+                                                <a href="{{ route('student.tests') }}" class="dropdown-item">
                                                     <i class="fa-solid fa-list-check"></i>
                                                     <span>Mock Tests</span>
                                                 </a>
-                                                <a href="{{ route('e-library') }}" class="dropdown-item">
+                                                <a href="{{ route('student.elibrary') }}" class="dropdown-item">
                                                     <i class="fa-solid fa-book-medical"></i>
-                                                    <span>E-Library</span>
+                                                    <span>E-Library Vault</span>
+                                                </a>
+                                                <a href="{{ route('student.settings') }}" class="dropdown-item">
+                                                    <i class="fa-regular fa-user"></i>
+                                                    <span>Profile &amp; Settings</span>
                                                 </a>
                                                 <div class="dropdown-divider my-1"></div>
                                                 <a href="{{ route('logout') }}" class="dropdown-item logout-link text-danger">

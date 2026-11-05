@@ -19,7 +19,7 @@ function getActiveCourseId() {
 
     if (!courseId) {
         const pathParts = window.location.pathname.split('/').filter(Boolean);
-        const studyIdx = pathParts.findIndex(p => p === "my-courses");
+        const studyIdx = pathParts.findIndex(p => p === "my-courses" || p === "classroom");
         if (studyIdx !== -1 && pathParts[studyIdx + 1]) {
             courseId = pathParts[studyIdx + 1];
         }

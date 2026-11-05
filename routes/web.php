@@ -79,7 +79,17 @@ Route::get('/reset-password', [RouteController::class, 'Frontend_ResetPassword']
 // User Account & Student LMS Portal
 use App\Http\Controllers\Student\StudentDashboardController;
 
-Route::get('/student/dashboard', [StudentDashboardController::class, 'dashboard'])->name('student.dashboard');
+Route::prefix('student')->name('student.')->group(function () {
+    Route::get('/dashboard', [StudentDashboardController::class, 'dashboard'])->name('dashboard');
+    Route::get('/courses', [StudentDashboardController::class, 'courses'])->name('courses');
+    Route::get('/classroom/{slug?}', [StudentDashboardController::class, 'classroom'])->name('classroom');
+    Route::get('/tests', [StudentDashboardController::class, 'tests'])->name('tests');
+    Route::get('/elibrary', [StudentDashboardController::class, 'elibrary'])->name('elibrary');
+    Route::get('/analytics', [StudentDashboardController::class, 'analytics'])->name('analytics');
+    Route::get('/settings', [StudentDashboardController::class, 'settings'])->name('settings');
+    Route::post('/settings', [StudentDashboardController::class, 'updateSettings'])->name('settings.update');
+});
+
 Route::get('/dashboard', function () {
     return redirect()->route('student.dashboard');
 })->name('dashboard');
