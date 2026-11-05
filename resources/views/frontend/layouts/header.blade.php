@@ -88,11 +88,11 @@
 
     <header class="th-header header-default">
         <div class="sticky-wrapper">
-            <div class="container">
+            <div class="container-fluid px-3 px-xl-5" style="max-width: 1560px;">
                 <div class="menu-area">
-                    <div class="row align-items-center justify-content-between">
+                    <div class="row align-items-center justify-content-between flex-nowrap">
 
-                        <div class="col-auto">
+                        <div class="col-auto flex-shrink-0">
                             <div class="header-logo">
                                 <a href="{{ route('home') }}"><img src="{{ asset('frontend/img/logo/logo.svg') }}"
                                         alt="DoctorsInnElite"></a>
@@ -122,7 +122,7 @@
                                      class="fal fa-bars"></i></button>
                         </div>
 
-                        <div class="col-auto d-none d-xl-block">
+                        <div class="col-auto flex-shrink-0 d-none d-lg-block">
                             <div class="header-profile-wrap">
                                 @if ($currentUser)
                                     {{-- Authenticated Student View --}}

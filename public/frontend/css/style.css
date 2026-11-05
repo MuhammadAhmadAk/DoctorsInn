@@ -36858,6 +36858,16 @@ textarea.custom-form-control {
    HEADER PROFILE & AUTH ACTIONS (PIXEL PERFECT LAYOUT)
    ======================================================== */
 
+.header-default .main-menu > ul > li {
+    margin: 0 10px !important;
+}
+
+.header-default .main-menu > ul > li > a {
+    font-size: 13.5px !important;
+    letter-spacing: -0.01em !important;
+    padding: 30px 0 !important;
+}
+
 .header-profile-wrap {
     display: inline-flex !important;
     align-items: center !important;
@@ -36877,15 +36887,18 @@ textarea.custom-form-control {
     background: #f5f3ff !important;
     border: 1px solid rgba(92, 50, 255, 0.2) !important;
     color: #5C32FF !important;
-    font-size: 13px !important;
+    font-size: 12px !important;
     font-weight: 700 !important;
     font-family: var(--title-font, sans-serif) !important;
-    padding: 7px 16px !important;
+    padding: 5px 12px !important;
     border-radius: 50px !important;
     line-height: 1.2 !important;
     white-space: nowrap !important;
     flex-shrink: 0 !important;
     margin: 0 !important;
+    max-width: 170px !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
     box-shadow: 0 2px 6px rgba(92, 50, 255, 0.08) !important;
 }
 
@@ -36897,8 +36910,19 @@ textarea.custom-form-control {
 .header-profile-controls {
     display: inline-flex !important;
     align-items: center !important;
-    gap: 12px !important;
+    gap: 10px !important;
     flex-shrink: 0 !important;
+}
+
+.header-profile-controls .notification-btn {
+    width: 38px !important;
+    height: 38px !important;
+    font-size: 16px !important;
+}
+
+.header-profile-controls .profile-avatar-trigger .avatar-img {
+    width: 38px !important;
+    height: 38px !important;
 }
 
 /* Guest Authentication Buttons */
