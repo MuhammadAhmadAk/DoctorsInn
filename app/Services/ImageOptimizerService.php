@@ -8,22 +8,22 @@ use Illuminate\Support\Str;
 class ImageOptimizerService
 {
     /**
-     * Subfolder-specific dimension & quality presets so every section gets appropriately sized WebP assets.
+     * Subfolder-specific dimension, quality, and byte-budget presets.
      *
-     * @var array<string, array{maxWidth:int, maxHeight:int, quality:int}>
+     * @var array<string, array{maxWidth:int, maxHeight:int, quality:int, minQuality:int, targetBytes:int}>
      */
     private const PRESETS = [
-        'testimonials' => ['maxWidth' => 400,  'maxHeight' => 400,  'quality' => 82],
-        'instructors'  => ['maxWidth' => 800,  'maxHeight' => 900,  'quality' => 82],
-        'courses'      => ['maxWidth' => 1200, 'maxHeight' => 900,  'quality' => 82],
-        'blogs'        => ['maxWidth' => 1200, 'maxHeight' => 900,  'quality' => 82],
-        'cms'          => ['maxWidth' => 1600, 'maxHeight' => 1600, 'quality' => 82],
+        'testimonials' => ['maxWidth' => 400,  'maxHeight' => 400,  'quality' => 80, 'minQuality' => 62, 'targetBytes' => 35 * 1024],
+        'instructors'  => ['maxWidth' => 800,  'maxHeight' => 900,  'quality' => 80, 'minQuality' => 62, 'targetBytes' => 65 * 1024],
+        'courses'      => ['maxWidth' => 1200, 'maxHeight' => 900,  'quality' => 80, 'minQuality' => 64, 'targetBytes' => 95 * 1024],
+        'blogs'        => ['maxWidth' => 1200, 'maxHeight' => 900,  'quality' => 80, 'minQuality' => 64, 'targetBytes' => 95 * 1024],
+        'cms'          => ['maxWidth' => 1600, 'maxHeight' => 1600, 'quality' => 80, 'minQuality' => 64, 'targetBytes' => 120 * 1024],
     ];
 
     /**
-     * Store and automatically optimize an uploaded image under public/uploads/{subfolder}.
-     * Resizes oversized raster uploads, corrects EXIF orientation, preserves alpha transparency,
-     * and converts to lightweight WebP when supported by GD or Imagick.
+     * Store and deep-optimize an uploaded image under public/uploads/{subfolder}.
+     * Resizes oversized assets, auto-orients camera EXIF rotation, strips metadata,
+     * preserves alpha transparency, and adaptively encodes to target-sized WebP.
      */
     public static function storeOptimized(?UploadedFile $file, string $subfolder = 'cms', array $options = []): ?string
     {
@@ -42,20 +42,42 @@ class ImageOptimizerService
         $uniquePrefix = $safeBase . '-' . time() . '-' . Str::random(5);
 
         $preset = array_merge(
-            self::PRESETS[$cleanSubfolder] ?? ['maxWidth' => 1400, 'maxHeight' => 1400, 'quality' => 82],
+            self::PRESETS[$cleanSubfolder] ?? [
+                'maxWidth' => 1400,
+                'maxHeight' => 1400,
+                'quality' => 80,
+                'minQuality' => 64,
+                'targetBytes' => 100 * 1024,
+            ],
             $options
         );
 
         $sourcePath = $file->getRealPath();
+
+        if ($ext === 'svg' && $sourcePath) {
+            $svgFilename = $uniquePrefix . '.svg';
+            if (self::storeOptimizedSvg($sourcePath, $targetDir . DIRECTORY_SEPARATOR . $svgFilename)) {
+                return 'uploads/' . $cleanSubfolder . '/' . $svgFilename;
+            }
+        }
+
         if ($sourcePath && self::shouldOptimizeRaster($sourcePath, $ext)) {
             $webpFilename = $uniquePrefix . '.webp';
             $webpPath = $targetDir . DIRECTORY_SEPARATOR . $webpFilename;
 
-            if (self::optimizeToWebp($sourcePath, $webpPath, $ext, $preset['maxWidth'], $preset['maxHeight'], $preset['quality'])) {
+            if (self::optimizeToWebpWithBudget(
+                $sourcePath,
+                $webpPath,
+                $ext,
+                $preset['maxWidth'],
+                $preset['maxHeight'],
+                $preset['quality'],
+                $preset['minQuality'],
+                $preset['targetBytes']
+            )) {
                 $origSize = @filesize($sourcePath) ?: 0;
                 $newSize = @filesize($webpPath) ?: 0;
 
-                // Keep whichever is smaller if the original was already a tiny optimized WebP
                 if ($ext === 'webp' && $origSize > 0 && $newSize >= $origSize) {
                     @unlink($webpPath);
                 } elseif ($newSize > 0) {
@@ -66,11 +88,28 @@ class ImageOptimizerService
             }
         }
 
-        // Passthrough fallback for SVG, animated GIF, or environments without GD/Imagick
         $fallbackFilename = $uniquePrefix . '.' . $ext;
         $file->move($targetDir, $fallbackFilename);
 
         return 'uploads/' . $cleanSubfolder . '/' . $fallbackFilename;
+    }
+
+    /**
+     * Strip redundant XML comments and editor whitespace from uploaded SVG assets.
+     */
+    private static function storeOptimizedSvg(string $sourcePath, string $destPath): bool
+    {
+        $raw = @file_get_contents($sourcePath);
+        if ($raw === false || stripos($raw, '<svg') === false) {
+            return false;
+        }
+
+        $cleaned = preg_replace('/<!--[\s\S]*?-->/', '', $raw) ?? $raw;
+        $cleaned = preg_replace('/\s{2,}/', ' ', $cleaned) ?? $cleaned;
+        $cleaned = preg_replace('/>\s+</', '><', $cleaned) ?? $cleaned;
+        $cleaned = trim($cleaned);
+
+        return @file_put_contents($destPath, strlen($cleaned) < strlen($raw) ? $cleaned : $raw) !== false;
     }
 
     /**
@@ -113,31 +152,90 @@ class ImageOptimizerService
     }
 
     /**
-     * Convert and resize source image to WebP using GD first, falling back to Imagick when needed.
+     * Deep-optimize raster images using Imagick (libwebp method=6 + adaptive target byte budget)
+     * first, with PHP GD as automatic fallback.
      */
-    private static function optimizeToWebp(
+    private static function optimizeToWebpWithBudget(
         string $sourcePath,
         string $destPath,
         string $ext,
         int $maxWidth,
         int $maxHeight,
-        int $quality
+        int $startQuality,
+        int $minQuality,
+        int $targetBytes
     ): bool {
-        if (extension_loaded('gd') && function_exists('imagewebp')) {
-            if (self::optimizeWithGd($sourcePath, $destPath, $ext, $maxWidth, $maxHeight, $quality)) {
+        if (extension_loaded('imagick')) {
+            if (self::optimizeWithImagick($sourcePath, $destPath, $maxWidth, $maxHeight, $startQuality, $minQuality, $targetBytes)) {
                 return true;
             }
         }
 
-        if (extension_loaded('imagick')) {
-            return self::optimizeWithImagick($sourcePath, $destPath, $maxWidth, $maxHeight, $quality);
+        if (extension_loaded('gd') && function_exists('imagewebp')) {
+            return self::optimizeWithGd($sourcePath, $destPath, $ext, $maxWidth, $maxHeight, $startQuality, $minQuality, $targetBytes);
         }
 
         return false;
     }
 
     /**
-     * Optimize raster image using PHP GD with EXIF orientation normalization and alpha support.
+     * Optimize via Imagick with Lanczos downscaling, EXIF stripping, method=6 WebP compression,
+     * and adaptive quality step-down until the output fits the target byte budget.
+     */
+    private static function optimizeWithImagick(
+        string $sourcePath,
+        string $destPath,
+        int $maxWidth,
+        int $maxHeight,
+        int $startQuality,
+        int $minQuality,
+        int $targetBytes
+    ): bool {
+        try {
+            $im = new \Imagick($sourcePath);
+            if (method_exists($im, 'autoOrient')) {
+                $im->autoOrient();
+            }
+
+            $w = $im->getImageWidth();
+            $h = $im->getImageHeight();
+            if ($w > $maxWidth || $h > $maxHeight) {
+                $im->resizeImage($maxWidth, $maxHeight, \Imagick::FILTER_LANCZOS, 1, true);
+            }
+
+            $im->stripImage();
+            $im->setImageFormat('webp');
+            $im->setOption('webp:method', '6');
+            $im->setOption('webp:auto-filter', 'true');
+            $im->setOption('webp:alpha-quality', '90');
+
+            $quality = $startQuality;
+            while (true) {
+                $im->setImageCompressionQuality($quality);
+                if (!$im->writeImage($destPath)) {
+                    $im->clear();
+                    return false;
+                }
+
+                clearstatcache(true, $destPath);
+                $size = @filesize($destPath) ?: 0;
+                if ($size <= $targetBytes || $quality <= $minQuality) {
+                    break;
+                }
+
+                $quality = max($minQuality, $quality - 6);
+            }
+
+            $im->clear();
+            return true;
+        } catch (\Throwable $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Optimize via PHP GD with EXIF orientation normalization, truecolor alpha support,
+     * and iterative quality tuning until the output fits the target byte budget.
      */
     private static function optimizeWithGd(
         string $sourcePath,
@@ -145,7 +243,9 @@ class ImageOptimizerService
         string $ext,
         int $maxWidth,
         int $maxHeight,
-        int $quality
+        int $startQuality,
+        int $minQuality,
+        int $targetBytes
     ): bool {
         try {
             $src = null;
@@ -195,10 +295,25 @@ class ImageOptimizerService
             imagecopyresampled($dst, $src, 0, 0, 0, 0, $newW, $newH, $origW, $origH);
             unset($src);
 
-            $ok = @imagewebp($dst, $destPath, $quality);
-            unset($dst);
+            $ok = false;
+            $quality = $startQuality;
+            while (true) {
+                $ok = (bool) @imagewebp($dst, $destPath, $quality);
+                if (!$ok) {
+                    break;
+                }
 
-            return (bool) $ok;
+                clearstatcache(true, $destPath);
+                $size = @filesize($destPath) ?: 0;
+                if ($size <= $targetBytes || $quality <= $minQuality) {
+                    break;
+                }
+
+                $quality = max($minQuality, $quality - 6);
+            }
+
+            unset($dst);
+            return $ok;
         } catch (\Throwable $e) {
             return false;
         }
@@ -230,39 +345,5 @@ class ImageOptimizerService
         }
 
         return $image;
-    }
-
-    /**
-     * Fallback WebP optimizer using Imagick when GD cannot decode an input format.
-     */
-    private static function optimizeWithImagick(
-        string $sourcePath,
-        string $destPath,
-        int $maxWidth,
-        int $maxHeight,
-        int $quality
-    ): bool {
-        try {
-            $im = new \Imagick($sourcePath);
-            if (method_exists($im, 'autoOrient')) {
-                $im->autoOrient();
-            }
-
-            $w = $im->getImageWidth();
-            $h = $im->getImageHeight();
-            if ($w > $maxWidth || $h > $maxHeight) {
-                $im->resizeImage($maxWidth, $maxHeight, \Imagick::FILTER_LANCZOS, 1, true);
-            }
-
-            $im->stripImage();
-            $im->setImageFormat('webp');
-            $im->setImageCompressionQuality($quality);
-            $ok = $im->writeImage($destPath);
-            $im->clear();
-
-            return (bool) $ok;
-        } catch (\Throwable $e) {
-            return false;
-        }
     }
 }
