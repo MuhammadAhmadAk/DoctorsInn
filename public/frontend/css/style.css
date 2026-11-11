@@ -37338,3 +37338,158 @@ textarea.custom-form-control {
 .test-modal-title {
     font-family: var(--title-font, sans-serif);
 }
+
+/* ========================================================
+   REFINED GLOBAL TYPOGRAPHY SCALE (CLEAN & PROPORTIONAL)
+   ======================================================== */
+body {
+    font-size: 14.5px;
+    line-height: 1.65;
+}
+
+p {
+    font-size: 14.5px;
+    line-height: 1.68;
+}
+
+.h1, h1 {
+    font-size: 46px;
+    line-height: 1.2;
+}
+
+.h2, h2,
+.sec-title {
+    font-size: 34px;
+    line-height: 1.26;
+}
+
+.h3, h3 {
+    font-size: 24px;
+    line-height: 1.32;
+}
+
+.h4, h4 {
+    font-size: 20px;
+    line-height: 1.35;
+}
+
+.h5, h5 {
+    font-size: 17px;
+    line-height: 1.4;
+}
+
+.h6, h6 {
+    font-size: 15px;
+    line-height: 1.45;
+}
+
+/* Hero Typography */
+.hero-title,
+.hero-style2 .hero-title {
+    font-size: 46px !important;
+    line-height: 1.18 !important;
+    margin-bottom: 18px !important;
+}
+
+.hero-text,
+.hero-style2 .hero-text {
+    font-size: 15px !important;
+    line-height: 1.65 !important;
+    margin-bottom: 26px !important;
+}
+
+.hero-style2 .sub-title,
+.sub-title {
+    font-size: 13px !important;
+    letter-spacing: 0.04em !important;
+}
+
+/* Page Breadcrumbs */
+.breadcumb-title {
+    font-size: 38px !important;
+    line-height: 1.2 !important;
+}
+
+/* Cards, Process, Testimonials, CTA & Accordions */
+.about-info-card .box-title,
+.process-card2 .box-title,
+.testi-card2 .box-title,
+.team-card2 .box-title,
+.course-card .box-title,
+.contact-card .box-title {
+    font-size: 18px !important;
+    line-height: 1.38 !important;
+}
+
+.cta-card2 .sec-title {
+    font-size: 23px !important;
+    line-height: 1.35 !important;
+}
+
+.counter-card2 .box-title {
+    font-size: 15px !important;
+}
+
+.accordion-card .accordion-button {
+    font-size: 15.5px !important;
+}
+
+.th-btn {
+    font-size: 13px !important;
+    padding: 14px 26px !important;
+}
+
+/* Footer Typography */
+.footer-wrapper .widget_title {
+    font-size: 18px !important;
+}
+
+.footer-wrapper .about-text,
+.footer-wrapper .box-text,
+.footer-wrapper .menu a,
+.footer-wrapper .copyright-text {
+    font-size: 14px !important;
+}
+
+/* Responsive Scale Adjustments */
+@media (max-width: 1199px) {
+    .h1, h1,
+    .hero-title,
+    .hero-style2 .hero-title {
+        font-size: 38px !important;
+    }
+
+    .h2, h2,
+    .sec-title,
+    .breadcumb-title {
+        font-size: 30px !important;
+    }
+}
+
+@media (max-width: 767px) {
+    body, p {
+        font-size: 14px;
+    }
+
+    .h1, h1,
+    .hero-title,
+    .hero-style2 .hero-title {
+        font-size: 30px !important;
+        line-height: 1.24 !important;
+    }
+
+    .h2, h2,
+    .sec-title,
+    .breadcumb-title {
+        font-size: 25px !important;
+    }
+
+    .h3, h3 {
+        font-size: 20px;
+    }
+
+    .cta-card2 .sec-title {
+        font-size: 20px !important;
+    }
+}
+
