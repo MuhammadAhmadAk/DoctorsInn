@@ -142,7 +142,7 @@
                                         <div class="flex-grow-1">
                                             <input type="file" name="images[{{ $field->key }}]" accept="image/*" class="form-control mb-1"
                                                    onchange="if(this.files[0]){ document.getElementById('prev-{{ $field->key }}').src = URL.createObjectURL(this.files[0]); }">
-                                            <div class="small text-muted" style="font-size: 11px;">Upload new JPG/PNG/WEBP/SVG or edit path below:</div>
+                                            <div class="small text-muted" style="font-size: 11px;">Auto-optimized to fast WebP (or edit path below):</div>
                                         </div>
                                     </div>
                                     <input type="text" name="values[{{ $field->key }}]" class="form-control" value="{{ $field->value }}" placeholder="frontend/img/...">
@@ -196,6 +196,7 @@
                         <div class="mb-3">
                             <label class="form-label small fw-bold">Upload Photo</label>
                             <input type="file" name="image_file" accept="image/*" class="form-control">
+                            <div class="small text-muted mt-1" style="font-size: 11px;">Auto-resized &amp; converted to fast WebP.</div>
                         </div>
                         <button type="submit" class="btn-adm btn-adm-primary w-100 justify-content-center">
                             <i class="fa-solid fa-floppy-disk"></i> Save Instructor
@@ -282,6 +283,7 @@
                         <div class="mb-3">
                             <label class="form-label small fw-bold">Student Photo</label>
                             <input type="file" name="avatar_file" accept="image/*" class="form-control">
+                            <div class="small text-muted mt-1" style="font-size: 11px;">Auto-resized &amp; converted to fast WebP.</div>
                         </div>
                         <button type="submit" class="btn-adm btn-adm-primary w-100 justify-content-center">
                             <i class="fa-solid fa-floppy-disk"></i> Save Testimonial

@@ -148,7 +148,7 @@ class AdminController extends Controller
             'category' => 'required|string',
             'price' => 'required',
             'duration' => 'required|string',
-            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:4096',
+            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,webp,avif,gif|max:8192',
         ]);
 
         $slug = $request->input('slug') ?: Str::slug($request->title);
@@ -297,7 +297,7 @@ class AdminController extends Controller
             'category' => 'required|string|max:80',
             'short_description' => 'nullable|string',
             'content' => 'nullable|string',
-            'image_file' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:4096',
+            'image_file' => 'nullable|image|mimes:jpeg,png,jpg,webp,avif,gif|max:8192',
         ]);
 
         $slug = $request->input('slug') ?: Str::slug($request->title);

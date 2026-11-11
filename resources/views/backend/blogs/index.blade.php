@@ -51,6 +51,7 @@
                 <div class="col-md-6">
                     <label class="form-label small fw-bold">Cover Image</label>
                     <input type="file" name="image_file" accept="image/*" class="form-control">
+                    <div class="small text-muted mt-1" style="font-size: 11px;">Auto-resized &amp; converted to fast WebP on publish.</div>
                 </div>
                 <div class="col-md-6">
                     <label class="form-label small fw-bold">Short Summary</label>

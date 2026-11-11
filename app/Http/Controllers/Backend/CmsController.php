@@ -68,7 +68,7 @@ class CmsController extends Controller
         foreach ($files as $key => $file) {
             if ($file && $file->isValid()) {
                 $request->validate([
-                    "images.{$key}" => 'image|mimes:jpeg,png,jpg,webp,svg,gif|max:4096',
+                    "images.{$key}" => 'image|mimes:jpeg,png,jpg,webp,avif,svg,gif|max:8192',
                 ]);
                 $uploadedPath = SiteContentService::uploadImage($file, 'cms');
                 if ($uploadedPath) {
@@ -97,7 +97,7 @@ class CmsController extends Controller
             'twitter_url' => 'nullable|string|max:255',
             'linkedin_url' => 'nullable|string|max:255',
             'instagram_url' => 'nullable|string|max:255',
-            'image_file' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:4096',
+            'image_file' => 'nullable|image|mimes:jpeg,png,jpg,webp,avif,gif|max:8192',
             'image' => 'nullable|string|max:255',
         ]);
 
@@ -152,7 +152,7 @@ class CmsController extends Controller
             'student_name' => 'required|string|max:120',
             'student_batch' => 'nullable|string|max:150',
             'rating' => 'nullable|string|max:10',
-            'avatar_file' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:3072',
+            'avatar_file' => 'nullable|image|mimes:jpeg,png,jpg,webp,avif,gif|max:8192',
             'avatar' => 'nullable|string|max:255',
         ]);
 

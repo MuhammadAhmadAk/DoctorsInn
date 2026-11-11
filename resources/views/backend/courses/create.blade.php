@@ -442,7 +442,7 @@
                     </div>
                     <input type="file" name="thumbnail" id="courseThumbInput" accept="image/*" class="form-control mb-1"
                            onchange="if(this.files[0]){ document.getElementById('courseThumbPreview').src = URL.createObjectURL(this.files[0]); }">
-                    <div class="text-muted font-10">Recommended 1200×800px (16:9 ratio).</div>
+                    <div class="text-muted font-10">Recommended 1200×800px. Auto-optimized to WebP on upload.</div>
                 </div>
             </div>
 

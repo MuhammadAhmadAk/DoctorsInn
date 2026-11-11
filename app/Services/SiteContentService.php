@@ -44,26 +44,11 @@ class SiteContentService
     }
 
     /**
-     * Upload an image cleanly under public/uploads/{subfolder} (Hostinger-safe, no symlink needed).
+     * Upload and automatically optimize an image (resized + converted to WebP) under public/uploads/{subfolder}.
      */
     public static function uploadImage(?UploadedFile $file, string $subfolder = 'cms'): ?string
     {
-        if (!$file || !$file->isValid()) {
-            return null;
-        }
-
-        $targetDir = public_path('uploads/' . trim($subfolder, '/'));
-        if (!is_dir($targetDir)) {
-            mkdir($targetDir, 0755, true);
-        }
-
-        $ext = strtolower($file->getClientOriginalExtension() ?: 'jpg');
-        $safeName = Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME));
-        $filename = ($safeName ?: 'media') . '-' . time() . '-' . Str::random(5) . '.' . $ext;
-
-        $file->move($targetDir, $filename);
-
-        return 'uploads/' . trim($subfolder, '/') . '/' . $filename;
+        return ImageOptimizerService::storeOptimized($file, $subfolder);
     }
 
     /**
