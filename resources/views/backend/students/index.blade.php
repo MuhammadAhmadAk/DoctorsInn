@@ -49,6 +49,13 @@
                     ['name' => 'Fahad Noor', 'email' => 'fahad.noor@yahoo.com', 'exam' => 'MDCAT 2026', 'course' => 'PMC High-Yield Mastery', 'tests' => 9, 'avg' => '84.0%', 'avatar' => 'team_2_1.jpg'],
                     ['name' => 'Hamza Malik', 'email' => 'hamza.malik@outlook.com', 'exam' => 'Army / AMC', 'course' => 'Army Medical College Elite', 'tests' => 16, 'avg' => '94.0%', 'avatar' => 'team_2_4.jpg'],
                     ['name' => 'Bilal Ahmed', 'email' => 'bilal.ahmed@gmail.com', 'exam' => 'MDCAT 2026', 'course' => 'MDCAT Comprehensive 2026', 'tests' => 6, 'avg' => '78.5%', 'avatar' => 'team_2_1.jpg'],
+                    ['name' => 'Zain ul Abideen', 'email' => 'zain.abideen@gmail.com', 'exam' => 'MDCAT 2026', 'course' => 'MDCAT Reboot (60 Days)', 'tests' => 12, 'avg' => '89.0%', 'avatar' => 'team_2_4.jpg'],
+                    ['name' => 'Saad Abdullah', 'email' => 'saad.abdullah@gmail.com', 'exam' => 'NUMS & AMC', 'course' => 'NUMS Medical Crash Prep', 'tests' => 10, 'avg' => '82.5%', 'avatar' => 'team_2_1.jpg'],
+                    ['name' => 'Hassan Raza', 'email' => 'hassan.raza@outlook.com', 'exam' => 'MDCAT 2026', 'course' => 'PMC High-Yield Mastery', 'tests' => 15, 'avg' => '90.4%', 'avatar' => 'team_2_4.jpg'],
+                    ['name' => 'Talha Mahmood', 'email' => 'talha.m@gmail.com', 'exam' => 'Army / AMC', 'course' => 'Army Medical College Elite', 'tests' => 8, 'avg' => '79.0%', 'avatar' => 'team_2_1.jpg'],
+                    ['name' => 'Umar Farooq', 'email' => 'umar.farooq@gmail.com', 'exam' => 'MDCAT 2026', 'course' => 'MDCAT Comprehensive 2026', 'tests' => 13, 'avg' => '86.2%', 'avatar' => 'team_2_4.jpg'],
+                    ['name' => 'Daniyal Khan', 'email' => 'daniyal.khan@yahoo.com', 'exam' => 'MDCAT 2026', 'course' => 'MDCAT Reboot (60 Days)', 'tests' => 7, 'avg' => '76.8%', 'avatar' => 'team_2_1.jpg'],
+                    ['name' => 'Salman Qureshi', 'email' => 'salman.q@gmail.com', 'exam' => 'NUMS & AMC', 'course' => 'NUMS Medical Crash Prep', 'tests' => 11, 'avg' => '85.1%', 'avatar' => 'team_2_4.jpg'],
                 ];
                 @endphp
 

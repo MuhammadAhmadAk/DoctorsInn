@@ -58,7 +58,7 @@
     <!-- Scripts -->
     <script src="{{ asset('frontend/js/vendor/jquery-3.7.1.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <script src="{{ asset('backend/js/admin.js') }}"></script>
+    <script src="{{ asset('backend/js/admin.js') }}?v={{ file_exists(public_path('backend/js/admin.js')) ? filemtime(public_path('backend/js/admin.js')) : time() }}"></script>
     @yield('extra_js')
 </body>
 

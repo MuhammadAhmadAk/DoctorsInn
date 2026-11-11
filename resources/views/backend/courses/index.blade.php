@@ -34,14 +34,14 @@
             <div class="col-md-5">
                 <div class="nav-search w-100">
                     <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" placeholder="Filter courses by name or subject...">
+                    <input type="text" id="courseSearchInput" placeholder="Filter courses by name or subject...">
                 </div>
             </div>
             <div class="col-md-7 d-flex justify-content-md-end gap-2 flex-wrap">
-                <button class="btn-adm btn-adm-primary py-2 px-3 font-12">All ({{ count(config('courses', [])) }})</button>
-                <button class="btn-adm btn-adm-outline py-2 px-3 font-12">MDCAT</button>
-                <button class="btn-adm btn-adm-outline py-2 px-3 font-12">NUMS</button>
-                <button class="btn-adm btn-adm-outline py-2 px-3 font-12">Army / AMC</button>
+                <button type="button" class="btn-adm btn-adm-primary py-2 px-3 font-12 course-cat-filter active" data-cat="all">All ({{ count(config('courses', [])) }})</button>
+                <button type="button" class="btn-adm btn-adm-outline py-2 px-3 font-12 course-cat-filter" data-cat="mdcat">MDCAT</button>
+                <button type="button" class="btn-adm btn-adm-outline py-2 px-3 font-12 course-cat-filter" data-cat="nums">NUMS</button>
+                <button type="button" class="btn-adm btn-adm-outline py-2 px-3 font-12 course-cat-filter" data-cat="amc">Army / AMC</button>
             </div>
         </div>
     </div>
@@ -57,7 +57,7 @@
         <span class="adm-badge adm-badge-success">All Batches Synced</span>
     </div>
     <div class="table-responsive">
-        <table class="adm-table">
+        <table class="adm-table" id="coursesAdminTable">
             <thead>
                 <tr>
                     <th>Course Details</th>
@@ -122,4 +122,48 @@
         </table>
     </div>
 </div>
+@endsection
+
+@section('extra_js')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const table = document.getElementById('coursesAdminTable');
+    const searchInput = document.getElementById('courseSearchInput');
+    const filterButtons = document.querySelectorAll('.course-cat-filter');
+    let activeCat = 'all';
+
+    function applyCourseFilters() {
+        if (!table || !table._admRows) return;
+        const query = (searchInput ? searchInput.value : '').trim().toLowerCase();
+
+        table._admRows.forEach(function (row) {
+            const text = row.textContent.toLowerCase();
+            const matchesSearch = !query || text.includes(query);
+            const matchesCat = activeCat === 'all' || text.includes(activeCat);
+            row.dataset.admFilteredOut = (matchesSearch && matchesCat) ? 'false' : 'true';
+        });
+
+        if (typeof table._admPaginate === 'function') {
+            table._admPaginate(1);
+        }
+    }
+
+    if (searchInput) {
+        searchInput.addEventListener('input', applyCourseFilters);
+    }
+
+    filterButtons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            filterButtons.forEach(function (b) {
+                b.classList.remove('btn-adm-primary', 'active');
+                b.classList.add('btn-adm-outline');
+            });
+            btn.classList.remove('btn-adm-outline');
+            btn.classList.add('btn-adm-primary', 'active');
+            activeCat = btn.getAttribute('data-cat') || 'all';
+            applyCourseFilters();
+        });
+    });
+});
+</script>
 @endsection

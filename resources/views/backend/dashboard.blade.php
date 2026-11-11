@@ -159,7 +159,7 @@
                 <a href="{{ route('admin.tests') }}" class="btn-adm btn-adm-outline py-1 px-3 font-12">View All Tests</a>
             </div>
             <div class="table-responsive">
-                <table class="adm-table">
+                <table class="adm-table" data-no-paginate="true">
                     <thead>
                         <tr>
                             <th>Student</th>
@@ -275,7 +275,7 @@
                 <a href="{{ route('admin.courses') }}" class="btn-adm btn-adm-outline py-1 px-3 font-12">Manage</a>
             </div>
             <div class="table-responsive">
-                <table class="adm-table">
+                <table class="adm-table" data-no-paginate="true">
                     <thead>
                         <tr>
                             <th>Batch</th>
