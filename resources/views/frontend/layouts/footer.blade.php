@@ -149,7 +149,9 @@
 <div class="floating-whatsapp-wrap">
     <a href="{{ $waLink }}" target="_blank" rel="noopener noreferrer" class="floating-whatsapp-btn" title="Chat on WhatsApp" aria-label="Chat on WhatsApp">
         <span class="floating-whatsapp-pulse"></span>
-        <i class="fab fa-whatsapp"></i>
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="position: relative; z-index: 2;">
+            <path d="M12.03 2C6.51 2 2.02 6.48 2.02 12c0 1.77.46 3.49 1.34 5.01L2 22l5.12-1.34A9.96 9.96 0 0 0 12.03 22c5.52 0 10-4.48 10-10S17.55 2 12.03 2zm5.82 14.2c-.25.7-1.45 1.34-2 1.42-.52.08-1.18.11-1.9-.12-.44-.14-1-.33-1.72-.64-3.02-1.31-4.99-4.35-5.14-4.55-.15-.2-1.23-1.64-1.23-3.13 0-1.49.78-2.22 1.05-2.52.27-.3.6-.38.8-.38.2 0 .4 0 .58.01.18.01.43-.07.67.51.25.6.85 2.07.92 2.22.08.15.13.33.03.53-.1.2-.15.33-.3.5-.15.18-.32.4-.45.53-.15.15-.31.32-.13.62.18.3.8 1.32 1.72 2.14 1.18 1.05 2.18 1.38 2.48 1.53.3.15.48.13.66-.08.18-.2.75-.88.95-1.18.2-.3.4-.25.67-.15.27.1 1.74.82 2.04.97.3.15.5.22.57.34.08.12.08.7-.17 1.4z"/>
+        </svg>
         <span class="floating-whatsapp-tooltip">
             <span class="online-dot"></span>
             Chat with us
@@ -164,13 +166,13 @@
     </svg>
 </div>
 
-<script src="{{ asset('frontend/js/vendor/jquery-3.7.1.min.js') }}"></script>
-<script src="{{ asset('frontend/js/app.min.js') }}"></script>
-<script src="{{ asset('frontend/js/hover-effect.umd.js') }}"></script>
-<script src="{{ asset('frontend/js/main.js') }}"></script>
-<script src="{{ asset('frontend/js/profile-header.js') }}?v={{ file_exists(public_path('frontend/js/profile-header.js')) ? filemtime(public_path('frontend/js/profile-header.js')) : time() }}"></script>
-<script src="{{ asset('frontend/js/preloader.js') }}"></script>
-<script src="{{ asset('frontend/js/course-pagination.js') }}"></script>
+<script src="{{ asset('frontend/js/vendor/jquery-3.7.1.min.js') }}" defer></script>
+<script src="{{ asset('frontend/js/app.min.js') }}" defer></script>
+<script src="{{ asset('frontend/js/hover-effect.umd.js') }}" defer></script>
+<script src="{{ asset('frontend/js/main.js') }}" defer></script>
+<script src="{{ asset('frontend/js/profile-header.js') }}?v={{ file_exists(public_path('frontend/js/profile-header.js')) ? filemtime(public_path('frontend/js/profile-header.js')) : time() }}" defer></script>
+<script src="{{ asset('frontend/js/preloader.js') }}?v={{ file_exists(public_path('frontend/js/preloader.js')) ? filemtime(public_path('frontend/js/preloader.js')) : time() }}" defer></script>
+<script src="{{ asset('frontend/js/course-pagination.js') }}" defer></script>
 
 @yield('extra_js')
 

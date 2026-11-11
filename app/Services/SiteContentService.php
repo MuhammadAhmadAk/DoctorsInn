@@ -67,7 +67,30 @@ class SiteContentService
     }
 
     /**
-     * Get cached site-wide CMS key => value map (single O(1) memory lookup per request).
+     * Shared cache-first query helper: checks Schema::hasTable ONLY on cold cache miss.
+     */
+    protected static function rememberTableQuery(string $cacheKey, string $table, callable $fetcher, $fallback = [])
+    {
+        try {
+            return Cache::rememberForever($cacheKey, function () use ($table, $fetcher, $fallback) {
+                if (!Schema::hasTable($table)) {
+                    return is_callable($fallback) ? $fallback() : $fallback;
+                }
+
+                $result = $fetcher();
+                if (empty($result) && is_callable($fallback)) {
+                    return $fallback();
+                }
+
+                return $result;
+            });
+        } catch (\Throwable $e) {
+            return is_callable($fallback) ? $fallback() : $fallback;
+        }
+    }
+
+    /**
+     * Get cached site-wide CMS key => value map (single O(1) memory lookup per request, 0 queries on hit).
      */
     public static function getSettings(): array
     {
@@ -78,22 +101,14 @@ class SiteContentService
 
         $defaults = self::defaultSiteContentMap();
 
-        try {
-            if (!Schema::hasTable('site_contents')) {
-                return $inMemory = $defaults;
-            }
+        $dbMap = self::rememberTableQuery(
+            self::CACHE_SETTINGS,
+            'site_contents',
+            fn () => SiteContent::query()->select(['key', 'value'])->pluck('value', 'key')->toArray(),
+            []
+        );
 
-            $dbMap = Cache::rememberForever(self::CACHE_SETTINGS, function () {
-                return SiteContent::query()
-                    ->select(['key', 'value'])
-                    ->pluck('value', 'key')
-                    ->toArray();
-            });
-
-            return $inMemory = array_merge($defaults, array_filter($dbMap, fn ($v) => $v !== null && $v !== ''));
-        } catch (\Throwable $e) {
-            return $inMemory = $defaults;
-        }
+        return $inMemory = array_merge($defaults, array_filter($dbMap, fn ($v) => $v !== null && $v !== ''));
     }
 
     public static function get(string $key, $default = ''): string
@@ -103,13 +118,26 @@ class SiteContentService
     }
 
     /**
-     * Fetch optimized, indexed, and cached Homepage payload (zero lag on load).
+     * Fetch optimized, indexed, and cached Homepage payload (0 MySQL queries on warm hit).
      */
     public static function getHomeData(): array
     {
         try {
             return Cache::rememberForever(self::CACHE_HOME, function () {
-                $courses = self::getAllCourses();
+                $courses = Schema::hasTable('courses')
+                    ? Course::query()
+                        ->select(['id', 'slug', 'category', 'category_name', 'title', 'price', 'original_price', 'rating', 'rating_count', 'lessons', 'students', 'image'])
+                        ->where('is_active', true)
+                        ->orderBy('sort_order')
+                        ->orderBy('id')
+                        ->get()
+                        ->mapWithKeys(fn ($c) => [$c->slug => $c->toFrontendArray()])
+                        ->toArray()
+                    : config('courses', []);
+
+                if (empty($courses)) {
+                    $courses = config('courses', []);
+                }
 
                 $blogs = Schema::hasTable('blogs')
                     ? Blog::query()
@@ -174,113 +202,81 @@ class SiteContentService
      */
     public static function getAllCourses(): array
     {
-        try {
-            if (!Schema::hasTable('courses')) {
-                return config('courses', []);
-            }
-
-            $list = Cache::rememberForever(self::CACHE_COURSES, function () {
-                return Course::query()
-                    ->where('is_active', true)
-                    ->orderBy('sort_order')
-                    ->orderBy('id')
-                    ->get()
-                    ->mapWithKeys(fn ($c) => [$c->slug => $c->toFrontendArray()])
-                    ->toArray();
-            });
-
-            return !empty($list) ? $list : config('courses', []);
-        } catch (\Throwable $e) {
-            return config('courses', []);
-        }
+        return self::rememberTableQuery(
+            self::CACHE_COURSES,
+            'courses',
+            fn () => Course::query()
+                ->where('is_active', true)
+                ->orderBy('sort_order')
+                ->orderBy('id')
+                ->get()
+                ->mapWithKeys(fn ($c) => [$c->slug => $c->toFrontendArray()])
+                ->toArray(),
+            fn () => config('courses', [])
+        );
     }
 
     public static function getAllBlogs(): array
     {
-        try {
-            if (!Schema::hasTable('blogs')) {
-                return config('blogs', []);
-            }
-
-            $list = Cache::rememberForever(self::CACHE_BLOGS, function () {
-                return Blog::query()
-                    ->where('is_published', true)
-                    ->orderBy('sort_order')
-                    ->orderByDesc('created_at')
-                    ->get()
-                    ->mapWithKeys(fn ($b) => [$b->slug => $b->toFrontendArray()])
-                    ->toArray();
-            });
-
-            return !empty($list) ? $list : config('blogs', []);
-        } catch (\Throwable $e) {
-            return config('blogs', []);
-        }
+        return self::rememberTableQuery(
+            self::CACHE_BLOGS,
+            'blogs',
+            fn () => Blog::query()
+                ->where('is_published', true)
+                ->orderBy('sort_order')
+                ->orderByDesc('created_at')
+                ->get()
+                ->mapWithKeys(fn ($b) => [$b->slug => $b->toFrontendArray()])
+                ->toArray(),
+            fn () => config('blogs', [])
+        );
     }
 
     public static function getAllTests(): array
     {
-        try {
-            if (!Schema::hasTable('mock_tests')) {
-                return config('tests.tests', []);
-            }
-
-            $list = Cache::rememberForever(self::CACHE_TESTS, function () {
-                return MockTest::query()
-                    ->where('is_active', true)
-                    ->orderBy('sort_order')
-                    ->orderBy('id')
-                    ->get()
-                    ->mapWithKeys(fn ($t) => [$t->slug => $t->toFrontendArray()])
-                    ->toArray();
-            });
-
-            return !empty($list) ? $list : config('tests.tests', []);
-        } catch (\Throwable $e) {
-            return config('tests.tests', []);
-        }
+        return self::rememberTableQuery(
+            self::CACHE_TESTS,
+            'mock_tests',
+            fn () => MockTest::query()
+                ->where('is_active', true)
+                ->orderBy('sort_order')
+                ->orderBy('id')
+                ->get()
+                ->mapWithKeys(fn ($t) => [$t->slug => $t->toFrontendArray()])
+                ->toArray(),
+            fn () => config('tests.tests', [])
+        );
     }
 
     public static function getAllResources(): array
     {
-        try {
-            if (!Schema::hasTable('elibrary_resources')) {
-                return config('elibrary.resources', []);
-            }
-
-            $list = Cache::rememberForever(self::CACHE_ELIBRARY, function () {
-                return ElibraryResource::query()
-                    ->where('is_active', true)
-                    ->orderBy('sort_order')
-                    ->orderBy('id')
-                    ->get()
-                    ->map(fn ($r) => $r->toFrontendArray())
-                    ->toArray();
-            });
-
-            return !empty($list) ? $list : config('elibrary.resources', []);
-        } catch (\Throwable $e) {
-            return config('elibrary.resources', []);
-        }
+        return self::rememberTableQuery(
+            self::CACHE_ELIBRARY,
+            'elibrary_resources',
+            fn () => ElibraryResource::query()
+                ->where('is_active', true)
+                ->orderBy('sort_order')
+                ->orderBy('id')
+                ->get()
+                ->map(fn ($r) => $r->toFrontendArray())
+                ->toArray(),
+            fn () => config('elibrary.resources', [])
+        );
     }
 
     public static function getAllFaqs(): array
     {
-        try {
-            if (!Schema::hasTable('faqs')) {
-                return [];
-            }
-
-            return Cache::rememberForever(self::CACHE_FAQS, function () {
-                return Faq::query()
-                    ->where('is_active', true)
-                    ->orderBy('sort_order')
-                    ->get()
-                    ->toArray();
-            });
-        } catch (\Throwable $e) {
-            return [];
-        }
+        return self::rememberTableQuery(
+            self::CACHE_FAQS,
+            'faqs',
+            fn () => Faq::query()
+                ->select(['id', 'question', 'answer', 'category', 'show_on_home'])
+                ->where('is_active', true)
+                ->orderBy('sort_order')
+                ->get()
+                ->toArray(),
+            []
+        );
     }
 
     /**

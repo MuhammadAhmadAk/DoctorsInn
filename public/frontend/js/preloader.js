@@ -11,15 +11,13 @@
             if (preloader.parentNode) {
                 preloader.style.display = 'none';
             }
-        }, 300);
+        }, 160);
     }
 
-    // Fast reveal on DOM ready or immediate if already interactive
     if (document.readyState === 'interactive' || document.readyState === 'complete') {
         hidePreloader();
     } else {
         document.addEventListener('DOMContentLoaded', hidePreloader, { once: true });
-        // Failsafe: never block student view longer than 600ms even if slow external network assets lag
-        setTimeout(hidePreloader, 600);
+        setTimeout(hidePreloader, 180);
     }
 })();

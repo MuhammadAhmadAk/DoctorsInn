@@ -19,6 +19,10 @@
 
     <link rel="shortcut icon" href="{{ asset($cms['site_favicon'] ?? 'frontend/img/logo/favicon.svg') }}" type="image/x-icon">
 
+    <link rel="preload" as="image" href="{{ asset($cms['site_logo'] ?? 'frontend/img/logo/logo.svg') }}">
+    <link rel="preload" as="font" type="font/woff2" href="{{ asset('frontend/fonts/fontawesome/fa-solid-900.woff2') }}" crossorigin>
+    <link rel="preload" as="font" type="font/woff2" href="{{ asset('frontend/fonts/fontawesome/fa-brands-400.woff2') }}" crossorigin>
+
     <link rel="stylesheet" href="{{ asset('frontend/css/app.min.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/css/fontawesome.min.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/css/style.css') }}?v={{ file_exists(public_path('frontend/css/style.css')) ? filemtime(public_path('frontend/css/style.css')) : time() }}">
@@ -35,6 +39,21 @@
             <img class="loading-icon" src="{{ asset('frontend/img/logo/logo-icon.svg') }}" alt="">
         </div>
     </div>
+    <script>
+        (function(){
+            var p = document.getElementById('page-preloader');
+            if(!p) return;
+            var hide = function(){
+                p.classList.add('is-hidden');
+                setTimeout(function(){ p.style.display = 'none'; }, 160);
+            };
+            if(document.readyState !== 'loading') hide();
+            else {
+                document.addEventListener('DOMContentLoaded', hide, { once: true });
+                setTimeout(hide, 220);
+            }
+        })();
+    </script>
 
     <div class="th-menu-wrapper">
         <div class="th-menu-area text-center"><button class="th-menu-toggle"><i class="fal fa-times"></i></button>

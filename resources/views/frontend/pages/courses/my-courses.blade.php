@@ -238,6 +238,6 @@
 @endsection
 
 @section('extra_js')
-    <script src="{{ asset('frontend/js/my-courses-data.js') }}"></script>
-    <script src="{{ asset('frontend/js/course-portal.js') }}"></script>
+    <script src="{{ asset('frontend/js/my-courses-data.js') }}" defer></script>
+    <script src="{{ asset('frontend/js/course-portal.js') }}" defer></script>
 @endsection

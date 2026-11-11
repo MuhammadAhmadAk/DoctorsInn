@@ -3111,7 +3111,7 @@ textarea.is-invalid {
     background: var(--loader-background);
     opacity: 1;
     visibility: visible;
-    transition: opacity 600ms ease, visibility 600ms ease;
+    transition: opacity 150ms ease, visibility 150ms ease;
 }
 
 .page-preloader.is-hidden {

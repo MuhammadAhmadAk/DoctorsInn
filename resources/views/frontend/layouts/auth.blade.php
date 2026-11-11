@@ -33,6 +33,15 @@
             <img class="loading-icon" src="{{ asset('frontend/img/logo/logo-icon.svg') }}" alt="">
         </div>
     </div>
+    <script>
+        (function(){
+            var p = document.getElementById('page-preloader');
+            if(!p) return;
+            var hide = function(){ p.classList.add('is-hidden'); setTimeout(function(){ p.style.display = 'none'; }, 160); };
+            if(document.readyState !== 'loading') hide();
+            else { document.addEventListener('DOMContentLoaded', hide, { once: true }); setTimeout(hide, 220); }
+        })();
+    </script>
 
 
     <div id="smooth-wrapper">
@@ -47,11 +56,11 @@
         </svg>
     </div>
 
-    <script src="{{ asset('frontend/js/vendor/jquery-3.7.1.min.js') }}"></script>
-    <script src="{{ asset('frontend/js/app.min.js') }}"></script>
-    <script src="{{ asset('frontend/js/hover-effect.umd.js') }}"></script>
-    <script src="{{ asset('frontend/js/main.js') }}"></script>
-    <script src="{{ asset('frontend/js/preloader.js') }}"></script>
+    <script src="{{ asset('frontend/js/vendor/jquery-3.7.1.min.js') }}" defer></script>
+    <script src="{{ asset('frontend/js/app.min.js') }}" defer></script>
+    <script src="{{ asset('frontend/js/hover-effect.umd.js') }}" defer></script>
+    <script src="{{ asset('frontend/js/main.js') }}" defer></script>
+    <script src="{{ asset('frontend/js/preloader.js') }}" defer></script>
 
     @yield('extra_js')
 
