@@ -39,3 +39,4 @@
 - `2cc56e1` :: "2026-11-06 | 01:18 AM" - "fix: enforce exact 38px circle styling, kill browser button outline, and add cache busting query strings"
 - `2ada66e` :: "2026-11-06 | 01:25 AM" - "feat: streamline profile dropdown to LMS dashboard, Profile, Logout and keep authenticated user on website upon login"
 - `948cd51` :: "2026-11-11 | 08:01 PM" - "style: redesign Student LMS into warm student-friendly Study Hub with light academic sidebar"
+- `8a5441e` :: "2026-11-11 | 08:18 PM" - "feat: add reusable pill pagination bar with page input, ellipsis, and rows-per-page across all Admin datatables"
