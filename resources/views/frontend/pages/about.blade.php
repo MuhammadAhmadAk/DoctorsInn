@@ -26,17 +26,15 @@
             <div class="row gy-50 align-items-center">
                 <div class="col-xl-6 col-lg-10">
                     <div class="img-box2">
-                        <div class="img1 th--hover-item th_fade_anim">
-                            <div class="thumb th--hover-img" data-displacement="{{ asset('frontend/img/imghover/fluid.jpg') }}"
-                                data-intensity="0.2" data-speedin="1" data-speedout="1"><img class="img-cover"
-                                    src="{{ asset($cms['about_image_1'] ?? 'frontend/img/normal/about_2_1.jpg') }}" alt="About"></div>
+                        <div class="img1 th_fade_anim">
+                            <div class="thumb"><img class="img-cover"
+                                    src="{{ asset($cms['about_image_1'] ?? 'frontend/img/normal/about_2_1.jpg') }}" alt="About" loading="lazy" decoding="async"></div>
                         </div>
-                        <div class="img2 th--hover-item th_fade_anim">
-                            <div class="thumb th--hover-img" data-displacement="{{ asset('frontend/img/imghover/fluid.jpg') }}"
-                                data-intensity="0.2" data-speedin="1" data-speedout="1"><img class="img-cover"
-                                    src="{{ asset($cms['about_image_2'] ?? 'frontend/img/normal/about_2_2.jpg') }}" alt="About"></div>
+                        <div class="img2 th_fade_anim">
+                            <div class="thumb"><img class="img-cover"
+                                    src="{{ asset($cms['about_image_2'] ?? 'frontend/img/normal/about_2_2.jpg') }}" alt="About" loading="lazy" decoding="async"></div>
                         </div>
-                        <div class="about-shape2-1 jump"><img src="{{ asset('frontend/img/shape/about_shape2_1.png') }}" alt="img">
+                        <div class="about-shape2-1 jump"><img src="{{ asset('frontend/img/shape/about_shape2_1.png') }}" alt="img" loading="lazy" decoding="async">
                         </div>
                     </div>
                 </div>

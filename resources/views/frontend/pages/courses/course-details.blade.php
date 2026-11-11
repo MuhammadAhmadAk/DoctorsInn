@@ -162,7 +162,7 @@
                                         <div class="course-author-box">
                                             <div class="auhtor-img">
                                                 <img src="{{ asset($course['instructor_info']['image'] ?? $course['instructor_image'] ?? 'frontend/img/course/course-thumb1-1.png') }}"
-                                                    alt="{{ $course['instructor_info']['name'] ?? $course['instructor'] }}">
+                                                    alt="{{ $course['instructor_info']['name'] ?? $course['instructor'] }}" loading="lazy" decoding="async">
                                             </div>
                                             <div class="media-body">
                                                 <h3 class="author-name"><a class="text-inherit"
@@ -192,7 +192,7 @@
                                                                 <div class="comment-avater">
                                                                     @if (!empty($rev['image']))
                                                                         <img src="{{ asset($rev['image']) }}"
-                                                                            alt="{{ $rev['name'] }}">
+                                                                            alt="{{ $rev['name'] }}" loading="lazy" decoding="async">
                                                                     @else
                                                                         <span class="review-avatar-initials"
                                                                             aria-label="{{ $rev['name'] }}">{{ strtoupper(substr($rev['name'], 0, 1)) }}</span>
@@ -370,7 +370,7 @@
                                 <div class="course-success-card-content">
                                     <div class="course-success-header">
                                         <img class="course-success-avatar" src="{{ asset($story['profile_image']) }}"
-                                            alt="{{ $story['name'] }}">
+                                            alt="{{ $story['name'] }}" loading="lazy" decoding="async">
                                         <div class="course-success-identity">
                                             <h3>{{ $story['name'] }}</h3>
                                             <p><i class="fa-solid fa-location-dot" aria-hidden="true"></i>

@@ -25,9 +25,8 @@
                     <div class="swiper-wrapper">
                         @foreach($teamList as $member)
                         <div class="swiper-slide">
-                            <div class="team-card2 th_fade_anim th--hover-item">
-                                <div class="box-img th--hover-img" data-displacement="{{ asset('frontend/img/imghover/fluid.jpg') }}"
-                                    data-intensity="0.2" data-speedin="1" data-speedout="1">
+                            <div class="team-card2 th_fade_anim">
+                                <div class="box-img">
                                     <img src="{{ asset($member['image'] ?: 'frontend/img/team/team_2_1.jpg') }}" alt="{{ $member['name'] }}" loading="lazy" decoding="async">
                                     <div class="th-social">
                                         @if(!empty($member['facebook_url']))<a target="_blank" href="{{ $member['facebook_url'] }}" rel="noopener"><i class="fab fa-facebook-f"></i></a>@endif

@@ -38,17 +38,15 @@
             <div class="row gy-50 align-items-center">
                 <div class="col-xl-6 col-lg-10">
                     <div class="img-box2">
-                        <div class="img1 th--hover-item th_fade_anim">
-                            <div class="thumb th--hover-img" data-displacement="{{ asset('frontend/img/imghover/fluid.jpg') }}"
-                                data-intensity="0.2" data-speedin="1" data-speedout="1"><img class="img-cover"
-                                    src="{{ asset($cms['about_image_1'] ?? 'frontend/img/normal/about_2_1.jpg') }}" alt="About"></div>
+                        <div class="img1 th_fade_anim">
+                            <div class="thumb"><img class="img-cover"
+                                    src="{{ asset($cms['about_image_1'] ?? 'frontend/img/normal/about_2_1.jpg') }}" alt="About" loading="lazy" decoding="async"></div>
                         </div>
-                        <div class="img2 th--hover-item th_fade_anim">
-                            <div class="thumb th--hover-img" data-displacement="{{ asset('frontend/img/imghover/fluid.jpg') }}"
-                                data-intensity="0.2" data-speedin="1" data-speedout="1"><img class="img-cover"
-                                    src="{{ asset($cms['about_image_2'] ?? 'frontend/img/normal/about_2_2.jpg') }}" alt="About"></div>
+                        <div class="img2 th_fade_anim">
+                            <div class="thumb"><img class="img-cover"
+                                    src="{{ asset($cms['about_image_2'] ?? 'frontend/img/normal/about_2_2.jpg') }}" alt="About" loading="lazy" decoding="async"></div>
                         </div>
-                        <div class="about-shape2-1 jump"><img src="{{ asset('frontend/img/shape/about_shape2_1.png') }}" alt="img">
+                        <div class="about-shape2-1 jump"><img src="{{ asset('frontend/img/shape/about_shape2_1.png') }}" alt="img" loading="lazy" decoding="async">
                         </div>
                     </div>
                 </div>
@@ -224,31 +222,31 @@
         <div class="container">
             <div class="counter-wrap2">
                 <div class="counter-card2 th_fade_anim" data-delay=".2">
-                    <div class="box-icon"><img src="{{ asset($cms['feature_1_icon'] ?? 'frontend/img/icon/counter-icon2-1.svg') }}" alt="icon"></div>
+                    <div class="box-icon"><img src="{{ asset($cms['feature_1_icon'] ?? 'frontend/img/icon/counter-icon2-1.svg') }}" alt="icon" loading="lazy" decoding="async"></div>
                     <div class="box-content">
                         <h4 class="box-title">{{ $cms['feature_1_title'] ?? '8+ Online Courses' }}</h4>
                     </div>
                 </div>
                 <div class="counter-card2 th_fade_anim" data-delay=".3">
-                    <div class="box-icon"><img src="{{ asset($cms['feature_2_icon'] ?? 'frontend/img/icon/counter-icon2-2.svg') }}" alt="icon"></div>
+                    <div class="box-icon"><img src="{{ asset($cms['feature_2_icon'] ?? 'frontend/img/icon/counter-icon2-2.svg') }}" alt="icon" loading="lazy" decoding="async"></div>
                     <div class="box-content">
                         <h4 class="box-title">{{ $cms['feature_2_title'] ?? 'Lifetime Access' }}</h4>
                     </div>
                 </div>
                 <div class="counter-card2 th_fade_anim" data-delay=".4">
-                    <div class="box-icon"><img src="{{ asset($cms['feature_3_icon'] ?? 'frontend/img/icon/counter-icon2-3.svg') }}" alt="icon"></div>
+                    <div class="box-icon"><img src="{{ asset($cms['feature_3_icon'] ?? 'frontend/img/icon/counter-icon2-3.svg') }}" alt="icon" loading="lazy" decoding="async"></div>
                     <div class="box-content">
                         <h4 class="box-title">{{ $cms['feature_3_title'] ?? 'Value For Money' }}</h4>
                     </div>
                 </div>
                 <div class="counter-card2 th_fade_anim" data-delay=".5">
-                    <div class="box-icon"><img src="{{ asset($cms['feature_4_icon'] ?? 'frontend/img/icon/counter-icon2-4.svg') }}" alt="icon"></div>
+                    <div class="box-icon"><img src="{{ asset($cms['feature_4_icon'] ?? 'frontend/img/icon/counter-icon2-4.svg') }}" alt="icon" loading="lazy" decoding="async"></div>
                     <div class="box-content">
                         <h4 class="box-title">{{ $cms['feature_4_title'] ?? '24/7 Student Support' }}</h4>
                     </div>
                 </div>
                 <div class="counter-card2 th_fade_anim" data-delay=".6">
-                    <div class="box-icon"><img src="{{ asset($cms['feature_5_icon'] ?? 'frontend/img/icon/counter-icon2-5.svg') }}" alt="icon"></div>
+                    <div class="box-icon"><img src="{{ asset($cms['feature_5_icon'] ?? 'frontend/img/icon/counter-icon2-5.svg') }}" alt="icon" loading="lazy" decoding="async"></div>
                     <div class="box-content">
                         <h4 class="box-title">{{ $cms['feature_5_title'] ?? 'WhatsApp Community' }}</h4>
                     </div>
@@ -271,7 +269,7 @@
                                 <div class="box-number">01</div>
                                 <div class="process-card-content">
                                     <div class="box-icon"><img src="{{ asset('frontend/img/icon/process-card-icon1.svg') }}"
-                                            alt="img">
+                                            alt="img" loading="lazy" decoding="async">
                                     </div>
                                     <div class="box-content">
                                         <h3 class="box-title">{{ $cms['process_step1_title'] ?? 'Register & Create Your Account' }}</h3>
@@ -283,7 +281,7 @@
                                 <div class="box-number">02</div>
                                 <div class="process-card-content">
                                     <div class="box-icon"><img src="{{ asset('frontend/img/icon/process-card-icon2.svg') }}"
-                                            alt="img">
+                                            alt="img" loading="lazy" decoding="async">
                                     </div>
                                     <div class="box-content">
                                         <h3 class="box-title">{{ $cms['process_step2_title'] ?? 'Choose Your Course' }}</h3>
@@ -295,7 +293,7 @@
                                 <div class="box-number">03</div>
                                 <div class="process-card-content">
                                     <div class="box-icon"><img src="{{ asset('frontend/img/icon/process-card-icon3.svg') }}"
-                                            alt="img">
+                                            alt="img" loading="lazy" decoding="async">
                                     </div>
                                     <div class="box-content">
                                         <h3 class="box-title">{{ $cms['process_step3_title'] ?? 'Learn & Ace Your Exam' }}</h3>
@@ -308,7 +306,7 @@
                 </div>
                 <div class="col-xl-6 align-self-end">
                     <div class="process-img-box2 th_fade_anim"><img src="{{ asset($cms['process_image'] ?? 'frontend/img/normal/process-thumb2-1.png') }}"
-                            alt="img">
+                            alt="img" loading="lazy" decoding="async">
                     </div>
                 </div>
             </div>
@@ -340,14 +338,14 @@
                         @foreach($displayTestimonials as $testi)
                         <div class="swiper-slide th_fade_anim">
                             <div class="testi-card2">
-                                <div class="box-icon"><img src="{{ asset('frontend/img/icon/quote.svg') }}" alt="icon"></div>
+                                <div class="box-icon"><img src="{{ asset('frontend/img/icon/quote.svg') }}" alt="icon" loading="lazy" decoding="async"></div>
                                 <h3 class="box-title">{{ $testi['headline'] }}</h3>
                                 <p class="box-text">{{ $testi['quote'] }}</p>
                                 <div class="testi-review-wrap"><span class="testi-card_review"><i class="fas fa-star"></i>
                                         <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i>
                                         <i class="fas fa-star"></i> </span><span class="rating-title">{{ $testi['rating'] ?? '5.0' }}</span></div>
                                 <div class="testi-card-profile">
-                                    <div class="box-thumb"><img src="{{ asset($testi['avatar'] ?: 'frontend/img/testimonial/testi_2_1.png') }}" alt="{{ $testi['student_name'] }}"></div>
+                                    <div class="box-thumb"><img src="{{ asset($testi['avatar'] ?: 'frontend/img/testimonial/testi_2_1.png') }}" alt="{{ $testi['student_name'] }}" loading="lazy" decoding="async"></div>
                                     <div class="media-left">
                                         <h4 class="testi-card_name">{{ $testi['student_name'] }}</h4><span class="testi-card_desig">{{ $testi['student_batch'] }}</span>
                                     </div>
@@ -368,26 +366,24 @@
 
     <div class="space overflow-hidden">
         <div class="faq-bg-shape1-1 shape-mockup th_fade_anim" data-speed="0.9" data-left="4%" data-top="10%">
-            <img src="{{ asset('frontend/img/icon/wave_shape_2.svg') }}" alt="img">
+            <img src="{{ asset('frontend/img/icon/wave_shape_2.svg') }}" alt="img" loading="lazy" decoding="async">
         </div>
         <div class="faq-bg-shape1-2 shape-mockup th_fade_anim" data-speed="0.9" data-right="-15%" data-bottom="5%"><img
-                src="{{ asset('frontend/img/icon/wave_bg_3.svg') }}" alt="img"></div>
+                src="{{ asset('frontend/img/icon/wave_bg_3.svg') }}" alt="img" loading="lazy" decoding="async"></div>
         <div class="container">
             <div class="row gy-40">
                 <div class="col-xl-6">
                     <div class="faq-img-box1">
-                        <div class="img1 th--hover-item th_fade_anim">
-                            <div class="thumb th--hover-img" data-displacement="{{ asset('frontend/img/imghover/fluid.jpg') }}"
-                                data-intensity="0.2" data-speedin="1" data-speedout="1"><img class="img-cover"
-                                    src="{{ asset($cms['faq_image_1'] ?? 'frontend/img/normal/faq_1_1.jpg') }}" alt="img"></div>
+                        <div class="img1 th_fade_anim">
+                            <div class="thumb"><img class="img-cover"
+                                    src="{{ asset($cms['faq_image_1'] ?? 'frontend/img/normal/faq_1_1.jpg') }}" alt="img" loading="lazy" decoding="async"></div>
                         </div>
-                        <div class="img2 th--hover-item th_fade_anim">
-                            <div class="thumb th--hover-img" data-displacement="{{ asset('frontend/img/imghover/fluid.jpg') }}"
-                                data-intensity="0.2" data-speedin="1" data-speedout="1"><img class="img-cover"
-                                    src="{{ asset($cms['faq_image_2'] ?? 'frontend/img/normal/faq_1_2.jpg') }}" alt="img"></div>
+                        <div class="img2 th_fade_anim">
+                            <div class="thumb"><img class="img-cover"
+                                    src="{{ asset($cms['faq_image_2'] ?? 'frontend/img/normal/faq_1_2.jpg') }}" alt="img" loading="lazy" decoding="async"></div>
                         </div>
                         <div class="faq-counter-wrap jump">
-                            <div class="thumb"><img src="{{ asset($cms['faq_counter_image'] ?? 'frontend/img/normal/volunteer-group2.png') }}" alt="img">
+                            <div class="thumb"><img src="{{ asset($cms['faq_counter_image'] ?? 'frontend/img/normal/volunteer-group2.png') }}" alt="img" loading="lazy" decoding="async">
                             </div>
                             <div class="box-details">
                                 <h3 class="box-title">{{ $cms['faq_counter_number'] ?? '1K +' }}</h3>
@@ -453,7 +449,7 @@
                         <div class="modern-blog-card">
                             <div class="blog-img">
                                 <a href="{{ route('blog-details', $blog['slug']) }}">
-                                    <img src="{{ url($blog['image']) }}" alt="{{ $blog['title'] }}">
+                                    <img src="{{ url($blog['image']) }}" alt="{{ $blog['title'] }}" loading="lazy" decoding="async">
                                 </a>
                                 <div class="blog-date-badge">
                                     <span class="date-day">{{ $blog['date_day'] }}</span>

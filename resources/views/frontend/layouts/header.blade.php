@@ -19,6 +19,7 @@
 
     <link rel="shortcut icon" href="{{ asset($cms['site_favicon'] ?? 'frontend/img/logo/favicon.svg') }}" type="image/x-icon">
 
+    <link rel="preload" as="image" href="{{ asset('frontend/img/bg/hero-bg1.webp') }}" fetchpriority="high">
     <link rel="preload" as="image" href="{{ asset($cms['site_logo'] ?? 'frontend/img/logo/logo.svg') }}">
     <link rel="preload" as="font" type="font/woff2" href="{{ asset('frontend/fonts/fontawesome/fa-solid-900.woff2') }}" crossorigin>
     <link rel="preload" as="font" type="font/woff2" href="{{ asset('frontend/fonts/fontawesome/fa-brands-400.woff2') }}" crossorigin>

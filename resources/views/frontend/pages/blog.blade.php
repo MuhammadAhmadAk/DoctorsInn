@@ -63,7 +63,7 @@
                         <div class="modern-blog-card">
                             <div class="blog-img">
                                 <a href="{{ route('blog-details', $blog['slug']) }}">
-                                    <img src="{{ url($blog['image']) }}" alt="{{ $blog['title'] }}">
+                                    <img src="{{ url($blog['image']) }}" alt="{{ $blog['title'] }}" loading="lazy" decoding="async">
                                 </a>
                                 <div class="blog-date-badge">
                                     <span class="date-day">{{ $blog['date_day'] }}</span>
