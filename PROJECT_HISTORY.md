@@ -40,3 +40,4 @@
 - `2ada66e` :: "2026-11-06 | 01:25 AM" - "feat: streamline profile dropdown to LMS dashboard, Profile, Logout and keep authenticated user on website upon login"
 - `948cd51` :: "2026-11-11 | 08:01 PM" - "style: redesign Student LMS into warm student-friendly Study Hub with light academic sidebar"
 - `8a5441e` :: "2026-11-11 | 08:18 PM" - "feat: add reusable pill pagination bar with page input, ellipsis, and rows-per-page across all Admin datatables"
+- `58018c5` :: "2026-11-11 | 08:58 PM" - "feat: make complete website content, images, courses, blogs, tests, faculty, testimonials, and FAQs dynamic via indexed DB + cached CMS"
