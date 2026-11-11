@@ -306,16 +306,28 @@ class AdminController extends Controller
             $imagePath = SiteContentService::uploadImage($request->file('image_file'), 'blogs');
         }
 
+        $rawBody = trim(strip_tags((string) $request->input('content', 'Medical preparation article.')));
+        $paragraphs = array_values(array_filter(array_map('trim', preg_split("/\r\n|\n|\r/", $rawBody) ?: [])));
+        if (empty($paragraphs)) {
+            $paragraphs = ['Medical entry test preparation guide by DoctorsInn Academic Faculty.'];
+        }
+
         Blog::updateOrCreate(
             ['slug' => $slug],
             [
                 'title' => $request->title,
                 'category' => $request->category,
-                'short_description' => $request->input('short_description', Str::limit(strip_tags($request->input('content', '')), 140)),
-                'content' => $request->input('content', '<p>Medical preparation article.</p>'),
+                'short_description' => $request->input('short_description') ?: Str::limit($rawBody, 140),
+                'content' => $paragraphs,
                 'image' => $imagePath ?: 'frontend/img/blog/blog_1_1.jpg',
                 'read_time' => $request->input('read_time', '5 min read'),
-                'author' => ['name' => $request->input('author_name', 'DoctorsInn Editorial Team'), 'avatar' => 'frontend/img/team/team_2_1.jpg'],
+                'author' => [
+                    'name' => $request->input('author_name', 'DoctorsInn Academic Team'),
+                    'designation' => 'Senior Medical Mentors',
+                    'image' => 'frontend/img/blog/blog-author.jpg',
+                    'bio' => 'DoctorsInn provides high-yield MDCAT, NUMS & AMC entry test preparation, comprehensive mock series, and personalized mentorship across Pakistan.',
+                ],
+                'tags' => ['MDCAT', 'Preparation'],
                 'date_day' => date('d'),
                 'date_month' => date('M'),
                 'date_year' => date('Y'),
