@@ -22,6 +22,9 @@
 <body>
 
     <div class="student-wrapper">
+        <!-- Mobile Sidebar Backdrop -->
+        <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
         <!-- Sidebar Navigation -->
         @include('student.layouts.sidebar')
 
@@ -59,9 +62,18 @@
         document.addEventListener('DOMContentLoaded', function() {
             const toggleBtn = document.getElementById('sidebarToggleBtn');
             const sidebar = document.getElementById('studentSidebar');
+            const backdrop = document.getElementById('sidebarBackdrop');
+
             if (toggleBtn && sidebar) {
                 toggleBtn.addEventListener('click', function() {
                     sidebar.classList.toggle('show');
+                    if (backdrop) backdrop.classList.toggle('show');
+                });
+            }
+            if (backdrop && sidebar) {
+                backdrop.addEventListener('click', function() {
+                    sidebar.classList.remove('show');
+                    backdrop.classList.remove('show');
                 });
             }
         });
