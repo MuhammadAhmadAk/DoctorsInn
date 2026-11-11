@@ -5,7 +5,7 @@
     <div class="container">
         <div class="row gy-30 justify-content-center">
             <div class="col-lg-6">
-                <div class="cta-card2 bg-theme" data-bg-src="{{ asset('frontend/img/bg/cta-card-bg2-1.png') }}">
+                <div class="cta-card2 bg-theme background-image" style="background-image: url('{{ asset('frontend/img/bg/cta-card-bg2-1.png') }}');">
                     <div class="title-area mb-0">
                         <span class="sub-title text-white th_fade_anim">
                             <i class="fa-solid fa-trophy me-2" aria-hidden="true"></i>{{ $cms['promo_1_badge'] ?? 'POPULAR COURSE' }}
@@ -29,7 +29,7 @@
                 </div>
             </div>
             <div class="col-lg-6">
-                <div class="cta-card2 bg-theme2" data-bg-src="{{ asset('frontend/img/bg/cta-card-bg2-1.png') }}">
+                <div class="cta-card2 bg-theme2 background-image" style="background-image: url('{{ asset('frontend/img/bg/cta-card-bg2-1.png') }}');">
                     <div class="title-area mb-0">
                         <span class="sub-title text-white th_fade_anim">
                             <i class="fa-solid fa-fire-flame-curved me-2" aria-hidden="true"></i>{{ $cms['promo_2_badge'] ?? 'TRENDING COURSE' }}

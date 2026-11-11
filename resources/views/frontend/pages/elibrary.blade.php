@@ -143,7 +143,7 @@
     </section>
 
     {{-- ======================== CTA BANNER FOR TESTS ======================== --}}
-    <section class="space bg-theme overflow-hidden" data-bg-src="{{ asset('frontend/img/bg/cta-bg5-1.png') }}">
+    <section class="space bg-theme overflow-hidden background-image" style="background-image: url('{{ asset('frontend/img/bg/cta-bg5-1.png') }}');">
         <div class="container">
             <div class="row gy-40 justify-content-between align-items-center">
                 <div class="col-xxl-7 col-xl-7 col-lg-7">

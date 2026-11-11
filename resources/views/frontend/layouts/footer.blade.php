@@ -168,7 +168,6 @@
 
 <script src="{{ asset('frontend/js/vendor/jquery-3.7.1.min.js') }}" defer></script>
 <script src="{{ asset('frontend/js/app.min.js') }}" defer></script>
-<script src="{{ asset('frontend/js/hover-effect.umd.js') }}" defer></script>
 <script src="{{ asset('frontend/js/main.js') }}" defer></script>
 <script src="{{ asset('frontend/js/profile-header.js') }}?v={{ file_exists(public_path('frontend/js/profile-header.js')) ? filemtime(public_path('frontend/js/profile-header.js')) : time() }}" defer></script>
 <script src="{{ asset('frontend/js/preloader.js') }}?v={{ file_exists(public_path('frontend/js/preloader.js')) ? filemtime(public_path('frontend/js/preloader.js')) : time() }}" defer></script>
