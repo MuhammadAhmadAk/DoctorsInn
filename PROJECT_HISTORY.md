@@ -45,3 +45,4 @@
 - `e45f29c` :: "2026-11-11 | 09:23 PM" - "perf: eliminate cold information_schema queries, add defer JS + instant 200ms preloader reveal, and preload critical fonts"
 - `5e69f97` :: "2026-11-11 | 09:32 PM" - "style: refine global frontend typography scale for cleaner proportional visuals"
 - `b659efc` :: "2026-11-11 | 09:44 PM" - "perf: compress large JPEGs, remove blocking WebGL fluid shader, preload hero image, and add lazy decoding to images"
+- `3680850` :: "2026-11-11 | 09:52 PM" - "perf: add automatic WebP conversion, resizing, EXIF rotation, and alpha preservation to all admin image uploads"
