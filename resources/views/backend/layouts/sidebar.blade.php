@@ -7,6 +7,13 @@
         </a>
     </div>
 
+    @php
+        $navCoursesCount = count(\App\Services\SiteContentService::getAllCourses());
+        $navTestsCount = count(\App\Services\SiteContentService::getAllTests());
+        $navElibraryCount = count(\App\Services\SiteContentService::getAllResources());
+        $navBlogsCount = count(\App\Services\SiteContentService::getAllBlogs());
+    @endphp
+
     <!-- Clean Minimal Navigation Menu -->
     <ul class="sidebar-menu">
         <li class="sidebar-item">
@@ -17,10 +24,17 @@
         </li>
 
         <li class="sidebar-item">
+            <a href="{{ route('admin.cms') }}" class="sidebar-link {{ request()->routeIs('admin.cms*') ? 'active' : '' }}">
+                <i class="fa-solid fa-pen-ruler"></i>
+                <span>Website CMS</span>
+            </a>
+        </li>
+
+        <li class="sidebar-item">
             <a href="{{ route('admin.courses') }}" class="sidebar-link {{ request()->routeIs('admin.courses*') ? 'active' : '' }}">
                 <i class="fa-solid fa-graduation-cap"></i>
                 <span>Courses</span>
-                <span class="badge-count">{{ count(config('courses', [])) }}</span>
+                <span class="badge-count">{{ $navCoursesCount }}</span>
             </a>
         </li>
 
@@ -28,7 +42,7 @@
             <a href="{{ route('admin.tests') }}" class="sidebar-link {{ request()->routeIs('admin.tests*') ? 'active' : '' }}">
                 <i class="fa-solid fa-clipboard-check"></i>
                 <span>Mock Tests</span>
-                <span class="badge-count">{{ count(config('tests.tests', [])) }}</span>
+                <span class="badge-count">{{ $navTestsCount }}</span>
             </a>
         </li>
 
@@ -36,7 +50,7 @@
             <a href="{{ route('admin.elibrary') }}" class="sidebar-link {{ request()->routeIs('admin.elibrary*') ? 'active' : '' }}">
                 <i class="fa-solid fa-book-bookmark"></i>
                 <span>E-Library</span>
-                <span class="badge-count">{{ count(config('elibrary.resources', [])) }}</span>
+                <span class="badge-count">{{ $navElibraryCount }}</span>
             </a>
         </li>
 
@@ -44,7 +58,7 @@
             <a href="{{ route('admin.blogs') }}" class="sidebar-link {{ request()->routeIs('admin.blogs*') ? 'active' : '' }}">
                 <i class="fa-solid fa-newspaper"></i>
                 <span>Blog Posts</span>
-                <span class="badge-count">{{ count(config('blogs', [])) }}</span>
+                <span class="badge-count">{{ $navBlogsCount }}</span>
             </a>
         </li>
 

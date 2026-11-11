@@ -17,7 +17,7 @@
     <meta name="robots" content="INDEX,FOLLOW">
     <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
 
-    <link rel="shortcut icon" href="{{ asset('frontend/img/logo/favicon.svg') }}" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ asset($cms['site_favicon'] ?? 'frontend/img/logo/favicon.svg') }}" type="image/x-icon">
 
     <link rel="stylesheet" href="{{ asset('frontend/css/app.min.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/css/fontawesome.min.css') }}">
@@ -41,8 +41,8 @@
             <div class="th-menu-content">
 
                 <div class="mobile-logo">
-                    <a href="{{ route('home') }}"><img src="{{ asset('frontend/img/logo/logo.svg') }}"
-                            alt="DoctorsInnElite"></a>
+                    <a href="{{ route('home') }}"><img src="{{ asset($cms['site_logo'] ?? 'frontend/img/logo/logo.svg') }}"
+                            alt="{{ $cms['site_name'] ?? 'DoctorsInnElite' }}"></a>
                 </div>
 
                 <div class="th-mobile-menu">
@@ -72,16 +72,15 @@
                 <div class="th-mobile-menu-bottom">
                     <div class="contact-info-wrap">
                         <div class="contact-info"><i class="fa-regular fa-envelope"></i><a
-                                href="mailto:info@DoctorsInnElite.com">info@DoctorsInnElite.com</a></div>
-                        <div class="contact-info"><i class="fa-regular fa-phone"></i><a href="tel:256214203215">256 214
-                                203 215</a></div>
+                                href="mailto:{{ $cms['contact_email_1'] ?? 'info@doctorsinnelite.com' }}">{{ $cms['contact_email_1'] ?? 'info@doctorsinnelite.com' }}</a></div>
+                        <div class="contact-info"><i class="fa-regular fa-phone"></i><a href="tel:{{ preg_replace('/[^0-9+]/', '', $cms['contact_phone_1'] ?? '+923001234567') }}">{{ $cms['contact_phone_1'] ?? '+92 300 1234567' }}</a></div>
                     </div>
-                    <div class="th-social style4"><a href="https://www.facebook.com/"><i
-                                class="fab fa-facebook-f"></i></a> <a href="https://www.twitter.com/"><i
-                                class="fab fa-twitter"></i></a> <a href="https://www.linkedin.com/"><i
-                                class="fab fa-linkedin-in"></i></a>
-                        <a href="https://www.youtube.com/"><i class="fab fa-youtube"></i></a> <a
-                            href="https://www.instagram.com/"><i class="fab fa-instagram"></i></a>
+                    <div class="th-social style4">
+                        <a href="{{ $cms['facebook_url'] ?? 'https://www.facebook.com/' }}"><i class="fab fa-facebook-f"></i></a>
+                        <a href="{{ $cms['twitter_url'] ?? 'https://www.twitter.com/' }}"><i class="fab fa-twitter"></i></a>
+                        <a href="{{ $cms['linkedin_url'] ?? 'https://www.linkedin.com/' }}"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="{{ $cms['youtube_url'] ?? 'https://www.youtube.com/' }}"><i class="fab fa-youtube"></i></a>
+                        <a href="{{ $cms['instagram_url'] ?? 'https://www.instagram.com/' }}"><i class="fab fa-instagram"></i></a>
                     </div>
                 </div>
 
@@ -97,8 +96,8 @@
 
                         <div class="col-auto flex-shrink-0">
                             <div class="header-logo">
-                                <a href="{{ route('home') }}"><img src="{{ asset('frontend/img/logo/logo.svg') }}"
-                                        alt="DoctorsInnElite"></a>
+                                <a href="{{ route('home') }}"><img src="{{ asset($cms['site_logo'] ?? 'frontend/img/logo/logo.svg') }}"
+                                        alt="{{ $cms['site_name'] ?? 'DoctorsInnElite' }}"></a>
                             </div>
                         </div>
 

@@ -29,12 +29,12 @@
                         <div class="img1 th--hover-item th_fade_anim">
                             <div class="thumb th--hover-img" data-displacement="{{ asset('frontend/img/imghover/fluid.jpg') }}"
                                 data-intensity="0.2" data-speedin="1" data-speedout="1"><img class="img-cover"
-                                    src="{{ asset('frontend/img/normal/about_2_1.jpg') }}" alt="About"></div>
+                                    src="{{ asset($cms['about_image_1'] ?? 'frontend/img/normal/about_2_1.jpg') }}" alt="About"></div>
                         </div>
                         <div class="img2 th--hover-item th_fade_anim">
                             <div class="thumb th--hover-img" data-displacement="{{ asset('frontend/img/imghover/fluid.jpg') }}"
                                 data-intensity="0.2" data-speedin="1" data-speedout="1"><img class="img-cover"
-                                    src="{{ asset('frontend/img/normal/about_2_2.jpg') }}" alt="About"></div>
+                                    src="{{ asset($cms['about_image_2'] ?? 'frontend/img/normal/about_2_2.jpg') }}" alt="About"></div>
                         </div>
                         <div class="about-shape2-1 jump"><img src="{{ asset('frontend/img/shape/about_shape2_1.png') }}" alt="img">
                         </div>
@@ -43,29 +43,21 @@
                 <div class="col-xl-6">
                     <div class="about-wrap2">
                         <div class="title-area mb-35"><span class="sub-title text-theme th_fade_anim"><img
-                                    src="{{ asset('frontend/img/logo/logo-icon.svg') }}" alt="img"> Get To Know About Us</span>
-                            <h2 class="sec-title th_fade_anim"><span class="th-text-perspective">Pakistan's
-                                    Trusted MDCAT Preparation Platform</span></h2>
-                            <p class="th_fade_anim">DoctorsInnElite is dedicated to helping aspiring medical students crack
-                                MDCAT and secure admissions in top medical colleges. With expert instructors, structured
-                                course, and real exam-style mock tests — we prepare you
-                                for success.</p>
+                                    src="{{ asset('frontend/img/logo/logo-icon.svg') }}" alt="img"> {{ $cms['about_subtitle'] ?? 'Get To Know About Us' }}</span>
+                            <h2 class="sec-title th_fade_anim"><span class="th-text-perspective">{{ $cms['about_title'] ?? "Pakistan's Trusted MDCAT Preparation Platform" }}</span></h2>
+                            <p class="th_fade_anim">{{ $cms['about_description'] ?? 'DoctorsInnElite is dedicated to helping aspiring medical students crack MDCAT and secure admissions in top medical colleges. With expert instructors, structured course, and real exam-style mock tests — we prepare you for success.' }}</p>
                         </div>
                         <div class="row gy-40 gx-40">
                             <div class="col-md-6">
                                 <div class="about-info-card">
-                                    <h3 class="box-title th_fade_anim">OUR MISSION:</h3>
-                                    <p class="box-text th_fade_anim">To provide every medical aspirant with affordable,
-                                        high-quality MDCAT preparation through structured course, mock tests, and expert
-                                        mentorship.</p>
+                                    <h3 class="box-title th_fade_anim">{{ $cms['about_mission_title'] ?? 'OUR MISSION:' }}</h3>
+                                    <p class="box-text th_fade_anim">{{ $cms['about_mission_text'] ?? 'To provide every medical aspirant with affordable, high-quality MDCAT preparation through structured course, mock tests, and expert mentorship.' }}</p>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="about-info-card">
-                                    <h3 class="box-title th_fade_anim">OUR VISION:</h3>
-                                    <p class="box-text th_fade_anim">To become Pakistan's #1 online platform for medical
-                                        entry test preparation — empowering students from every city and background.
-                                    </p>
+                                    <h3 class="box-title th_fade_anim">{{ $cms['about_vision_title'] ?? 'OUR VISION:' }}</h3>
+                                    <p class="box-text th_fade_anim">{{ $cms['about_vision_text'] ?? "To become Pakistan's #1 online platform for medical entry test preparation — empowering students from every city and background." }}</p>
                                 </div>
                             </div>
                         </div>

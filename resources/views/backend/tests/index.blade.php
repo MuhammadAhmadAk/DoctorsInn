@@ -13,10 +13,53 @@
             <i class="fa-solid fa-arrow-up-right-from-square"></i>
             <span>Preview Student Portal</span>
         </a>
-        <button class="btn-adm btn-adm-primary" onclick="alert('MCQ Creator modal ready for question entries!')">
+        <button type="button" class="btn-adm btn-adm-primary" onclick="document.getElementById('testFormCard').classList.toggle('d-none')">
             <i class="fa-solid fa-plus"></i>
             <span>Create New Test</span>
         </button>
+    </div>
+</div>
+
+@if(session('success'))
+<div class="alert alert-success d-flex align-items-center gap-2 py-2 px-3 mb-3 border-0 rounded-3 text-white" style="background: #10B981; font-size: 12.5px;">
+    <i class="fa-solid fa-circle-check"></i>
+    <span>{{ session('success') }}</span>
+</div>
+@endif
+
+<div class="adm-card mb-4 d-none" id="testFormCard">
+    <div class="adm-card-header">
+        <h2 class="adm-card-title"><i class="fa-solid fa-file-signature text-primary"></i> Create Mock Test</h2>
+    </div>
+    <div class="adm-card-body">
+        <form action="{{ route('admin.tests.store') }}" method="POST">
+            @csrf
+            <div class="row g-3">
+                <div class="col-md-5">
+                    <label class="form-label small fw-bold">Test Title</label>
+                    <input type="text" name="title" class="form-control" required placeholder="e.g. MDCAT Grand Mock #2">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label small fw-bold">Category</label>
+                    <select name="category" class="form-select">
+                        <option value="mdcat">MDCAT</option>
+                        <option value="nums">NUMS</option>
+                        <option value="army">Army / AMC</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label small fw-bold">Minutes</label>
+                    <input type="number" name="duration_minutes" class="form-control" value="30" required>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label small fw-bold">Pass %</label>
+                    <input type="number" name="passing_percentage" class="form-control" value="70" required>
+                </div>
+                <div class="col-12 text-end">
+                    <button type="submit" class="btn-adm btn-adm-primary"><i class="fa-solid fa-floppy-disk"></i> Save Mock Test</button>
+                </div>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -26,7 +69,7 @@
         <div class="stat-card">
             <div class="stat-info">
                 <div class="label">Total Published Tests</div>
-                <h3 class="number">{{ count(config('tests.tests', [])) }}</h3>
+                <h3 class="number">{{ count($tests) }}</h3>
             </div>
             <div class="stat-icon primary"><i class="fa-solid fa-file-signature"></i></div>
         </div>
@@ -65,7 +108,7 @@
     <div class="adm-card-header">
         <h2 class="adm-card-title">
             <i class="fa-solid fa-list-check text-primary"></i>
-            Published Test Series ({{ count(config('tests.tests', [])) }})
+            Published Test Series ({{ count($tests) }})
         </h2>
         <span class="adm-badge adm-badge-success">Scoring Engine Active</span>
     </div>
@@ -83,7 +126,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach(config('tests.tests', []) as $slug => $t)
+                @foreach($tests as $slug => $t)
                 <tr>
                     <td>
                         <div class="fw-bold text-dark">{{ $t['title'] ?? 'Mock Test' }}</div>
@@ -112,12 +155,10 @@
                             <a href="{{ route('test.take', $slug) }}" target="_blank" class="action-btn" title="Simulate Test">
                                 <i class="fa-solid fa-play"></i>
                             </a>
-                            <a href="#" class="action-btn" title="Manage MCQs" onclick="alert('Managing MCQs for {{ $slug }}')">
-                                <i class="fa-solid fa-pen-to-square"></i>
-                            </a>
-                            <a href="#" class="action-btn" title="Analytics" onclick="alert('Viewing score analytics for {{ $slug }}')">
-                                <i class="fa-solid fa-chart-pie"></i>
-                            </a>
+                            <form action="{{ route('admin.tests.delete', $slug) }}" method="POST" onsubmit="return confirm('Delete this mock test?')">
+                                @csrf @method('DELETE')
+                                <button type="submit" class="action-btn delete" title="Delete Test"><i class="fa-solid fa-trash-can"></i></button>
+                            </form>
                         </div>
                     </td>
                 </tr>

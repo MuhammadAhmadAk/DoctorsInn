@@ -5,7 +5,7 @@
 @section('content')
 <div class="page-header">
     <div>
-        <h1 class="page-title">Blog & Medical Insights</h1>
+        <h1 class="page-title">Blog &amp; Medical Insights</h1>
         <p class="page-subtitle">Publish MDCAT preparation guides, high-yield subject tips, syllabus news, and doctor interviews.</p>
     </div>
     <div class="page-actions">
@@ -13,10 +13,60 @@
             <i class="fa-solid fa-arrow-up-right-from-square"></i>
             <span>View Public Blog</span>
         </a>
-        <button class="btn-adm btn-adm-primary" onclick="alert('Article Editor initialized!')">
+        <button type="button" class="btn-adm btn-adm-primary" onclick="document.getElementById('blogFormCard').classList.toggle('d-none')">
             <i class="fa-solid fa-pen-nib"></i>
             <span>Write New Article</span>
         </button>
+    </div>
+</div>
+
+@if(session('success'))
+<div class="alert alert-success d-flex align-items-center gap-2 py-2 px-3 mb-3 border-0 rounded-3 text-white" style="background: #10B981; font-size: 12.5px;">
+    <i class="fa-solid fa-circle-check"></i>
+    <span>{{ session('success') }}</span>
+</div>
+@endif
+
+<!-- Quick Write / Edit Article Drawer Card -->
+<div class="adm-card mb-4 d-none" id="blogFormCard">
+    <div class="adm-card-header">
+        <h2 class="adm-card-title"><i class="fa-solid fa-pen-nib text-primary"></i> Publish / Edit Blog Article</h2>
+    </div>
+    <div class="adm-card-body">
+        <form action="{{ route('admin.blogs.store') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label small fw-bold">Article Title</label>
+                    <input type="text" name="title" class="form-control" required placeholder="e.g. How to Score 185+ in MDCAT 2026">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label small fw-bold">Category</label>
+                    <input type="text" name="category" class="form-control" value="MDCAT Preparation" required>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label small fw-bold">Read Time</label>
+                    <input type="text" name="read_time" class="form-control" value="5 min read">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label small fw-bold">Cover Image</label>
+                    <input type="file" name="image_file" accept="image/*" class="form-control">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label small fw-bold">Short Summary</label>
+                    <input type="text" name="short_description" class="form-control" placeholder="Brief summary for blog cards...">
+                </div>
+                <div class="col-12">
+                    <label class="form-label small fw-bold">Article Content (HTML or plain text)</label>
+                    <textarea name="content" rows="4" class="form-control" placeholder="<p>Full article content...</p>"></textarea>
+                </div>
+                <div class="col-12 text-end">
+                    <button type="submit" class="btn-adm btn-adm-primary">
+                        <i class="fa-solid fa-paper-plane"></i> Publish Article Live
+                    </button>
+                </div>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -24,9 +74,9 @@
     <div class="adm-card-header">
         <h2 class="adm-card-title">
             <i class="fa-solid fa-newspaper text-primary"></i>
-            Published Articles ({{ count(config('blogs', [])) }})
+            Published Articles ({{ count($blogs) }})
         </h2>
-        <span class="adm-badge adm-badge-success">SEO Synced</span>
+        <span class="adm-badge adm-badge-success">Database Synced</span>
     </div>
     <div class="table-responsive">
         <table class="adm-table">
@@ -41,7 +91,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach(config('blogs', []) as $slug => $b)
+                @foreach($blogs as $slug => $b)
                 <tr>
                     <td>
                         <div class="item-thumb-box">
@@ -72,12 +122,10 @@
                             <a href="{{ route('blog-details', $slug) }}" target="_blank" class="action-btn" title="View Article">
                                 <i class="fa-solid fa-arrow-up-right-from-square"></i>
                             </a>
-                            <a href="#" class="action-btn" title="Edit Article" onclick="alert('Editing {{ $slug }}')">
-                                <i class="fa-solid fa-pen-to-square"></i>
-                            </a>
-                            <a href="#" class="action-btn delete" title="Delete" onclick="confirm('Delete article?')">
-                                <i class="fa-solid fa-trash-can"></i>
-                            </a>
+                            <form action="{{ route('admin.blogs.delete', $slug) }}" method="POST" onsubmit="return confirm('Delete this article?')">
+                                @csrf @method('DELETE')
+                                <button type="submit" class="action-btn delete" title="Delete"><i class="fa-solid fa-trash-can"></i></button>
+                            </form>
                         </div>
                     </td>
                 </tr>

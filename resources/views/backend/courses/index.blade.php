@@ -38,7 +38,7 @@
                 </div>
             </div>
             <div class="col-md-7 d-flex justify-content-md-end gap-2 flex-wrap">
-                <button type="button" class="btn-adm btn-adm-primary py-2 px-3 font-12 course-cat-filter active" data-cat="all">All ({{ count(config('courses', [])) }})</button>
+                <button type="button" class="btn-adm btn-adm-primary py-2 px-3 font-12 course-cat-filter active" data-cat="all">All ({{ count($courses) }})</button>
                 <button type="button" class="btn-adm btn-adm-outline py-2 px-3 font-12 course-cat-filter" data-cat="mdcat">MDCAT</button>
                 <button type="button" class="btn-adm btn-adm-outline py-2 px-3 font-12 course-cat-filter" data-cat="nums">NUMS</button>
                 <button type="button" class="btn-adm btn-adm-outline py-2 px-3 font-12 course-cat-filter" data-cat="amc">Army / AMC</button>
@@ -52,9 +52,9 @@
     <div class="adm-card-header">
         <h2 class="adm-card-title">
             <i class="fa-solid fa-graduation-cap text-primary"></i>
-            Active Course Catalog ({{ count(config('courses', [])) }})
+            Active Course Catalog ({{ count($courses) }})
         </h2>
-        <span class="adm-badge adm-badge-success">All Batches Synced</span>
+        <span class="adm-badge adm-badge-success">Database Synced</span>
     </div>
     <div class="table-responsive">
         <table class="adm-table" id="coursesAdminTable">
@@ -70,11 +70,11 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach(config('courses', []) as $slug => $c)
+                @foreach($courses as $slug => $c)
                 <tr>
                     <td>
                         <div class="item-thumb-box">
-                            <img src="{{ asset($c['thumbnail'] ?? 'frontend/img/normal/about_2_1.jpg') }}" alt="Course">
+                            <img src="{{ asset($c['image'] ?? ($c['thumbnail'] ?? 'frontend/img/course/course1-1.jpg')) }}" alt="Course">
                             <div>
                                 <a href="{{ route('course-details', $slug) }}" target="_blank" class="title text-decoration-none hover-primary">
                                     {{ $c['title'] ?? 'Course Title' }}
@@ -84,14 +84,14 @@
                         </div>
                     </td>
                     <td>
-                        <span class="adm-badge adm-badge-primary">{{ $c['category'] ?? 'MDCAT' }}</span>
+                        <span class="adm-badge adm-badge-primary">{{ $c['category_name'] ?? strtoupper($c['category'] ?? 'MDCAT') }}</span>
                     </td>
                     <td>
                         <div class="fw-bold text-dark">{{ $c['duration'] ?? '10 Weeks' }}</div>
-                        <div class="small text-muted">{{ $c['lectures_count'] ?? '60+' }} Lectures</div>
+                        <div class="small text-muted">{{ $c['lessons'] ?? ($c['lectures_count'] ?? '60+ Lectures') }}</div>
                     </td>
                     <td>
-                        <span class="fw-bold text-dark">{{ rand(95, 380) }}</span>
+                        <span class="fw-bold text-dark">{{ $c['students'] ?? '500+ Students' }}</span>
                         <div class="small text-success"><i class="fa-solid fa-circle font-8"></i> Active</div>
                     </td>
                     <td>
@@ -108,12 +108,12 @@
                             <a href="{{ route('course-details', $slug) }}" target="_blank" class="action-btn" title="View Public Page">
                                 <i class="fa-solid fa-arrow-up-right-from-square"></i>
                             </a>
-                            <a href="#" class="action-btn" title="Edit Course" onclick="alert('Opening Course Editor for {{ $slug }}')">
-                                <i class="fa-solid fa-pen-to-square"></i>
-                            </a>
-                            <a href="#" class="action-btn delete" title="Archive" onclick="confirm('Are you sure you want to archive this course?')">
-                                <i class="fa-solid fa-trash-can"></i>
-                            </a>
+                            <form action="{{ route('admin.courses.delete', $slug) }}" method="POST" onsubmit="return confirm('Delete this course from live site?')">
+                                @csrf @method('DELETE')
+                                <button type="submit" class="action-btn delete" title="Delete Course">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                            </form>
                         </div>
                     </td>
                 </tr>

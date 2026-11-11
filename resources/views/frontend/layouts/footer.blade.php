@@ -8,18 +8,16 @@
                     <div class="widget footer-widget th_fade_anim" data-delay=".3">
                         <div class="th-widget-about">
                             <div class="about-logo">
-                                <a href="{{ route('home') }}"><img src="{{ asset('frontend/img/logo/logo-white.svg') }}"
-                                        alt="DoctorsInnElite"></a>
+                                <a href="{{ route('home') }}"><img src="{{ asset($cms['site_logo_white'] ?? 'frontend/img/logo/logo-white.svg') }}"
+                                        alt="{{ $cms['site_name'] ?? 'DoctorsInnElite' }}"></a>
                             </div>
-                            <p class="about-text">DoctorsInnElite empowers medical aspirants with expert-led
-                                MDCAT preparation, mock tests, and mentorship to secure top medical college
-                                admissions.</p>
+                            <p class="about-text">{{ $cms['footer_about_text'] ?? 'DoctorsInnElite empowers medical aspirants with expert-led MDCAT preparation, mock tests, and mentorship to secure top medical college admissions.' }}</p>
                             <div class="th-social style2">
-                                <a href="https://www.facebook.com/"><i class="fab fa-facebook-f"></i></a>
-                                <a href="https://www.twitter.com/"><i class="fab fa-twitter"></i></a>
-                                <a href="https://www.linkedin.com/"><i class="fab fa-linkedin-in"></i></a>
-                                <a href="https://www.youtube.com/"><i class="fab fa-youtube"></i></a>
-                                <a href="https://www.instagram.com/"><i class="fab fa-instagram"></i></a>
+                                <a href="{{ $cms['facebook_url'] ?? 'https://www.facebook.com/' }}"><i class="fab fa-facebook-f"></i></a>
+                                <a href="{{ $cms['twitter_url'] ?? 'https://www.twitter.com/' }}"><i class="fab fa-twitter"></i></a>
+                                <a href="{{ $cms['linkedin_url'] ?? 'https://www.linkedin.com/' }}"><i class="fab fa-linkedin-in"></i></a>
+                                <a href="{{ $cms['youtube_url'] ?? 'https://www.youtube.com/' }}"><i class="fab fa-youtube"></i></a>
+                                <a href="{{ $cms['instagram_url'] ?? 'https://www.instagram.com/' }}"><i class="fab fa-instagram"></i></a>
                             </div>
                         </div>
                     </div>
@@ -59,10 +57,12 @@
                                             stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"></path>
                                     </svg></div>
                                 <div class="box-details">
-                                    <p class="box-text"><a href="mailto:mailinfo00@realar.com"
-                                            class="box-link">mailinfo@gmail.com</a></p>
-                                    <p class="box-text"><a href="mailto:support24@realar.com"
-                                            class="box-link">support24@gmail.com</a></p>
+                                    <p class="box-text"><a href="mailto:{{ $cms['contact_email_1'] ?? 'info@doctorsinnelite.com' }}"
+                                            class="box-link">{{ $cms['contact_email_1'] ?? 'info@doctorsinnelite.com' }}</a></p>
+                                    @if(!empty($cms['contact_email_2']))
+                                    <p class="box-text"><a href="mailto:{{ $cms['contact_email_2'] }}"
+                                            class="box-link">{{ $cms['contact_email_2'] }}</a></p>
+                                    @endif
                                 </div>
                             </div>
 
@@ -84,10 +84,10 @@
                                         </defs>
                                     </svg></div>
                                 <div class="box-details">
-                                    <p class="box-text"><a href="tel:+0123456789" class="box-link">+01 234
-                                            567 890</a></p>
-                                    <p class="box-text"><a href="tel:+09876543210" class="box-link">+09 876
-                                            543 210</a></p>
+                                    <p class="box-text"><a href="tel:{{ preg_replace('/[^0-9+]/', '', $cms['contact_phone_1'] ?? '+923001234567') }}" class="box-link">{{ $cms['contact_phone_1'] ?? '+92 300 1234567' }}</a></p>
+                                    @if(!empty($cms['contact_phone_2']))
+                                    <p class="box-text"><a href="tel:{{ preg_replace('/[^0-9+]/', '', $cms['contact_phone_2']) }}" class="box-link">{{ $cms['contact_phone_2'] }}</a></p>
+                                    @endif
                                 </div>
                             </div>
 
@@ -102,7 +102,7 @@
                                             stroke="currentColor" stroke-width="1.5"></path>
                                     </svg></div>
                                 <div class="box-details">
-                                    <p class="box-text">789 Inner Lane, Holy park, California, USA</p>
+                                    <p class="box-text">{{ $cms['contact_address'] ?? 'DoctorsInn Main Campus, Lahore, Pakistan' }}</p>
                                 </div>
                             </div>
 
@@ -118,8 +118,7 @@
         <div class="container">
             <div class="row gy-2 align-items-center">
                 <div class="col-lg-6">
-                    <p class="copyright-text">Copyright <i class="fal fa-copyright"></i> 2026 <a
-                            href="{{ route('home') }}">DoctorsInnElite</a>, All rights reserved.</p>
+                    <p class="copyright-text">{{ $cms['footer_copyright'] ?? 'Copyright © 2026 DoctorsInnElite, All rights reserved.' }}</p>
                 </div>
                 <div class="col-lg-6 text-center text-lg-end">
                     <div class="footer-links">
@@ -142,7 +141,7 @@
 
 {{-- Floating WhatsApp Chat Button --}}
 @php
-    $waNumber = config('services.whatsapp.number', '923001234567');
+    $waNumber = $cms['whatsapp_number'] ?? config('services.whatsapp.number', '923001234567');
     $waMessage = config('services.whatsapp.message', 'Hello DoctorsInn, I want to inquire about MDCAT and medical prep courses.');
     $waCleanNumber = preg_replace('/[^0-9]/', '', $waNumber);
     $waLink = "https://wa.me/{$waCleanNumber}?text=" . urlencode($waMessage);

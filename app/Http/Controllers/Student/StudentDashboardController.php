@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
+use App\Services\SiteContentService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -132,9 +133,9 @@ class StudentDashboardController extends Controller
             ],
         ];
 
-        $courses = config('courses', []);
-        $tests = config('tests.tests', []);
-        $resources = config('elibrary.resources', []);
+        $courses = SiteContentService::getAllCourses();
+        $tests = SiteContentService::getAllTests();
+        $resources = SiteContentService::getAllResources();
 
         return view('student.dashboard', compact(
             'studentData',
@@ -159,7 +160,7 @@ class StudentDashboardController extends Controller
             return redirect()->route('login');
         }
 
-        $courses = config('courses', []);
+        $courses = SiteContentService::getAllCourses();
         return view('student.courses', compact('studentData', 'courses'));
     }
 
@@ -173,7 +174,7 @@ class StudentDashboardController extends Controller
             return redirect()->route('login');
         }
 
-        $courses = config('courses', []);
+        $courses = SiteContentService::getAllCourses();
         $slug = $slug ?? $request->query('course') ?? array_key_first($courses);
 
         $activeCourse = $courses[$slug] ?? reset($courses);
@@ -191,7 +192,7 @@ class StudentDashboardController extends Controller
             return redirect()->route('login');
         }
 
-        $tests = config('tests.tests', []);
+        $tests = SiteContentService::getAllTests();
         $categories = config('tests.categories', []);
 
         return view('student.tests', compact('studentData', 'tests', 'categories'));
@@ -207,7 +208,7 @@ class StudentDashboardController extends Controller
             return redirect()->route('login');
         }
 
-        $resources = config('elibrary.resources', []);
+        $resources = SiteContentService::getAllResources();
         $categories = config('elibrary.categories', []);
 
         return view('student.elibrary', compact('studentData', 'resources', 'categories'));

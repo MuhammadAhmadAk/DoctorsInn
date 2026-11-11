@@ -2,26 +2,32 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\SiteContentService;
 use Illuminate\Http\Request;
 
 class RouteController extends Controller
 {
     public function Frontend_Home()
     {
-        $courses = config('courses', []);
-        $blogs = config('blogs', []);
+        $homeData = SiteContentService::getHomeData();
 
-        return view('frontend.index', compact('courses', 'blogs'));
+        return view('frontend.index', $homeData);
     }
 
     public function Frontend_About()
     {
-        return view('frontend.pages.about');
+        $homeData = SiteContentService::getHomeData();
+
+        return view('frontend.pages.about', [
+            'instructors' => $homeData['instructors'] ?? [],
+        ]);
     }
 
     public function Frontend_Faq()
     {
-        return view('frontend.pages.faq');
+        $faqs = SiteContentService::getAllFaqs();
+
+        return view('frontend.pages.faq', compact('faqs'));
     }
 
     public function Frontend_Contact()
@@ -47,7 +53,7 @@ class RouteController extends Controller
     public function Frontend_ELibrary(Request $request)
     {
         $categoriesConfig = config('elibrary.categories', []);
-        $allResources = collect(config('elibrary.resources', []));
+        $allResources = collect(SiteContentService::getAllResources());
 
         $resourceCategories = [
             'all' => [
@@ -87,7 +93,7 @@ class RouteController extends Controller
 
     public function Frontend_DownloadResource($slug)
     {
-        $resources = config('elibrary.resources', []);
+        $resources = SiteContentService::getAllResources();
         $found = null;
         foreach ($resources as $res) {
             if ($res['slug'] === $slug || (string) $res['id'] === (string) $slug) {
@@ -124,14 +130,14 @@ class RouteController extends Controller
     // Courses
     public function Frontend_Course()
     {
-        $courses = config('courses', []);
+        $courses = SiteContentService::getAllCourses();
 
         return view('frontend.pages.courses.course', compact('courses'));
     }
 
     public function Frontend_CourseDetails(Request $request, $slug = null)
     {
-        $courses = config('courses', []);
+        $courses = SiteContentService::getAllCourses();
         $slug = $slug ?? $request->query('slug');
 
         $course = null;
@@ -153,7 +159,7 @@ class RouteController extends Controller
 
     public function Frontend_MyCourses(Request $request, $slug = null)
     {
-        $courses = config('courses', []);
+        $courses = SiteContentService::getAllCourses();
         $courseParam = $slug ?: $request->query('course');
 
         $activeCourse = null;
@@ -183,7 +189,7 @@ class RouteController extends Controller
 
     public function Frontend_Checkout(Request $request)
     {
-        $courses = config('courses', []);
+        $courses = SiteContentService::getAllCourses();
         $slug = $request->query('course');
 
         $course = null;
@@ -233,7 +239,7 @@ class RouteController extends Controller
     // User Account
     public function Frontend_Profile()
     {
-        $courses = config('courses', []);
+        $courses = SiteContentService::getAllCourses();
 
         return view('frontend.pages.authentication.profile', compact('courses'));
     }
@@ -246,7 +252,7 @@ class RouteController extends Controller
     // Blogs
     public function Frontend_Blog(Request $request)
     {
-        $allBlogs = config('blogs', []);
+        $allBlogs = SiteContentService::getAllBlogs();
         $blogs = $allBlogs;
 
         $selectedCategory = $request->query('category');
@@ -314,7 +320,7 @@ class RouteController extends Controller
 
     public function Frontend_BlogDetails(Request $request, $slug = null)
     {
-        $allBlogs = config('blogs', []);
+        $allBlogs = SiteContentService::getAllBlogs();
         $slug = $slug ?? $request->query('slug');
 
         $blog = null;
@@ -397,7 +403,7 @@ class RouteController extends Controller
     public function Frontend_Tests(Request $request)
     {
         $categoriesConfig = config('tests.categories', []);
-        $allTests = collect(config('tests.tests', []));
+        $allTests = collect(SiteContentService::getAllTests());
 
         $testCategories = [
             'all' => [
@@ -434,7 +440,7 @@ class RouteController extends Controller
                 ->with('warning', 'Please log in to your student account to attempt this test.');
         }
 
-        $tests = config('tests.tests', []);
+        $tests = SiteContentService::getAllTests();
         $test = $tests[$slug] ?? null;
 
         if (! $test) {
@@ -452,7 +458,7 @@ class RouteController extends Controller
                 ->with('warning', 'Please log in to your account to submit the test.');
         }
 
-        $tests = config('tests.tests', []);
+        $tests = SiteContentService::getAllTests();
         $test = $tests[$slug] ?? null;
 
         if (! $test) {

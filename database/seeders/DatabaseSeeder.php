@@ -38,5 +38,8 @@ class DatabaseSeeder extends Seeder
                 'email_verified_at' => now(),
             ]
         );
+
+        // 3. Complete Website CMS, Courses, Blogs, Mock Tests, E-Library, Faculty, Testimonials & FAQs
+        $this->call(SiteCmsSeeder::class);
     }
 }

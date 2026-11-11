@@ -41,8 +41,8 @@
                         <div class="box-icon"><i class="fal fa-headset"></i></div>
                         <div class="box-content">
                             <h3 class="box-title">Call Us</h3>
-                            <p class="box-text">Any time for flight booking.</p><a class="box-link"
-                                href="tel:253245636547">(+253)-2456-36547</a>
+                            <p class="box-text">Any time for student admissions.</p><a class="box-link"
+                                href="tel:{{ preg_replace('/[^0-9+]/', '', $cms['contact_phone_1'] ?? '+923001234567') }}">{{ $cms['contact_phone_1'] ?? '+92 300 1234567' }}</a>
                         </div>
                     </div>
                 </div>
@@ -51,8 +51,8 @@
                         <div class="box-icon" data-theme-color="#FFBF00"><i class="fal fa-envelope-open-text"></i></div>
                         <div class="box-content">
                             <h3 class="box-title">Official Email</h3>
-                            <p class="box-text">Email us for any quires</p><a class="box-link"
-                                href="mailto:info@DoctorsInnElite.com">info@DoctorsInnElite.com</a>
+                            <p class="box-text">Email us for any queries</p><a class="box-link"
+                                href="mailto:{{ $cms['contact_email_1'] ?? 'info@doctorsinnelite.com' }}">{{ $cms['contact_email_1'] ?? 'info@doctorsinnelite.com' }}</a>
                         </div>
                     </div>
                 </div>
@@ -62,8 +62,7 @@
                         </div>
                         <div class="box-content">
                             <h3 class="box-title">Our Location</h3>
-                            <p class="box-text">Visit us today!</p><a class="box-link" href="https://www.google.com/maps">15
-                                Maniel Lane, Berlin</a>
+                            <p class="box-text">Visit us today!</p><a class="box-link" href="https://www.google.com/maps">{{ $cms['contact_address'] ?? 'DoctorsInn Main Campus, Lahore, Pakistan' }}</a>
                         </div>
                     </div>
                 </div>
@@ -71,9 +70,9 @@
                     <div class="contact-card th_fade_anim">
                         <div class="box-icon" data-theme-color="#FF5C2A"><i class="fal fa-grid-2"></i></div>
                         <div class="box-content">
-                            <h3 class="box-title">Admission Apps</h3>
-                            <p class="box-text">App for more details</p><a class="box-link"
-                                href="mailto:www.DoctorsInnElite.com">www.DoctorsInnElite.com</a>
+                            <h3 class="box-title">Admission Portal</h3>
+                            <p class="box-text">Online Student Portal</p><a class="box-link"
+                                href="{{ route('home') }}">{{ $cms['site_name'] ?? 'DoctorsInnElite' }}</a>
                         </div>
                     </div>
                 </div>

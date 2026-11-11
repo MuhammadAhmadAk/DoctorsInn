@@ -98,6 +98,8 @@ Route::match(['get', 'post'], '/profile', [RouteController::class, 'Frontend_Pro
 Route::get('/notifications', [RouteController::class, 'Frontend_Notifications'])->name('notifications');
 
 // Admin Panel Routes
+use App\Http\Controllers\Backend\CmsController;
+
 Route::prefix('admin')->name('admin.')->group(function () {
     // Guest Admin Auth
     Route::get('/login', [AdminController::class, 'showLoginForm'])->name('login');
@@ -108,13 +110,37 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::middleware(['admin.auth'])->group(function () {
         Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
         Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard.index');
+
+        // Complete Website Content & Images CMS
+        Route::get('/cms', [CmsController::class, 'index'])->name('cms');
+        Route::post('/cms/section', [CmsController::class, 'updateSection'])->name('cms.section.update');
+        Route::post('/cms/instructors', [CmsController::class, 'saveInstructor'])->name('cms.instructors.save');
+        Route::delete('/cms/instructors/{id}', [CmsController::class, 'deleteInstructor'])->name('cms.instructors.delete');
+        Route::post('/cms/testimonials', [CmsController::class, 'saveTestimonial'])->name('cms.testimonials.save');
+        Route::delete('/cms/testimonials/{id}', [CmsController::class, 'deleteTestimonial'])->name('cms.testimonials.delete');
+        Route::post('/cms/faqs', [CmsController::class, 'saveFaq'])->name('cms.faqs.save');
+        Route::delete('/cms/faqs/{id}', [CmsController::class, 'deleteFaq'])->name('cms.faqs.delete');
+
+        // Courses, Tests, E-Library, Blogs CRUD
         Route::get('/courses', [AdminController::class, 'courses'])->name('courses');
         Route::get('/courses/create', [AdminController::class, 'createCourse'])->name('courses.create');
         Route::post('/courses', [AdminController::class, 'storeCourse'])->name('courses.store');
+        Route::delete('/courses/{slug}', [AdminController::class, 'deleteCourse'])->name('courses.delete');
+
         Route::get('/tests', [AdminController::class, 'tests'])->name('tests');
+        Route::post('/tests', [AdminController::class, 'storeTest'])->name('tests.store');
+        Route::delete('/tests/{slug}', [AdminController::class, 'deleteTest'])->name('tests.delete');
+
         Route::get('/elibrary', [AdminController::class, 'elibrary'])->name('elibrary');
+        Route::post('/elibrary', [AdminController::class, 'storeResource'])->name('elibrary.store');
+        Route::delete('/elibrary/{slug}', [AdminController::class, 'deleteResource'])->name('elibrary.delete');
+
         Route::get('/blogs', [AdminController::class, 'blogs'])->name('blogs');
+        Route::post('/blogs', [AdminController::class, 'storeBlog'])->name('blogs.store');
+        Route::delete('/blogs/{slug}', [AdminController::class, 'deleteBlog'])->name('blogs.delete');
+
         Route::get('/students', [AdminController::class, 'students'])->name('students');
         Route::get('/settings', [AdminController::class, 'settings'])->name('settings');
+        Route::post('/settings', [AdminController::class, 'saveSettings'])->name('settings.save');
     });
 });

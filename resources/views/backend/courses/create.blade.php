@@ -3,7 +3,7 @@
 @section('title', 'Add New Course')
 
 @section('content')
-<form action="{{ route('admin.courses.store') }}" method="POST">
+<form action="{{ route('admin.courses.store') }}" method="POST" enctype="multipart/form-data">
     @csrf
 
     <!-- Page Header -->
@@ -438,12 +438,10 @@
                 </div>
                 <div class="adm-card-body text-center">
                     <div class="border rounded-2 p-1.5 bg-light mb-2">
-                        <img src="{{ asset('frontend/img/course/course1-1.jpg') }}" alt="Course Thumbnail" class="img-fluid rounded" style="max-height: 140px; width: 100%; object-fit: cover;">
+                        <img src="{{ asset('frontend/img/course/course1-1.jpg') }}" id="courseThumbPreview" alt="Course Thumbnail" class="img-fluid rounded" style="max-height: 140px; width: 100%; object-fit: cover;">
                     </div>
-                    <button type="button" class="btn-adm btn-adm-outline w-100 py-1.5 font-11 mb-1" onclick="alert('Select image dialog')">
-                        <i class="fa-solid fa-cloud-arrow-up"></i>
-                        <span>Upload Image</span>
-                    </button>
+                    <input type="file" name="thumbnail" id="courseThumbInput" accept="image/*" class="form-control mb-1"
+                           onchange="if(this.files[0]){ document.getElementById('courseThumbPreview').src = URL.createObjectURL(this.files[0]); }">
                     <div class="text-muted font-10">Recommended 1200×800px (16:9 ratio).</div>
                 </div>
             </div>

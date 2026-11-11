@@ -3,7 +3,14 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Blog;
+use App\Models\Course;
+use App\Models\ElibraryResource;
+use App\Models\MockTest;
+use App\Models\SiteContent;
+use App\Services\SiteContentService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class AdminController extends Controller
 {
@@ -106,10 +113,10 @@ class AdminController extends Controller
      */
     public function dashboard()
     {
-        $courses = config('courses', []);
-        $tests = config('tests.tests', []);
-        $resources = config('elibrary.resources', []);
-        $blogs = config('blogs', []);
+        $courses = SiteContentService::getAllCourses();
+        $tests = SiteContentService::getAllTests();
+        $resources = SiteContentService::getAllResources();
+        $blogs = SiteContentService::getAllBlogs();
 
         return view('backend.dashboard', compact('courses', 'tests', 'resources', 'blogs'));
     }
@@ -119,7 +126,7 @@ class AdminController extends Controller
      */
     public function courses()
     {
-        $courses = config('courses', []);
+        $courses = SiteContentService::getAllCourses();
         return view('backend.courses.index', compact('courses'));
     }
 
@@ -132,7 +139,7 @@ class AdminController extends Controller
     }
 
     /**
-     * Store New Course
+     * Store or Update Course (Persisted to DB + Cache Flushed)
      */
     public function storeCourse(Request $request)
     {
@@ -141,9 +148,45 @@ class AdminController extends Controller
             'category' => 'required|string',
             'price' => 'required',
             'duration' => 'required|string',
+            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:4096',
         ]);
 
-        return redirect()->route('admin.courses')->with('success', 'New Course "' . $request->title . '" created and structured successfully with all subjects!');
+        $slug = $request->input('slug') ?: Str::slug($request->title);
+        $catMap = ['mdcat' => 'MDCAT', 'nums' => 'NUMS', 'army' => 'Army / AMC'];
+        $category = strtolower($request->category);
+
+        $imagePath = $request->input('existing_image');
+        if ($request->hasFile('thumbnail')) {
+            $imagePath = SiteContentService::uploadImage($request->file('thumbnail'), 'courses');
+        }
+
+        Course::updateOrCreate(
+            ['slug' => $slug],
+            [
+                'title' => $request->title,
+                'category' => $category,
+                'category_name' => $catMap[$category] ?? strtoupper($category),
+                'price' => $request->price,
+                'original_price' => $request->input('original_price'),
+                'duration' => $request->duration,
+                'lessons' => $request->input('lessons', '40+ Lectures'),
+                'students' => $request->input('students', '500+ Students'),
+                'instructor' => $request->input('instructor', 'DoctorsInn Faculty'),
+                'overview' => $request->input('overview', 'Structured medical entry test preparation batch.'),
+                'image' => $imagePath ?: 'frontend/img/course/course1-1.jpg',
+                'detail_image' => $imagePath ?: 'frontend/img/course/course1-1.jpg',
+                'is_featured' => true,
+                'is_active' => true,
+            ]
+        );
+
+        return redirect()->route('admin.courses')->with('success', 'Course "' . $request->title . '" saved and published live!');
+    }
+
+    public function deleteCourse($slug)
+    {
+        Course::where('slug', $slug)->delete();
+        return redirect()->route('admin.courses')->with('success', 'Course removed from catalog.');
     }
 
     /**
@@ -151,8 +194,46 @@ class AdminController extends Controller
      */
     public function tests()
     {
-        $tests = config('tests.tests', []);
+        $tests = SiteContentService::getAllTests();
         return view('backend.tests.index', compact('tests'));
+    }
+
+    public function storeTest(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'category' => 'required|string|max:50',
+            'duration_minutes' => 'required|integer|min:1',
+            'passing_percentage' => 'required|integer|min:1|max:100',
+        ]);
+
+        $slug = $request->input('slug') ?: Str::slug($request->title);
+        $catMap = ['mdcat' => 'MDCAT', 'nums' => 'NUMS', 'army' => 'Army / AMC'];
+        $category = strtolower($request->category);
+
+        MockTest::updateOrCreate(
+            ['slug' => $slug],
+            [
+                'title' => $request->title,
+                'category' => $category,
+                'category_name' => $catMap[$category] ?? strtoupper($category),
+                'badge' => $request->input('badge', 'High Yield'),
+                'duration_minutes' => (int) $request->duration_minutes,
+                'passing_percentage' => (int) $request->passing_percentage,
+                'marks_per_question' => (int) $request->input('marks_per_question', 1),
+                'difficulty' => $request->input('difficulty', 'Medium'),
+                'description' => $request->input('description', 'Medical mock test practice session.'),
+                'is_active' => true,
+            ]
+        );
+
+        return redirect()->route('admin.tests')->with('success', 'Mock test "' . $request->title . '" saved!');
+    }
+
+    public function deleteTest($slug)
+    {
+        MockTest::where('slug', $slug)->delete();
+        return redirect()->route('admin.tests')->with('success', 'Mock test deleted.');
     }
 
     /**
@@ -160,8 +241,44 @@ class AdminController extends Controller
      */
     public function elibrary()
     {
-        $resources = config('elibrary.resources', []);
+        $resources = SiteContentService::getAllResources();
         return view('backend.elibrary.index', compact('resources'));
+    }
+
+    public function storeResource(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'category' => 'required|string|max:60',
+            'subject' => 'nullable|string|max:80',
+        ]);
+
+        $slug = $request->input('slug') ?: Str::slug($request->title);
+
+        ElibraryResource::updateOrCreate(
+            ['slug' => $slug],
+            [
+                'title' => $request->title,
+                'category' => strtolower($request->category),
+                'exam_category' => strtolower($request->input('exam_category', $request->category)),
+                'category_name' => ucwords(str_replace('-', ' ', $request->category)),
+                'subject' => $request->input('subject', 'All Subjects'),
+                'badge' => $request->input('badge', 'Free PDF'),
+                'pages' => $request->input('pages', '60 Pages'),
+                'size' => $request->input('size', '4.2 MB'),
+                'description' => $request->input('description', 'Official study guide and notes.'),
+                'file_name' => $slug . '.pdf',
+                'is_active' => true,
+            ]
+        );
+
+        return redirect()->route('admin.elibrary')->with('success', 'Resource "' . $request->title . '" published!');
+    }
+
+    public function deleteResource($slug)
+    {
+        ElibraryResource::where('slug', $slug)->delete();
+        return redirect()->route('admin.elibrary')->with('success', 'E-Library resource deleted.');
     }
 
     /**
@@ -169,8 +286,50 @@ class AdminController extends Controller
      */
     public function blogs()
     {
-        $blogs = config('blogs', []);
+        $blogs = SiteContentService::getAllBlogs();
         return view('backend.blogs.index', compact('blogs'));
+    }
+
+    public function storeBlog(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'category' => 'required|string|max:80',
+            'short_description' => 'nullable|string',
+            'content' => 'nullable|string',
+            'image_file' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:4096',
+        ]);
+
+        $slug = $request->input('slug') ?: Str::slug($request->title);
+        $imagePath = $request->input('existing_image');
+        if ($request->hasFile('image_file')) {
+            $imagePath = SiteContentService::uploadImage($request->file('image_file'), 'blogs');
+        }
+
+        Blog::updateOrCreate(
+            ['slug' => $slug],
+            [
+                'title' => $request->title,
+                'category' => $request->category,
+                'short_description' => $request->input('short_description', Str::limit(strip_tags($request->input('content', '')), 140)),
+                'content' => $request->input('content', '<p>Medical preparation article.</p>'),
+                'image' => $imagePath ?: 'frontend/img/blog/blog_1_1.jpg',
+                'read_time' => $request->input('read_time', '5 min read'),
+                'author' => ['name' => $request->input('author_name', 'DoctorsInn Editorial Team'), 'avatar' => 'frontend/img/team/team_2_1.jpg'],
+                'date_day' => date('d'),
+                'date_month' => date('M'),
+                'date_year' => date('Y'),
+                'is_published' => true,
+            ]
+        );
+
+        return redirect()->route('admin.blogs')->with('success', 'Article "' . $request->title . '" saved and published!');
+    }
+
+    public function deleteBlog($slug)
+    {
+        Blog::where('slug', $slug)->delete();
+        return redirect()->route('admin.blogs')->with('success', 'Article deleted.');
     }
 
     /**
@@ -186,6 +345,23 @@ class AdminController extends Controller
      */
     public function settings()
     {
-        return view('backend.settings.index');
+        $cms = SiteContentService::getSettings();
+        return view('backend.settings.index', compact('cms'));
+    }
+
+    public function saveSettings(Request $request)
+    {
+        $keys = [
+            'site_name', 'contact_phone_1', 'whatsapp_number',
+            'contact_email_1', 'contact_address',
+        ];
+        foreach ($keys as $k) {
+            if ($request->has($k)) {
+                SiteContent::where('key', $k)->update(['value' => trim((string) $request->input($k))]);
+            }
+        }
+        SiteContentService::flushCache();
+
+        return redirect()->route('admin.settings')->with('success', 'Platform & Academy Settings saved and synced live!');
     }
 }
