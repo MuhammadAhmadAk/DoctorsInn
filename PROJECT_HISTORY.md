@@ -43,3 +43,4 @@
 - `58018c5` :: "2026-11-11 | 08:58 PM" - "feat: make complete website content, images, courses, blogs, tests, faculty, testimonials, and FAQs dynamic via indexed DB + cached CMS"
 - `7ed5c3c` :: "2026-11-11 | 09:02 PM" - "fix: cast Blog content as array and preserve complete author metadata for CMS seeding"
 - `e45f29c` :: "2026-11-11 | 09:23 PM" - "perf: eliminate cold information_schema queries, add defer JS + instant 200ms preloader reveal, and preload critical fonts"
+- `5e69f97` :: "2026-11-11 | 09:32 PM" - "style: refine global frontend typography scale for cleaner proportional visuals"
