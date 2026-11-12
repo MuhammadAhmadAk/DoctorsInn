@@ -49,3 +49,4 @@
 - `ae9cd02` :: "2026-11-11 | 10:26 PM" - "perf: add server WebP content negotiation, Brotli/immutable cache headers, 43 pre-encoded WebP images, non-blocking fonts, and drop dead hover-effect JS"
 - `84cfc8a` :: "2026-11-11 | 10:43 PM" - "perf: upgrade admin ImageOptimizerService to deep Imagick method=6, adaptive byte-budget compression, and SVG minification"
 - `9a59747` :: "2026-11-12 | 11:56 PM" - "feat: upgrade classroom modules to chapters and topics with dedicated interactive Quiz Studio"
+- `e70a3af` :: "2026-11-13 | 01:14 AM" - "feat: implement 3-tier hierarchy (Modules -> Chapters -> Topics & Quizzes) with module filter pills"
