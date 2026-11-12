@@ -48,3 +48,4 @@
 - `3680850` :: "2026-11-11 | 09:52 PM" - "perf: add automatic WebP conversion, resizing, EXIF rotation, and alpha preservation to all admin image uploads"
 - `ae9cd02` :: "2026-11-11 | 10:26 PM" - "perf: add server WebP content negotiation, Brotli/immutable cache headers, 43 pre-encoded WebP images, non-blocking fonts, and drop dead hover-effect JS"
 - `84cfc8a` :: "2026-11-11 | 10:43 PM" - "perf: upgrade admin ImageOptimizerService to deep Imagick method=6, adaptive byte-budget compression, and SVG minification"
+- `9a59747` :: "2026-11-12 | 11:56 PM" - "feat: upgrade classroom modules to chapters and topics with dedicated interactive Quiz Studio"
