@@ -898,6 +898,6 @@
 @endsection
 
 @section('extra_js')
-    <script src="{{ asset('frontend/js/my-courses-data.js') }}"></script>
-    <script src="{{ asset('frontend/js/course-portal.js') }}"></script>
+    <script src="{{ asset('frontend/js/my-courses-data.js') }}?v={{ file_exists(public_path('frontend/js/my-courses-data.js')) ? filemtime(public_path('frontend/js/my-courses-data.js')) : time() }}"></script>
+    <script src="{{ asset('frontend/js/course-portal.js') }}?v={{ file_exists(public_path('frontend/js/course-portal.js')) ? filemtime(public_path('frontend/js/course-portal.js')) : time() }}"></script>
 @endsection
