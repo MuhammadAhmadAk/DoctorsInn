@@ -1,17 +1,31 @@
 /**
- * Course Study Portal Controller
- * DoctorsInnElite - Learning Portal
+ * Course Study Portal Controller — Chapters, Topics & Quiz Studio Engine
+ * DoctorsInnElite - Learning Management System
  * File: public/frontend/js/course-portal.js
  */
 
 // Global database reference (loaded from my-courses-data.js)
 const getDb = () => (typeof myCoursesData !== 'undefined' ? myCoursesData : (typeof coursesDatabase !== 'undefined' ? coursesDatabase : {}));
 
-// State variables
+// Global State
 let activeCourseId = "mdcat-reboot-60-day";
-let activeLessonId = "";
+let activeTopicId = "";
+let activeFilter = "all"; // "all" | "topics" | "quizzes"
 
-// Helper Functions for URL & State
+// Quiz Studio Runtime State
+let currentQuizTopic = null;
+let activeQuizData = null;
+let currentQuestionIdx = 0;
+let userSelections = [];
+let checkedStatus = [];
+let quizTimerInterval = null;
+let timeRemainingSec = 0;
+let timeSpentSec = 0;
+
+// =============================================================================
+// 1. DATA NORMALIZATION & HELPERS
+// =============================================================================
+
 function getActiveCourseId() {
     const db = getDb();
     const urlParams = new URLSearchParams(window.location.search);
@@ -29,13 +43,220 @@ function getActiveCourseId() {
         return courseId;
     }
 
-    // Default to first available or mdcat-reboot
     const keys = Object.keys(db);
     return keys.length > 0 ? (db["mdcat-reboot-60-day"] ? "mdcat-reboot-60-day" : keys[0]) : "mdcat-reboot-60-day";
 }
 
-// Completed Lessons in LocalStorage
-function getCompletedLessons(courseId) {
+/**
+ * Normalizes course content so whether defined as 'chapters' or legacy 'modules',
+ * it returns a structured array of Chapters with Topics and Quizzes.
+ */
+function normalizeCourseContent(course) {
+    if (!course) return [];
+
+    // Case A: Course has direct native 'chapters'
+    if (Array.isArray(course.chapters) && course.chapters.length > 0) {
+        return course.chapters.map((ch, chIdx) => {
+            const chId = ch.id || `chapter-${chIdx + 1}`;
+            const chName = ch.name || `Chapter ${chIdx + 1}`;
+            const topics = (ch.topics || []).map((tp, tpIdx) => {
+                const isQuiz = Boolean(tp.isQuiz || tp.type === "quiz");
+                const quizType = tp.quizType || (tp.isChapterQuiz ? "chapter" : "topic");
+                return {
+                    id: tp.id || `topic-${chIdx + 1}-${tpIdx + 1}`,
+                    topicNumber: tp.topicNumber || `${chIdx + 1}.${tpIdx + 1}`,
+                    title: tp.title || `Topic ${tpIdx + 1}`,
+                    type: isQuiz ? "quiz" : (tp.type || "video"),
+                    isQuiz: isQuiz,
+                    quizType: quizType,
+                    duration: tp.duration || (isQuiz ? "5 min" : "35 min"),
+                    videoUrl: tp.videoUrl || "",
+                    readContent: tp.readContent || "",
+                    resources: tp.resources || course.defaultResources || [],
+                    quizData: tp.quizData || (isQuiz ? generateFallbackQuiz(tp.title) : null),
+                    chapterId: chId,
+                    chapterName: chName
+                };
+            });
+            return {
+                id: chId,
+                name: chName,
+                description: ch.description || "",
+                topics: topics
+            };
+        });
+    }
+
+    // Case B: Course has legacy 'modules' — adapt into Chapters and Topics
+    if (Array.isArray(course.modules) && course.modules.length > 0) {
+        return course.modules.map((mod, modIdx) => {
+            const chId = `chapter-${modIdx + 1}`;
+            const cleanModName = mod.name.replace(/^Module\s*\d+\s*:\s*/i, "");
+            const chName = `Chapter ${modIdx + 1}: ${cleanModName}`;
+
+            const topics = [];
+            (mod.lessons || []).forEach((les, lesIdx) => {
+                const isQuiz = Boolean(les.isQuiz || les.type === "quiz");
+                const cleanTitle = les.title.replace(/^Lesson\s*\d+\s*[-—:]\s*/i, "");
+
+                // Add the topic
+                topics.push({
+                    id: les.id,
+                    topicNumber: `${modIdx + 1}.${lesIdx + 1}`,
+                    title: `Topic ${modIdx + 1}.${lesIdx + 1}: ${cleanTitle}`,
+                    type: isQuiz ? "quiz" : (les.type || "video"),
+                    isQuiz: isQuiz,
+                    quizType: isQuiz ? (les.quizType || "topic") : "topic",
+                    duration: les.duration || "30 min",
+                    videoUrl: les.videoUrl || "",
+                    readContent: les.readContent || "",
+                    resources: les.resources || course.defaultResources || [],
+                    quizData: les.quizData || (isQuiz ? generateFallbackQuiz(les.title) : null),
+                    chapterId: chId,
+                    chapterName: chName
+                });
+
+                // Synthesize a Checkpoint Topic Quiz after the first video topic if none exists
+                if (lesIdx === 0 && !isQuiz && (mod.lessons.length > 1 || !mod.lessons.some(l => l.isQuiz))) {
+                    const quizTopicId = `${les.id}-quiz`;
+                    topics.push({
+                        id: quizTopicId,
+                        topicNumber: `${modIdx + 1}.1 Checkpoint`,
+                        title: `Topic ${modIdx + 1}.1 Quick Quiz: Concept Check`,
+                        type: "quiz",
+                        isQuiz: true,
+                        quizType: "topic",
+                        duration: "5 min",
+                        videoUrl: "",
+                        readContent: "",
+                        resources: course.defaultResources || [],
+                        quizData: generateFallbackQuiz(`Topic ${modIdx + 1}.1: ${cleanTitle}`),
+                        chapterId: chId,
+                        chapterName: chName
+                    });
+                }
+            });
+
+            // Synthesize a Chapter Comprehensive Quiz at the end of the chapter
+            const hasChapterEndQuiz = topics.some(t => t.quizType === "chapter");
+            if (!hasChapterEndQuiz) {
+                const chQuizId = `chapter-${modIdx + 1}-assessment`;
+                topics.push({
+                    id: chQuizId,
+                    topicNumber: "Assessment",
+                    title: `${chName} — Mastery Assessment`,
+                    type: "quiz",
+                    isQuiz: true,
+                    quizType: "chapter",
+                    duration: "10 min",
+                    videoUrl: "",
+                    readContent: "",
+                    resources: course.defaultResources || [],
+                    quizData: generateFallbackQuiz(chName, 5, 80, 10, true),
+                    chapterId: chId,
+                    chapterName: chName
+                });
+            }
+
+            return {
+                id: chId,
+                name: chName,
+                description: mod.description || "",
+                topics: topics
+            };
+        });
+    }
+
+    return [];
+}
+
+/**
+ * Fallback generator for realistic high-yield PMDC quiz MCQs
+ */
+function generateFallbackQuiz(subjectTitle, count = 5, passScore = 80, timeMins = 5, isChapterExam = false) {
+    const questions = [
+        {
+            question: `In reference to ${subjectTitle}, which of the following is considered the primary physiological regulatory factor according to PMDC guidelines?`,
+            options: [
+                "Negative feedback inhibition through allosteric control",
+                "Passive paracellular osmotic equilibration",
+                "Irreversible covalent ligand cleavage",
+                "Substrate-level phosphorylation alone"
+            ],
+            correctIndex: 0,
+            explanation: "Negative feedback inhibition represents the quintessential homeostatic mechanism tested in MDCAT biology, preventing toxic substrate accumulation."
+        },
+        {
+            question: "Which of the following cellular processes directly requires energy derived from the hydrolysis of nucleoside triphosphates (ATP/GTP)?",
+            options: [
+                "Primary active transport via transmembrane pump",
+                "Facilitated diffusion through voltage-gated ion channel",
+                "Simple osmotic movement of water across aquaporins",
+                "Lipid-soluble gas exchange across alveolar membrane"
+            ],
+            correctIndex: 0,
+            explanation: "Primary active transport is characterized by direct coupling of ATP hydrolysis to solute translocation against an electrochemical gradient."
+        },
+        {
+            question: "During high-intensity physiological stress, what metabolic adjustment is observed in mammalian tissue cells?",
+            options: [
+                "Depletion of intracellular glycogen with lactic acid elevation",
+                "Immediate cessation of anaerobic glycolysis",
+                "Total inhibition of mitochondrial cytochromes",
+                "Accumulation of excess extracellular glucose polymers"
+            ],
+            correctIndex: 0,
+            explanation: "Under high metabolic demand or relative hypoxia, glycolysis increases rapidly with pyruvate reduction to lactate to regenerate NAD+ for continuous ATP supply."
+        },
+        {
+            question: "Which molecular bond provides the primary structural stability in the secondary conformation of proteins (alpha-helix & beta-pleated sheet)?",
+            options: [
+                "Hydrogen bonds between carbonyl oxygen and amide hydrogen of backbone",
+                "Covalent disulfide bridges between distal cysteine residues",
+                "Hydrophobic van der Waals forces between nonpolar side chains",
+                "Ionic salt bridges between aspartate and lysine groups"
+            ],
+            correctIndex: 0,
+            explanation: "Secondary structures are strictly stabilized by backbone hydrogen bonds occurring at regular periodic intervals along the polypeptide chain."
+        },
+        {
+            question: "In standard Mendelian genetic evaluation, what phenotypic ratio is expected from a cross of two double heterozygotes (AaBb x AaBb) with unlinked genes?",
+            options: [
+                "9 : 3 : 3 : 1",
+                "1 : 2 : 1",
+                "3 : 1",
+                "1 : 1 : 1 : 1"
+            ],
+            correctIndex: 0,
+            explanation: "The hallmark 9:3:3:1 phenotypic ratio arises from the independent assortment of two non-interacting, unlinked autosomal gene pairs."
+        }
+    ];
+
+    return {
+        title: isChapterExam ? `${subjectTitle} — Comprehensive Assessment` : `${subjectTitle} Practice Quiz`,
+        subtitle: isChapterExam ? "PMDC Examination standard comprehensive mastery assessment." : "Rapid-fire concept check questions to test your retention.",
+        passingScore: passScore,
+        timeLimitMinutes: timeMins,
+        questions: questions.slice(0, count)
+    };
+}
+
+/**
+ * Returns a flat array of all topics across all chapters for sequential navigation.
+ */
+function getAllCourseTopics(chapters) {
+    const list = [];
+    chapters.forEach(ch => {
+        ch.topics.forEach(tp => list.push(tp));
+    });
+    return list;
+}
+
+// =============================================================================
+// 2. LOCAL STORAGE PERSISTENCE (Completion, Notes, Q&A)
+// =============================================================================
+
+function getCompletedItems(courseId) {
     const key = `completed_lessons_${courseId}`;
     try {
         const completed = localStorage.getItem(key);
@@ -45,16 +266,16 @@ function getCompletedLessons(courseId) {
     }
 }
 
-function setLessonCompleted(courseId, lessonId, isCompleted) {
+function setItemCompleted(courseId, itemId, isCompleted) {
     const key = `completed_lessons_${courseId}`;
-    let completed = getCompletedLessons(courseId);
+    let completed = getCompletedItems(courseId);
 
     if (isCompleted) {
-        if (!completed.includes(lessonId)) {
-            completed.push(lessonId);
+        if (!completed.includes(itemId)) {
+            completed.push(itemId);
         }
     } else {
-        completed = completed.filter(id => id !== lessonId);
+        completed = completed.filter(id => id !== itemId);
     }
 
     localStorage.setItem(key, JSON.stringify(completed));
@@ -62,13 +283,12 @@ function setLessonCompleted(courseId, lessonId, isCompleted) {
     updateSidebarCheckmarks();
 }
 
-// Notes Storage
-function getLessonNotes(lessonId) {
-    return localStorage.getItem(`notes_${lessonId}`) || "";
+function getTopicNotes(topicId) {
+    return localStorage.getItem(`notes_${topicId}`) || "";
 }
 
-function saveLessonNotes(lessonId, content) {
-    localStorage.setItem(`notes_${lessonId}`, content);
+function saveTopicNotes(topicId, content) {
+    localStorage.setItem(`notes_${topicId}`, content);
 }
 
 function getInstructorImage() {
@@ -79,13 +299,11 @@ function getStudentAvatar(avatar = "") {
     if (/^(https?:)?\/\//i.test(avatar)) {
         return avatar;
     }
-
     return document.getElementById("enrolledCourseSelect")?.dataset.studentAvatar || "";
 }
 
-// Q&A Store
-function getLessonQa(lessonId) {
-    const key = `qa_${lessonId}`;
+function getTopicQa(topicId) {
+    const key = `qa_${topicId}`;
     try {
         const qa = localStorage.getItem(key);
         return qa ? JSON.parse(qa) : [
@@ -94,14 +312,14 @@ function getLessonQa(lessonId) {
                 role: "Student",
                 avatar: getStudentAvatar(),
                 date: "3 hours ago",
-                text: "Is this lesson strictly aligned with the updated PMDC syllabus for the upcoming exam session?"
+                text: "Is this topic and quiz strictly aligned with the updated PMDC syllabus for the upcoming exam session?"
             },
             {
                 user: "DoctorsInn Mentor",
                 role: "Instructor",
                 avatar: getInstructorImage(),
                 date: "2 hours ago",
-                text: "Yes, Ali! All topics, MCQs, and past questions are 100% mapped to the official MDCAT syllabus."
+                text: "Yes, Ali! All topics, practice quizzes, and chapter assessments are 100% mapped to the official MDCAT syllabus."
             }
         ];
     } catch (e) {
@@ -109,119 +327,246 @@ function getLessonQa(lessonId) {
     }
 }
 
-function saveLessonQa(lessonId, thread) {
-    localStorage.setItem(`qa_${lessonId}`, JSON.stringify(thread));
+function saveTopicQa(topicId, thread) {
+    localStorage.setItem(`qa_${topicId}`, JSON.stringify(thread));
 }
 
-// --- UI Rendering ---
-function renderSyllabusSidebar() {
-    const db = getDb();
-    const course = db[activeCourseId];
-    if (!course || !course.modules) return;
+// =============================================================================
+// 3. CURRICULUM OUTLINE SIDEBAR RENDERING
+// =============================================================================
 
+function renderCurriculumSidebar(filter = activeFilter) {
+    activeFilter = filter;
+    const db = getDb();
+    const rawCourse = db[activeCourseId];
+    if (!rawCourse) return;
+
+    const chapters = normalizeCourseContent(rawCourse);
     const accordionContainer = document.getElementById("syllabusAccordion");
     if (!accordionContainer) return;
+
     accordionContainer.innerHTML = "";
-    if (!accordionContainer._hasLessonListener) {
-        accordionContainer._hasLessonListener = true;
-        accordionContainer.addEventListener("click", event => {
-            const lessonItem = event.target.closest("[data-lesson-id]");
-            if (lessonItem) selectActiveLesson(lessonItem.dataset.lessonId);
-        });
-    }
 
-    course.modules.forEach((module, moduleIdx) => {
-        const accordionId = `moduleCollapse_${moduleIdx}`;
-        const isShow = moduleIdx === 0 ? "show" : "";
-        const isExpanded = moduleIdx === 0 ? "true" : "false";
-        const buttonCollapsed = moduleIdx === 0 ? "" : "collapsed";
+    // Count statistics
+    let cntAll = 0;
+    let cntTopics = 0;
+    let cntQuizzes = 0;
 
-        let lessonsHtml = "";
-        module.lessons.forEach(lesson => {
-            const iconClass = lesson.type === "video" ? "fa-regular fa-video" : "fa-regular fa-file-lines";
-            const completedList = getCompletedLessons(activeCourseId);
-            const isCompleted = completedList.includes(lesson.id);
-            const completedClass = isCompleted ? "completed" : "";
-            const activeClass = lesson.id === activeLessonId ? "active" : "";
-
-            lessonsHtml += `
-                <div class="lesson-study-item ${activeClass} ${completedClass}" id="item-${lesson.id}" data-lesson-id="${lesson.id}">
-                    <span class="lesson-icon-wrapper">
-                        <i class="${iconClass}"></i>
-                    </span>
-                    <div class="lesson-meta-info flex-grow-1">
-                        <span class="lesson-title-text">${lesson.title}</span>
-                        <span class="lesson-time text-muted text-xs">${lesson.duration}</span>
-                    </div>
-                    <span class="status-indicator">
-                        <i class="fa-solid fa-circle-check checkmark"></i>
-                        <i class="fa-regular fa-circle bullet"></i>
-                    </span>
-                </div>
-            `;
-        });
-
-        const moduleCardHtml = `
-            <div class="accordion-item study-accordion-item">
-                <h2 class="accordion-header" id="heading_${moduleIdx}">
-                    <button class="accordion-button ${buttonCollapsed}" type="button" data-bs-toggle="collapse" data-bs-target="#${accordionId}" aria-expanded="${isExpanded}" aria-controls="${accordionId}">
-                        <div class="d-flex flex-column text-start">
-                            <span class="fw-bold text-title text-sm">${module.name}</span>
-                            <span class="text-xs text-muted mt-1">${module.lessons.length} Lessons</span>
-                        </div>
-                    </button>
-                </h2>
-                <div id="${accordionId}" class="accordion-collapse collapse ${isShow}" aria-labelledby="heading_${moduleIdx}" data-bs-parent="#syllabusAccordion">
-                    <div class="accordion-body p-2 study-accordion-body">
-                        ${lessonsHtml}
-                    </div>
-                </div>
-            </div>
-        `;
-        accordionContainer.insertAdjacentHTML("beforeend", moduleCardHtml);
-    });
-}
-
-function selectActiveLesson(lessonId) {
-    activeLessonId = lessonId;
-
-    const db = getDb();
-    const course = db[activeCourseId];
-    if (!course || !course.modules) return;
-
-    let activeLesson = null;
-    let parentModuleName = "Course Module";
-
-    course.modules.forEach(module => {
-        module.lessons.forEach(lesson => {
-            if (lesson.id === lessonId) {
-                activeLesson = lesson;
-                parentModuleName = module.name;
+    chapters.forEach(ch => {
+        ch.topics.forEach(tp => {
+            cntAll++;
+            if (tp.isQuiz) {
+                cntQuizzes++;
+            } else {
+                cntTopics++;
             }
         });
     });
 
-    if (!activeLesson) return;
+    const filterAllEl = document.getElementById("filter-cnt-all");
+    const filterTopicsEl = document.getElementById("filter-cnt-topics");
+    const filterQuizzesEl = document.getElementById("filter-cnt-quizzes");
 
-    // Highlight active in sidebar
-    document.querySelectorAll(".lesson-study-item").forEach(item => {
+    if (filterAllEl) filterAllEl.textContent = `(${cntAll})`;
+    if (filterTopicsEl) filterTopicsEl.textContent = `(${cntTopics})`;
+    if (filterQuizzesEl) filterQuizzesEl.textContent = `(${cntQuizzes})`;
+
+    // Attach click listener for items once
+    if (!accordionContainer._hasTopicListener) {
+        accordionContainer._hasTopicListener = true;
+        accordionContainer.addEventListener("click", event => {
+            const topicItem = event.target.closest("[data-topic-id], [data-lesson-id]");
+            if (topicItem) {
+                const topicId = topicItem.dataset.topicId || topicItem.dataset.lessonId;
+                selectActiveTopic(topicId);
+            }
+        });
+    }
+
+    const completedList = getCompletedItems(activeCourseId);
+
+    chapters.forEach((chapter, chIdx) => {
+        const accordionId = `chapterCollapse_${chIdx}`;
+
+        // Filter topics according to active filter
+        const visibleTopics = chapter.topics.filter(tp => {
+            if (activeFilter === "topics") return !tp.isQuiz;
+            if (activeFilter === "quizzes") return tp.isQuiz;
+            return true;
+        });
+
+        // Determine if this chapter contains the active topic
+        const containsActive = chapter.topics.some(tp => tp.id === activeTopicId);
+        const shouldExpand = containsActive || (chIdx === 0 && !activeTopicId);
+        const isShow = shouldExpand ? "show" : "";
+        const isExpanded = shouldExpand ? "true" : "false";
+        const buttonCollapsed = shouldExpand ? "" : "collapsed";
+
+        let topicsHtml = "";
+        if (visibleTopics.length === 0) {
+            topicsHtml = `
+                <div class="text-center py-3 text-muted text-xs">
+                    No ${activeFilter} in this chapter.
+                </div>
+            `;
+        } else {
+            visibleTopics.forEach(topic => {
+                const isCompleted = completedList.includes(topic.id);
+                const completedClass = isCompleted ? "completed" : "";
+                const activeClass = topic.id === activeTopicId ? "active" : "";
+
+                // Icon and Badge determination
+                let iconClass = "fa-solid fa-play";
+                let badgeClass = "badge-pill-video";
+                let badgeText = "VIDEO";
+                let quizItemClass = "";
+
+                if (topic.isQuiz) {
+                    if (topic.quizType === "chapter") {
+                        iconClass = "fa-solid fa-award";
+                        badgeClass = "badge-pill-chapter-quiz";
+                        badgeText = "CHAPTER QUIZ";
+                        quizItemClass = "is-chapter-quiz-item";
+                    } else {
+                        iconClass = "fa-solid fa-clipboard-question";
+                        badgeClass = "badge-pill-topic-quiz";
+                        badgeText = "TOPIC QUIZ";
+                        quizItemClass = "is-quiz-item";
+                    }
+                } else if (topic.type === "reading" || topic.type === "text") {
+                    iconClass = "fa-solid fa-book-open-reader";
+                    badgeClass = "badge-pill-reading";
+                    badgeText = "READING";
+                }
+
+                topicsHtml += `
+                    <div class="topic-study-item ${activeClass} ${completedClass} ${quizItemClass}" id="item-${topic.id}" data-topic-id="${topic.id}" data-lesson-id="${topic.id}">
+                        <span class="topic-icon-wrapper">
+                            <i class="${iconClass}"></i>
+                        </span>
+                        <div class="topic-meta-info flex-grow-1" style="min-width: 0;">
+                            <div class="d-flex align-items-center gap-1 flex-wrap">
+                                <span class="topic-badge-pill ${badgeClass}">${badgeText}</span>
+                                <span class="topic-time text-muted text-xs ms-auto">${topic.duration}</span>
+                            </div>
+                            <div class="topic-title-text text-truncate fw-semibold text-dark mt-1" title="${topic.title}">
+                                ${topic.title}
+                            </div>
+                        </div>
+                        <span class="status-indicator ms-2">
+                            <i class="fa-solid fa-circle-check checkmark"></i>
+                            <i class="fa-regular fa-circle bullet"></i>
+                        </span>
+                    </div>
+                `;
+            });
+        }
+
+        const chapterTopicsCount = chapter.topics.filter(t => !t.isQuiz).length;
+        const chapterQuizzesCount = chapter.topics.filter(t => t.isQuiz).length;
+        const countMeta = `${chapterTopicsCount} Topics &bull; ${chapterQuizzesCount} Quizzes`;
+
+        const chapterCardHtml = `
+            <div class="accordion-item study-accordion-item border rounded-3 mb-2 overflow-hidden">
+                <h2 class="accordion-header" id="heading_${chIdx}">
+                    <button class="accordion-button ${buttonCollapsed} px-3 py-2.5 bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#${accordionId}" aria-expanded="${isExpanded}" aria-controls="${accordionId}">
+                        <div class="d-flex flex-column text-start">
+                            <span class="fw-bold text-dark text-sm">${chapter.name}</span>
+                            <span class="text-xs text-muted mt-0.5">${countMeta}</span>
+                        </div>
+                    </button>
+                </h2>
+                <div id="${accordionId}" class="accordion-collapse collapse ${isShow}" aria-labelledby="heading_${chIdx}" data-bs-parent="#syllabusAccordion">
+                    <div class="accordion-body p-2 study-accordion-body bg-white">
+                        ${topicsHtml}
+                    </div>
+                </div>
+            </div>
+        `;
+        accordionContainer.insertAdjacentHTML("beforeend", chapterCardHtml);
+    });
+}
+
+// =============================================================================
+// 4. TOPIC & QUIZ SELECTION CONTROLLER
+// =============================================================================
+
+function selectActiveTopic(topicId) {
+    activeTopicId = topicId;
+
+    const db = getDb();
+    const rawCourse = db[activeCourseId];
+    if (!rawCourse) return;
+
+    const chapters = normalizeCourseContent(rawCourse);
+    let activeTopic = null;
+    let parentChapter = null;
+
+    chapters.forEach(ch => {
+        ch.topics.forEach(tp => {
+            if (tp.id === topicId) {
+                activeTopic = tp;
+                parentChapter = ch;
+            }
+        });
+    });
+
+    if (!activeTopic) return;
+
+    // Highlight active item in sidebar
+    document.querySelectorAll(".topic-study-item, .lesson-study-item").forEach(item => {
         item.classList.remove("active");
     });
-    const sidebarItem = document.getElementById(`item-${lessonId}`);
+    const sidebarItem = document.getElementById(`item-${topicId}`);
     if (sidebarItem) {
         sidebarItem.classList.add("active");
     }
 
-    // Video vs Text
+    // References to UI View containers
     const videoContainer = document.getElementById("video-player-container");
     const textBanner = document.getElementById("text-lesson-banner");
+    const quizContainer = document.getElementById("quiz-studio-container");
     const videoPlayer = document.getElementById("main-video-player");
+    const topicControlRow = document.getElementById("topic-control-row");
+    const topicTabsWrapper = document.getElementById("topic-tabs-wrapper");
 
-    if (activeLesson.type === "video" && activeLesson.videoUrl) {
+    // Clear any running quiz timer
+    if (quizTimerInterval) {
+        clearInterval(quizTimerInterval);
+        quizTimerInterval = null;
+    }
+
+    // =========================================================================
+    // CASE A: QUIZ STUDIO ITEM (Topic Quiz or Chapter Assessment)
+    // =========================================================================
+    if (activeTopic.isQuiz) {
+        if (videoPlayer) {
+            videoPlayer.pause();
+            videoPlayer.src = "";
+        }
+        if (videoContainer) videoContainer.classList.add("d-none");
+        if (textBanner) textBanner.classList.add("d-none");
+        if (quizContainer) quizContainer.classList.remove("d-none");
+        if (topicControlRow) topicControlRow.classList.add("d-none");
+        if (topicTabsWrapper) topicTabsWrapper.classList.add("d-none");
+
+        initQuizStudio(activeTopic);
+        return;
+    }
+
+    // =========================================================================
+    // CASE B: NORMAL TOPIC (Video Lecture or High-Yield Reading)
+    // =========================================================================
+    if (quizContainer) quizContainer.classList.add("d-none");
+    if (topicControlRow) topicControlRow.classList.remove("d-none");
+    if (topicTabsWrapper) topicTabsWrapper.classList.remove("d-none");
+
+    // Video vs Reading
+    if (activeTopic.type === "video" && activeTopic.videoUrl) {
         if (videoContainer) videoContainer.classList.remove("d-none");
         if (textBanner) textBanner.classList.add("d-none");
         if (videoPlayer) {
-            videoPlayer.src = activeLesson.videoUrl;
+            videoPlayer.src = activeTopic.videoUrl;
             videoPlayer.load();
         }
     } else {
@@ -232,87 +577,136 @@ function selectActiveLesson(lessonId) {
             videoPlayer.src = "";
         }
         const textBannerTitle = document.getElementById("text-banner-title");
-        if (textBannerTitle) textBannerTitle.textContent = activeLesson.title;
+        if (textBannerTitle) textBannerTitle.textContent = activeTopic.title;
     }
 
-    // Labels
-    const moduleNameEl = document.getElementById("active-module-name");
-    const lessonTitleEl = document.getElementById("active-lesson-title");
-    const lessonDurationEl = document.getElementById("active-lesson-duration");
-    const lessonTypeEl = document.getElementById("active-lesson-type");
+    // Update Header Labels
+    const chNameEl = document.getElementById("active-chapter-name") || document.getElementById("active-module-name");
+    const titleEl = document.getElementById("active-topic-title") || document.getElementById("active-lesson-title");
+    const durationEl = document.getElementById("active-topic-duration") || document.getElementById("active-lesson-duration");
+    const typeEl = document.getElementById("active-topic-type") || document.getElementById("active-lesson-type");
+    const badgeEl = document.getElementById("active-topic-badge");
 
-    if (moduleNameEl) moduleNameEl.textContent = parentModuleName;
-    if (lessonTitleEl) lessonTitleEl.textContent = activeLesson.title;
-    if (lessonDurationEl) lessonDurationEl.textContent = activeLesson.duration;
-    if (lessonTypeEl) lessonTypeEl.textContent = activeLesson.type === "video" ? "Video Lecture" : "Read Article / Exam";
+    if (chNameEl) chNameEl.textContent = parentChapter ? parentChapter.name : "Course Chapter";
+    if (titleEl) titleEl.textContent = activeTopic.title;
+    if (durationEl) durationEl.textContent = activeTopic.duration;
+    if (typeEl) typeEl.textContent = activeTopic.type === "video" ? "Video Lecture" : "Read Notes / Article";
+    if (badgeEl) badgeEl.textContent = activeTopic.type === "video" ? "Video Topic" : "High-Yield Reading";
 
-    // Mark complete button toggle
-    const completedList = getCompletedLessons(activeCourseId);
-    const isCompleted = completedList.includes(lessonId);
+    // Update Completion status button
+    const completedList = getCompletedItems(activeCourseId);
+    const isCompleted = completedList.includes(topicId);
     updateCompleteButtonUi(isCompleted);
 
-    // Reading text content
+    // Reading text body
     const readingBody = document.getElementById("lesson-reading-body");
     if (readingBody) {
-        readingBody.innerHTML = activeLesson.readContent || "<p class='p-3 text-muted'>Lecture content is being updated by instructors.</p>";
+        readingBody.innerHTML = activeTopic.readContent || `
+            <div class="p-4 bg-light rounded-3 text-secondary">
+                <h5 class="fw-bold text-dark mb-2">${activeTopic.title}</h5>
+                <p class="mb-2">This topic contains high-yield PMDC syllabus core points, conceptual diagrams, and mnemonics.</p>
+                <div class="alert alert-info py-2 px-3 text-xs mb-0">
+                    <i class="fa-solid fa-circle-info me-1"></i> Video lecture and interactive checkpoints are accessible in the outline.
+                </div>
+            </div>
+        `;
     }
 
-    // Notes
+    // Personal Notes
     const notesTextarea = document.getElementById("lesson-notes-textarea");
     if (notesTextarea) {
-        notesTextarea.value = getLessonNotes(lessonId);
+        notesTextarea.value = getTopicNotes(topicId);
     }
     const notesStatus = document.getElementById("notes-save-status");
     if (notesStatus) notesStatus.classList.add("d-none");
 
-    // Resources Tab
-    const resourcesContainer = document.getElementById("lesson-resources-list");
-    if (resourcesContainer) {
-        resourcesContainer.innerHTML = "";
-        if (!resourcesContainer._hasDownloadListener) {
-            resourcesContainer._hasDownloadListener = true;
-            resourcesContainer.addEventListener("click", event => {
-                const downloadButton = event.target.closest("[data-resource-download]");
-                if (!downloadButton) return;
-                downloadResourceFile(downloadButton.dataset.resourceDownload);
-            });
-        }
-        const allResources = (activeLesson.resources && activeLesson.resources.length > 0)
-            ? activeLesson.resources
-            : (course.defaultResources || []);
+    // Resources (PDFs)
+    renderResourcesList(activeTopic, rawCourse);
 
-        if (allResources && allResources.length > 0) {
-            allResources.forEach(res => {
-                const resHtml = `
-                    <div class="resource-study-box d-flex align-items-center justify-content-between p-3 mb-2 rounded-3 border study-resource-box">
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="rounded-3 p-2 d-flex align-items-center justify-content-center study-resource-icon">
-                                <i class="fa-solid fa-file-pdf text-danger study-resource-file-icon"></i>
-                            </div>
-                            <div>
-                                <span class="fw-bold d-block text-title text-sm">${res.name}</span>
-                                <span class="text-xs text-muted"><i class="fa-regular fa-download me-1"></i> Verified MDCAT Study Resource &bull; PDF Document</span>
-                            </div>
-                        </div>
-                        <button type="button" data-resource-download="${res.name}" class="th-btn btn-sm py-2 px-3 study-resource-download">
-                            <i class="fa-regular fa-arrow-down-to-line me-1"></i> Download PDF
-                        </button>
-                    </div>
-                `;
-                resourcesContainer.insertAdjacentHTML("beforeend", resHtml);
-            });
-        } else {
-            resourcesContainer.innerHTML = `
-                <div class="text-center py-4 text-muted text-sm">
-                    <i class="fa-regular fa-folder-open mb-2 d-block study-empty-icon"></i>
-                    No additional resources attached for this lesson.
-                </div>
-            `;
-        }
+    // Q&A Feed
+    renderQaFeed();
+
+    // Up Next Banner
+    updateUpNextBanner(activeTopic, chapters);
+}
+
+// Backward-compatibility alias
+function selectActiveLesson(lessonId) {
+    selectActiveTopic(lessonId);
+}
+
+function updateUpNextBanner(currentTopic, chapters) {
+    const allTopics = getAllCourseTopics(chapters);
+    const currentIdx = allTopics.findIndex(t => t.id === currentTopic.id);
+    const upNextBanner = document.getElementById("up-next-banner");
+    const upNextTitle = document.getElementById("up-next-title");
+    const upNextBtn = document.getElementById("up-next-btn");
+
+    if (!upNextBanner || !upNextTitle || !upNextBtn) return;
+
+    if (currentIdx !== -1 && currentIdx < allTopics.length - 1) {
+        const nextTopic = allTopics[currentIdx + 1];
+        upNextBanner.classList.remove("d-none");
+        upNextTitle.textContent = nextTopic.title;
+
+        upNextBtn.onclick = () => {
+            selectActiveTopic(nextTopic.id);
+            window.scrollTo({ top: 120, behavior: "smooth" });
+        };
+    } else {
+        upNextTitle.textContent = "Curriculum Completed! Review chapters or retake assessments.";
+        upNextBtn.onclick = () => {
+            if (allTopics.length > 0) selectActiveTopic(allTopics[0].id);
+        };
+    }
+}
+
+function renderResourcesList(activeTopic, course) {
+    const resourcesContainer = document.getElementById("lesson-resources-list");
+    if (!resourcesContainer) return;
+    resourcesContainer.innerHTML = "";
+
+    if (!resourcesContainer._hasDownloadListener) {
+        resourcesContainer._hasDownloadListener = true;
+        resourcesContainer.addEventListener("click", event => {
+            const downloadButton = event.target.closest("[data-resource-download]");
+            if (!downloadButton) return;
+            downloadResourceFile(downloadButton.dataset.resourceDownload);
+        });
     }
 
-    // Q&A
-    renderQaFeed();
+    const allResources = (activeTopic.resources && activeTopic.resources.length > 0)
+        ? activeTopic.resources
+        : (course.defaultResources || []);
+
+    if (allResources && allResources.length > 0) {
+        allResources.forEach(res => {
+            const resHtml = `
+                <div class="resource-study-box d-flex align-items-center justify-content-between p-3 mb-2 rounded-3 border bg-light">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="rounded-3 p-2 bg-white border d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                            <i class="fa-solid fa-file-pdf text-danger fs-5"></i>
+                        </div>
+                        <div>
+                            <span class="fw-bold d-block text-dark text-sm">${res.name}</span>
+                            <span class="text-xs text-muted"><i class="fa-regular fa-download me-1"></i> Verified MDCAT Study Resource &bull; PDF Document</span>
+                        </div>
+                    </div>
+                    <button type="button" data-resource-download="${res.name}" class="btn btn-sm btn-primary py-2 px-3 fw-semibold">
+                        <i class="fa-regular fa-arrow-down-to-line me-1"></i> Download PDF
+                    </button>
+                </div>
+            `;
+            resourcesContainer.insertAdjacentHTML("beforeend", resHtml);
+        });
+    } else {
+        resourcesContainer.innerHTML = `
+            <div class="text-center py-4 text-muted text-sm">
+                <i class="fa-regular fa-folder-open mb-2 d-block fs-3"></i>
+                No additional resources attached for this topic.
+            </div>
+        `;
+    }
 }
 
 function downloadResourceFile(resourceName) {
@@ -331,46 +725,431 @@ function downloadResourceFile(resourceName) {
     URL.revokeObjectURL(url);
 }
 
+// =============================================================================
+// 5. QUIZ STUDIO ENGINE (Start Screen, Question Player, Scorecard)
+// =============================================================================
+
+function initQuizStudio(topic) {
+    currentQuizTopic = topic;
+    activeQuizData = topic.quizData || generateFallbackQuiz(topic.title);
+
+    // Dynamic Quiz Header
+    const typeBadge = document.getElementById("quiz-type-badge");
+    const crumbEl = document.getElementById("quiz-chapter-crumb");
+    const titleEl = document.getElementById("quiz-title-display");
+    const subtitleEl = document.getElementById("quiz-subtitle-display");
+    const timerDisplay = document.getElementById("quiz-timer-display");
+
+    if (typeBadge) {
+        if (topic.quizType === "chapter") {
+            typeBadge.className = "badge bg-purple text-white fw-bold text-xs px-2.5 py-1";
+            typeBadge.style.backgroundColor = "#7c3aed";
+            typeBadge.innerHTML = `<i class="fa-solid fa-award me-1"></i> Chapter Assessment`;
+        } else {
+            typeBadge.className = "badge bg-warning text-dark fw-bold text-xs px-2.5 py-1";
+            typeBadge.innerHTML = `<i class="fa-solid fa-clipboard-question me-1"></i> Topic Quiz`;
+        }
+    }
+
+    if (crumbEl) crumbEl.textContent = `${topic.chapterName || 'Curriculum'} • Quiz`;
+    if (titleEl) titleEl.textContent = activeQuizData.title || topic.title;
+    if (subtitleEl) subtitleEl.textContent = activeQuizData.subtitle || "Single Best Answer Multiple Choice Questions.";
+
+    const totalQuestions = activeQuizData.questions ? activeQuizData.questions.length : 0;
+    const timeMins = activeQuizData.timeLimitMinutes || 5;
+    if (timerDisplay) timerDisplay.textContent = formatTimerSeconds(timeMins * 60);
+
+    // Switch to Start / Overview Screen
+    const startScreen = document.getElementById("quiz-start-screen");
+    const playerScreen = document.getElementById("quiz-player-screen");
+    const scorecardScreen = document.getElementById("quiz-scorecard-screen");
+
+    if (startScreen) startScreen.classList.remove("d-none");
+    if (playerScreen) playerScreen.classList.add("d-none");
+    if (scorecardScreen) scorecardScreen.classList.add("d-none");
+
+    const statTotalQ = document.getElementById("quiz-stat-total-q");
+    const statDuration = document.getElementById("quiz-stat-duration");
+    const statPass = document.getElementById("quiz-stat-pass");
+
+    if (statTotalQ) statTotalQ.textContent = `${totalQuestions} MCQs`;
+    if (statDuration) statDuration.textContent = `${timeMins} Mins`;
+    if (statPass) statPass.textContent = `${activeQuizData.passingScore || 80}%`;
+
+    // Wire Start Quiz Button
+    const startBtn = document.getElementById("start-quiz-btn");
+    if (startBtn) {
+        startBtn.onclick = () => startQuizSession();
+    }
+}
+
+function startQuizSession() {
+    if (!activeQuizData || !activeQuizData.questions || activeQuizData.questions.length === 0) return;
+
+    const totalQuestions = activeQuizData.questions.length;
+    userSelections = new Array(totalQuestions).fill(null);
+    checkedStatus = new Array(totalQuestions).fill(false);
+    currentQuestionIdx = 0;
+    timeRemainingSec = (activeQuizData.timeLimitMinutes || 5) * 60;
+    timeSpentSec = 0;
+
+    // Switch to Active Question Player Screen
+    const startScreen = document.getElementById("quiz-start-screen");
+    const playerScreen = document.getElementById("quiz-player-screen");
+    const scorecardScreen = document.getElementById("quiz-scorecard-screen");
+
+    if (startScreen) startScreen.classList.add("d-none");
+    if (playerScreen) playerScreen.classList.remove("d-none");
+    if (scorecardScreen) scorecardScreen.classList.add("d-none");
+
+    // Start Timer Interval
+    if (quizTimerInterval) clearInterval(quizTimerInterval);
+    const timerDisplay = document.getElementById("quiz-timer-display");
+
+    quizTimerInterval = setInterval(() => {
+        timeRemainingSec--;
+        timeSpentSec++;
+
+        if (timerDisplay) {
+            timerDisplay.textContent = formatTimerSeconds(Math.max(0, timeRemainingSec));
+        }
+
+        if (timeRemainingSec <= 0) {
+            clearInterval(quizTimerInterval);
+            quizTimerInterval = null;
+            alert("Time is up! Submitting your answers automatically.");
+            submitQuizSession();
+        }
+    }, 1000);
+
+    // Wire Player Control Buttons
+    wireQuizPlayerControls();
+
+    // Render Question
+    loadQuizQuestion(0);
+}
+
+function wireQuizPlayerControls() {
+    const prevBtn = document.getElementById("quiz-prev-btn");
+    const checkBtn = document.getElementById("quiz-check-btn");
+    const nextBtn = document.getElementById("quiz-next-btn");
+    const finishBtn = document.getElementById("quiz-finish-btn");
+
+    if (prevBtn) {
+        prevBtn.onclick = () => {
+            if (currentQuestionIdx > 0) {
+                loadQuizQuestion(currentQuestionIdx - 1);
+            }
+        };
+    }
+
+    if (checkBtn) {
+        checkBtn.onclick = () => {
+            checkCurrentAnswer();
+        };
+    }
+
+    if (nextBtn) {
+        nextBtn.onclick = () => {
+            if (currentQuestionIdx < activeQuizData.questions.length - 1) {
+                loadQuizQuestion(currentQuestionIdx + 1);
+            }
+        };
+    }
+
+    if (finishBtn) {
+        finishBtn.onclick = () => {
+            submitQuizSession();
+        };
+    }
+}
+
+function loadQuizQuestion(qIdx) {
+    currentQuestionIdx = qIdx;
+    const questions = activeQuizData.questions;
+    const total = questions.length;
+    const currentQ = questions[qIdx];
+
+    // Question number tracker
+    const qnumLabel = document.getElementById("quiz-qnum-label");
+    if (qnumLabel) qnumLabel.textContent = `Question ${qIdx + 1} of ${total}`;
+
+    // Render Navigator Dots
+    renderQuizNavDots();
+
+    // Question statement
+    const stmtEl = document.getElementById("quiz-question-statement");
+    if (stmtEl) stmtEl.textContent = currentQ.question;
+
+    // Render Options
+    const optionsContainer = document.getElementById("quiz-options-container");
+    if (optionsContainer) {
+        optionsContainer.innerHTML = "";
+        const letters = ["A", "B", "C", "D", "E"];
+        const selectedOpt = userSelections[qIdx];
+        const isChecked = checkedStatus[qIdx];
+
+        currentQ.options.forEach((optText, optIdx) => {
+            let cardClass = "quiz-option-card";
+            if (selectedOpt === optIdx) {
+                cardClass += " selected";
+            }
+            if (isChecked) {
+                if (optIdx === currentQ.correctIndex) {
+                    cardClass += " correct";
+                } else if (selectedOpt === optIdx && optIdx !== currentQ.correctIndex) {
+                    cardClass += " incorrect";
+                }
+            }
+
+            const card = document.createElement("div");
+            card.className = cardClass;
+            card.dataset.optionIndex = optIdx;
+            card.innerHTML = `
+                <div class="quiz-option-letter">${letters[optIdx] || optIdx + 1}</div>
+                <div class="flex-grow-1">${optText}</div>
+            `;
+
+            card.addEventListener("click", () => {
+                if (!checkedStatus[currentQuestionIdx]) {
+                    selectQuizOption(optIdx);
+                }
+            });
+
+            optionsContainer.appendChild(card);
+        });
+    }
+
+    // Explanation Box
+    const explanationBox = document.getElementById("quiz-explanation-box");
+    const explanationText = document.getElementById("quiz-explanation-text");
+    if (explanationBox && explanationText) {
+        if (checkedStatus[qIdx]) {
+            explanationBox.classList.remove("d-none");
+            explanationText.textContent = currentQ.explanation || "Correct option is verified according to the PMDC curriculum.";
+        } else {
+            explanationBox.classList.add("d-none");
+        }
+    }
+
+    // Button states
+    const prevBtn = document.getElementById("quiz-prev-btn");
+    const checkBtn = document.getElementById("quiz-check-btn");
+    const nextBtn = document.getElementById("quiz-next-btn");
+    const finishBtn = document.getElementById("quiz-finish-btn");
+
+    if (prevBtn) {
+        prevBtn.disabled = (qIdx === 0);
+    }
+
+    if (checkBtn) {
+        if (checkedStatus[qIdx]) {
+            checkBtn.disabled = true;
+            checkBtn.innerHTML = `<i class="fa-solid fa-check-double me-1"></i> Checked`;
+        } else if (userSelections[qIdx] !== null) {
+            checkBtn.disabled = false;
+            checkBtn.innerHTML = `<i class="fa-solid fa-circle-check me-1"></i> Check Answer`;
+        } else {
+            checkBtn.disabled = true;
+            checkBtn.innerHTML = `<i class="fa-solid fa-circle-check me-1"></i> Check Answer`;
+        }
+    }
+
+    if (nextBtn && finishBtn) {
+        if (qIdx === total - 1) {
+            nextBtn.classList.add("d-none");
+            finishBtn.classList.remove("d-none");
+        } else {
+            nextBtn.classList.remove("d-none");
+            finishBtn.classList.add("d-none");
+        }
+    }
+}
+
+function renderQuizNavDots() {
+    const dotsContainer = document.getElementById("quiz-nav-dots");
+    if (!dotsContainer || !activeQuizData) return;
+    dotsContainer.innerHTML = "";
+
+    const questions = activeQuizData.questions;
+    questions.forEach((q, i) => {
+        const dot = document.createElement("div");
+        let dotClass = "quiz-dot";
+
+        if (i === currentQuestionIdx) {
+            dotClass += " active";
+        }
+        if (checkedStatus[i]) {
+            if (userSelections[i] === q.correctIndex) {
+                dotClass += " correct";
+            } else {
+                dotClass += " wrong";
+            }
+        } else if (userSelections[i] !== null) {
+            dotClass += " answered";
+        }
+
+        dot.className = dotClass;
+        dot.textContent = i + 1;
+        dot.title = `Jump to Question ${i + 1}`;
+        dot.addEventListener("click", () => {
+            loadQuizQuestion(i);
+        });
+
+        dotsContainer.appendChild(dot);
+    });
+}
+
+function selectQuizOption(optIdx) {
+    userSelections[currentQuestionIdx] = optIdx;
+    loadQuizQuestion(currentQuestionIdx);
+}
+
+function checkCurrentAnswer() {
+    if (userSelections[currentQuestionIdx] === null) return;
+    checkedStatus[currentQuestionIdx] = true;
+    loadQuizQuestion(currentQuestionIdx);
+}
+
+function submitQuizSession() {
+    if (quizTimerInterval) {
+        clearInterval(quizTimerInterval);
+        quizTimerInterval = null;
+    }
+
+    const questions = activeQuizData.questions;
+    const total = questions.length;
+    let correctCount = 0;
+
+    questions.forEach((q, i) => {
+        if (userSelections[i] === q.correctIndex) {
+            correctCount++;
+        }
+    });
+
+    const percent = total > 0 ? Math.round((correctCount / total) * 100) : 0;
+    const passThreshold = activeQuizData.passingScore || 80;
+    const isPassed = percent >= passThreshold;
+
+    // Mark completed in localStorage & update curriculum
+    if (currentQuizTopic) {
+        setItemCompleted(activeCourseId, currentQuizTopic.id, true);
+    }
+
+    // Switch to Scorecard Screen
+    const startScreen = document.getElementById("quiz-start-screen");
+    const playerScreen = document.getElementById("quiz-player-screen");
+    const scorecardScreen = document.getElementById("quiz-scorecard-screen");
+
+    if (startScreen) startScreen.classList.add("d-none");
+    if (playerScreen) playerScreen.classList.add("d-none");
+    if (scorecardScreen) scorecardScreen.classList.remove("d-none");
+
+    const scoreBadge = document.getElementById("quiz-score-badge");
+    const scorePercent = document.getElementById("quiz-score-percent");
+    const scoreStatus = document.getElementById("quiz-score-status");
+    const resultTitle = document.getElementById("quiz-result-title");
+    const resultMsg = document.getElementById("quiz-result-msg");
+    const scoreRatio = document.getElementById("quiz-score-ratio");
+    const accuracyRatio = document.getElementById("quiz-accuracy-ratio");
+    const timeSpentEl = document.getElementById("quiz-time-spent");
+
+    if (scoreBadge) {
+        scoreBadge.className = `quiz-score-badge ${isPassed ? 'passed' : 'failed'}`;
+    }
+    if (scorePercent) scorePercent.textContent = `${percent}%`;
+    if (scoreStatus) scoreStatus.textContent = isPassed ? "PASSED" : "NEEDS REVIEW";
+
+    if (resultTitle) {
+        resultTitle.textContent = isPassed ? "Outstanding Performance!" : "Quiz Completed — Keep Practicing!";
+    }
+    if (resultMsg) {
+        resultMsg.textContent = isPassed
+            ? "Congratulations! You have demonstrated strong conceptual retention in this curriculum milestone."
+            : "You can retake this checkpoint to reinforce high-yield concepts and achieve 80%+ mastery.";
+    }
+
+    if (scoreRatio) scoreRatio.textContent = `${correctCount}/${total}`;
+    if (accuracyRatio) accuracyRatio.textContent = `${percent}%`;
+    if (timeSpentEl) timeSpentEl.textContent = formatTimerSeconds(timeSpentSec);
+
+    // Wire Retake and Proceed buttons
+    const retakeBtn = document.getElementById("quiz-retake-btn");
+    if (retakeBtn) {
+        retakeBtn.onclick = () => {
+            startQuizSession();
+        };
+    }
+
+    const proceedBtn = document.getElementById("quiz-proceed-btn");
+    if (proceedBtn) {
+        proceedBtn.onclick = () => {
+            const db = getDb();
+            const rawCourse = db[activeCourseId];
+            if (!rawCourse) return;
+            const chapters = normalizeCourseContent(rawCourse);
+            const allTopics = getAllCourseTopics(chapters);
+            const currentIdx = allTopics.findIndex(t => t.id === currentQuizTopic.id);
+
+            if (currentIdx !== -1 && currentIdx < allTopics.length - 1) {
+                selectActiveTopic(allTopics[currentIdx + 1].id);
+            } else if (allTopics.length > 0) {
+                selectActiveTopic(allTopics[0].id);
+            }
+            window.scrollTo({ top: 120, behavior: "smooth" });
+        };
+    }
+}
+
+function formatTimerSeconds(totalSeconds) {
+    const mins = Math.floor(totalSeconds / 60);
+    const secs = totalSeconds % 60;
+    return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+}
+
+// =============================================================================
+// 6. GENERAL LMS UI CONTROLLERS (Progress, Tabs, Q&A, Notes)
+// =============================================================================
+
 function updateCompleteButtonUi(isCompleted) {
     const btn = document.getElementById("complete-lesson-btn");
     if (!btn) return;
     if (isCompleted) {
         btn.innerHTML = `<i class="fa-solid fa-circle-check me-2"></i> Completed`;
-        btn.className = "th-btn btn-sm bg-success text-white border-0";
+        btn.className = "btn btn-sm btn-success text-white border-0 fw-semibold";
     } else {
         btn.innerHTML = `<i class="fa-regular fa-circle-check me-2"></i> Mark Complete`;
-        btn.className = "th-btn btn-sm";
+        btn.className = "btn btn-sm btn-primary fw-semibold";
     }
 }
 
 function updateProgressUi() {
     const db = getDb();
-    const course = db[activeCourseId];
-    if (!course || !course.modules) return;
+    const rawCourse = db[activeCourseId];
+    if (!rawCourse) return;
 
-    let totalLessons = 0;
-    course.modules.forEach(module => {
-        totalLessons += module.lessons.length;
-    });
+    const chapters = normalizeCourseContent(rawCourse);
+    const allTopics = getAllCourseTopics(chapters);
+    const totalItems = allTopics.length;
 
-    const completedList = getCompletedLessons(activeCourseId);
+    const completedList = getCompletedItems(activeCourseId);
     const completedCount = completedList.length;
-    const progressPercent = totalLessons > 0 ? Math.round((completedCount / totalLessons) * 100) : 0;
+    const progressPercent = totalItems > 0 ? Math.round((completedCount / totalItems) * 100) : 0;
 
     const percentEl = document.getElementById("progress-percent");
     const ratioEl = document.getElementById("progress-ratio");
     const barEl = document.getElementById("study-progress-bar");
 
-    if (percentEl) percentEl.textContent = `${progressPercent}% Completed`;
-    if (ratioEl) ratioEl.textContent = `${completedCount}/${totalLessons} Lessons`;
+    if (percentEl) percentEl.textContent = `${progressPercent}% Complete`;
+    if (ratioEl) ratioEl.textContent = `${completedCount}/${totalItems} Completed`;
     if (barEl) barEl.style.width = `${progressPercent}%`;
 }
 
 function updateSidebarCheckmarks() {
-    const completedList = getCompletedLessons(activeCourseId);
-    document.querySelectorAll(".lesson-study-item").forEach(item => {
-        const lessonId = item.id.replace("item-", "");
-        if (completedList.includes(lessonId)) {
+    const completedList = getCompletedItems(activeCourseId);
+    document.querySelectorAll(".topic-study-item, .lesson-study-item").forEach(item => {
+        const itemId = item.id.replace("item-", "");
+        if (completedList.includes(itemId)) {
             item.classList.add("completed");
         } else {
             item.classList.remove("completed");
@@ -389,28 +1168,28 @@ function renderQaFeed() {
     // Pinned Instructor Announcement
     if (course && course.pinnedMessage) {
         const pinnedHtml = `
-            <div class="p-3 mb-3 rounded-3 border qa-thread-card qa-thread-instructor qa-pinned-announcement">
+            <div class="p-3 mb-3 rounded-3 border bg-light qa-thread-card">
                 <div class="d-flex align-items-center justify-content-between mb-2">
                     <div class="d-flex align-items-center gap-2">
-                        <img src="${getInstructorImage()}" alt="instructor" class="rounded-circle border qa-user-avatar qa-instructor-avatar">
+                        <img src="${getInstructorImage()}" alt="instructor" class="rounded-circle border" style="width: 38px; height: 38px; object-fit: cover;">
                         <div>
-                            <span class="fw-bold text-title text-sm d-inline-flex align-items-center">DoctorsInn Faculty <span class="badge bg-primary text-white text-xs px-2 py-1 radius-4 ms-2"><i class="fa-solid fa-thumbtack me-1"></i> Pinned Announcement</span></span>
-                            <span class="text-xs text-muted d-block">Lead Medical Instructor</span>
+                            <span class="fw-bold text-dark text-sm d-inline-flex align-items-center">DoctorsInn Faculty <span class="badge bg-primary text-white text-xs px-2 py-0.5 ms-2 rounded-pill"><i class="fa-solid fa-thumbtack me-1"></i> Pinned Announcement</span></span>
+                            <span class="text-xs text-muted d-block">Lead Medical Faculty</span>
                         </div>
                     </div>
                     <span class="text-xs text-muted font-semibold"><i class="fa-solid fa-shield-check text-primary me-1"></i> Verified</span>
                 </div>
-                <p class="mb-0 text-sm qa-pinned-message">${course.pinnedMessage}</p>
+                <p class="mb-0 text-sm text-dark">${course.pinnedMessage}</p>
             </div>
         `;
         feedContainer.insertAdjacentHTML("beforeend", pinnedHtml);
     }
 
-    const threads = getLessonQa(activeLessonId);
+    const threads = getTopicQa(activeTopicId);
     if (threads.length === 0 && (!course || !course.pinnedMessage)) {
         feedContainer.innerHTML = `
             <div class="text-center py-4 text-muted text-sm">
-                <i class="fa-regular fa-comments mb-2 d-block study-empty-icon"></i>
+                <i class="fa-regular fa-comments mb-2 d-block fs-3"></i>
                 No questions asked yet. Be the first to ask!
             </div>
         `;
@@ -420,29 +1199,31 @@ function renderQaFeed() {
     threads.forEach(post => {
         const isInstructor = post.role === "Instructor";
         const avatar = isInstructor ? getInstructorImage() : getStudentAvatar(post.avatar);
-        const roleBadge = isInstructor ? `<span class="badge bg-primary text-white text-xs px-2 py-1 radius-4 ms-2">Instructor</span>` : "";
-        const authorClass = isInstructor ? "qa-thread-instructor" : "qa-thread-student";
+        const roleBadge = isInstructor ? `<span class="badge bg-primary text-white text-xs px-2 py-0.5 ms-2 rounded-pill">Instructor</span>` : "";
 
         const postHtml = `
-            <div class="p-3 mb-3 rounded-3 border qa-thread-card ${authorClass}">
+            <div class="p-3 mb-3 rounded-3 border bg-white shadow-sm qa-thread-card">
                 <div class="d-flex align-items-center justify-content-between mb-2">
                     <div class="d-flex align-items-center gap-2">
-                        <img src="${avatar}" alt="user" class="rounded-circle border qa-user-avatar">
+                        <img src="${avatar}" alt="user" class="rounded-circle border" style="width: 36px; height: 36px; object-fit: cover;">
                         <div>
-                            <span class="fw-bold text-title text-sm d-inline-flex align-items-center">${post.user} ${roleBadge}</span>
+                            <span class="fw-bold text-dark text-sm d-inline-flex align-items-center">${post.user} ${roleBadge}</span>
                             <span class="text-xs text-muted d-block">${post.role}</span>
                         </div>
                     </div>
                     <span class="text-xs text-muted">${post.date}</span>
                 </div>
-                <p class="mb-0 text-sm text-secondary-color qa-thread-message">${post.text}</p>
+                <p class="mb-0 text-sm text-secondary">${post.text}</p>
             </div>
         `;
         feedContainer.insertAdjacentHTML("beforeend", postHtml);
     });
 }
 
-// Main Initialization Function
+// =============================================================================
+// 7. INITIALIZATION
+// =============================================================================
+
 function initStudyPortal() {
     activeCourseId = getActiveCourseId();
     const db = getDb();
@@ -454,47 +1235,61 @@ function initStudyPortal() {
         if (bannerTitle) bannerTitle.textContent = course.title;
         if (breadcrumbName) breadcrumbName.textContent = course.title;
 
-        // Set course dropdown if exists
+        // Course dropdown switch
         const courseSelect = document.getElementById("enrolledCourseSelect");
         if (courseSelect) {
             courseSelect.value = activeCourseId;
             courseSelect.addEventListener("change", () => {
-                const courseUrl = new URL(courseSelect.dataset.courseUrl, window.location.origin);
+                const courseUrl = new URL(courseSelect.dataset.courseUrl || window.location.href, window.location.origin);
                 courseUrl.searchParams.set("course", courseSelect.value);
                 window.location.href = courseUrl.toString();
             });
         }
 
-        if (course.modules && course.modules.length > 0 && course.modules[0].lessons.length > 0) {
-            activeLessonId = course.modules[0].lessons[0].id;
+        // Set initial active topic
+        const chapters = normalizeCourseContent(course);
+        if (chapters.length > 0 && chapters[0].topics.length > 0) {
+            activeTopicId = chapters[0].topics[0].id;
         }
     }
 
-    renderSyllabusSidebar();
-    if (activeLessonId) {
-        selectActiveLesson(activeLessonId);
+    // Filter Buttons Listener
+    document.querySelectorAll(".syllabus-filter-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+            document.querySelectorAll(".syllabus-filter-btn").forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            renderCurriculumSidebar(btn.dataset.filter || "all");
+        });
+    });
+
+    // Render Curriculum
+    renderCurriculumSidebar("all");
+
+    // Activate initial topic
+    if (activeTopicId) {
+        selectActiveTopic(activeTopicId);
     }
     updateProgressUi();
 
-    // Bind Mark Complete
+    // Mark Complete Button
     const completeBtn = document.getElementById("complete-lesson-btn");
     if (completeBtn && !completeBtn._hasStudyListener) {
         completeBtn._hasStudyListener = true;
         completeBtn.addEventListener("click", () => {
-            const completedList = getCompletedLessons(activeCourseId);
-            const isCompleted = completedList.includes(activeLessonId);
-            setLessonCompleted(activeCourseId, activeLessonId, !isCompleted);
+            const completedList = getCompletedItems(activeCourseId);
+            const isCompleted = completedList.includes(activeTopicId);
+            setItemCompleted(activeCourseId, activeTopicId, !isCompleted);
             updateCompleteButtonUi(!isCompleted);
         });
     }
 
-    // Bind Notes
+    // Personal Notes
     const saveNotesBtn = document.getElementById("save-notes-btn");
     const notesTextarea = document.getElementById("lesson-notes-textarea");
     if (saveNotesBtn && notesTextarea && !saveNotesBtn._hasStudyListener) {
         saveNotesBtn._hasStudyListener = true;
         saveNotesBtn.addEventListener("click", () => {
-            saveLessonNotes(activeLessonId, notesTextarea.value);
+            saveTopicNotes(activeTopicId, notesTextarea.value);
             const saveStatus = document.getElementById("notes-save-status");
             if (saveStatus) {
                 saveStatus.classList.remove("d-none");
@@ -506,7 +1301,7 @@ function initStudyPortal() {
         notesTextarea.addEventListener("input", () => {
             clearTimeout(autoSaveTimeout);
             autoSaveTimeout = setTimeout(() => {
-                saveLessonNotes(activeLessonId, notesTextarea.value);
+                saveTopicNotes(activeTopicId, notesTextarea.value);
                 const saveStatus = document.getElementById("notes-save-status");
                 if (saveStatus) {
                     saveStatus.classList.remove("d-none");
@@ -516,7 +1311,7 @@ function initStudyPortal() {
         });
     }
 
-    // Bind Q&A form
+    // Q&A form submission
     const qaForm = document.getElementById("qa-form");
     const qaInput = document.getElementById("qa-input-text");
     if (qaForm && qaInput && !qaForm._hasStudyListener) {
@@ -526,7 +1321,7 @@ function initStudyPortal() {
             const text = qaInput.value.trim();
             if (!text) return;
 
-            let thread = getLessonQa(activeLessonId);
+            let thread = getTopicQa(activeTopicId);
             thread.push({
                 user: "Ahmed Khan",
                 role: "Student",
@@ -535,13 +1330,13 @@ function initStudyPortal() {
                 text: text
             });
 
-            saveLessonQa(activeLessonId, thread);
+            saveTopicQa(activeTopicId, thread);
             renderQaFeed();
             qaInput.value = "";
         });
     }
 
-    // Video security
+    // Video security controls
     const videoElement = document.getElementById("main-video-player");
     if (videoElement) {
         videoElement.setAttribute("controlslist", "nodownload");
@@ -552,7 +1347,7 @@ function initStudyPortal() {
     }
 }
 
-// Auto-run on DOM ready or immediately if already loaded
+// Auto-run on DOM ready
 if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", initStudyPortal);
 } else {

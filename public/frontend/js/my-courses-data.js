@@ -26,6 +26,629 @@ const myCoursesData = {
             { name: "60-Day Study Plan — PDF", type: "pdf" },
             { name: "Mock Test Answer Keys — PDF", type: "pdf" }
         ],
+        chapters: [
+            {
+                id: "chapter-1",
+                chapterNumber: 1,
+                name: "Chapter 1: Cell Biology & Cytology",
+                description: "Plasma membrane dynamics, organelle functions, endomembrane trafficking & cellular division.",
+                topics: [
+                    {
+                        id: "topic-1-1",
+                        topicNumber: "1.1",
+                        title: "1.1 Cell Membrane & Fluid Mosaic Architecture",
+                        type: "video",
+                        duration: "35 min",
+                        videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+                        readContent: `
+                            <div class="lesson-header-box mb-4">
+                                <span class="badge bg-primary text-white px-3 py-1 rounded-pill mb-2">Chapter 1 &bull; Topic 1.1</span>
+                                <h3 class="fw-bold text-dark">1.1 Cell Membrane & Fluid Mosaic Dynamics</h3>
+                            </div>
+                            <div class="alert alert-primary bg-light border-primary p-3 rounded-3 mb-4">
+                                <p class="mb-0 text-dark"><strong>Summary:</strong> Covers Singer & Nicolson's Fluid Mosaic Model, lipid bilayer composition, integral vs peripheral proteins, cholesterol fluidity buffer, and transport mechanisms.</p>
+                            </div>
+                            <h4>1. Molecular Architecture of Biological Membranes</h4>
+                            <p>According to the Fluid Mosaic Model (Singer & Nicolson, 1972), the plasma membrane behaves as a quasi-fluid two-dimensional liquid wherein amphipathic phospholipids and proteins are in continuous lateral motion.</p>
+                            <ul>
+                                <li><strong>Phospholipid Bilayer:</strong> Hydrophilic polar heads face aqueous environments (ECF & ICF); hydrophobic non-polar fatty acid tails sequester inward.</li>
+                                <li><strong>Cholesterol (Animal Cells):</strong> Acts as a biophysical fluidity buffer. It prevents crystallized packing at cold temperatures and stabilizes excess fluidity at elevated temperatures.</li>
+                                <li><strong>Glycocalyx:</strong> Surface oligosaccharide chains linked to lipids (glycolipids) or proteins (glycoproteins) enabling cell-cell recognition and immune identity.</li>
+                            </ul>
+                            <h4 class="mt-4">2. Transmembrane Transport Mechanisms</h4>
+                            <p>MDCAT frequently tests differences between passive diffusion, facilitated diffusion via GLUT carriers/aquaporins, and primary/secondary active transport.</p>
+                        `,
+                        resources: [
+                            { name: "Cell Biology Chapter Notes — PDF", type: "pdf" },
+                            { name: "Fluid Mosaic Diagram & Notes — PDF", type: "pdf" }
+                        ]
+                    },
+                    {
+                        id: "topic-1-quiz",
+                        topicNumber: "1.1 Checkpoint",
+                        title: "Topic 1.1 Quick Quiz: Membrane Transport & Channels",
+                        type: "quiz",
+                        isQuiz: true,
+                        quizType: "topic",
+                        duration: "5 min",
+                        quizData: {
+                            title: "Topic 1.1 Checkpoint: Cell Membrane & Transport Quiz",
+                            subtitle: "5 Rapid-Fire PMDC MCQs covering active transport, passive diffusion & tonicity",
+                            passingScore: 80,
+                            timeLimitMinutes: 5,
+                            questions: [
+                                {
+                                    question: "Which component of the plasma membrane acts as a fluidity buffer across temperature fluctuations in animal cells?",
+                                    options: [
+                                        "Peripheral glycoproteins",
+                                        "Cholesterol molecules",
+                                        "Sphingomyelin lipids",
+                                        "Oligosaccharide chains"
+                                    ],
+                                    correctIndex: 1,
+                                    explanation: "Cholesterol prevents phospholipid fatty acid chains from packing closely at low temperatures and restricts excessive membrane fluidity at high temperatures, functioning as a biophysical fluidity buffer."
+                                },
+                                {
+                                    question: "In the Sodium-Potassium ATPase pump, what is the stoichiometric exchange ratio per ATP hydrolyzed?",
+                                    options: [
+                                        "3 Na+ out, 2 K+ in",
+                                        "2 Na+ out, 3 K+ in",
+                                        "3 Na+ in, 2 K+ out",
+                                        "1 Na+ out, 1 K+ in"
+                                    ],
+                                    correctIndex: 0,
+                                    explanation: "The primary active Na+/K+ ATPase pumps 3 Sodium ions OUT of the cell and 2 Potassium ions INTO the cell per ATP molecule cleaved, maintaining negative resting membrane potential."
+                                },
+                                {
+                                    question: "Which of the following transport mechanisms moves substances against their electrochemical gradient without direct ATP hydrolysis?",
+                                    options: [
+                                        "Facilitated diffusion",
+                                        "Simple osmosis",
+                                        "Secondary active transport (Symport/Antiport)",
+                                        "Primary active transport"
+                                    ],
+                                    correctIndex: 2,
+                                    explanation: "Secondary active transport couples the downhill movement of an ion (such as Na+) down its gradient to drive the uphill transport of another solute against its concentration gradient."
+                                },
+                                {
+                                    question: "A red blood cell placed in a 0.2% NaCl solution will undergo:",
+                                    options: [
+                                        "Crenation (Shrinkage)",
+                                        "Plasmolysis",
+                                        "Hemolysis (Osmotic Lysis)",
+                                        "No osmotic volume change"
+                                    ],
+                                    correctIndex: 2,
+                                    explanation: "Normal physiological saline is 0.9% NaCl (isotonic). A 0.2% NaCl solution is hypotonic, causing water to rush into the erythrocyte via osmosis, leading to swelling and membrane bursting (hemolysis)."
+                                },
+                                {
+                                    question: "The 'glycocalyx' found on the external surface of the plasma membrane is primarily composed of:",
+                                    options: [
+                                        "Cholesterol and saturated phospholipids",
+                                        "Glycoproteins and glycolipids",
+                                        "Integral transmembrane alpha-helices",
+                                        "Spectrin and ankyrin cytoskeletal anchors"
+                                    ],
+                                    correctIndex: 1,
+                                    explanation: "The glycocalyx consists of carbohydrates covalently linked to membrane proteins (glycoproteins) and lipids (glycolipids), providing cell-cell recognition and immunological markers."
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        id: "topic-1-2",
+                        topicNumber: "1.2",
+                        title: "1.2 Endomembrane System, Mitochondria & Cytoskeleton",
+                        type: "video",
+                        duration: "42 min",
+                        videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+                        readContent: `
+                            <div class="lesson-header-box mb-4">
+                                <span class="badge bg-primary text-white px-3 py-1 rounded-pill mb-2">Chapter 1 &bull; Topic 1.2</span>
+                                <h3 class="fw-bold text-dark">1.2 Endomembrane System & Mitochondria</h3>
+                            </div>
+                            <h4>1. Eukaryotic Organelles Overview</h4>
+                            <p>Detailed analysis of mitochondria (double membrane, cristae, circular DNA, 70S ribosomes), endoplasmic reticulum (RER protein synthesis vs SER lipid synthesis & drug detox), and lysosomes (acid hydrolases with pH 4.5-5.0).</p>
+                        `,
+                        resources: [
+                            { name: "Organelle Pathology & MDCAT Notes — PDF", type: "pdf" }
+                        ]
+                    },
+                    {
+                        id: "topic-1-3",
+                        topicNumber: "1.3",
+                        title: "1.3 Mitosis, Meiosis & Karyotyping High-Yield Notes",
+                        type: "reading",
+                        duration: "25 min",
+                        readContent: `
+                            <div class="lesson-header-box mb-4">
+                                <span class="badge bg-primary text-white px-3 py-1 rounded-pill mb-2">Chapter 1 &bull; Topic 1.3</span>
+                                <h3 class="fw-bold text-dark">1.3 Mitosis, Meiosis & Karyotyping High-Yield Notes</h3>
+                            </div>
+                            <h4>1. Cell Division Comparison Table</h4>
+                            <div class="table-responsive my-3">
+                                <table class="table table-bordered text-sm">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Feature</th>
+                                            <th>Mitosis</th>
+                                            <th>Meiosis</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>Site</strong></td>
+                                            <td>Somatic cells</td>
+                                            <td>Germ cells (Gametogenesis)</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Recombination</strong></td>
+                                            <td>None</td>
+                                            <td>Pachytene stage (Prophase I)</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Outcome</strong></td>
+                                            <td>2 identical diploid (2n) cells</td>
+                                            <td>4 genetically distinct haploid (1n) cells</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        `,
+                        resources: [
+                            { name: "Cell Division Comparative Chart — PDF", type: "pdf" }
+                        ]
+                    },
+                    {
+                        id: "chapter-1-quiz",
+                        topicNumber: "Assessment",
+                        title: "Chapter 1 Comprehensive Mastery Assessment",
+                        type: "quiz",
+                        isQuiz: true,
+                        quizType: "chapter",
+                        duration: "10 min",
+                        quizData: {
+                            title: "Chapter 1: Cell Biology & Cytology Comprehensive Exam",
+                            subtitle: "PMDC standard chapter-ending evaluation covering organelles, division, and membrane dynamics.",
+                            passingScore: 80,
+                            timeLimitMinutes: 10,
+                            questions: [
+                                {
+                                    question: "Crossing over between non-sister chromatids of homologous chromosomes occurs during which specific stage of Prophase I?",
+                                    options: [
+                                        "Leptotene",
+                                        "Zygotene",
+                                        "Pachytene",
+                                        "Diplotene"
+                                    ],
+                                    correctIndex: 2,
+                                    explanation: "Synapsis occurs during Zygotene, but genetic exchange (crossing over) takes place during Pachytene via recombination nodules, producing chiasmata visible in Diplotene."
+                                },
+                                {
+                                    question: "Which organelle is directly responsible for the synthesis of steroid hormones in Leydig and adrenal cortex cells?",
+                                    options: [
+                                        "Rough Endoplasmic Reticulum",
+                                        "Smooth Endoplasmic Reticulum",
+                                        "Peroxisomes",
+                                        "Lysosomes"
+                                    ],
+                                    correctIndex: 1,
+                                    explanation: "The Smooth Endoplasmic Reticulum (SER) is enriched with enzymes for lipid and steroid biosynthesis, as well as glycogen breakdown and detoxification in hepatocytes."
+                                },
+                                {
+                                    question: "In eukaryotic ribosomes, the peptidyl transferase ribozyme activity that forms peptide bonds is located in:",
+                                    options: [
+                                        "18S rRNA of 40S subunit",
+                                        "28S rRNA of 60S subunit",
+                                        "5S rRNA of 60S subunit",
+                                        "Initiation Factor IF-2"
+                                    ],
+                                    correctIndex: 1,
+                                    explanation: "The catalytic peptidyl transferase activity of eukaryotic 80S ribosomes resides within the 28S ribosomal RNA of the large (60S) subunit."
+                                },
+                                {
+                                    question: "Tay-Sachs disease results from the genetic deficiency of Hexosaminidase A within which organelle?",
+                                    options: [
+                                        "Mitochondria",
+                                        "Peroxisomes",
+                                        "Lysosomes",
+                                        "Golgi Apparatus"
+                                    ],
+                                    correctIndex: 2,
+                                    explanation: "Tay-Sachs is an autosomal recessive lysosomal storage disease resulting in abnormal accumulation of GM2 gangliosides in neuronal lysosomes."
+                                },
+                                {
+                                    question: "Colchicine arrests cells in which mitotic phase by inhibiting microtubule polymerization?",
+                                    options: [
+                                        "Prophase",
+                                        "Metaphase",
+                                        "Anaphase",
+                                        "Telophase"
+                                    ],
+                                    correctIndex: 1,
+                                    explanation: "Colchicine disrupts mitotic spindle microtubule assembly, arresting chromosomes on the metaphase plate (used clinically for karyotyping)."
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            {
+                id: "chapter-2",
+                chapterNumber: 2,
+                name: "Chapter 2: Biological Molecules & Enzymology",
+                description: "Carbohydrates, lipids, structural proteins, nucleic acids, and enzyme kinetics.",
+                topics: [
+                    {
+                        id: "topic-2-1",
+                        topicNumber: "2.1",
+                        title: "2.1 Carbohydrate Chemistry, Isomerism & Glycosidic Bonds",
+                        type: "video",
+                        duration: "38 min",
+                        videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+                        readContent: `
+                            <div class="lesson-header-box mb-4">
+                                <span class="badge bg-primary text-white px-3 py-1 rounded-pill mb-2">Chapter 2 &bull; Topic 2.1</span>
+                                <h3 class="fw-bold text-dark">2.1 Carbohydrate Chemistry & Glycosidic Linkages</h3>
+                            </div>
+                            <p>Detailed study of aldoses, ketoses, hemiacetals, anomeric carbons, and classification into monosaccharides, disaccharides, and polysaccharides.</p>
+                        `,
+                        resources: [
+                            { name: "Carbohydrates Structures & Tests — PDF", type: "pdf" }
+                        ]
+                    },
+                    {
+                        id: "topic-2-quiz",
+                        topicNumber: "2.1 Checkpoint",
+                        title: "Topic 2.1 Quick Quiz: Carbohydrate Structure & Tests",
+                        type: "quiz",
+                        isQuiz: true,
+                        quizType: "topic",
+                        duration: "5 min",
+                        quizData: {
+                            title: "Carbohydrate Classification & Biochemical Tests",
+                            subtitle: "5 Rapid-Fire PMDC MCQs covering mono-, di- and polysaccharides",
+                            passingScore: 80,
+                            timeLimitMinutes: 5,
+                            questions: [
+                                {
+                                    question: "Which of the following carbohydrates is a non-reducing disaccharide with an alpha-1,2-glycosidic linkage?",
+                                    options: [
+                                        "Maltose",
+                                        "Lactose",
+                                        "Sucrose",
+                                        "Cellobiose"
+                                    ],
+                                    correctIndex: 2,
+                                    explanation: "In sucrose, both anomeric carbons of glucose and fructose participate in the glycosidic bond (alpha-1,2), leaving no free hemiacetal group; thus it does not reduce Benedict's reagent."
+                                },
+                                {
+                                    question: "Which branched polymer of glucose serves as the primary animal storage carbohydrate?",
+                                    options: [
+                                        "Amylose",
+                                        "Glycogen",
+                                        "Cellulose",
+                                        "Chitin"
+                                    ],
+                                    correctIndex: 1,
+                                    explanation: "Glycogen has alpha-1,4 glycosidic bonds in chains with frequent alpha-1,6 branch points occurring every 8-12 glucose residues, stored in liver and skeletal muscles."
+                                },
+                                {
+                                    question: "A patient's urine turns brick-red when heated with Benedict's solution. Which sugar is NOT responsible?",
+                                    options: [
+                                        "Glucose",
+                                        "Galactose",
+                                        "Fructose",
+                                        "Sucrose"
+                                    ],
+                                    correctIndex: 3,
+                                    explanation: "Sucrose is non-reducing and gives a negative Benedict's test unless previously hydrolyzed by acid or sucrase."
+                                },
+                                {
+                                    question: "Chitin, found in fungal cell walls and arthropod exoskeletons, is a polymer of:",
+                                    options: [
+                                        "N-acetylglucosamine (NAG)",
+                                        "N-acetylmuramic acid (NAM)",
+                                        "Alpha-D-glucuronic acid",
+                                        "Beta-D-galactose"
+                                    ],
+                                    correctIndex: 0,
+                                    explanation: "Chitin is a homopolymer of N-acetyl-D-glucosamine units joined by beta-1,4-glycosidic linkages."
+                                },
+                                {
+                                    question: "Amylose and amylopectin are the two structural constituents of:",
+                                    options: [
+                                        "Glycogen",
+                                        "Starch",
+                                        "Inulin",
+                                        "Dextran"
+                                    ],
+                                    correctIndex: 1,
+                                    explanation: "Plant starch consists of unbranched helical amylose (alpha-1,4) and branched amylopectin (alpha-1,4 with alpha-1,6 branches)."
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        id: "topic-2-2",
+                        topicNumber: "2.2",
+                        title: "2.2 Protein Hierarchy, Peptide Bonds & Hemoglobin vs Myoglobin",
+                        type: "video",
+                        duration: "40 min",
+                        videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+                        readContent: `
+                            <div class="lesson-header-box mb-4">
+                                <span class="badge bg-primary text-white px-3 py-1 rounded-pill mb-2">Chapter 2 &bull; Topic 2.2</span>
+                                <h3 class="fw-bold text-dark">2.2 Protein Structural Hierarchy & Allostery</h3>
+                            </div>
+                            <p>Primary, secondary (alpha-helix, beta-sheet), tertiary, and quaternary levels of protein structure, with clinical comparisons of myoglobin (hyperbolic curve) and hemoglobin (sigmoidal cooperative curve).</p>
+                        `,
+                        resources: [
+                            { name: "Proteins & Amino Acid Classifications — PDF", type: "pdf" }
+                        ]
+                    },
+                    {
+                        id: "topic-2-3",
+                        topicNumber: "2.3",
+                        title: "2.3 Enzyme Kinetics, Michaelis-Menten & Inhibition Models",
+                        type: "reading",
+                        duration: "30 min",
+                        readContent: `
+                            <div class="lesson-header-box mb-4">
+                                <span class="badge bg-primary text-white px-3 py-1 rounded-pill mb-2">Chapter 2 &bull; Topic 2.3</span>
+                                <h3 class="fw-bold text-dark">2.3 Enzyme Kinetics, Michaelis-Menten & Inhibition Models</h3>
+                            </div>
+                            <p>Km (substrate concentration at 1/2 Vmax), competitive vs non-competitive vs uncompetitive inhibitors, and regulatory allosteric effectors.</p>
+                        `,
+                        resources: [
+                            { name: "Enzyme Kinetics Formula & Graphs — PDF", type: "pdf" }
+                        ]
+                    },
+                    {
+                        id: "chapter-2-quiz",
+                        topicNumber: "Assessment",
+                        title: "Chapter 2 Comprehensive Mastery Assessment",
+                        type: "quiz",
+                        isQuiz: true,
+                        quizType: "chapter",
+                        duration: "10 min",
+                        quizData: {
+                            title: "Chapter 2: Biochemistry & Enzymology Comprehensive Exam",
+                            subtitle: "PMDC standard assessment on amino acids, proteins, lipids, and catalytic kinetics.",
+                            passingScore: 80,
+                            timeLimitMinutes: 10,
+                            questions: [
+                                {
+                                    question: "A competitive enzyme inhibitor produces which of the following kinetic alterations on Km and Vmax?",
+                                    options: [
+                                        "Increases Km, Vmax unchanged",
+                                        "Decreases Km, Vmax decreases",
+                                        "Km unchanged, Vmax decreases",
+                                        "Increases both Km and Vmax"
+                                    ],
+                                    correctIndex: 0,
+                                    explanation: "Competitive inhibitors compete with substrate for active sites, requiring higher substrate concentrations to reach half-maximal velocity (increased Km), but high [S] can still achieve maximal rate (unchanged Vmax)."
+                                },
+                                {
+                                    question: "Which amino acid possesses an indole ring and serves as precursor to serotonin and melatonin?",
+                                    options: [
+                                        "Phenylalanine",
+                                        "Tyrosine",
+                                        "Tryptophan",
+                                        "Histidine"
+                                    ],
+                                    correctIndex: 2,
+                                    explanation: "Tryptophan contains an indole ring and is the biochemical precursor for neurotransmitter serotonin (5-HT) and hormone melatonin."
+                                },
+                                {
+                                    question: "Which of the following bonds stabilizes the alpha-helix secondary structure of proteins?",
+                                    options: [
+                                        "Disulfide bridges between cysteine residues",
+                                        "Hydrogen bonds between C=O and N-H of peptide backbones",
+                                        "Hydrophobic interactions of R-groups",
+                                        "Ionic bonds between acidic and basic side chains"
+                                    ],
+                                    correctIndex: 1,
+                                    explanation: "Alpha-helices and beta-sheets are stabilized strictly by intrachain hydrogen bonds between the carbonyl oxygen (C=O) and amide hydrogen (N-H) of the peptide backbone 4 residues apart."
+                                },
+                                {
+                                    question: "Prosthetic groups differ from coenzymes in that prosthetic groups are:",
+                                    options: [
+                                        "Transiently associated non-protein cofactors",
+                                        "Permanently and tightly/covalently bound to the apoenzyme",
+                                        "Inorganic metal ions only (e.g., Fe2+, Mg2+)",
+                                        "Always synthesized de novo during every reaction cycle"
+                                    ],
+                                    correctIndex: 1,
+                                    explanation: "A prosthetic group (like heme in catalase or hemoglobin) remains tightly or covalently bound to the enzyme throughout the catalytic cycle."
+                                },
+                                {
+                                    question: "The quaternary structure of adult Hemoglobin (HbA) consists of:",
+                                    options: [
+                                        "Two alpha and two gamma globin chains",
+                                        "Two alpha and two beta globin chains",
+                                        "Single polypeptide with one heme pocket",
+                                        "Four identical beta globin chains"
+                                    ],
+                                    correctIndex: 1,
+                                    explanation: "Normal adult human hemoglobin (HbA) is a tetramer of two alpha (alpha) and two beta (beta) subunits, each containing a protoporphyrin IX heme ring."
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            {
+                id: "chapter-3",
+                chapterNumber: 3,
+                name: "Chapter 3: Genetics, DNA Replication & Transcription",
+                description: "Mendelian genetics, chromosome mapping, Central Dogma, and gene regulation.",
+                topics: [
+                    {
+                        id: "topic-3-1",
+                        topicNumber: "3.1",
+                        title: "3.1 Mendelian Inheritance & Non-Mendelian Extensions",
+                        type: "video",
+                        duration: "44 min",
+                        videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4",
+                        readContent: `
+                            <div class="lesson-header-box mb-4">
+                                <span class="badge bg-primary text-white px-3 py-1 rounded-pill mb-2">Chapter 3 &bull; Topic 3.1</span>
+                                <h3 class="fw-bold text-dark">3.1 Mendelian Genetics & Inheritance Patterns</h3>
+                            </div>
+                            <p>Law of Segregation, Law of Independent Assortment, codominance, incomplete dominance, multiple alleles (ABO blood groups), and epistasis.</p>
+                        `,
+                        resources: [
+                            { name: "Genetics Punnett Squares & Pedigree Analysis — PDF", type: "pdf" }
+                        ]
+                    },
+                    {
+                        id: "topic-3-quiz",
+                        topicNumber: "3.1 Checkpoint",
+                        title: "Topic 3.1 Quick Quiz: Mendelian Ratios & Pedigrees",
+                        type: "quiz",
+                        isQuiz: true,
+                        quizType: "topic",
+                        duration: "5 min",
+                        quizData: {
+                            title: "Genetics & Inheritance Patterns Quiz",
+                            subtitle: "5 Rapid-Fire PMDC MCQs covering monohybrid, dihybrid, and sex-linked traits",
+                            passingScore: 80,
+                            timeLimitMinutes: 5,
+                            questions: [
+                                {
+                                    question: "In a cross between two individuals heterozygous for two unlinked traits (AaBb x AaBb), what fraction of offspring is expected to express both recessive phenotypes (aabb)?",
+                                    options: [
+                                        "1/16",
+                                        "3/16",
+                                        "9/16",
+                                        "1/4"
+                                    ],
+                                    correctIndex: 0,
+                                    explanation: "Standard Mendelian dihybrid phenotypic ratio is 9:3:3:1. The double recessive phenotype (aabb) represents 1 out of 16 offspring."
+                                },
+                                {
+                                    question: "Hemophilia A is an X-linked recessive disorder. If a carrier female marries an unaffected male, what percentage of their male children will have hemophilia?",
+                                    options: [
+                                        "0%",
+                                        "25%",
+                                        "50%",
+                                        "100%"
+                                    ],
+                                    correctIndex: 2,
+                                    explanation: "The mother is X^H X^h and father is X^H Y. Male children inherit Y from father and either X^H (unaffected, 50%) or X^h (affected, 50%) from mother."
+                                },
+                                {
+                                    question: "The phenomenon where a single gene influences multiple unrelated phenotypic traits is called:",
+                                    options: [
+                                        "Polygenic inheritance",
+                                        "Epistasis",
+                                        "Pleiotropy",
+                                        "Incomplete dominance"
+                                    ],
+                                    correctIndex: 2,
+                                    explanation: "Pleiotropy describes a single gene mutation producing multiple phenotypic effects across distinct organ systems (e.g., Sickle Cell Anemia, Marfan syndrome)."
+                                },
+                                {
+                                    question: "During DNA replication in E. coli, which enzyme unwinds the double helix at the replication fork?",
+                                    options: [
+                                        "DNA Topoisomerase (Gyrase)",
+                                        "DNA Helicase (DnaB)",
+                                        "DNA Polymerase III",
+                                        "DNA Ligase"
+                                    ],
+                                    correctIndex: 1,
+                                    explanation: "DNA Helicase unwinds the double helix at the fork by breaking hydrogen bonds, while Topoisomerase (gyrase) relieves supercoiling tension ahead of the fork."
+                                },
+                                {
+                                    question: "Okazaki fragments are synthesized along the:",
+                                    options: [
+                                        "Leading strand continuously in 5' to 3' direction",
+                                        "Lagging strand discontinuously in 5' to 3' direction",
+                                        "Lagging strand continuously in 3' to 5' direction",
+                                        "Both strands simultaneously by RNA polymerase"
+                                    ],
+                                    correctIndex: 1,
+                                    explanation: "Because DNA polymerases only synthesize in the 5' to 3' direction, the lagging strand is synthesized discontinuously as short Okazaki fragments, later joined by DNA ligase."
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        id: "chapter-3-quiz",
+                        topicNumber: "Assessment",
+                        title: "Chapter 3 Comprehensive Mastery Assessment",
+                        type: "quiz",
+                        isQuiz: true,
+                        quizType: "chapter",
+                        duration: "10 min",
+                        quizData: {
+                            title: "Chapter 3: Genetics & Molecular Biology Comprehensive Exam",
+                            subtitle: "PMDC standard assessment on DNA replication, transcription, translation, and genetic disorders.",
+                            passingScore: 80,
+                            timeLimitMinutes: 10,
+                            questions: [
+                                {
+                                    question: "The genetic codon AUG encodes which amino acid and functions as what in eukaryotic translation?",
+                                    options: [
+                                        "Formylmethionine, Stop codon",
+                                        "Methionine, Start codon",
+                                        "Valine, Start codon",
+                                        "Tryptophan, Stop codon"
+                                    ],
+                                    correctIndex: 1,
+                                    explanation: "AUG codes for Methionine (Met) in eukaryotes and serves as the universal initiator (start) codon for protein translation."
+                                },
+                                {
+                                    question: "Which of the following codons does NOT code for any amino acid and acts as a translation termination signal?",
+                                    options: [
+                                        "UAA, UAG, UGA",
+                                        "AUG, GUG, UUG",
+                                        "UGG, UAC, UAU",
+                                        "AAA, AAG, AGU"
+                                    ],
+                                    correctIndex: 0,
+                                    explanation: "UAA (Ochre), UAG (Amber), and UGA (Opal) are non-sense stop codons recognized by release factors rather than tRNAs."
+                                },
+                                {
+                                    question: "In eukaryotic mRNA post-transcriptional processing, the 5' cap is composed of:",
+                                    options: [
+                                        "Poly-adenylate tail (200-250 Adenines)",
+                                        "7-methylguanosine (m7G) triphosphate linkage",
+                                        "Ribosomal RNA hairpin loop",
+                                        "Spliceosome ribonucleoprotein snRNP"
+                                    ],
+                                    correctIndex: 1,
+                                    explanation: "Eukaryotic pre-mRNA is capped at its 5' end with 7-methylguanosine via an unusual 5'-to-5' triphosphate bridge to prevent exonuclease degradation."
+                                },
+                                {
+                                    question: "Which enzyme is responsible for synthesizing ribosomal RNA (28S, 18S, and 5.8S) in eukaryotic nucleoli?",
+                                    options: [
+                                        "RNA Polymerase I",
+                                        "RNA Polymerase II",
+                                        "RNA Polymerase III",
+                                        "Reverse Transcriptase"
+                                    ],
+                                    correctIndex: 0,
+                                    explanation: "In eukaryotes: RNA Pol I transcribes major rRNAs (28S, 18S, 5.8S); RNA Pol II transcribes mRNA and snRNA; RNA Pol III transcribes tRNA and 5S rRNA."
+                                },
+                                {
+                                    question: "A cross between a red flower (RR) and white flower (WW) yielding 100% pink flowers (RW) exemplifies:",
+                                    options: [
+                                        "Complete dominance",
+                                        "Incomplete dominance",
+                                        "Codominance",
+                                        "Epistatic suppression"
+                                    ],
+                                    correctIndex: 1,
+                                    explanation: "Incomplete dominance occurs when heterozygotes exhibit an intermediate blended phenotype (such as 4 o'clock Mirabilis jalapa flowers)."
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        ],
         modules: [
             {
                 name: "Module 1: Biology",

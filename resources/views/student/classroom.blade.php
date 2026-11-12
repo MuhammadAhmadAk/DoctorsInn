@@ -1,5 +1,5 @@
 @extends('student.layouts.master')
-@section('title', 'LMS Classroom Video Player — DoctorsInn Elite')
+@section('title', 'LMS Classroom Video Player & Quiz Studio — DoctorsInn Elite')
 
 @section('extra_css')
 <style>
@@ -38,6 +38,34 @@
         flex-direction: column;
         box-shadow: var(--std-shadow);
     }
+    .syllabus-filter-bar {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding-bottom: 12px;
+        margin-bottom: 12px;
+        border-bottom: 1px dashed var(--std-border);
+    }
+    .syllabus-filter-btn {
+        font-size: 11.5px;
+        font-weight: 600;
+        padding: 4px 10px;
+        border-radius: 20px;
+        border: 1px solid var(--std-border);
+        background: #ffffff;
+        color: var(--std-text-muted);
+        cursor: pointer;
+        transition: all 0.15s ease;
+    }
+    .syllabus-filter-btn:hover {
+        background: #f8fafc;
+        color: var(--std-primary);
+    }
+    .syllabus-filter-btn.active {
+        background: var(--std-primary);
+        color: #ffffff;
+        border-color: var(--std-primary);
+    }
     .syllabus-accordion-wrap {
         max-height: 650px;
         overflow-y: auto;
@@ -50,51 +78,111 @@
         background: #cbd5e1;
         border-radius: 4px;
     }
-    .lesson-study-item {
+    .topic-study-item {
         display: flex;
         align-items: center;
         gap: 12px;
         padding: 10px 12px;
         border-radius: 8px;
         cursor: pointer;
-        transition: background 0.15s ease;
+        transition: all 0.15s ease;
         margin-bottom: 4px;
         font-size: 13px;
         border: 1px solid transparent;
+        position: relative;
     }
-    .lesson-study-item:hover {
+    .topic-study-item:hover {
         background: #f1f5f9;
     }
-    .lesson-study-item.active {
+    .topic-study-item.active {
         background: rgba(92, 50, 255, 0.08);
         border-color: rgba(92, 50, 255, 0.25);
         font-weight: 600;
         color: var(--std-primary);
     }
-    .lesson-study-item.completed .status-indicator .checkmark {
+    .topic-study-item.is-quiz-item {
+        background: #fffbeb;
+        border-color: rgba(245, 158, 11, 0.2);
+    }
+    .topic-study-item.is-quiz-item:hover {
+        background: #fef3c7;
+    }
+    .topic-study-item.is-quiz-item.active {
+        background: #fef3c7;
+        border-color: #f59e0b;
+        color: #b45309;
+    }
+    .topic-study-item.is-chapter-quiz-item {
+        background: #f5f3ff;
+        border-color: rgba(139, 92, 246, 0.25);
+    }
+    .topic-study-item.is-chapter-quiz-item:hover {
+        background: #ede9fe;
+    }
+    .topic-study-item.is-chapter-quiz-item.active {
+        background: #ede9fe;
+        border-color: #8b5cf6;
+        color: #6d28d9;
+    }
+    .topic-study-item.completed .status-indicator .checkmark {
         display: inline-block;
         color: #10b981;
     }
-    .lesson-study-item.completed .status-indicator .bullet {
+    .topic-study-item.completed .status-indicator .bullet {
         display: none;
     }
-    .lesson-study-item:not(.completed) .status-indicator .checkmark {
+    .topic-study-item:not(.completed) .status-indicator .checkmark {
         display: none;
     }
-    .lesson-study-item:not(.completed) .status-indicator .bullet {
+    .topic-study-item:not(.completed) .status-indicator .bullet {
         display: inline-block;
         color: #94a3b8;
     }
-    .lesson-icon-wrapper {
-        width: 28px;
-        height: 28px;
+    .topic-icon-wrapper {
+        width: 30px;
+        height: 30px;
         border-radius: 6px;
         background: #f8fafc;
         display: flex;
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
-        font-size: 12px;
+        font-size: 13px;
+        color: var(--std-primary);
+    }
+    .topic-study-item.is-quiz-item .topic-icon-wrapper {
+        background: #fef3c7;
+        color: #d97706;
+    }
+    .topic-study-item.is-chapter-quiz-item .topic-icon-wrapper {
+        background: #ede9fe;
+        color: #7c3aed;
+    }
+    .topic-badge-pill {
+        font-size: 10px;
+        font-weight: 700;
+        padding: 2px 7px;
+        border-radius: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+    }
+    .badge-pill-topic-quiz {
+        background: #fef3c7;
+        color: #b45309;
+        border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+    .badge-pill-chapter-quiz {
+        background: #ede9fe;
+        color: #6d28d9;
+        border: 1px solid rgba(139, 92, 246, 0.3);
+    }
+    .badge-pill-video {
+        background: #e0e7ff;
+        color: #3730a3;
+    }
+    .badge-pill-reading {
+        background: #e0f2fe;
+        color: #0369a1;
     }
     .classroom-tab-nav {
         border-bottom: 1px solid var(--std-border);
@@ -115,6 +203,220 @@
         border-bottom-color: var(--std-primary);
         background: transparent;
     }
+
+    /* =========================================================================
+       QUIZ STUDIO UI STYLES
+       ========================================================================= */
+    .quiz-studio-box {
+        background: #ffffff;
+        border: 1px solid var(--std-border);
+        border-radius: var(--std-radius);
+        overflow: hidden;
+        box-shadow: var(--std-shadow-md);
+    }
+    .quiz-studio-header {
+        background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+        color: #ffffff;
+        padding: 20px 24px;
+        position: relative;
+    }
+    .quiz-timer-pill {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        color: #ffffff;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-weight: 700;
+        font-size: 13px;
+        letter-spacing: 0.5px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .quiz-question-card {
+        background: #ffffff;
+        padding: 24px;
+    }
+    .quiz-qnum-badge {
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--std-primary);
+        background: rgba(92, 50, 255, 0.08);
+        padding: 3px 10px;
+        border-radius: 12px;
+        display: inline-block;
+        margin-bottom: 10px;
+    }
+    .quiz-question-text {
+        font-size: 16px;
+        font-weight: 700;
+        color: #1e293b;
+        line-height: 1.5;
+        margin-bottom: 20px;
+    }
+    .quiz-options-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 24px;
+    }
+    .quiz-option-card {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 13px 16px;
+        border-radius: 10px;
+        border: 1.5px solid #e2e8f0;
+        background: #ffffff;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        font-size: 14px;
+        color: #334155;
+    }
+    .quiz-option-card:hover {
+        border-color: var(--std-primary);
+        background: rgba(92, 50, 255, 0.03);
+    }
+    .quiz-option-card.selected {
+        border-color: var(--std-primary);
+        background: rgba(92, 50, 255, 0.08);
+        font-weight: 600;
+        color: var(--std-primary);
+    }
+    .quiz-option-card.correct {
+        border-color: #10b981 !important;
+        background: #ecfdf5 !important;
+        color: #065f46 !important;
+        font-weight: 600;
+    }
+    .quiz-option-card.incorrect {
+        border-color: #ef4444 !important;
+        background: #fef2f2 !important;
+        color: #991b1b !important;
+    }
+    .quiz-option-letter {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        border: 1.5px solid #cbd5e1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 12.5px;
+        color: #64748b;
+        flex-shrink: 0;
+        background: #ffffff;
+        transition: all 0.15s ease;
+    }
+    .quiz-option-card.selected .quiz-option-letter {
+        border-color: var(--std-primary);
+        background: var(--std-primary);
+        color: #ffffff;
+    }
+    .quiz-option-card.correct .quiz-option-letter {
+        border-color: #10b981;
+        background: #10b981;
+        color: #ffffff;
+    }
+    .quiz-option-card.incorrect .quiz-option-letter {
+        border-color: #ef4444;
+        background: #ef4444;
+        color: #ffffff;
+    }
+    .quiz-explanation-box {
+        background: #f8fafc;
+        border-left: 4px solid var(--std-primary);
+        border-radius: 8px;
+        padding: 16px;
+        margin-top: 16px;
+        font-size: 13.5px;
+        line-height: 1.6;
+    }
+    .quiz-nav-dots {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: wrap;
+    }
+    .quiz-dot {
+        width: 28px;
+        height: 28px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 700;
+        border: 1px solid #cbd5e1;
+        background: #f8fafc;
+        color: #64748b;
+        cursor: pointer;
+        transition: all 0.15s ease;
+    }
+    .quiz-dot.active {
+        border-color: var(--std-primary);
+        background: var(--std-primary);
+        color: #ffffff;
+    }
+    .quiz-dot.answered {
+        background: #e2e8f0;
+        color: #334155;
+    }
+    .quiz-dot.correct {
+        background: #10b981;
+        border-color: #10b981;
+        color: #ffffff;
+    }
+    .quiz-dot.wrong {
+        background: #ef4444;
+        border-color: #ef4444;
+        color: #ffffff;
+    }
+
+    /* Scorecard Screen */
+    .quiz-scorecard-card {
+        padding: 40px 24px;
+        text-align: center;
+    }
+    .quiz-score-badge {
+        width: 110px;
+        height: 110px;
+        border-radius: 50%;
+        margin: 0 auto 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+        color: #ffffff;
+        box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.4);
+    }
+    .quiz-score-badge.passed {
+        background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+        box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.4);
+    }
+    .quiz-score-badge.failed {
+        background: linear-gradient(135deg, #dc2626 0%, #f59e0b 100%);
+        box-shadow: 0 10px 25px -5px rgba(239, 68, 68, 0.4);
+    }
+    .quiz-stat-tile {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 14px;
+        text-align: center;
+    }
+    .up-next-banner {
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 16px 20px;
+        margin-top: 24px;
+    }
 </style>
 @endsection
 
@@ -131,7 +433,12 @@
                         <i class="fa-solid fa-arrow-left"></i>
                     </a>
                     <div class="flex-grow-1">
-                        <span class="text-xs fw-bold text-uppercase text-primary tracking-wide">Classroom &bull; Enrolled Track</span>
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="text-xs fw-bold text-uppercase text-primary tracking-wide">Classroom &bull; Enrolled Track</span>
+                            <span class="badge bg-light text-dark border font-11 px-2 py-0.5 rounded-pill" id="classroom-mode-badge">
+                                <i class="fa-solid fa-graduation-cap text-primary me-1"></i> Chapters &amp; Topics
+                            </span>
+                        </div>
                         <select id="enrolledCourseSelect"
                             class="form-select form-select-sm rounded-3 fw-bold text-dark mt-1"
                             data-instructor-image="{{ asset($activeCourse['instructor_info']['image'] ?? $activeCourse['instructor_image'] ?? 'frontend/img/testimonial/testi_2_2.png') }}"
@@ -151,8 +458,8 @@
                 <div class="d-flex align-items-center justify-content-lg-end gap-3">
                     {{-- Progress Summary --}}
                     <div class="text-end d-none d-sm-block">
-                        <div class="text-xs text-dark fw-bold mb-1" id="progress-ratio">0/0 Lessons Done</div>
-                        <div class="std-progress-track mt-0" style="width: 140px; height: 8px;">
+                        <div class="text-xs text-dark fw-bold mb-1" id="progress-ratio">0/0 Topics Completed</div>
+                        <div class="std-progress-track mt-0" style="width: 150px; height: 8px;">
                             <div class="std-progress-fill fill-success" id="study-progress-bar" style="width: 0%;"></div>
                         </div>
                     </div>
@@ -165,11 +472,13 @@
     {{-- Main Classroom Layout --}}
     <div class="row gy-4">
 
-        {{-- Left Area: Video Player & Tabs --}}
+        {{-- Left Area: Video Player / Quiz Studio / Notes Tabs --}}
         <div class="col-xl-8">
             <div class="std-card p-4 mb-4">
 
-                {{-- Video Player --}}
+                {{-- =========================================================
+                     1. VIDEO PLAYER CONTAINER (Visible when Topic Type == video)
+                     ========================================================= --}}
                 <div id="video-player-container" class="classroom-video-box mb-4">
                     <video id="main-video-player" controls controlslist="nodownload" playsinline>
                         <source src="" type="video/mp4">
@@ -177,23 +486,191 @@
                     </video>
                 </div>
 
-                {{-- Text Lesson Placeholder Banner --}}
+                {{-- =========================================================
+                     2. READING BANNER (Visible when Topic Type == reading/text)
+                     ========================================================= --}}
                 <div id="text-lesson-banner" class="text-lesson-banner mb-4 d-none">
                     <div class="py-5 px-4 rounded-4 text-center bg-light border">
-                        <i class="fa-solid fa-file-lines text-primary mb-3 fs-1"></i>
-                        <h4 class="h5 fw-bold text-dark mb-2" id="text-banner-title">Written Lecture Material</h4>
-                        <p class="text-muted text-sm mb-0">Read the high-yield syllabus notes and chapter breakdown below.</p>
+                        <i class="fa-solid fa-book-open-reader text-primary mb-3 fs-1"></i>
+                        <h4 class="h5 fw-bold text-dark mb-2" id="text-banner-title">High-Yield Topic Notes</h4>
+                        <p class="text-muted text-sm mb-0">Study the comprehensive syllabus breakdown, mnemonics, and PMDC key points below.</p>
                     </div>
                 </div>
 
-                {{-- Lesson Control Row --}}
-                <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 pb-3 mb-3 border-bottom">
+                {{-- =========================================================
+                     3. QUIZ STUDIO UI CONTAINER (Visible when Topic Type == quiz)
+                     ========================================================= --}}
+                <div id="quiz-studio-container" class="quiz-studio-box mb-4 d-none">
+                    {{-- Quiz Dynamic Header --}}
+                    <div class="quiz-studio-header">
+                        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-2">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="badge bg-warning text-dark fw-bold text-xs px-2 py-1" id="quiz-type-badge">
+                                    <i class="fa-solid fa-clipboard-question me-1"></i> Topic Quiz
+                                </span>
+                                <span class="text-xs text-white-50" id="quiz-chapter-crumb">Chapter 1 &bull; Assessment</span>
+                            </div>
+                            <div class="quiz-timer-pill" id="quiz-timer-pill">
+                                <i class="fa-regular fa-clock"></i>
+                                <span id="quiz-timer-display">08:00</span>
+                            </div>
+                        </div>
+                        <h3 class="h5 fw-bold text-white mb-1" id="quiz-title-display">Cell Biology Checkpoint Quiz</h3>
+                        <p class="text-white-50 text-xs mb-0" id="quiz-subtitle-display">Test your conceptual retention with high-yield MDCAT MCQs.</p>
+                    </div>
+
+                    {{-- Quiz View A: Start / Overview Screen --}}
+                    <div id="quiz-start-screen" class="p-4 text-center">
+                        <div class="p-4 bg-light rounded-4 border mb-4 text-start">
+                            <h5 class="fw-bold text-dark mb-2"><i class="fa-solid fa-circle-info text-primary me-2"></i> Quiz Guidelines &amp; Marking Scheme</h5>
+                            <ul class="text-sm text-secondary mb-0 ps-3">
+                                <li class="mb-1"><strong>Format:</strong> Single Best Answer Multiple Choice Questions (PMDC Standard).</li>
+                                <li class="mb-1"><strong>Instant Feedback:</strong> You can check explanations after each question to reinforce concepts.</li>
+                                <li class="mb-1"><strong>Passing Benchmark:</strong> 80% score required to earn the Chapter Mastery checkmark.</li>
+                                <li><strong>Retakes:</strong> You can retake this quiz anytime to practice weak concepts.</li>
+                            </ul>
+                        </div>
+
+                        <div class="row g-3 mb-4">
+                            <div class="col-6 col-sm-3">
+                                <div class="quiz-stat-tile">
+                                    <div class="text-xs text-muted mb-1">Questions</div>
+                                    <div class="h5 fw-bold text-dark mb-0" id="quiz-stat-total-q">5 MCQs</div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-sm-3">
+                                <div class="quiz-stat-tile">
+                                    <div class="text-xs text-muted mb-1">Time Allowed</div>
+                                    <div class="h5 fw-bold text-dark mb-0" id="quiz-stat-duration">8 Mins</div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-sm-3">
+                                <div class="quiz-stat-tile">
+                                    <div class="text-xs text-muted mb-1">Pass Score</div>
+                                    <div class="h5 fw-bold text-dark mb-0" id="quiz-stat-pass">80%</div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-sm-3">
+                                <div class="quiz-stat-tile">
+                                    <div class="text-xs text-muted mb-1">Difficulty</div>
+                                    <div class="h5 fw-bold text-primary mb-0">High-Yield</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary px-4 py-2.5 fw-bold d-inline-flex align-items-center gap-2 rounded-3" id="start-quiz-btn" style="font-size: 14.5px;">
+                            <i class="fa-solid fa-play"></i>
+                            <span>Start Quiz Now</span>
+                        </button>
+                    </div>
+
+                    {{-- Quiz View B: Active Question Player Screen --}}
+                    <div id="quiz-player-screen" class="quiz-question-card d-none">
+                        {{-- Top Question Tracker & Dots --}}
+                        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 pb-3 mb-3 border-bottom">
+                            <div>
+                                <span class="quiz-qnum-badge" id="quiz-qnum-label">Question 1 of 5</span>
+                            </div>
+                            <div class="quiz-nav-dots" id="quiz-nav-dots">
+                                <!-- Injected dynamically via JS -->
+                            </div>
+                        </div>
+
+                        {{-- Question Statement --}}
+                        <div class="quiz-question-text" id="quiz-question-statement">
+                            Loading question...
+                        </div>
+
+                        {{-- 4 Options Choices --}}
+                        <div class="quiz-options-list" id="quiz-options-container">
+                            <!-- Injected dynamically via JS -->
+                        </div>
+
+                        {{-- Explanation Card (revealed after Check Answer) --}}
+                        <div class="quiz-explanation-box d-none" id="quiz-explanation-box">
+                            <div class="d-flex align-items-center gap-2 fw-bold text-primary mb-1">
+                                <i class="fa-solid fa-lightbulb"></i>
+                                <span>High-Yield PMDC Solution &amp; Reference</span>
+                            </div>
+                            <div class="text-secondary" id="quiz-explanation-text"></div>
+                        </div>
+
+                        {{-- Action Buttons Row --}}
+                        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 pt-3 mt-4 border-top">
+                            <div>
+                                <button class="btn btn-sm btn-outline-secondary px-3 py-2 fw-semibold rounded-2" id="quiz-prev-btn" disabled>
+                                    <i class="fa-solid fa-arrow-left me-1"></i> Previous
+                                </button>
+                            </div>
+                            <div class="d-flex align-items-center gap-2">
+                                <button class="btn btn-sm btn-outline-primary px-3 py-2 fw-semibold rounded-2" id="quiz-check-btn">
+                                    <i class="fa-solid fa-circle-check me-1"></i> Check Answer
+                                </button>
+                                <button class="btn btn-sm btn-primary px-3 py-2 fw-semibold rounded-2" id="quiz-next-btn">
+                                    <span>Next Question</span> <i class="fa-solid fa-arrow-right ms-1"></i>
+                                </button>
+                                <button class="btn btn-sm btn-success px-3 py-2 fw-semibold rounded-2 d-none" id="quiz-finish-btn">
+                                    <i class="fa-solid fa-flag-checkered me-1"></i> Submit Quiz
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Quiz View C: Result & Scorecard Screen --}}
+                    <div id="quiz-scorecard-screen" class="quiz-scorecard-card d-none">
+                        <div class="quiz-score-badge" id="quiz-score-badge">
+                            <span class="fs-2 fw-bold mb-0" id="quiz-score-percent">80%</span>
+                            <span class="text-xs uppercase fw-bold" id="quiz-score-status">Passed</span>
+                        </div>
+
+                        <h4 class="h5 fw-bold text-dark mb-1" id="quiz-result-title">Quiz Completed Successfully!</h4>
+                        <p class="text-muted text-sm mb-4" id="quiz-result-msg">Great job! You have demonstrated solid conceptual grasp of this chapter.</p>
+
+                        <div class="row g-3 justify-content-center max-w-md mx-auto mb-4" style="max-width: 520px;">
+                            <div class="col-4">
+                                <div class="quiz-stat-tile">
+                                    <div class="text-xs text-muted mb-1">Score</div>
+                                    <div class="h5 fw-bold text-dark mb-0" id="quiz-score-ratio">4/5</div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="quiz-stat-tile">
+                                    <div class="text-xs text-muted mb-1">Accuracy</div>
+                                    <div class="h5 fw-bold text-success mb-0" id="quiz-accuracy-ratio">80%</div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="quiz-stat-tile">
+                                    <div class="text-xs text-muted mb-1">Time Spent</div>
+                                    <div class="h5 fw-bold text-primary mb-0" id="quiz-time-spent">03:42</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-center justify-content-center flex-wrap gap-2">
+                            <button class="btn btn-outline-secondary px-3 py-2 fw-semibold rounded-3 text-sm" id="quiz-retake-btn">
+                                <i class="fa-solid fa-rotate-right me-1"></i> Retake Practice Quiz
+                            </button>
+                            <button class="btn btn-primary px-4 py-2 fw-semibold rounded-3 text-sm" id="quiz-proceed-btn">
+                                <span>Continue to Next Item</span> <i class="fa-solid fa-arrow-right ms-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- =========================================================
+                     TOPIC METADATA & CONTROL ROW (When Video/Reading is Active)
+                     ========================================================= --}}
+                <div id="topic-control-row" class="d-flex align-items-center justify-content-between flex-wrap gap-3 pb-3 mb-3 border-bottom">
                     <div>
-                        <span class="text-xs fw-bold text-uppercase text-primary" id="active-module-name">Module Index</span>
-                        <h2 class="h5 fw-bold text-dark mb-1 mt-1" id="active-lesson-title">Select a Lesson</h2>
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="text-xs fw-bold text-uppercase text-primary" id="active-chapter-name">Chapter 1: Cell Biology</span>
+                            <span class="badge bg-light text-secondary border font-10 px-2 py-0.5 rounded-pill" id="active-topic-badge">Topic</span>
+                        </div>
+                        <h2 class="h5 fw-bold text-dark mb-1 mt-1" id="active-topic-title">Select a Topic</h2>
                         <div class="d-flex align-items-center gap-3 text-muted text-xs mt-1">
-                            <span><i class="fa-regular fa-clock me-1 text-primary"></i> <span id="active-lesson-duration">0 min</span></span>
-                            <span><i class="fa-solid fa-layer-group me-1 text-primary"></i> <span id="active-lesson-type">Lesson</span></span>
+                            <span><i class="fa-regular fa-clock me-1 text-primary"></i> <span id="active-topic-duration">0 min</span></span>
+                            <span><i class="fa-solid fa-layer-group me-1 text-primary"></i> <span id="active-topic-type">Topic Lecture</span></span>
                         </div>
                     </div>
                     <div>
@@ -204,104 +681,137 @@
                     </div>
                 </div>
 
-                {{-- Detail Content Tabs --}}
-                <ul class="nav classroom-tab-nav mb-4" id="studyTabs" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="read-tab" data-bs-toggle="tab" data-bs-target="#read-pane" type="button" role="tab">
-                            <i class="fa-solid fa-book-open-reader me-2"></i>Lesson Notes
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="notes-tab" data-bs-toggle="tab" data-bs-target="#notes-pane" type="button" role="tab">
-                            <i class="fa-solid fa-note-sticky me-2"></i>My Private Notes
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="resources-tab" data-bs-toggle="tab" data-bs-target="#resources-pane" type="button" role="tab">
-                            <i class="fa-solid fa-file-pdf me-2"></i>PDF Handouts
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="qa-tab" data-bs-toggle="tab" data-bs-target="#qa-pane" type="button" role="tab">
-                            <i class="fa-solid fa-comments me-2"></i>Doubt Discussion
-                        </button>
-                    </li>
-                </ul>
-
-                <div class="tab-content" id="studyTabsContent">
-
-                    {{-- Tab 1: Reading Area --}}
-                    <div class="tab-pane fade show active" id="read-pane" role="tabpanel">
-                        <div class="lesson-reading-body text-dark" id="lesson-reading-body" style="font-size: 14px; line-height: 1.7;">
-                            <!-- Injected dynamically via JS -->
-                        </div>
-                    </div>
-
-                    {{-- Tab 2: Notes Editor --}}
-                    <div class="tab-pane fade" id="notes-pane" role="tabpanel">
-                        <div class="d-flex align-items-center justify-content-between mb-2">
-                            <h5 class="fw-bold text-dark mb-0" style="font-size: 15px;">Personal Study Notes</h5>
-                            <span class="text-xs text-success d-none" id="notes-save-status"><i class="fa-solid fa-check me-1"></i> Saved automatically!</span>
-                        </div>
-                        <p class="text-muted text-xs mb-3">Save your mnemonics, numerical shortcuts, or doubt points. Stored securely on your device.</p>
-                        <textarea id="lesson-notes-textarea" class="form-control rounded-3 p-3 mb-3" rows="7" placeholder="Type your personal notes for this lesson here..." style="font-size: 13.5px;"></textarea>
-                        <div class="text-end">
-                            <button class="btn btn-sm btn-primary px-3 py-2 fw-semibold" id="save-notes-btn">
-                                <i class="fa-regular fa-floppy-disk me-1"></i> Save Notes
+                {{-- =========================================================
+                     TOPIC STUDY TABS (Notes / Resources / Doubt Clearance)
+                     ========================================================= --}}
+                <div id="topic-tabs-wrapper">
+                    <ul class="nav classroom-tab-nav mb-4" id="studyTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="read-tab" data-bs-toggle="tab" data-bs-target="#read-pane" type="button" role="tab">
+                                <i class="fa-solid fa-book-open-reader me-2"></i>Topic Notes
                             </button>
-                        </div>
-                    </div>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="notes-tab" data-bs-toggle="tab" data-bs-target="#notes-pane" type="button" role="tab">
+                                <i class="fa-solid fa-note-sticky me-2"></i>My Private Notes
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="resources-tab" data-bs-toggle="tab" data-bs-target="#resources-pane" type="button" role="tab">
+                                <i class="fa-solid fa-file-pdf me-2"></i>PDF Handouts
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="qa-tab" data-bs-toggle="tab" data-bs-target="#qa-pane" type="button" role="tab">
+                                <i class="fa-solid fa-comments me-2"></i>Doubt Forum
+                            </button>
+                        </li>
+                    </ul>
 
-                    {{-- Tab 3: Resource PDFs --}}
-                    <div class="tab-pane fade" id="resources-pane" role="tabpanel">
-                        <h5 class="fw-bold text-dark mb-1" style="font-size: 15px;">Official Lesson Handouts &amp; Formula Sheets</h5>
-                        <p class="text-muted text-xs mb-3">Download high-yield slides, past question references, and answer keys.</p>
-                        <div id="lesson-resources-list" class="d-flex flex-column gap-2">
-                            <!-- Injected dynamically via JS -->
-                        </div>
-                    </div>
+                    <div class="tab-content" id="studyTabsContent">
 
-                    {{-- Tab 4: Q&A Discussion --}}
-                    <div class="tab-pane fade" id="qa-pane" role="tabpanel">
-                        <h5 class="fw-bold text-dark mb-1" style="font-size: 15px;">Doubt Clearance Forum</h5>
-                        <p class="text-muted text-xs mb-3">Ask doubts directly to DoctorsInn faculty and discussion mentors.</p>
+                        {{-- Tab 1: Topic Notes Body --}}
+                        <div class="tab-pane fade show active" id="read-pane" role="tabpanel">
+                            <div class="lesson-reading-body text-dark" id="lesson-reading-body" style="font-size: 14px; line-height: 1.7;">
+                                <!-- Injected dynamically via JS -->
+                            </div>
 
-                        <div class="bg-light p-3 rounded-3 mb-4 border">
-                            <form id="qa-form">
-                                <div class="mb-2">
-                                    <label class="form-label text-xs fw-bold text-dark mb-1">Post a Question / Doubt</label>
-                                    <textarea id="qa-input-text" class="form-control text-sm rounded-3" rows="3" placeholder="Explain what concept or MCQ you need help with..." required></textarea>
+                            {{-- Up Next Recommendation Banner --}}
+                            <div class="up-next-banner d-flex align-items-center justify-content-between flex-wrap gap-3" id="up-next-banner">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="rounded-circle bg-primary bg-opacity-10 text-primary p-3 d-flex align-items-center justify-content-center" style="width: 44px; height: 44px;">
+                                        <i class="fa-solid fa-forward-step fs-5"></i>
+                                    </div>
+                                    <div>
+                                        <span class="text-xs fw-bold text-uppercase text-primary d-block">Up Next in Chapter</span>
+                                        <h6 class="fw-bold text-dark mb-0" id="up-next-title">Topic Practice Quiz</h6>
+                                    </div>
                                 </div>
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <span class="text-muted text-xs">Response time: usually under 2 hours</span>
-                                    <button type="submit" class="btn btn-sm btn-primary px-3 py-2 fw-semibold">
-                                        <i class="fa-regular fa-paper-plane me-1"></i> Post Question
-                                    </button>
-                                </div>
-                            </form>
+                                <button class="btn btn-sm btn-primary px-3 py-2 fw-semibold rounded-2" id="up-next-btn">
+                                    <span>Proceed Next</span> <i class="fa-solid fa-arrow-right ms-1"></i>
+                                </button>
+                            </div>
                         </div>
 
-                        <div id="qa-thread-feed">
-                            <!-- Injected dynamically via JS -->
+                        {{-- Tab 2: Notes Editor --}}
+                        <div class="tab-pane fade" id="notes-pane" role="tabpanel">
+                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                <h5 class="fw-bold text-dark mb-0" style="font-size: 15px;">Personal Study Notes</h5>
+                                <span class="text-xs text-success d-none" id="notes-save-status"><i class="fa-solid fa-check me-1"></i> Saved automatically!</span>
+                            </div>
+                            <p class="text-muted text-xs mb-3">Save your mnemonics, numerical shortcuts, or doubt points. Stored securely on your device.</p>
+                            <textarea id="lesson-notes-textarea" class="form-control rounded-3 p-3 mb-3" rows="7" placeholder="Type your personal notes for this topic here..." style="font-size: 13.5px;"></textarea>
+                            <div class="text-end">
+                                <button class="btn btn-sm btn-primary px-3 py-2 fw-semibold" id="save-notes-btn">
+                                    <i class="fa-regular fa-floppy-disk me-1"></i> Save Notes
+                                </button>
+                            </div>
                         </div>
+
+                        {{-- Tab 3: Resource PDFs --}}
+                        <div class="tab-pane fade" id="resources-pane" role="tabpanel">
+                            <h5 class="fw-bold text-dark mb-1" style="font-size: 15px;">Official Topic Handouts &amp; Formula Sheets</h5>
+                            <p class="text-muted text-xs mb-3">Download high-yield slides, past question references, and answer keys.</p>
+                            <div id="lesson-resources-list" class="d-flex flex-column gap-2">
+                                <!-- Injected dynamically via JS -->
+                            </div>
+                        </div>
+
+                        {{-- Tab 4: Q&A Doubt Discussion --}}
+                        <div class="tab-pane fade" id="qa-pane" role="tabpanel">
+                            <h5 class="fw-bold text-dark mb-1" style="font-size: 15px;">Doubt Clearance Forum</h5>
+                            <p class="text-muted text-xs mb-3">Ask doubts directly to DoctorsInn faculty and discussion mentors.</p>
+
+                            <div class="bg-light p-3 rounded-3 mb-4 border">
+                                <form id="qa-form">
+                                    <div class="mb-2">
+                                        <label class="form-label text-xs fw-bold text-dark mb-1">Post a Question / Doubt</label>
+                                        <textarea id="qa-input-text" class="form-control text-sm rounded-3" rows="3" placeholder="Explain what concept or MCQ you need help with..." required></textarea>
+                                    </div>
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <span class="text-muted text-xs">Response time: usually under 2 hours</span>
+                                        <button type="submit" class="btn btn-sm btn-primary px-3 py-2 fw-semibold">
+                                            <i class="fa-regular fa-paper-plane me-1"></i> Post Question
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div id="qa-thread-feed">
+                                <!-- Injected dynamically via JS -->
+                            </div>
+                        </div>
+
                     </div>
-
                 </div>
 
             </div>
         </div>
 
-        {{-- Right Area: Syllabus Curriculum Accordion --}}
+        {{-- Right Area: Chapters & Topics Curriculum Outline --}}
         <div class="col-xl-4">
             <div class="syllabus-card">
-                <div class="d-flex align-items-center justify-content-between pb-3 mb-3 border-bottom">
+                <div class="d-flex align-items-center justify-content-between pb-2 mb-2">
                     <div>
                         <h3 class="fw-bold text-dark mb-0" style="font-size: 15.5px;">Curriculum Outline</h3>
-                        <span class="text-muted text-xs">Select lecture to switch stream</span>
+                        <span class="text-muted text-xs" id="syllabus-summary-text">Chapters, Topics &amp; Practice Quizzes</span>
                     </div>
                     <span class="badge bg-light text-dark border px-2 py-1 text-xs fw-semibold">
                         <i class="fa-solid fa-list-ol text-primary me-1"></i> Syllabus
                     </span>
+                </div>
+
+                {{-- Filter Bar (All / Topics / Quizzes) --}}
+                <div class="syllabus-filter-bar">
+                    <button type="button" class="syllabus-filter-btn active" data-filter="all">
+                        All <span id="filter-cnt-all">(0)</span>
+                    </button>
+                    <button type="button" class="syllabus-filter-btn" data-filter="topics">
+                        <i class="fa-solid fa-book-bookmark me-1 text-primary"></i> Topics <span id="filter-cnt-topics">(0)</span>
+                    </button>
+                    <button type="button" class="syllabus-filter-btn" data-filter="quizzes">
+                        <i class="fa-solid fa-clipboard-question me-1 text-warning"></i> Quizzes <span id="filter-cnt-quizzes">(0)</span>
+                    </button>
                 </div>
 
                 <div class="syllabus-accordion-wrap flex-grow-1">
@@ -312,7 +822,7 @@
 
                 {{-- WhatsApp Assistance --}}
                 <div class="mt-3 pt-3 border-top">
-                    <a href="https://wa.me/923001234567?text=Hello%20DoctorsInn%2C%20I%20have%20a%20doubt%20in%20the%20active%20lecture." target="_blank" class="btn btn-outline-success w-100 py-2 fw-semibold d-flex align-items-center justify-content-center gap-2" style="font-size: 13px; border-radius: 8px;">
+                    <a href="https://wa.me/923001234567?text=Hello%20DoctorsInn%2C%20I%20have%20a%20doubt%20in%20the%20active%20chapter%20or%20quiz." target="_blank" class="btn btn-outline-success w-100 py-2 fw-semibold d-flex align-items-center justify-content-center gap-2" style="font-size: 13px; border-radius: 8px;">
                         <i class="fa-brands fa-whatsapp fs-5"></i>
                         <span>Ask Teacher on WhatsApp</span>
                     </a>
