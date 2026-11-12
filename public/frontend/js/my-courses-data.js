@@ -26,15 +26,21 @@ const myCoursesData = {
             { name: "60-Day Study Plan — PDF", type: "pdf" },
             { name: "Mock Test Answer Keys — PDF", type: "pdf" }
         ],
+        modules: [
+    {
+        id: "module-1-bio",
+        name: "Module 1: Biology",
+        icon: "fa-solid fa-dna",
+        description: "Core PMDC Biology syllabus: Cell Biology, Biological Molecules, Genetics & Cellular Physiology.",
         chapters: [
             {
-                id: "chapter-1",
+                id: "bio-ch-1",
                 chapterNumber: 1,
                 name: "Chapter 1: Cell Biology & Cytology",
                 description: "Plasma membrane dynamics, organelle functions, endomembrane trafficking & cellular division.",
                 topics: [
                     {
-                        id: "topic-1-1",
+                        id: "bio-1-1",
                         topicNumber: "1.1",
                         title: "1.1 Cell Membrane & Fluid Mosaic Architecture",
                         type: "video",
@@ -42,21 +48,19 @@ const myCoursesData = {
                         videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
                         readContent: `
                             <div class="lesson-header-box mb-4">
-                                <span class="badge bg-primary text-white px-3 py-1 rounded-pill mb-2">Chapter 1 &bull; Topic 1.1</span>
+                                <span class="badge bg-primary text-white px-3 py-1 rounded-pill mb-2">Module 1: Biology &bull; Chapter 1</span>
                                 <h3 class="fw-bold text-dark">1.1 Cell Membrane & Fluid Mosaic Dynamics</h3>
                             </div>
                             <div class="alert alert-primary bg-light border-primary p-3 rounded-3 mb-4">
                                 <p class="mb-0 text-dark"><strong>Summary:</strong> Covers Singer & Nicolson's Fluid Mosaic Model, lipid bilayer composition, integral vs peripheral proteins, cholesterol fluidity buffer, and transport mechanisms.</p>
                             </div>
                             <h4>1. Molecular Architecture of Biological Membranes</h4>
-                            <p>According to the Fluid Mosaic Model (Singer & Nicolson, 1972), the plasma membrane behaves as a quasi-fluid two-dimensional liquid wherein amphipathic phospholipids and proteins are in continuous lateral motion.</p>
+                            <p>According to the Fluid Mosaic Model (Singer & Nicolson, 1972), biological membranes behave as a quasi-fluid two-dimensional liquid wherein amphipathic phospholipids and proteins are in continuous lateral motion.</p>
                             <ul>
-                                <li><strong>Phospholipid Bilayer:</strong> Hydrophilic polar heads face aqueous environments (ECF & ICF); hydrophobic non-polar fatty acid tails sequester inward.</li>
+                                <li><strong>Phospholipid Bilayer:</strong> Hydrophilic polar heads face aqueous environments; hydrophobic non-polar fatty acid tails sequester inward.</li>
                                 <li><strong>Cholesterol (Animal Cells):</strong> Acts as a biophysical fluidity buffer. It prevents crystallized packing at cold temperatures and stabilizes excess fluidity at elevated temperatures.</li>
                                 <li><strong>Glycocalyx:</strong> Surface oligosaccharide chains linked to lipids (glycolipids) or proteins (glycoproteins) enabling cell-cell recognition and immune identity.</li>
                             </ul>
-                            <h4 class="mt-4">2. Transmembrane Transport Mechanisms</h4>
-                            <p>MDCAT frequently tests differences between passive diffusion, facilitated diffusion via GLUT carriers/aquaporins, and primary/secondary active transport.</p>
                         `,
                         resources: [
                             { name: "Cell Biology Chapter Notes — PDF", type: "pdf" },
@@ -64,7 +68,7 @@ const myCoursesData = {
                         ]
                     },
                     {
-                        id: "topic-1-quiz",
+                        id: "bio-1-quiz",
                         topicNumber: "1.1 Checkpoint",
                         title: "Topic 1.1 Quick Quiz: Membrane Transport & Channels",
                         type: "quiz",
@@ -136,15 +140,15 @@ const myCoursesData = {
                         }
                     },
                     {
-                        id: "topic-1-2",
+                        id: "bio-1-2",
                         topicNumber: "1.2",
-                        title: "1.2 Endomembrane System, Mitochondria & Cytoskeleton",
+                        title: "1.2 Endomembrane System & Mitochondria",
                         type: "video",
                         duration: "42 min",
                         videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
                         readContent: `
                             <div class="lesson-header-box mb-4">
-                                <span class="badge bg-primary text-white px-3 py-1 rounded-pill mb-2">Chapter 1 &bull; Topic 1.2</span>
+                                <span class="badge bg-primary text-white px-3 py-1 rounded-pill mb-2">Module 1: Biology &bull; Chapter 1</span>
                                 <h3 class="fw-bold text-dark">1.2 Endomembrane System & Mitochondria</h3>
                             </div>
                             <h4>1. Eukaryotic Organelles Overview</h4>
@@ -155,42 +159,26 @@ const myCoursesData = {
                         ]
                     },
                     {
-                        id: "topic-1-3",
+                        id: "bio-1-3",
                         topicNumber: "1.3",
                         title: "1.3 Mitosis, Meiosis & Karyotyping High-Yield Notes",
                         type: "reading",
                         duration: "25 min",
                         readContent: `
                             <div class="lesson-header-box mb-4">
-                                <span class="badge bg-primary text-white px-3 py-1 rounded-pill mb-2">Chapter 1 &bull; Topic 1.3</span>
+                                <span class="badge bg-primary text-white px-3 py-1 rounded-pill mb-2">Module 1: Biology &bull; Chapter 1</span>
                                 <h3 class="fw-bold text-dark">1.3 Mitosis, Meiosis & Karyotyping High-Yield Notes</h3>
                             </div>
                             <h4>1. Cell Division Comparison Table</h4>
                             <div class="table-responsive my-3">
                                 <table class="table table-bordered text-sm">
                                     <thead class="table-light">
-                                        <tr>
-                                            <th>Feature</th>
-                                            <th>Mitosis</th>
-                                            <th>Meiosis</th>
-                                        </tr>
+                                        <tr><th>Feature</th><th>Mitosis</th><th>Meiosis</th></tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td><strong>Site</strong></td>
-                                            <td>Somatic cells</td>
-                                            <td>Germ cells (Gametogenesis)</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Recombination</strong></td>
-                                            <td>None</td>
-                                            <td>Pachytene stage (Prophase I)</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Outcome</strong></td>
-                                            <td>2 identical diploid (2n) cells</td>
-                                            <td>4 genetically distinct haploid (1n) cells</td>
-                                        </tr>
+                                        <tr><td><strong>Site</strong></td><td>Somatic cells</td><td>Germ cells</td></tr>
+                                        <tr><td><strong>Recombination</strong></td><td>None</td><td>Pachytene (Prophase I)</td></tr>
+                                        <tr><td><strong>Outcome</strong></td><td>2 identical diploid (2n)</td><td>4 distinct haploid (1n)</td></tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -200,7 +188,7 @@ const myCoursesData = {
                         ]
                     },
                     {
-                        id: "chapter-1-quiz",
+                        id: "bio-ch1-quiz",
                         topicNumber: "Assessment",
                         title: "Chapter 1 Comprehensive Mastery Assessment",
                         type: "quiz",
@@ -215,56 +203,31 @@ const myCoursesData = {
                             questions: [
                                 {
                                     question: "Crossing over between non-sister chromatids of homologous chromosomes occurs during which specific stage of Prophase I?",
-                                    options: [
-                                        "Leptotene",
-                                        "Zygotene",
-                                        "Pachytene",
-                                        "Diplotene"
-                                    ],
+                                    options: ["Leptotene", "Zygotene", "Pachytene", "Diplotene"],
                                     correctIndex: 2,
                                     explanation: "Synapsis occurs during Zygotene, but genetic exchange (crossing over) takes place during Pachytene via recombination nodules, producing chiasmata visible in Diplotene."
                                 },
                                 {
                                     question: "Which organelle is directly responsible for the synthesis of steroid hormones in Leydig and adrenal cortex cells?",
-                                    options: [
-                                        "Rough Endoplasmic Reticulum",
-                                        "Smooth Endoplasmic Reticulum",
-                                        "Peroxisomes",
-                                        "Lysosomes"
-                                    ],
+                                    options: ["Rough Endoplasmic Reticulum", "Smooth Endoplasmic Reticulum", "Peroxisomes", "Lysosomes"],
                                     correctIndex: 1,
                                     explanation: "The Smooth Endoplasmic Reticulum (SER) is enriched with enzymes for lipid and steroid biosynthesis, as well as glycogen breakdown and detoxification in hepatocytes."
                                 },
                                 {
                                     question: "In eukaryotic ribosomes, the peptidyl transferase ribozyme activity that forms peptide bonds is located in:",
-                                    options: [
-                                        "18S rRNA of 40S subunit",
-                                        "28S rRNA of 60S subunit",
-                                        "5S rRNA of 60S subunit",
-                                        "Initiation Factor IF-2"
-                                    ],
+                                    options: ["18S rRNA of 40S subunit", "28S rRNA of 60S subunit", "5S rRNA of 60S subunit", "Initiation Factor IF-2"],
                                     correctIndex: 1,
                                     explanation: "The catalytic peptidyl transferase activity of eukaryotic 80S ribosomes resides within the 28S ribosomal RNA of the large (60S) subunit."
                                 },
                                 {
                                     question: "Tay-Sachs disease results from the genetic deficiency of Hexosaminidase A within which organelle?",
-                                    options: [
-                                        "Mitochondria",
-                                        "Peroxisomes",
-                                        "Lysosomes",
-                                        "Golgi Apparatus"
-                                    ],
+                                    options: ["Mitochondria", "Peroxisomes", "Lysosomes", "Golgi Apparatus"],
                                     correctIndex: 2,
                                     explanation: "Tay-Sachs is an autosomal recessive lysosomal storage disease resulting in abnormal accumulation of GM2 gangliosides in neuronal lysosomes."
                                 },
                                 {
                                     question: "Colchicine arrests cells in which mitotic phase by inhibiting microtubule polymerization?",
-                                    options: [
-                                        "Prophase",
-                                        "Metaphase",
-                                        "Anaphase",
-                                        "Telophase"
-                                    ],
+                                    options: ["Prophase", "Metaphase", "Anaphase", "Telophase"],
                                     correctIndex: 1,
                                     explanation: "Colchicine disrupts mitotic spindle microtubule assembly, arresting chromosomes on the metaphase plate (used clinically for karyotyping)."
                                 }
@@ -274,13 +237,13 @@ const myCoursesData = {
                 ]
             },
             {
-                id: "chapter-2",
+                id: "bio-ch-2",
                 chapterNumber: 2,
                 name: "Chapter 2: Biological Molecules & Enzymology",
                 description: "Carbohydrates, lipids, structural proteins, nucleic acids, and enzyme kinetics.",
                 topics: [
                     {
-                        id: "topic-2-1",
+                        id: "bio-2-1",
                         topicNumber: "2.1",
                         title: "2.1 Carbohydrate Chemistry, Isomerism & Glycosidic Bonds",
                         type: "video",
@@ -288,7 +251,7 @@ const myCoursesData = {
                         videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
                         readContent: `
                             <div class="lesson-header-box mb-4">
-                                <span class="badge bg-primary text-white px-3 py-1 rounded-pill mb-2">Chapter 2 &bull; Topic 2.1</span>
+                                <span class="badge bg-primary text-white px-3 py-1 rounded-pill mb-2">Module 1: Biology &bull; Chapter 2</span>
                                 <h3 class="fw-bold text-dark">2.1 Carbohydrate Chemistry & Glycosidic Linkages</h3>
                             </div>
                             <p>Detailed study of aldoses, ketoses, hemiacetals, anomeric carbons, and classification into monosaccharides, disaccharides, and polysaccharides.</p>
@@ -298,7 +261,7 @@ const myCoursesData = {
                         ]
                     },
                     {
-                        id: "topic-2-quiz",
+                        id: "bio-2-quiz",
                         topicNumber: "2.1 Checkpoint",
                         title: "Topic 2.1 Quick Quiz: Carbohydrate Structure & Tests",
                         type: "quiz",
@@ -313,56 +276,31 @@ const myCoursesData = {
                             questions: [
                                 {
                                     question: "Which of the following carbohydrates is a non-reducing disaccharide with an alpha-1,2-glycosidic linkage?",
-                                    options: [
-                                        "Maltose",
-                                        "Lactose",
-                                        "Sucrose",
-                                        "Cellobiose"
-                                    ],
+                                    options: ["Maltose", "Lactose", "Sucrose", "Cellobiose"],
                                     correctIndex: 2,
                                     explanation: "In sucrose, both anomeric carbons of glucose and fructose participate in the glycosidic bond (alpha-1,2), leaving no free hemiacetal group; thus it does not reduce Benedict's reagent."
                                 },
                                 {
                                     question: "Which branched polymer of glucose serves as the primary animal storage carbohydrate?",
-                                    options: [
-                                        "Amylose",
-                                        "Glycogen",
-                                        "Cellulose",
-                                        "Chitin"
-                                    ],
+                                    options: ["Amylose", "Glycogen", "Cellulose", "Chitin"],
                                     correctIndex: 1,
                                     explanation: "Glycogen has alpha-1,4 glycosidic bonds in chains with frequent alpha-1,6 branch points occurring every 8-12 glucose residues, stored in liver and skeletal muscles."
                                 },
                                 {
                                     question: "A patient's urine turns brick-red when heated with Benedict's solution. Which sugar is NOT responsible?",
-                                    options: [
-                                        "Glucose",
-                                        "Galactose",
-                                        "Fructose",
-                                        "Sucrose"
-                                    ],
+                                    options: ["Glucose", "Galactose", "Fructose", "Sucrose"],
                                     correctIndex: 3,
                                     explanation: "Sucrose is non-reducing and gives a negative Benedict's test unless previously hydrolyzed by acid or sucrase."
                                 },
                                 {
                                     question: "Chitin, found in fungal cell walls and arthropod exoskeletons, is a polymer of:",
-                                    options: [
-                                        "N-acetylglucosamine (NAG)",
-                                        "N-acetylmuramic acid (NAM)",
-                                        "Alpha-D-glucuronic acid",
-                                        "Beta-D-galactose"
-                                    ],
+                                    options: ["N-acetylglucosamine (NAG)", "N-acetylmuramic acid (NAM)", "Alpha-D-glucuronic acid", "Beta-D-galactose"],
                                     correctIndex: 0,
                                     explanation: "Chitin is a homopolymer of N-acetyl-D-glucosamine units joined by beta-1,4-glycosidic linkages."
                                 },
                                 {
                                     question: "Amylose and amylopectin are the two structural constituents of:",
-                                    options: [
-                                        "Glycogen",
-                                        "Starch",
-                                        "Inulin",
-                                        "Dextran"
-                                    ],
+                                    options: ["Glycogen", "Starch", "Inulin", "Dextran"],
                                     correctIndex: 1,
                                     explanation: "Plant starch consists of unbranched helical amylose (alpha-1,4) and branched amylopectin (alpha-1,4 with alpha-1,6 branches)."
                                 }
@@ -370,16 +308,16 @@ const myCoursesData = {
                         }
                     },
                     {
-                        id: "topic-2-2",
+                        id: "bio-2-2",
                         topicNumber: "2.2",
-                        title: "2.2 Protein Hierarchy, Peptide Bonds & Hemoglobin vs Myoglobin",
+                        title: "2.2 Protein Hierarchy & Hemoglobin vs Myoglobin",
                         type: "video",
                         duration: "40 min",
                         videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
                         readContent: `
                             <div class="lesson-header-box mb-4">
-                                <span class="badge bg-primary text-white px-3 py-1 rounded-pill mb-2">Chapter 2 &bull; Topic 2.2</span>
-                                <h3 class="fw-bold text-dark">2.2 Protein Structural Hierarchy & Allostery</h3>
+                                <span class="badge bg-primary text-white px-3 py-1 rounded-pill mb-2">Module 1: Biology &bull; Chapter 2</span>
+                                <h3 class="fw-bold text-dark">2.2 Protein Hierarchy & Hemoglobin vs Myoglobin</h3>
                             </div>
                             <p>Primary, secondary (alpha-helix, beta-sheet), tertiary, and quaternary levels of protein structure, with clinical comparisons of myoglobin (hyperbolic curve) and hemoglobin (sigmoidal cooperative curve).</p>
                         `,
@@ -388,15 +326,15 @@ const myCoursesData = {
                         ]
                     },
                     {
-                        id: "topic-2-3",
+                        id: "bio-2-3",
                         topicNumber: "2.3",
                         title: "2.3 Enzyme Kinetics, Michaelis-Menten & Inhibition Models",
                         type: "reading",
                         duration: "30 min",
                         readContent: `
                             <div class="lesson-header-box mb-4">
-                                <span class="badge bg-primary text-white px-3 py-1 rounded-pill mb-2">Chapter 2 &bull; Topic 2.3</span>
-                                <h3 class="fw-bold text-dark">2.3 Enzyme Kinetics, Michaelis-Menten & Inhibition Models</h3>
+                                <span class="badge bg-primary text-white px-3 py-1 rounded-pill mb-2">Module 1: Biology &bull; Chapter 2</span>
+                                <h3 class="fw-bold text-dark">2.3 Enzyme Kinetics & Inhibition Models</h3>
                             </div>
                             <p>Km (substrate concentration at 1/2 Vmax), competitive vs non-competitive vs uncompetitive inhibitors, and regulatory allosteric effectors.</p>
                         `,
@@ -405,7 +343,7 @@ const myCoursesData = {
                         ]
                     },
                     {
-                        id: "chapter-2-quiz",
+                        id: "bio-ch2-quiz",
                         topicNumber: "Assessment",
                         title: "Chapter 2 Comprehensive Mastery Assessment",
                         type: "quiz",
@@ -420,56 +358,31 @@ const myCoursesData = {
                             questions: [
                                 {
                                     question: "A competitive enzyme inhibitor produces which of the following kinetic alterations on Km and Vmax?",
-                                    options: [
-                                        "Increases Km, Vmax unchanged",
-                                        "Decreases Km, Vmax decreases",
-                                        "Km unchanged, Vmax decreases",
-                                        "Increases both Km and Vmax"
-                                    ],
+                                    options: ["Increases Km, Vmax unchanged", "Decreases Km, Vmax decreases", "Km unchanged, Vmax decreases", "Increases both Km and Vmax"],
                                     correctIndex: 0,
                                     explanation: "Competitive inhibitors compete with substrate for active sites, requiring higher substrate concentrations to reach half-maximal velocity (increased Km), but high [S] can still achieve maximal rate (unchanged Vmax)."
                                 },
                                 {
                                     question: "Which amino acid possesses an indole ring and serves as precursor to serotonin and melatonin?",
-                                    options: [
-                                        "Phenylalanine",
-                                        "Tyrosine",
-                                        "Tryptophan",
-                                        "Histidine"
-                                    ],
+                                    options: ["Phenylalanine", "Tyrosine", "Tryptophan", "Histidine"],
                                     correctIndex: 2,
                                     explanation: "Tryptophan contains an indole ring and is the biochemical precursor for neurotransmitter serotonin (5-HT) and hormone melatonin."
                                 },
                                 {
                                     question: "Which of the following bonds stabilizes the alpha-helix secondary structure of proteins?",
-                                    options: [
-                                        "Disulfide bridges between cysteine residues",
-                                        "Hydrogen bonds between C=O and N-H of peptide backbones",
-                                        "Hydrophobic interactions of R-groups",
-                                        "Ionic bonds between acidic and basic side chains"
-                                    ],
+                                    options: ["Disulfide bridges between cysteine residues", "Hydrogen bonds between C=O and N-H of peptide backbones", "Hydrophobic interactions of R-groups", "Ionic bonds between acidic and basic side chains"],
                                     correctIndex: 1,
                                     explanation: "Alpha-helices and beta-sheets are stabilized strictly by intrachain hydrogen bonds between the carbonyl oxygen (C=O) and amide hydrogen (N-H) of the peptide backbone 4 residues apart."
                                 },
                                 {
                                     question: "Prosthetic groups differ from coenzymes in that prosthetic groups are:",
-                                    options: [
-                                        "Transiently associated non-protein cofactors",
-                                        "Permanently and tightly/covalently bound to the apoenzyme",
-                                        "Inorganic metal ions only (e.g., Fe2+, Mg2+)",
-                                        "Always synthesized de novo during every reaction cycle"
-                                    ],
+                                    options: ["Transiently associated non-protein cofactors", "Permanently and tightly/covalently bound to the apoenzyme", "Inorganic metal ions only (e.g., Fe2+, Mg2+)", "Always synthesized de novo during every reaction cycle"],
                                     correctIndex: 1,
                                     explanation: "A prosthetic group (like heme in catalase or hemoglobin) remains tightly or covalently bound to the enzyme throughout the catalytic cycle."
                                 },
                                 {
                                     question: "The quaternary structure of adult Hemoglobin (HbA) consists of:",
-                                    options: [
-                                        "Two alpha and two gamma globin chains",
-                                        "Two alpha and two beta globin chains",
-                                        "Single polypeptide with one heme pocket",
-                                        "Four identical beta globin chains"
-                                    ],
+                                    options: ["Two alpha and two gamma globin chains", "Two alpha and two beta globin chains", "Single polypeptide with one heme pocket", "Four identical beta globin chains"],
                                     correctIndex: 1,
                                     explanation: "Normal adult human hemoglobin (HbA) is a tetramer of two alpha (alpha) and two beta (beta) subunits, each containing a protoporphyrin IX heme ring."
                                 }
@@ -479,13 +392,13 @@ const myCoursesData = {
                 ]
             },
             {
-                id: "chapter-3",
+                id: "bio-ch-3",
                 chapterNumber: 3,
                 name: "Chapter 3: Genetics, DNA Replication & Transcription",
                 description: "Mendelian genetics, chromosome mapping, Central Dogma, and gene regulation.",
                 topics: [
                     {
-                        id: "topic-3-1",
+                        id: "bio-3-1",
                         topicNumber: "3.1",
                         title: "3.1 Mendelian Inheritance & Non-Mendelian Extensions",
                         type: "video",
@@ -493,17 +406,17 @@ const myCoursesData = {
                         videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4",
                         readContent: `
                             <div class="lesson-header-box mb-4">
-                                <span class="badge bg-primary text-white px-3 py-1 rounded-pill mb-2">Chapter 3 &bull; Topic 3.1</span>
+                                <span class="badge bg-primary text-white px-3 py-1 rounded-pill mb-2">Module 1: Biology &bull; Chapter 3</span>
                                 <h3 class="fw-bold text-dark">3.1 Mendelian Genetics & Inheritance Patterns</h3>
                             </div>
-                            <p>Law of Segregation, Law of Independent Assortment, codominance, incomplete dominance, multiple alleles (ABO blood groups), and epistasis.</p>
+                            <p>Law of Segregation, Law of Independent Assortment, codominance, incomplete dominance, multiple alleles, and epistasis.</p>
                         `,
                         resources: [
                             { name: "Genetics Punnett Squares & Pedigree Analysis — PDF", type: "pdf" }
                         ]
                     },
                     {
-                        id: "topic-3-quiz",
+                        id: "bio-3-quiz",
                         topicNumber: "3.1 Checkpoint",
                         title: "Topic 3.1 Quick Quiz: Mendelian Ratios & Pedigrees",
                         type: "quiz",
@@ -518,45 +431,25 @@ const myCoursesData = {
                             questions: [
                                 {
                                     question: "In a cross between two individuals heterozygous for two unlinked traits (AaBb x AaBb), what fraction of offspring is expected to express both recessive phenotypes (aabb)?",
-                                    options: [
-                                        "1/16",
-                                        "3/16",
-                                        "9/16",
-                                        "1/4"
-                                    ],
+                                    options: ["1/16", "3/16", "9/16", "1/4"],
                                     correctIndex: 0,
                                     explanation: "Standard Mendelian dihybrid phenotypic ratio is 9:3:3:1. The double recessive phenotype (aabb) represents 1 out of 16 offspring."
                                 },
                                 {
                                     question: "Hemophilia A is an X-linked recessive disorder. If a carrier female marries an unaffected male, what percentage of their male children will have hemophilia?",
-                                    options: [
-                                        "0%",
-                                        "25%",
-                                        "50%",
-                                        "100%"
-                                    ],
+                                    options: ["0%", "25%", "50%", "100%"],
                                     correctIndex: 2,
                                     explanation: "The mother is X^H X^h and father is X^H Y. Male children inherit Y from father and either X^H (unaffected, 50%) or X^h (affected, 50%) from mother."
                                 },
                                 {
                                     question: "The phenomenon where a single gene influences multiple unrelated phenotypic traits is called:",
-                                    options: [
-                                        "Polygenic inheritance",
-                                        "Epistasis",
-                                        "Pleiotropy",
-                                        "Incomplete dominance"
-                                    ],
+                                    options: ["Polygenic inheritance", "Epistasis", "Pleiotropy", "Incomplete dominance"],
                                     correctIndex: 2,
                                     explanation: "Pleiotropy describes a single gene mutation producing multiple phenotypic effects across distinct organ systems (e.g., Sickle Cell Anemia, Marfan syndrome)."
                                 },
                                 {
                                     question: "During DNA replication in E. coli, which enzyme unwinds the double helix at the replication fork?",
-                                    options: [
-                                        "DNA Topoisomerase (Gyrase)",
-                                        "DNA Helicase (DnaB)",
-                                        "DNA Polymerase III",
-                                        "DNA Ligase"
-                                    ],
+                                    options: ["DNA Topoisomerase (Gyrase)", "DNA Helicase (DnaB)", "DNA Polymerase III", "DNA Ligase"],
                                     correctIndex: 1,
                                     explanation: "DNA Helicase unwinds the double helix at the fork by breaking hydrogen bonds, while Topoisomerase (gyrase) relieves supercoiling tension ahead of the fork."
                                 },
@@ -575,7 +468,7 @@ const myCoursesData = {
                         }
                     },
                     {
-                        id: "chapter-3-quiz",
+                        id: "bio-ch3-quiz",
                         topicNumber: "Assessment",
                         title: "Chapter 3 Comprehensive Mastery Assessment",
                         type: "quiz",
@@ -590,379 +483,658 @@ const myCoursesData = {
                             questions: [
                                 {
                                     question: "The genetic codon AUG encodes which amino acid and functions as what in eukaryotic translation?",
-                                    options: [
-                                        "Formylmethionine, Stop codon",
-                                        "Methionine, Start codon",
-                                        "Valine, Start codon",
-                                        "Tryptophan, Stop codon"
-                                    ],
+                                    options: ["Formylmethionine, Stop codon", "Methionine, Start codon", "Valine, Start codon", "Tryptophan, Stop codon"],
                                     correctIndex: 1,
                                     explanation: "AUG codes for Methionine (Met) in eukaryotes and serves as the universal initiator (start) codon for protein translation."
                                 },
                                 {
                                     question: "Which of the following codons does NOT code for any amino acid and acts as a translation termination signal?",
-                                    options: [
-                                        "UAA, UAG, UGA",
-                                        "AUG, GUG, UUG",
-                                        "UGG, UAC, UAU",
-                                        "AAA, AAG, AGU"
-                                    ],
+                                    options: ["UAA, UAG, UGA", "AUG, GUG, UUG", "UGG, UAC, UAU", "AAA, AAG, AGU"],
                                     correctIndex: 0,
                                     explanation: "UAA (Ochre), UAG (Amber), and UGA (Opal) are non-sense stop codons recognized by release factors rather than tRNAs."
                                 },
                                 {
                                     question: "In eukaryotic mRNA post-transcriptional processing, the 5' cap is composed of:",
-                                    options: [
-                                        "Poly-adenylate tail (200-250 Adenines)",
-                                        "7-methylguanosine (m7G) triphosphate linkage",
-                                        "Ribosomal RNA hairpin loop",
-                                        "Spliceosome ribonucleoprotein snRNP"
-                                    ],
+                                    options: ["Poly-adenylate tail", "7-methylguanosine (m7G) triphosphate linkage", "Ribosomal RNA hairpin loop", "Spliceosome snRNP"],
                                     correctIndex: 1,
-                                    explanation: "Eukaryotic pre-mRNA is capped at its 5' end with 7-methylguanosine via an unusual 5'-to-5' triphosphate bridge to prevent exonuclease degradation."
+                                    explanation: "Eukaryotic pre-mRNA is capped at its 5' end with 7-methylguanosine via an unusual 5'-to-5' triphosphate bridge."
                                 },
                                 {
                                     question: "Which enzyme is responsible for synthesizing ribosomal RNA (28S, 18S, and 5.8S) in eukaryotic nucleoli?",
-                                    options: [
-                                        "RNA Polymerase I",
-                                        "RNA Polymerase II",
-                                        "RNA Polymerase III",
-                                        "Reverse Transcriptase"
-                                    ],
+                                    options: ["RNA Polymerase I", "RNA Polymerase II", "RNA Polymerase III", "Reverse Transcriptase"],
                                     correctIndex: 0,
-                                    explanation: "In eukaryotes: RNA Pol I transcribes major rRNAs (28S, 18S, 5.8S); RNA Pol II transcribes mRNA and snRNA; RNA Pol III transcribes tRNA and 5S rRNA."
+                                    explanation: "RNA Pol I transcribes major rRNAs (28S, 18S, 5.8S); RNA Pol II transcribes mRNA and snRNA; RNA Pol III transcribes tRNA and 5S rRNA."
                                 },
                                 {
                                     question: "A cross between a red flower (RR) and white flower (WW) yielding 100% pink flowers (RW) exemplifies:",
-                                    options: [
-                                        "Complete dominance",
-                                        "Incomplete dominance",
-                                        "Codominance",
-                                        "Epistatic suppression"
-                                    ],
+                                    options: ["Complete dominance", "Incomplete dominance", "Codominance", "Epistatic suppression"],
                                     correctIndex: 1,
-                                    explanation: "Incomplete dominance occurs when heterozygotes exhibit an intermediate blended phenotype (such as 4 o'clock Mirabilis jalapa flowers)."
+                                    explanation: "Incomplete dominance occurs when heterozygotes exhibit an intermediate blended phenotype."
                                 }
                             ]
                         }
                     }
                 ]
             }
-        ],
-        modules: [
+        ]
+    },
+    {
+        id: "module-2-chem",
+        name: "Module 2: Chemistry",
+        icon: "fa-solid fa-flask-vial",
+        description: "Physical, Inorganic and Organic Chemistry tailored to PMDC exam pattern.",
+        chapters: [
             {
-                name: "Module 1: Biology",
-                lessons: [
+                id: "chem-ch-1",
+                chapterNumber: 1,
+                name: "Chapter 1: Chemical Bonding & Hybridization",
+                description: "VSEPR theory, atomic orbital hybridization, dipole moments and molecular geometries.",
+                topics: [
                     {
-                        id: "reboot-bio-1",
-                        title: "Lesson 1 — Cell Biology & Cell Division",
+                        id: "chem-1-1",
+                        topicNumber: "1.1",
+                        title: "1.1 VSEPR Theory, Molecular Shapes & Bond Angles",
                         type: "video",
-                        duration: "45 min",
-                        videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-                        readContent: `
-                            <div class="lesson-header-box mb-4">
-                                <span class="badge bg-primary text-white px-3 py-1 rounded-pill mb-2">Biology &bull; Core Module</span>
-                                <h3 class="fw-bold text-title">Lesson 1: Cell Biology & Cell Division</h3>
-                            </div>
-                            <div class="alert alert-primary bg-light border-primary p-3 rounded-3 mb-4">
-                                <p class="mb-0 text-dark"><strong>Summary:</strong> In this lesson you will cover the complete MDCAT syllabus on Cell Biology including cell structure, organelles, mitosis, meiosis, and their exam-relevant MCQs. Watch the video lecture, read the notes, and attempt practice questions at the end.</p>
-                            </div>
-
-                            <h4>1. Cell Structure & Major Organelles</h4>
-                            <p>Cells represent the structural and functional units of living systems. For MDCAT examinations, questions primarily test differences between prokaryotic and eukaryotic architectures:</p>
-                            <ul>
-                                <li><strong>Plasma Membrane:</strong> Fluid Mosaic Model by Singer & Nicolson. Lipid bilayer with amphipathic phospholipids and embedded proteins. Cholesterol provides fluidity buffer.</li>
-                                <li><strong>Mitochondria:</strong> Powerhouse of the cell with circular DNA and 70S ribosomes. Inner membrane invaginations (cristae) host Electron Transport Chain complexes and ATP Synthase (F0-F1 particles).</li>
-                                <li><strong>Endoplasmic Reticulum:</strong> RER is studded with 80S ribosomes for secretable protein synthesis; SER synthesizes steroids, phospholipids, and detoxifies xenobiotics.</li>
-                                <li><strong>Golgi Complex:</strong> Polarized cisternae (cis-face forming, trans-face maturing) responsible for glycosylation and lysosome generation.</li>
-                            </ul>
-
-                            <h4 class="mt-4">2. Cell Division — Mitosis vs Meiosis Comparison</h4>
-                            <div class="table-responsive my-3">
-                                <table class="table table-bordered text-sm">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th>Feature</th>
-                                            <th>Mitosis (Equational)</th>
-                                            <th>Meiosis (Reductional)</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td><strong>Occurs In</strong></td>
-                                            <td>Somatic cells</td>
-                                            <td>Germ line cells (gametogenesis)</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Daughter Cells</strong></td>
-                                            <td>2 identical diploid (2n) cells</td>
-                                            <td>4 genetically distinct haploid (1n) cells</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Genetic Recombination</strong></td>
-                                            <td>Absent</td>
-                                            <td>Present during Pachytene stage of Prophase I</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            <h4 class="mt-4">3. Exam-Relevant High-Yield MCQs</h4>
-                            <div class="p-3 bg-light rounded-3 border mb-3">
-                                <p class="fw-bold mb-1">Q: Crossing over between non-sister chromatids occurs during which phase?</p>
-                                <p class="text-muted mb-1">A) Leptotene &nbsp;|&nbsp; B) Zygotene &nbsp;|&nbsp; <strong>C) Pachytene (Correct)</strong> &nbsp;|&nbsp; D) Diplotene</p>
-                                <small class="text-success"><i class="fa-solid fa-check me-1"></i> Explanation: Synapsis completes at Zygotene, followed by crossing over at Pachytene via recombination nodules.</small>
-                            </div>
-                        `,
-                        resources: [
-                            { name: "Biology Chapter Notes — PDF", type: "pdf" },
-                            { name: "60-Day Study Plan — PDF", type: "pdf" }
-                        ]
-                    },
-                    {
-                        id: "reboot-bio-2",
-                        title: "Lesson 2 — Genetics & Inheritance",
-                        type: "video",
-                        duration: "50 min",
+                        duration: "40 min",
                         videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
                         readContent: `
                             <div class="lesson-header-box mb-4">
-                                <span class="badge bg-primary text-white px-3 py-1 rounded-pill mb-2">Biology &bull; Genetics</span>
-                                <h3 class="fw-bold text-title">Lesson 2: Genetics & Inheritance</h3>
+                                <span class="badge bg-success text-white px-3 py-1 rounded-pill mb-2">Module 2: Chemistry &bull; Chapter 1</span>
+                                <h3 class="fw-bold text-dark">1.1 VSEPR Theory & Hybridization</h3>
                             </div>
-                            <p>Mendelian genetics, laws of segregation, independent assortment, sex-linked traits, and gene interaction patterns.</p>
-                            <h5>Key Highlights:</h5>
-                            <ul>
-                                <li><strong>Monohybrid Cross:</strong> Phenotypic ratio 3:1, genotypic ratio 1:2:1.</li>
-                                <li><strong>Dihybrid Cross:</strong> 9:3:3:1 phenotypic ratio assuming unlinked loci.</li>
-                                <li><strong>X-Linked Recessive:</strong> Hemophilia and Color Blindness, criss-cross inheritance from grandfather to grandson via carrier daughter.</li>
-                            </ul>
-                        `,
-                        resources: [
-                            { name: "Biology Chapter Notes — PDF", type: "pdf" }
-                        ]
-                    },
-                    {
-                        id: "reboot-bio-3",
-                        title: "Lesson 3 — Biological Molecules",
-                        type: "text",
-                        duration: "35 min",
-                        readContent: `
-                            <div class="lesson-header-box mb-4">
-                                <span class="badge bg-primary text-white px-3 py-1 rounded-pill mb-2">Biology &bull; Biochemistry</span>
-                                <h3 class="fw-bold text-title">Lesson 3: Biological Molecules</h3>
-                            </div>
-                            <p>Study of carbohydrates, proteins, lipids, nucleic acids, and enzymatic mechanisms under physiological conditions.</p>
-                        `,
-                        resources: [
-                            { name: "Biology Chapter Notes — PDF", type: "pdf" }
-                        ]
-                    },
-                    {
-                        id: "reboot-bio-4",
-                        title: "Lesson 4 — Kingdom Animalia & Plantae",
-                        type: "video",
-                        duration: "40 min",
-                        videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
-                        readContent: `
-                            <div class="lesson-header-box mb-4">
-                                <span class="badge bg-primary text-white px-3 py-1 rounded-pill mb-2">Biology &bull; Diversity</span>
-                                <h3 class="fw-bold text-title">Lesson 4: Kingdom Animalia & Plantae</h3>
-                            </div>
-                            <p>Evolutionary trends in invertebrates and vertebrates, coelom organization, symmetry, and plant alternation of generations.</p>
-                        `,
-                        resources: [
-                            { name: "Biology Chapter Notes — PDF", type: "pdf" }
-                        ]
-                    }
-                ]
-            },
-            {
-                name: "Module 2: Chemistry",
-                lessons: [
-                    {
-                        id: "reboot-chem-5",
-                        title: "Lesson 5 — Organic Chemistry Basics",
-                        type: "video",
-                        duration: "55 min",
-                        videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-                        readContent: `
-                            <div class="lesson-header-box mb-4">
-                                <span class="badge bg-success text-white px-3 py-1 rounded-pill mb-2">Chemistry &bull; Organic</span>
-                                <h3 class="fw-bold text-title">Lesson 5: Organic Chemistry Basics</h3>
-                            </div>
-                            <p>IUPAC Nomenclature, structural and stereoisomerism, inductive effect, resonance, and carbocation stability.</p>
+                            <p>Valence Shell Electron Pair Repulsion theory: lone pair-lone pair > lone pair-bond pair > bond pair-bond pair repulsion.</p>
                         `,
                         resources: [
                             { name: "Chemistry Formula Sheet — PDF", type: "pdf" }
                         ]
                     },
                     {
-                        id: "reboot-chem-6",
-                        title: "Lesson 6 — Chemical Bonding",
-                        type: "text",
-                        duration: "40 min",
-                        readContent: `
-                            <div class="lesson-header-box mb-4">
-                                <span class="badge bg-success text-white px-3 py-1 rounded-pill mb-2">Chemistry &bull; Physical</span>
-                                <h3 class="fw-bold text-title">Lesson 6: Chemical Bonding</h3>
-                            </div>
-                            <p>VSEPR theory, hybridization (sp3, sp2, sp), bond parameters, dipole moment, and intermolecular interactions.</p>
-                        `,
-                        resources: [
-                            { name: "Chemistry Formula Sheet — PDF", type: "pdf" }
-                        ]
+                        id: "chem-1-quiz",
+                        topicNumber: "1.1 Checkpoint",
+                        title: "Topic 1.1 Quick Quiz: Hybridization & Bond Angles",
+                        type: "quiz",
+                        isQuiz: true,
+                        quizType: "topic",
+                        duration: "5 min",
+                        quizData: {
+                            title: "Chemical Bonding & Hybridization Quiz",
+                            subtitle: "5 Rapid-Fire PMDC MCQs covering sp3, sp2, sp hybridization and geometries",
+                            passingScore: 80,
+                            timeLimitMinutes: 5,
+                            questions: [
+                                {
+                                    question: "What is the hybridization state and molecular geometry of Xenon Tetrafluoride (XeF4)?",
+                                    options: [
+                                        "sp3d2, Square Planar",
+                                        "sp3d, Trigonal Bipyramidal",
+                                        "sp3, Tetrahedral",
+                                        "dsp2, Square Planar"
+                                    ],
+                                    correctIndex: 0,
+                                    explanation: "Xe has 8 valence electrons + 4 F bonds = 12 electrons (6 pairs: 4 bonding pairs + 2 lone pairs). Steric number 6 = sp3d2, with lone pairs axial yielding a square planar geometry."
+                                },
+                                {
+                                    question: "According to VSEPR theory, the bond angle in a water (H2O) molecule is reduced from 109.5° to 104.5° primarily due to:",
+                                    options: [
+                                        "Strong lone pair-lone pair repulsion",
+                                        "High electronegativity of hydrogen",
+                                        "Presence of pi-bonds",
+                                        "Hyperconjugation effect"
+                                    ],
+                                    correctIndex: 0,
+                                    explanation: "The two lone pairs on oxygen exert greater repulsive forces than bond pairs, compressing the H-O-H angle from 109.5° to approximately 104.5°."
+                                },
+                                {
+                                    question: "Which of the following molecules has a net dipole moment of ZERO despite containing polar bonds?",
+                                    options: ["BF3 (Boron Trifluoride)", "NH3 (Ammonia)", "SO2 (Sulfur Dioxide)", "CHCl3 (Chloroform)"],
+                                    correctIndex: 0,
+                                    explanation: "BF3 has a symmetrical trigonal planar geometry (120° angles), causing the three polar B-F bond dipoles to cancel each other out completely."
+                                },
+                                {
+                                    question: "The percentage of s-character in sp2 hybrid orbitals is:",
+                                    options: ["25%", "33.3%", "50%", "66.7%"],
+                                    correctIndex: 1,
+                                    explanation: "An sp2 orbital is formed by 1 s orbital and 2 p orbitals (total 3), giving 1/3 = 33.33% s-character."
+                                },
+                                {
+                                    question: "Which of the following compounds exhibits intramolecular hydrogen bonding?",
+                                    options: ["ortho-Nitrophenol", "para-Nitrophenol", "Ethanol", "Water"],
+                                    correctIndex: 0,
+                                    explanation: "In o-nitrophenol, the -OH group and -NO2 group are adjacent on the benzene ring, forming an internal 6-membered hydrogen-bonded ring."
+                                }
+                            ]
+                        }
                     },
                     {
-                        id: "reboot-chem-7",
-                        title: "Lesson 7 — Reaction Kinetics",
-                        type: "video",
-                        duration: "45 min",
-                        videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
-                        readContent: `
-                            <div class="lesson-header-box mb-4">
-                                <span class="badge bg-success text-white px-3 py-1 rounded-pill mb-2">Chemistry &bull; Physical</span>
-                                <h3 class="fw-bold text-title">Lesson 7: Reaction Kinetics</h3>
-                            </div>
-                            <p>Rate of reaction, differential rate equations, order of reaction, Arrhenius activation energy, and catalyst action.</p>
-                        `,
-                        resources: [
-                            { name: "Chemistry Formula Sheet — PDF", type: "pdf" }
-                        ]
-                    }
-                ]
-            },
-            {
-                name: "Module 3: Physics",
-                lessons: [
-                    {
-                        id: "reboot-phy-8",
-                        title: "Lesson 8 — Mechanics & Motion",
-                        type: "video",
-                        duration: "50 min",
-                        videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
-                        readContent: `
-                            <div class="lesson-header-box mb-4">
-                                <span class="badge bg-warning text-dark px-3 py-1 rounded-pill mb-2">Physics &bull; Mechanics</span>
-                                <h3 class="fw-bold text-title">Lesson 8: Mechanics & Motion</h3>
-                            </div>
-                            <p>Linear motion, projectile trajectories, Newton's laws, impulse, conservation of momentum, and work-energy theorem.</p>
-                        `,
-                        resources: [
-                            { name: "Physics Revision Notes — PDF", type: "pdf" }
-                        ]
-                    },
-                    {
-                        id: "reboot-phy-9",
-                        title: "Lesson 9 — Waves & Electricity",
-                        type: "video",
-                        duration: "45 min",
-                        videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-                        readContent: `
-                            <div class="lesson-header-box mb-4">
-                                <span class="badge bg-warning text-dark px-3 py-1 rounded-pill mb-2">Physics &bull; Electricity</span>
-                                <h3 class="fw-bold text-title">Lesson 9: Waves & Electricity</h3>
-                            </div>
-                            <p>Simple Harmonic Motion, standing waves, Doppler effect, Coulomb's law, Ohm's law, and Kirchhoff's loop analysis.</p>
-                        `,
-                        resources: [
-                            { name: "Physics Revision Notes — PDF", type: "pdf" }
-                        ]
-                    },
-                    {
-                        id: "reboot-phy-10",
-                        title: "Lesson 10 — Modern Physics",
-                        type: "text",
-                        duration: "35 min",
-                        readContent: `
-                            <div class="lesson-header-box mb-4">
-                                <span class="badge bg-warning text-dark px-3 py-1 rounded-pill mb-2">Physics &bull; Modern</span>
-                                <h3 class="fw-bold text-title">Lesson 10: Modern Physics</h3>
-                            </div>
-                            <p>Photoelectric effect, Compton scattering, de Broglie matter waves, atomic transitions, and nuclear radiation laws.</p>
-                        `,
-                        resources: [
-                            { name: "Physics Revision Notes — PDF", type: "pdf" }
-                        ]
-                    }
-                ]
-            },
-            {
-                name: "Module 4: English & Logical Reasoning",
-                lessons: [
-                    {
-                        id: "reboot-eng-11",
-                        title: "Lesson 11 — Grammar & Vocabulary",
-                        type: "text",
+                        id: "chem-1-2",
+                        topicNumber: "1.2",
+                        title: "1.2 Intermolecular Forces & Dipole Moments",
+                        type: "reading",
                         duration: "30 min",
                         readContent: `
                             <div class="lesson-header-box mb-4">
-                                <span class="badge bg-info text-white px-3 py-1 rounded-pill mb-2">English &bull; Grammar</span>
-                                <h3 class="fw-bold text-title">Lesson 11: Grammar & Vocabulary</h3>
+                                <span class="badge bg-success text-white px-3 py-1 rounded-pill mb-2">Module 2: Chemistry &bull; Chapter 1</span>
+                                <h3 class="fw-bold text-dark">1.2 Intermolecular Forces & Dipole Moments</h3>
                             </div>
-                            <p>Subject-verb agreement, modifiers, conditional structures, punctuation rules, and high-frequency MDCAT vocabulary words.</p>
+                            <p>London dispersion forces, dipole-dipole attractions, hydrogen bonding, and their impact on boiling points and vapor pressures.</p>
                         `,
                         resources: [
-                            { name: "60-Day Study Plan — PDF", type: "pdf" }
+                            { name: "Intermolecular Forces Reference Sheet — PDF", type: "pdf" }
                         ]
                     },
                     {
-                        id: "reboot-lr-12",
-                        title: "Lesson 12 — Logical Reasoning MCQs",
-                        type: "video",
-                        duration: "40 min",
-                        videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
-                        readContent: `
-                            <div class="lesson-header-box mb-4">
-                                <span class="badge bg-info text-white px-3 py-1 rounded-pill mb-2">Reasoning &bull; Problem Solving</span>
-                                <h3 class="fw-bold text-title">Lesson 12: Logical Reasoning MCQs</h3>
-                            </div>
-                            <p>Letter series, syllogisms, cause and effect arguments, logical deductions, and analytical puzzle techniques.</p>
-                        `,
-                        resources: [
-                            { name: "Mock Test Answer Keys — PDF", type: "pdf" }
-                        ]
+                        id: "chem-ch1-quiz",
+                        topicNumber: "Assessment",
+                        title: "Chapter 1 Comprehensive Chemistry Assessment",
+                        type: "quiz",
+                        isQuiz: true,
+                        quizType: "chapter",
+                        duration: "10 min",
+                        quizData: {
+                            title: "Chapter 1: Chemical Bonding Comprehensive Assessment",
+                            subtitle: "PMDC standard evaluation on hybridization, geometry, and polarity.",
+                            passingScore: 80,
+                            timeLimitMinutes: 10,
+                            questions: [
+                                {
+                                    question: "In ethyne (acetylene, C2H2), the carbon-carbon triple bond consists of:",
+                                    options: [
+                                        "One sigma bond and two pi bonds",
+                                        "Two sigma bonds and one pi bond",
+                                        "Three sigma bonds",
+                                        "Three pi bonds"
+                                    ],
+                                    correctIndex: 0,
+                                    explanation: "A triple bond is composed of one axial sigma bond formed by sp-sp overlap and two lateral pi bonds formed by unhybridized 2py and 2pz orbitals."
+                                },
+                                {
+                                    question: "Which molecule has an octahedral electron-group geometry with 90° bond angles throughout?",
+                                    options: ["SF6", "PCl5", "CH4", "CO2"],
+                                    correctIndex: 0,
+                                    explanation: "SF6 has 6 bonding pairs and 0 lone pairs around sulfur (sp3d2), giving a regular octahedral geometry with all 90° bond angles."
+                                },
+                                {
+                                    question: "Which halogen forms the strongest hydrogen bond due to highest electronegativity?",
+                                    options: ["Fluorine", "Chlorine", "Bromine", "Iodine"],
+                                    correctIndex: 0,
+                                    explanation: "Fluorine has the highest electronegativity (4.0 on Pauling scale), producing the strongest dipole and hydrogen bond in H-F."
+                                },
+                                {
+                                    question: "The bond order of Oxygen molecule (O2) according to Molecular Orbital Theory (MOT) is:",
+                                    options: ["1", "2", "2.5", "3"],
+                                    correctIndex: 1,
+                                    explanation: "O2 has 10 bonding electrons and 6 anti-bonding electrons: (10 - 6) / 2 = 2. It is paramagnetic due to two unpaired electrons."
+                                },
+                                {
+                                    question: "Coordinate covalent (dative) bonding is present in which of the following species?",
+                                    options: ["NH4+ (Ammonium ion)", "CH4", "NaCl", "H2"],
+                                    correctIndex: 0,
+                                    explanation: "In NH4+, the lone pair on ammonia's nitrogen is donated to an empty 1s orbital of H+, forming a coordinate covalent bond."
+                                }
+                            ]
+                        }
                     }
                 ]
             },
             {
-                name: "Module 5: Mock Tests",
-                lessons: [
+                id: "chem-ch-2",
+                chapterNumber: 2,
+                name: "Chapter 2: Organic Chemistry Basics & Hydrocarbons",
+                description: "IUPAC nomenclature, isomerism, reaction mechanisms, and aromatic stability.",
+                topics: [
                     {
-                        id: "reboot-mock-1",
-                        title: "Mock Test 1 — Biology + Chemistry",
-                        type: "text",
-                        duration: "90 min",
+                        id: "chem-2-1",
+                        topicNumber: "2.1",
+                        title: "2.1 IUPAC Nomenclature, Isomerism & Inductive Effect",
+                        type: "video",
+                        duration: "45 min",
+                        videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
                         readContent: `
                             <div class="lesson-header-box mb-4">
-                                <span class="badge bg-danger text-white px-3 py-1 rounded-pill mb-2">Exam Simulator</span>
-                                <h3 class="fw-bold text-title">Mock Test 1: Biology + Chemistry</h3>
+                                <span class="badge bg-success text-white px-3 py-1 rounded-pill mb-2">Module 2: Chemistry &bull; Chapter 2</span>
+                                <h3 class="fw-bold text-dark">2.1 Organic Chemistry Fundamentals</h3>
                             </div>
-                            <p>Attempt 120 high-yield questions under timed exam condition (90 minutes). Mark your choices on paper and check with the downloadable key.</p>
+                            <p>Chain, position, functional group, and optical isomerism (chiral centers). Electrophiles vs nucleophiles and carbocation stability (3° > 2° > 1°).</p>
                         `,
                         resources: [
-                            { name: "Mock Test Answer Keys — PDF", type: "pdf" }
+                            { name: "Organic Reaction Pathways — PDF", type: "pdf" }
                         ]
                     },
                     {
-                        id: "reboot-mock-2",
-                        title: "Mock Test 2 — Full Length Paper",
-                        type: "text",
-                        duration: "210 min",
-                        readContent: `
-                            <div class="lesson-header-box mb-4">
-                                <span class="badge bg-danger text-white px-3 py-1 rounded-pill mb-2">Full Length Paper</span>
-                                <h3 class="fw-bold text-title">Mock Test 2: Full Length Paper</h3>
-                            </div>
-                            <p>Complete 200 MCQs simulation covering full syllabus strictly following PMDC examination blueprint.</p>
-                        `,
-                        resources: [
-                            { name: "Mock Test Answer Keys — PDF", type: "pdf" }
-                        ]
+                        id: "chem-2-quiz",
+                        topicNumber: "2.1 Checkpoint",
+                        title: "Topic 2.1 Quick Quiz: Organic Reaction Intermediates",
+                        type: "quiz",
+                        isQuiz: true,
+                        quizType: "topic",
+                        duration: "5 min",
+                        quizData: {
+                            title: "Organic Chemistry Checkpoint Quiz",
+                            subtitle: "5 Rapid-Fire PMDC MCQs covering carbocations, isomerism & Markovnikov addition",
+                            passingScore: 80,
+                            timeLimitMinutes: 5,
+                            questions: [
+                                {
+                                    question: "Which of the following carbocations is thermodynamically the most stable?",
+                                    options: [
+                                        "Tert-butyl carbocation (CH3)3C+",
+                                        "Isopropyl carbocation (CH3)2CH+",
+                                        "Ethyl carbocation CH3CH2+",
+                                        "Methyl carbocation CH3+"
+                                    ],
+                                    correctIndex: 0,
+                                    explanation: "Tertiary (3°) carbocations are stabilized by hyperconjugation (9 alpha-hydrogens in tert-butyl) and +I inductive electron donation."
+                                },
+                                {
+                                    question: "Addition of HBr to propene in the absence of peroxides yields 2-bromopropane as major product according to:",
+                                    options: ["Markovnikov's rule", "Anti-Markovnikov rule", "Saytzeff's rule", "Hund's rule"],
+                                    correctIndex: 0,
+                                    explanation: "Markovnikov's rule states that the electrophilic H+ adds to the carbon with more hydrogen atoms to generate the more stable secondary carbocation intermediate."
+                                },
+                                {
+                                    question: "How many structural isomers exist for pentane (C5H12)?",
+                                    options: ["2", "3", "4", "5"],
+                                    correctIndex: 1,
+                                    explanation: "C5H12 has exactly 3 structural isomers: n-pentane, isopentane (2-methylbutane), and neopentane (2,2-dimethylpropane)."
+                                },
+                                {
+                                    question: "Benzene undergoes electrophilic aromatic substitution rather than addition primarily because substitution:",
+                                    options: [
+                                        "Preserves the stable aromatic sextet resonance",
+                                        "Requires no catalyst",
+                                        "Breaks all pi-bonds permanently",
+                                        "Is endothermic"
+                                    ],
+                                    correctIndex: 0,
+                                    explanation: "Addition would destroy the 36 kcal/mol resonance stabilization energy of the delocalized aromatic pi-ring."
+                                },
+                                {
+                                    question: "Which compound exhibits geometrical (cis-trans) isomerism?",
+                                    options: ["But-2-ene", "But-1-ene", "Propene", "Ethene"],
+                                    correctIndex: 0,
+                                    explanation: "But-2-ene has two different groups (H and CH3) attached to each double-bonded carbon, allowing cis- and trans- stereoisomers."
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        id: "chem-ch2-quiz",
+                        topicNumber: "Assessment",
+                        title: "Chapter 2 Comprehensive Organic Chemistry Assessment",
+                        type: "quiz",
+                        isQuiz: true,
+                        quizType: "chapter",
+                        duration: "10 min",
+                        quizData: {
+                            title: "Chapter 2: Organic Chemistry Mastery Exam",
+                            subtitle: "PMDC standard evaluation on hydrocarbons, functional groups, and mechanisms.",
+                            passingScore: 80,
+                            timeLimitMinutes: 10,
+                            questions: [
+                                {
+                                    question: "The conversion of an alkyl halide to an alkene by heating with alcoholic KOH is an example of:",
+                                    options: [
+                                        "Beta-Elimination (Dehydrohalogenation)",
+                                        "Nucleophilic substitution (SN2)",
+                                        "Electrophilic addition",
+                                        "Free radical substitution"
+                                    ],
+                                    correctIndex: 0,
+                                    explanation: "Alcoholic KOH acts as a strong base, abstracting a proton from the beta-carbon while the halide leaves, yielding an alkene."
+                                },
+                                {
+                                    question: "In an SN1 reaction mechanism, the rate-determining step involves:",
+                                    options: [
+                                        "Formation of a carbocation intermediate (unimolecular)",
+                                        "Simultaneous nucleophile attack and leaving group departure (bimolecular)",
+                                        "Proton transfer from solvent",
+                                        "Rearrangement of free radicals"
+                                    ],
+                                    correctIndex: 0,
+                                    explanation: "SN1 rate depends only on alkyl halide concentration (Rate = k[R-X]) during the slow heterolytic ionization to a carbocation."
+                                },
+                                {
+                                    question: "Lucas reagent used to differentiate 1°, 2°, and 3° alcohols consists of:",
+                                    options: [
+                                        "Anhydrous ZnCl2 in concentrated HCl",
+                                        "Alkaline KMnO4 solution",
+                                        "Acidified K2Cr2O7 solution",
+                                        "Ammoniacal silver nitrate"
+                                    ],
+                                    correctIndex: 0,
+                                    explanation: "Lucas test uses anhydrous ZnCl2 + conc. HCl; tertiary alcohols react immediately producing oily turbidity."
+                                },
+                                {
+                                    question: "Which functional group gives a silver mirror with Tollen's reagent?",
+                                    options: ["Aldehydes", "Ketones", "Esters", "Ethers"],
+                                    correctIndex: 0,
+                                    explanation: "Aldehydes are easily oxidized to carboxylic acids, reducing Ag+ in Tollen's reagent to metallic silver."
+                                },
+                                {
+                                    question: "Saponification of triglycerides (fats) with NaOH produces:",
+                                    options: [
+                                        "Soap (sodium salts of fatty acids) and Glycerol",
+                                        "Fatty acids and Glycol",
+                                        "Ester and water only",
+                                        "Alkanes and CO2"
+                                    ],
+                                    correctIndex: 0,
+                                    explanation: "Alkaline ester hydrolysis of fats cleaves the triester to yield glycerol (propane-1,2,3-triol) and sodium carboxylates (soap)."
+                                }
+                            ]
+                        }
                     }
                 ]
             }
         ]
+    },
+    {
+        id: "module-3-phy",
+        name: "Module 3: Physics",
+        icon: "fa-solid fa-bolt",
+        description: "Mechanics, Work & Energy, Wave Motion, Electricity & Nuclear Physics.",
+        chapters: [
+            {
+                id: "phy-ch-1",
+                chapterNumber: 1,
+                name: "Chapter 1: Mechanics, Vectors & Work-Energy",
+                description: "Newtonian mechanics, momentum, projectiles, work-energy theorem, and circular dynamics.",
+                topics: [
+                    {
+                        id: "phy-1-1",
+                        topicNumber: "1.1",
+                        title: "1.1 Projectile Trajectories & Newton's Laws",
+                        type: "video",
+                        duration: "45 min",
+                        videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+                        readContent: `
+                            <div class="lesson-header-box mb-4">
+                                <span class="badge bg-warning text-dark px-3 py-1 rounded-pill mb-2">Module 3: Physics &bull; Chapter 1</span>
+                                <h3 class="fw-bold text-dark">1.1 Projectile Trajectories & Newton's Laws</h3>
+                            </div>
+                            <p>Independence of horizontal and vertical velocity components, maximum height (H = v0^2 sin^2 theta / 2g), time of flight, and maximum range at 45 degrees.</p>
+                        `,
+                        resources: [
+                            { name: "Physics Mechanics Formulas — PDF", type: "pdf" }
+                        ]
+                    },
+                    {
+                        id: "phy-1-quiz",
+                        topicNumber: "1.1 Checkpoint",
+                        title: "Topic 1.1 Quick Quiz: Mechanics & Momentum Conservation",
+                        type: "quiz",
+                        isQuiz: true,
+                        quizType: "topic",
+                        duration: "5 min",
+                        quizData: {
+                            title: "Mechanics & Projectiles Checkpoint Quiz",
+                            subtitle: "5 Rapid-Fire PMDC MCQs covering projectile ranges, momentum, and impulse",
+                            passingScore: 80,
+                            timeLimitMinutes: 5,
+                            questions: [
+                                {
+                                    question: "At what angle of projection is the horizontal range of a projectile equal to its maximum height?",
+                                    options: [
+                                        "tan^(-1)(4) ≈ 76°",
+                                        "45°",
+                                        "60°",
+                                        "30°"
+                                    ],
+                                    correctIndex: 0,
+                                    explanation: "Range R = 4 H / tan(theta). For R = H, tan(theta) = 4, so theta = arctan(4) ≈ 75.96°."
+                                },
+                                {
+                                    question: "In an elastic collision between two isolated bodies, which of the following quantities is conserved?",
+                                    options: [
+                                        "Both Linear Momentum and Kinetic Energy",
+                                        "Linear Momentum only",
+                                        "Kinetic Energy only",
+                                        "Neither Momentum nor Kinetic Energy"
+                                    ],
+                                    correctIndex: 0,
+                                    explanation: "By definition, an ideal elastic collision conserves both total linear momentum and total mechanical kinetic energy."
+                                },
+                                {
+                                    question: "A force of 10 N acts on a body of mass 2 kg for 3 seconds. The impulse delivered to the body is:",
+                                    options: ["30 N·s", "15 N·s", "20 N·s", "60 N·s"],
+                                    correctIndex: 0,
+                                    explanation: "Impulse J = Force × time = 10 N × 3 s = 30 N·s (also equal to the change in linear momentum)."
+                                },
+                                {
+                                    question: "The work done by a centripetal force on a particle moving with constant speed in a circular path is:",
+                                    options: ["Zero", "Positive", "Negative", "Depends on radius"],
+                                    correctIndex: 0,
+                                    explanation: "Centripetal force is always perpendicular to instantaneous displacement vector (cos 90° = 0), so work done is zero."
+                                },
+                                {
+                                    question: "If the velocity of a moving car is doubled, its kinetic energy increases by a factor of:",
+                                    options: ["4 times", "2 times", "8 times", "Remains unchanged"],
+                                    correctIndex: 0,
+                                    explanation: "Kinetic energy KE = 1/2 m v^2. Doubling v quadruples (2^2 = 4) the kinetic energy."
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        id: "phy-ch1-quiz",
+                        topicNumber: "Assessment",
+                        title: "Chapter 1 Comprehensive Physics Assessment",
+                        type: "quiz",
+                        isQuiz: true,
+                        quizType: "chapter",
+                        duration: "10 min",
+                        quizData: {
+                            title: "Chapter 1: Mechanics & Work-Energy Comprehensive Exam",
+                            subtitle: "PMDC standard evaluation on kinematics, laws of motion, and energy.",
+                            passingScore: 80,
+                            timeLimitMinutes: 10,
+                            questions: [
+                                {
+                                    question: "A rocket works on the principle of conservation of:",
+                                    options: [
+                                        "Linear momentum",
+                                        "Angular momentum",
+                                        "Mass only",
+                                        "Gravitational potential energy"
+                                    ],
+                                    correctIndex: 0,
+                                    explanation: "Rockets expel high-velocity exhaust gases backward; by Newton's 3rd law and linear momentum conservation, the rocket gains forward momentum."
+                                },
+                                {
+                                    question: "Escape velocity from the surface of Earth depends upon:",
+                                    options: [
+                                        "Mass of Earth and radius of Earth",
+                                        "Mass of the escaping projectile",
+                                        "Angle of projection",
+                                        "Atmospheric temperature"
+                                    ],
+                                    correctIndex: 0,
+                                    explanation: "v_esc = sqrt(2 G M / R). It is independent of projectile mass or launch angle."
+                                },
+                                {
+                                    question: "The area under a Force-Displacement (F-d) graph represents:",
+                                    options: ["Work done", "Power", "Momentum", "Acceleration"],
+                                    correctIndex: 0,
+                                    explanation: "The integral of Force with respect to displacement integral(F dx) equals mechanical work done."
+                                },
+                                {
+                                    question: "A ball is thrown vertically upward. At the highest point of its trajectory, its:",
+                                    options: [
+                                        "Velocity is zero and acceleration is g downward",
+                                        "Velocity is zero and acceleration is zero",
+                                        "Velocity is maximum and acceleration is zero",
+                                        "Both velocity and acceleration are downward"
+                                    ],
+                                    correctIndex: 0,
+                                    explanation: "Instantaneous velocity passes through zero as it changes direction, while gravitational acceleration continues unabated at 9.8 m/s^2 downward."
+                                },
+                                {
+                                    question: "One kilowatt-hour (1 kWh) of electrical energy is equal to:",
+                                    options: ["3.6 × 10^6 Joules", "3.6 × 10^3 Joules", "1000 Joules", "3600 Joules"],
+                                    correctIndex: 0,
+                                    explanation: "1 kWh = 1000 W × 3600 s = 3,600,000 J = 3.6 × 10^6 J (3.6 MJ)."
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        id: "module-4-eng",
+        name: "Module 4: English & Logical Reasoning",
+        icon: "fa-solid fa-brain",
+        description: "High-yield PMDC grammar, vocabulary, critical deduction, and syllogisms.",
+        chapters: [
+            {
+                id: "eng-ch-1",
+                chapterNumber: 1,
+                name: "Chapter 1: English Grammar Rules & Error Spotting",
+                description: "Subject-verb agreement, dangling modifiers, parallel structure, and conditional clauses.",
+                topics: [
+                    {
+                        id: "eng-1-1",
+                        topicNumber: "1.1",
+                        title: "1.1 Subject-Verb Agreement & Modifier Traps",
+                        type: "video",
+                        duration: "35 min",
+                        videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+                        readContent: `
+                            <div class="lesson-header-box mb-4">
+                                <span class="badge bg-secondary text-white px-3 py-1 rounded-pill mb-2">Module 4: English &bull; Chapter 1</span>
+                                <h3 class="fw-bold text-dark">1.1 Subject-Verb Agreement</h3>
+                            </div>
+                            <p>Singular subjects connected by 'either...or' / 'neither...nor' take verbs agreeing with the closest subject. Collective nouns, intervening prepositional phrases, and indefinite pronouns.</p>
+                        `,
+                        resources: [
+                            { name: "English Rules & PMDC Vocabulary List — PDF", type: "pdf" }
+                        ]
+                    },
+                    {
+                        id: "eng-1-quiz",
+                        topicNumber: "1.1 Checkpoint",
+                        title: "Topic 1.1 Quick Quiz: Sentence Correction Diagnostic",
+                        type: "quiz",
+                        isQuiz: true,
+                        quizType: "topic",
+                        duration: "5 min",
+                        quizData: {
+                            title: "English Grammar Diagnostic Quiz",
+                            subtitle: "5 Rapid-Fire PMDC MCQs covering subject-verb agreement and error spotting",
+                            passingScore: 80,
+                            timeLimitMinutes: 5,
+                            questions: [
+                                {
+                                    question: "Choose the grammatically correct sentence:",
+                                    options: [
+                                        "Neither the doctor nor the nurses were able to explain the anomalous ECG result.",
+                                        "Neither the doctor nor the nurses was able to explain the anomalous ECG result.",
+                                        "Neither the doctor or the nurses were able to explain the anomalous ECG result.",
+                                        "Neither the doctor nor the nurses are been able to explain the anomalous ECG result."
+                                    ],
+                                    correctIndex: 0,
+                                    explanation: "When subjects are joined by 'neither...nor', the verb agrees in number with the closer subject ('nurses' is plural, requiring 'were')."
+                                },
+                                {
+                                    question: "Identify the error: 'The team of medical specialists [A] have decided [B] to postpone [C] the clinical trial [D].'",
+                                    options: [
+                                        "have decided (should be 'has decided')",
+                                        "team of",
+                                        "to postpone",
+                                        "clinical trial"
+                                    ],
+                                    correctIndex: 0,
+                                    explanation: "The true subject of the clause is the singular collective noun 'team' (not the plural 'specialists'), requiring singular 'has decided'."
+                                },
+                                {
+                                    question: "Select the correct conditional sentence:",
+                                    options: [
+                                        "If he had studied the histology slides, he would have passed the exam.",
+                                        "If he studied the histology slides, he would have passed the exam.",
+                                        "If he had studied the histology slides, he will pass the exam.",
+                                        "If he would study the histology slides, he passed the exam."
+                                    ],
+                                    correctIndex: 0,
+                                    explanation: "Third conditional (past unreal condition) requires: If + past perfect (had studied), would have + past participle (would have passed)."
+                                },
+                                {
+                                    question: "Choose the synonym for 'AMELIORATE':",
+                                    options: ["Improve", "Aggravate", "Deteriorate", "Ignore"],
+                                    correctIndex: 0,
+                                    explanation: "'Ameliorate' means to make something bad or unsatisfactory better; to improve."
+                                },
+                                {
+                                    question: "Choose the antonym for 'BENIGN':",
+                                    options: ["Malignant", "Gentle", "Harmless", "Sympathetic"],
+                                    correctIndex: 0,
+                                    explanation: "In medical terminology, 'benign' refers to a non-cancerous/harmless condition; its exact antonym is 'malignant'."
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        id: "eng-ch1-quiz",
+                        topicNumber: "Assessment",
+                        title: "Chapter 1 Comprehensive Verbal Ability Assessment",
+                        type: "quiz",
+                        isQuiz: true,
+                        quizType: "chapter",
+                        duration: "10 min",
+                        quizData: {
+                            title: "Chapter 1: English Language Mastery Assessment",
+                            subtitle: "PMDC standard evaluation on grammar, sentence correction, and vocabulary.",
+                            passingScore: 80,
+                            timeLimitMinutes: 10,
+                            questions: [
+                                {
+                                    question: "Which word correctly completes: 'The surgeon was praised for her _____ handling of the delicate neurosurgical procedure.'",
+                                    options: ["deft", "daft", "adverse", "apathetic"],
+                                    correctIndex: 0,
+                                    explanation: "'Deft' means neatly skillful and quick in one's movements."
+                                },
+                                {
+                                    question: "Select the sentence with correct parallel structure:",
+                                    options: [
+                                        "The candidate likes reading medical journals, conducting lab experiments, and writing case reports.",
+                                        "The candidate likes reading medical journals, to conduct lab experiments, and writing case reports.",
+                                        "The candidate likes to read medical journals, conducting lab experiments, and write case reports.",
+                                        "The candidate likes reading medical journals, conduct lab experiments, and writing case reports."
+                                    ],
+                                    correctIndex: 0,
+                                    explanation: "Parallelism requires consistent grammatical forms (here: all gerunds - reading, conducting, writing)."
+                                },
+                                {
+                                    question: "'EPHEMERAL' is closest in meaning to:",
+                                    options: ["Transient (short-lived)", "Eternal", "Perpetual", "Monumental"],
+                                    correctIndex: 0,
+                                    explanation: "'Ephemeral' means lasting for a very short time."
+                                },
+                                {
+                                    question: "Choose the sentence with correct punctuation:",
+                                    options: [
+                                        "The patient had severe symptoms; however, the initial blood panel was unremarkable.",
+                                        "The patient had severe symptoms, however the initial blood panel was unremarkable.",
+                                        "The patient had severe symptoms; however the initial blood panel was unremarkable.",
+                                        "The patient had severe symptoms however; the initial blood panel was unremarkable."
+                                    ],
+                                    correctIndex: 0,
+                                    explanation: "When linking two independent clauses with a conjunctive adverb like 'however', use a semicolon before and a comma after."
+                                },
+                                {
+                                    question: "Complete the analogy: STETHOSCOPE : PHYSICIAN :: SCALPEL : _____",
+                                    options: ["SURGEON", "NURSE", "PATIENT", "PHARMACIST"],
+                                    correctIndex: 0,
+                                    explanation: "A stethoscope is the defining diagnostic tool of a physician; a scalpel is the defining operative tool of a surgeon."
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]
     },
 
     // =========================================================================

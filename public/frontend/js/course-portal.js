@@ -1,5 +1,5 @@
 /**
- * Course Study Portal Controller — Chapters, Topics & Quiz Studio Engine
+ * Course Study Portal Controller — 3-Tier Hierarchy (Modules -> Chapters -> Topics & Quizzes)
  * DoctorsInnElite - Learning Management System
  * File: public/frontend/js/course-portal.js
  */
@@ -9,8 +9,9 @@ const getDb = () => (typeof myCoursesData !== 'undefined' ? myCoursesData : (typ
 
 // Global State
 let activeCourseId = "mdcat-reboot-60-day";
+let activeModuleFilter = "all"; // "all" or specific module ID
+let activeTypeFilter = "all";   // "all" | "topics" | "quizzes"
 let activeTopicId = "";
-let activeFilter = "all"; // "all" | "topics" | "quizzes"
 
 // Quiz Studio Runtime State
 let currentQuizTopic = null;
@@ -23,7 +24,7 @@ let timeRemainingSec = 0;
 let timeSpentSec = 0;
 
 // =============================================================================
-// 1. DATA NORMALIZATION & HELPERS
+// 1. DATA NORMALIZATION (3-Tier: Course -> Modules -> Chapters -> Topics & Quizzes)
 // =============================================================================
 
 function getActiveCourseId() {
@@ -47,63 +48,89 @@ function getActiveCourseId() {
     return keys.length > 0 ? (db["mdcat-reboot-60-day"] ? "mdcat-reboot-60-day" : keys[0]) : "mdcat-reboot-60-day";
 }
 
+function getModuleIcon(name = "") {
+    const lower = name.toLowerCase();
+    if (lower.includes("bio")) return "fa-solid fa-dna";
+    if (lower.includes("chem")) return "fa-solid fa-flask-vial";
+    if (lower.includes("phy")) return "fa-solid fa-bolt";
+    if (lower.includes("eng") || lower.includes("logic")) return "fa-solid fa-brain";
+    return "fa-solid fa-layer-group";
+}
+
 /**
- * Normalizes course content so whether defined as 'chapters' or legacy 'modules',
- * it returns a structured array of Chapters with Topics and Quizzes.
+ * Normalizes course content so it always returns a structured array of:
+ * Modules -> Chapters -> Topics & Quizzes
  */
 function normalizeCourseContent(course) {
     if (!course) return [];
 
-    // Case A: Course has direct native 'chapters'
-    if (Array.isArray(course.chapters) && course.chapters.length > 0) {
-        return course.chapters.map((ch, chIdx) => {
-            const chId = ch.id || `chapter-${chIdx + 1}`;
-            const chName = ch.name || `Chapter ${chIdx + 1}`;
-            const topics = (ch.topics || []).map((tp, tpIdx) => {
-                const isQuiz = Boolean(tp.isQuiz || tp.type === "quiz");
-                const quizType = tp.quizType || (tp.isChapterQuiz ? "chapter" : "topic");
-                return {
-                    id: tp.id || `topic-${chIdx + 1}-${tpIdx + 1}`,
-                    topicNumber: tp.topicNumber || `${chIdx + 1}.${tpIdx + 1}`,
-                    title: tp.title || `Topic ${tpIdx + 1}`,
-                    type: isQuiz ? "quiz" : (tp.type || "video"),
-                    isQuiz: isQuiz,
-                    quizType: quizType,
-                    duration: tp.duration || (isQuiz ? "5 min" : "35 min"),
-                    videoUrl: tp.videoUrl || "",
-                    readContent: tp.readContent || "",
-                    resources: tp.resources || course.defaultResources || [],
-                    quizData: tp.quizData || (isQuiz ? generateFallbackQuiz(tp.title) : null),
-                    chapterId: chId,
-                    chapterName: chName
-                };
-            });
-            return {
-                id: chId,
-                name: chName,
-                description: ch.description || "",
-                topics: topics
-            };
-        });
-    }
-
-    // Case B: Course has legacy 'modules' — adapt into Chapters and Topics
+    // Case 1: Course has modules with nested chapters
     if (Array.isArray(course.modules) && course.modules.length > 0) {
         return course.modules.map((mod, modIdx) => {
-            const chId = `chapter-${modIdx + 1}`;
+            const modId = mod.id || `module-${modIdx + 1}`;
+            const modName = mod.name || `Module ${modIdx + 1}`;
+            const modIcon = mod.icon || getModuleIcon(modName);
+
+            // If module already has structured chapters
+            if (Array.isArray(mod.chapters) && mod.chapters.length > 0) {
+                const chapters = mod.chapters.map((ch, chIdx) => {
+                    const chId = ch.id || `${modId}-ch-${chIdx + 1}`;
+                    const chName = ch.name || `Chapter ${chIdx + 1}`;
+                    const topics = (ch.topics || []).map((tp, tpIdx) => {
+                        const isQuiz = Boolean(tp.isQuiz || tp.type === "quiz");
+                        const quizType = tp.quizType || (tp.isChapterQuiz ? "chapter" : "topic");
+                        return {
+                            id: tp.id || `${chId}-tp-${tpIdx + 1}`,
+                            topicNumber: tp.topicNumber || `${modIdx + 1}.${chIdx + 1}.${tpIdx + 1}`,
+                            title: tp.title || `Topic ${tpIdx + 1}`,
+                            type: isQuiz ? "quiz" : (tp.type || "video"),
+                            isQuiz: isQuiz,
+                            quizType: quizType,
+                            duration: tp.duration || (isQuiz ? "5 min" : "35 min"),
+                            videoUrl: tp.videoUrl || "",
+                            readContent: tp.readContent || "",
+                            resources: tp.resources || course.defaultResources || [],
+                            quizData: tp.quizData || (isQuiz ? generateFallbackQuiz(tp.title) : null),
+                            moduleId: modId,
+                            moduleName: modName,
+                            chapterId: chId,
+                            chapterName: chName
+                        };
+                    });
+                    return {
+                        id: chId,
+                        chapterNumber: ch.chapterNumber || chIdx + 1,
+                        name: chName,
+                        description: ch.description || "",
+                        moduleId: modId,
+                        moduleName: modName,
+                        topics: topics
+                    };
+                });
+
+                return {
+                    id: modId,
+                    name: modName,
+                    icon: modIcon,
+                    description: mod.description || "",
+                    chapters: chapters
+                };
+            }
+
+            // If module has legacy lessons, convert them into Chapters with Topics & Quizzes
             const cleanModName = mod.name.replace(/^Module\s*\d+\s*:\s*/i, "");
-            const chName = `Chapter ${modIdx + 1}: ${cleanModName}`;
+            const chId = `${modId}-ch-1`;
+            const chName = `Chapter 1: ${cleanModName} Fundamentals`;
 
             const topics = [];
             (mod.lessons || []).forEach((les, lesIdx) => {
                 const isQuiz = Boolean(les.isQuiz || les.type === "quiz");
                 const cleanTitle = les.title.replace(/^Lesson\s*\d+\s*[-—:]\s*/i, "");
 
-                // Add the topic
                 topics.push({
                     id: les.id,
-                    topicNumber: `${modIdx + 1}.${lesIdx + 1}`,
-                    title: `Topic ${modIdx + 1}.${lesIdx + 1}: ${cleanTitle}`,
+                    topicNumber: `1.${lesIdx + 1}`,
+                    title: `Topic 1.${lesIdx + 1}: ${cleanTitle}`,
                     type: isQuiz ? "quiz" : (les.type || "video"),
                     isQuiz: isQuiz,
                     quizType: isQuiz ? (les.quizType || "topic") : "topic",
@@ -112,6 +139,8 @@ function normalizeCourseContent(course) {
                     readContent: les.readContent || "",
                     resources: les.resources || course.defaultResources || [],
                     quizData: les.quizData || (isQuiz ? generateFallbackQuiz(les.title) : null),
+                    moduleId: modId,
+                    moduleName: modName,
                     chapterId: chId,
                     chapterName: chName
                 });
@@ -121,8 +150,8 @@ function normalizeCourseContent(course) {
                     const quizTopicId = `${les.id}-quiz`;
                     topics.push({
                         id: quizTopicId,
-                        topicNumber: `${modIdx + 1}.1 Checkpoint`,
-                        title: `Topic ${modIdx + 1}.1 Quick Quiz: Concept Check`,
+                        topicNumber: "1.1 Checkpoint",
+                        title: `Topic 1.1 Quick Quiz: Concept Check`,
                         type: "quiz",
                         isQuiz: true,
                         quizType: "topic",
@@ -130,17 +159,19 @@ function normalizeCourseContent(course) {
                         videoUrl: "",
                         readContent: "",
                         resources: course.defaultResources || [],
-                        quizData: generateFallbackQuiz(`Topic ${modIdx + 1}.1: ${cleanTitle}`),
+                        quizData: generateFallbackQuiz(`Topic 1.1: ${cleanTitle}`),
+                        moduleId: modId,
+                        moduleName: modName,
                         chapterId: chId,
                         chapterName: chName
                     });
                 }
             });
 
-            // Synthesize a Chapter Comprehensive Quiz at the end of the chapter
+            // Synthesize a Chapter Comprehensive Quiz at chapter end
             const hasChapterEndQuiz = topics.some(t => t.quizType === "chapter");
             if (!hasChapterEndQuiz) {
-                const chQuizId = `chapter-${modIdx + 1}-assessment`;
+                const chQuizId = `${chId}-assessment`;
                 topics.push({
                     id: chQuizId,
                     topicNumber: "Assessment",
@@ -153,21 +184,97 @@ function normalizeCourseContent(course) {
                     readContent: "",
                     resources: course.defaultResources || [],
                     quizData: generateFallbackQuiz(chName, 5, 80, 10, true),
+                    moduleId: modId,
+                    moduleName: modName,
                     chapterId: chId,
                     chapterName: chName
                 });
             }
 
             return {
-                id: chId,
-                name: chName,
+                id: modId,
+                name: modName,
+                icon: modIcon,
                 description: mod.description || "",
-                topics: topics
+                chapters: [
+                    {
+                        id: chId,
+                        chapterNumber: 1,
+                        name: chName,
+                        description: mod.description || "",
+                        moduleId: modId,
+                        moduleName: modName,
+                        topics: topics
+                    }
+                ]
             };
         });
     }
 
+    // Case 2: Course has direct chapters at root
+    if (Array.isArray(course.chapters) && course.chapters.length > 0) {
+        const modId = "module-core";
+        const modName = "Module 1: Core Curriculum";
+        const chapters = course.chapters.map((ch, chIdx) => {
+            const chId = ch.id || `chapter-${chIdx + 1}`;
+            const chName = ch.name || `Chapter ${chIdx + 1}`;
+            const topics = (ch.topics || []).map((tp, tpIdx) => {
+                const isQuiz = Boolean(tp.isQuiz || tp.type === "quiz");
+                const quizType = tp.quizType || (tp.isChapterQuiz ? "chapter" : "topic");
+                return {
+                    id: tp.id || `${chId}-tp-${tpIdx + 1}`,
+                    topicNumber: tp.topicNumber || `${chIdx + 1}.${tpIdx + 1}`,
+                    title: tp.title || `Topic ${tpIdx + 1}`,
+                    type: isQuiz ? "quiz" : (tp.type || "video"),
+                    isQuiz: isQuiz,
+                    quizType: quizType,
+                    duration: tp.duration || (isQuiz ? "5 min" : "35 min"),
+                    videoUrl: tp.videoUrl || "",
+                    readContent: tp.readContent || "",
+                    resources: tp.resources || course.defaultResources || [],
+                    quizData: tp.quizData || (isQuiz ? generateFallbackQuiz(tp.title) : null),
+                    moduleId: modId,
+                    moduleName: modName,
+                    chapterId: chId,
+                    chapterName: chName
+                };
+            });
+            return {
+                id: chId,
+                chapterNumber: chIdx + 1,
+                name: chName,
+                description: ch.description || "",
+                moduleId: modId,
+                moduleName: modName,
+                topics: topics
+            };
+        });
+
+        return [
+            {
+                id: modId,
+                name: modName,
+                icon: "fa-solid fa-graduation-cap",
+                description: course.description || "",
+                chapters: chapters
+            }
+        ];
+    }
+
     return [];
+}
+
+/**
+ * Returns a flat linear array of all topics across all modules and chapters.
+ */
+function getAllCourseTopics(modules) {
+    const list = [];
+    modules.forEach(mod => {
+        mod.chapters.forEach(ch => {
+            ch.topics.forEach(tp => list.push(tp));
+        });
+    });
+    return list;
 }
 
 /**
@@ -241,17 +348,6 @@ function generateFallbackQuiz(subjectTitle, count = 5, passScore = 80, timeMins 
     };
 }
 
-/**
- * Returns a flat array of all topics across all chapters for sequential navigation.
- */
-function getAllCourseTopics(chapters) {
-    const list = [];
-    chapters.forEach(ch => {
-        ch.topics.forEach(tp => list.push(tp));
-    });
-    return list;
-}
-
 // =============================================================================
 // 2. LOCAL STORAGE PERSISTENCE (Completion, Notes, Q&A)
 // =============================================================================
@@ -319,7 +415,7 @@ function getTopicQa(topicId) {
                 role: "Instructor",
                 avatar: getInstructorImage(),
                 date: "2 hours ago",
-                text: "Yes, Ali! All topics, practice quizzes, and chapter assessments are 100% mapped to the official MDCAT syllabus."
+                text: "Yes, Ali! All modules, chapters, practice quizzes, and comprehensive assessments are 100% mapped to the official MDCAT syllabus."
             }
         ];
     } catch (e) {
@@ -332,16 +428,53 @@ function saveTopicQa(topicId, thread) {
 }
 
 // =============================================================================
-// 3. CURRICULUM OUTLINE SIDEBAR RENDERING
+// 3. CURRICULUM OUTLINE SIDEBAR (Modules -> Chapters -> Topics)
 // =============================================================================
 
-function renderCurriculumSidebar(filter = activeFilter) {
-    activeFilter = filter;
+function renderModulePills(modules) {
+    const bar = document.getElementById("modulePillsBar");
+    if (!bar) return;
+    bar.innerHTML = "";
+
+    if (modules.length <= 1) {
+        bar.classList.add("d-none");
+        return;
+    }
+    bar.classList.remove("d-none");
+
+    // All Modules Pill
+    const allBtn = document.createElement("button");
+    allBtn.type = "button";
+    allBtn.className = `module-pill-btn ${activeModuleFilter === 'all' ? 'active' : ''}`;
+    allBtn.innerHTML = `<i class="fa-solid fa-shapes"></i> All Modules`;
+    allBtn.addEventListener("click", () => {
+        activeModuleFilter = "all";
+        renderModulePills(modules);
+        renderCurriculumSidebar();
+    });
+    bar.appendChild(allBtn);
+
+    // Individual Module Pills
+    modules.forEach(mod => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = `module-pill-btn ${activeModuleFilter === mod.id ? 'active' : ''}`;
+        btn.innerHTML = `<i class="${mod.icon}"></i> ${mod.name.replace(/^Module\s*\d+\s*:\s*/i, "")}`;
+        btn.addEventListener("click", () => {
+            activeModuleFilter = mod.id;
+            renderModulePills(modules);
+            renderCurriculumSidebar();
+        });
+        bar.appendChild(btn);
+    });
+}
+
+function renderCurriculumSidebar() {
     const db = getDb();
     const rawCourse = db[activeCourseId];
     if (!rawCourse) return;
 
-    const chapters = normalizeCourseContent(rawCourse);
+    const modules = normalizeCourseContent(rawCourse);
     const accordionContainer = document.getElementById("syllabusAccordion");
     if (!accordionContainer) return;
 
@@ -352,14 +485,13 @@ function renderCurriculumSidebar(filter = activeFilter) {
     let cntTopics = 0;
     let cntQuizzes = 0;
 
-    chapters.forEach(ch => {
-        ch.topics.forEach(tp => {
-            cntAll++;
-            if (tp.isQuiz) {
-                cntQuizzes++;
-            } else {
-                cntTopics++;
-            }
+    modules.forEach(mod => {
+        mod.chapters.forEach(ch => {
+            ch.topics.forEach(tp => {
+                cntAll++;
+                if (tp.isQuiz) cntQuizzes++;
+                else cntTopics++;
+            });
         });
     });
 
@@ -385,105 +517,123 @@ function renderCurriculumSidebar(filter = activeFilter) {
 
     const completedList = getCompletedItems(activeCourseId);
 
-    chapters.forEach((chapter, chIdx) => {
-        const accordionId = `chapterCollapse_${chIdx}`;
+    // Filter modules based on activeModuleFilter
+    const targetModules = activeModuleFilter === "all"
+        ? modules
+        : modules.filter(m => m.id === activeModuleFilter);
 
-        // Filter topics according to active filter
-        const visibleTopics = chapter.topics.filter(tp => {
-            if (activeFilter === "topics") return !tp.isQuiz;
-            if (activeFilter === "quizzes") return tp.isQuiz;
-            return true;
-        });
-
-        // Determine if this chapter contains the active topic
-        const containsActive = chapter.topics.some(tp => tp.id === activeTopicId);
-        const shouldExpand = containsActive || (chIdx === 0 && !activeTopicId);
-        const isShow = shouldExpand ? "show" : "";
-        const isExpanded = shouldExpand ? "true" : "false";
-        const buttonCollapsed = shouldExpand ? "" : "collapsed";
-
-        let topicsHtml = "";
-        if (visibleTopics.length === 0) {
-            topicsHtml = `
-                <div class="text-center py-3 text-muted text-xs">
-                    No ${activeFilter} in this chapter.
+    targetModules.forEach((mod, modIdx) => {
+        // Module Section Header when viewing "All Modules"
+        if (activeModuleFilter === "all" && modules.length > 1) {
+            const modHeaderHtml = `
+                <div class="module-group-header">
+                    <span><i class="${mod.icon} me-1.5"></i> ${mod.name}</span>
+                    <span class="badge bg-white text-primary border" style="font-size: 9.5px;">${mod.chapters.length} Chapters</span>
                 </div>
             `;
-        } else {
-            visibleTopics.forEach(topic => {
-                const isCompleted = completedList.includes(topic.id);
-                const completedClass = isCompleted ? "completed" : "";
-                const activeClass = topic.id === activeTopicId ? "active" : "";
-
-                // Icon and Badge determination
-                let iconClass = "fa-solid fa-play";
-                let badgeClass = "badge-pill-video";
-                let badgeText = "VIDEO";
-                let quizItemClass = "";
-
-                if (topic.isQuiz) {
-                    if (topic.quizType === "chapter") {
-                        iconClass = "fa-solid fa-award";
-                        badgeClass = "badge-pill-chapter-quiz";
-                        badgeText = "CHAPTER QUIZ";
-                        quizItemClass = "is-chapter-quiz-item";
-                    } else {
-                        iconClass = "fa-solid fa-clipboard-question";
-                        badgeClass = "badge-pill-topic-quiz";
-                        badgeText = "TOPIC QUIZ";
-                        quizItemClass = "is-quiz-item";
-                    }
-                } else if (topic.type === "reading" || topic.type === "text") {
-                    iconClass = "fa-solid fa-book-open-reader";
-                    badgeClass = "badge-pill-reading";
-                    badgeText = "READING";
-                }
-
-                topicsHtml += `
-                    <div class="topic-study-item ${activeClass} ${completedClass} ${quizItemClass}" id="item-${topic.id}" data-topic-id="${topic.id}" data-lesson-id="${topic.id}">
-                        <span class="topic-icon-wrapper">
-                            <i class="${iconClass}"></i>
-                        </span>
-                        <div class="topic-meta-info flex-grow-1" style="min-width: 0;">
-                            <div class="d-flex align-items-center gap-1 flex-wrap">
-                                <span class="topic-badge-pill ${badgeClass}">${badgeText}</span>
-                                <span class="topic-time text-muted text-xs ms-auto">${topic.duration}</span>
-                            </div>
-                            <div class="topic-title-text text-truncate fw-semibold text-dark mt-1" title="${topic.title}">
-                                ${topic.title}
-                            </div>
-                        </div>
-                        <span class="status-indicator ms-2">
-                            <i class="fa-solid fa-circle-check checkmark"></i>
-                            <i class="fa-regular fa-circle bullet"></i>
-                        </span>
-                    </div>
-                `;
-            });
+            accordionContainer.insertAdjacentHTML("beforeend", modHeaderHtml);
         }
 
-        const chapterTopicsCount = chapter.topics.filter(t => !t.isQuiz).length;
-        const chapterQuizzesCount = chapter.topics.filter(t => t.isQuiz).length;
-        const countMeta = `${chapterTopicsCount} Topics &bull; ${chapterQuizzesCount} Quizzes`;
+        // Render each Chapter in this module
+        mod.chapters.forEach((chapter, chIdx) => {
+            const accordionId = `chapterCollapse_${mod.id}_${chIdx}`;
 
-        const chapterCardHtml = `
-            <div class="accordion-item study-accordion-item border rounded-3 mb-2 overflow-hidden">
-                <h2 class="accordion-header" id="heading_${chIdx}">
-                    <button class="accordion-button ${buttonCollapsed} px-3 py-2.5 bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#${accordionId}" aria-expanded="${isExpanded}" aria-controls="${accordionId}">
-                        <div class="d-flex flex-column text-start">
-                            <span class="fw-bold text-dark text-sm">${chapter.name}</span>
-                            <span class="text-xs text-muted mt-0.5">${countMeta}</span>
+            // Filter topics according to activeTypeFilter
+            const visibleTopics = chapter.topics.filter(tp => {
+                if (activeTypeFilter === "topics") return !tp.isQuiz;
+                if (activeTypeFilter === "quizzes") return tp.isQuiz;
+                return true;
+            });
+
+            // Expand chapter if it contains the active topic
+            const containsActive = chapter.topics.some(tp => tp.id === activeTopicId);
+            const shouldExpand = containsActive || (modIdx === 0 && chIdx === 0 && !activeTopicId);
+            const isShow = shouldExpand ? "show" : "";
+            const isExpanded = shouldExpand ? "true" : "false";
+            const buttonCollapsed = shouldExpand ? "" : "collapsed";
+
+            let topicsHtml = "";
+            if (visibleTopics.length === 0) {
+                topicsHtml = `
+                    <div class="text-center py-3 text-muted text-xs">
+                        No ${activeTypeFilter} in this chapter.
+                    </div>
+                `;
+            } else {
+                visibleTopics.forEach(topic => {
+                    const isCompleted = completedList.includes(topic.id);
+                    const completedClass = isCompleted ? "completed" : "";
+                    const activeClass = topic.id === activeTopicId ? "active" : "";
+
+                    let iconClass = "fa-solid fa-play";
+                    let badgeClass = "badge-pill-video";
+                    let badgeText = "VIDEO";
+                    let quizItemClass = "";
+
+                    if (topic.isQuiz) {
+                        if (topic.quizType === "chapter") {
+                            iconClass = "fa-solid fa-award";
+                            badgeClass = "badge-pill-chapter-quiz";
+                            badgeText = "CHAPTER QUIZ";
+                            quizItemClass = "is-chapter-quiz-item";
+                        } else {
+                            iconClass = "fa-solid fa-clipboard-question";
+                            badgeClass = "badge-pill-topic-quiz";
+                            badgeText = "TOPIC QUIZ";
+                            quizItemClass = "is-quiz-item";
+                        }
+                    } else if (topic.type === "reading" || topic.type === "text") {
+                        iconClass = "fa-solid fa-book-open-reader";
+                        badgeClass = "badge-pill-reading";
+                        badgeText = "READING";
+                    }
+
+                    topicsHtml += `
+                        <div class="topic-study-item ${activeClass} ${completedClass} ${quizItemClass}" id="item-${topic.id}" data-topic-id="${topic.id}" data-lesson-id="${topic.id}">
+                            <span class="topic-icon-wrapper">
+                                <i class="${iconClass}"></i>
+                            </span>
+                            <div class="topic-meta-info flex-grow-1" style="min-width: 0;">
+                                <div class="d-flex align-items-center gap-1 flex-wrap">
+                                    <span class="topic-badge-pill ${badgeClass}">${badgeText}</span>
+                                    <span class="topic-time text-muted text-xs ms-auto">${topic.duration}</span>
+                                </div>
+                                <div class="topic-title-text text-truncate fw-semibold text-dark mt-1" title="${topic.title}">
+                                    ${topic.title}
+                                </div>
+                            </div>
+                            <span class="status-indicator ms-2">
+                                <i class="fa-solid fa-circle-check checkmark"></i>
+                                <i class="fa-regular fa-circle bullet"></i>
+                            </span>
                         </div>
-                    </button>
-                </h2>
-                <div id="${accordionId}" class="accordion-collapse collapse ${isShow}" aria-labelledby="heading_${chIdx}" data-bs-parent="#syllabusAccordion">
-                    <div class="accordion-body p-2 study-accordion-body bg-white">
-                        ${topicsHtml}
+                    `;
+                });
+            }
+
+            const chTopicsCount = chapter.topics.filter(t => !t.isQuiz).length;
+            const chQuizzesCount = chapter.topics.filter(t => t.isQuiz).length;
+            const countMeta = `${chTopicsCount} Topics &bull; ${chQuizzesCount} Quizzes`;
+
+            const chapterCardHtml = `
+                <div class="accordion-item study-accordion-item border rounded-3 mb-2 overflow-hidden">
+                    <h2 class="accordion-header" id="heading_${mod.id}_${chIdx}">
+                        <button class="accordion-button ${buttonCollapsed} px-3 py-2.5 bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#${accordionId}" aria-expanded="${isExpanded}" aria-controls="${accordionId}">
+                            <div class="d-flex flex-column text-start">
+                                <span class="fw-bold text-dark text-sm">${chapter.name}</span>
+                                <span class="text-xs text-muted mt-0.5">${countMeta}</span>
+                            </div>
+                        </button>
+                    </h2>
+                    <div id="${accordionId}" class="accordion-collapse collapse ${isShow}" aria-labelledby="heading_${mod.id}_${chIdx}" data-bs-parent="#syllabusAccordion">
+                        <div class="accordion-body p-2 study-accordion-body bg-white">
+                            ${topicsHtml}
+                        </div>
                     </div>
                 </div>
-            </div>
-        `;
-        accordionContainer.insertAdjacentHTML("beforeend", chapterCardHtml);
+            `;
+            accordionContainer.insertAdjacentHTML("beforeend", chapterCardHtml);
+        });
     });
 }
 
@@ -498,16 +648,20 @@ function selectActiveTopic(topicId) {
     const rawCourse = db[activeCourseId];
     if (!rawCourse) return;
 
-    const chapters = normalizeCourseContent(rawCourse);
+    const modules = normalizeCourseContent(rawCourse);
     let activeTopic = null;
     let parentChapter = null;
+    let parentModule = null;
 
-    chapters.forEach(ch => {
-        ch.topics.forEach(tp => {
-            if (tp.id === topicId) {
-                activeTopic = tp;
-                parentChapter = ch;
-            }
+    modules.forEach(mod => {
+        mod.chapters.forEach(ch => {
+            ch.topics.forEach(tp => {
+                if (tp.id === topicId) {
+                    activeTopic = tp;
+                    parentChapter = ch;
+                    parentModule = mod;
+                }
+            });
         });
     });
 
@@ -522,7 +676,7 @@ function selectActiveTopic(topicId) {
         sidebarItem.classList.add("active");
     }
 
-    // References to UI View containers
+    // View containers
     const videoContainer = document.getElementById("video-player-container");
     const textBanner = document.getElementById("text-lesson-banner");
     const quizContainer = document.getElementById("quiz-studio-container");
@@ -530,7 +684,7 @@ function selectActiveTopic(topicId) {
     const topicControlRow = document.getElementById("topic-control-row");
     const topicTabsWrapper = document.getElementById("topic-tabs-wrapper");
 
-    // Clear any running quiz timer
+    // Clear active timer if running
     if (quizTimerInterval) {
         clearInterval(quizTimerInterval);
         quizTimerInterval = null;
@@ -561,7 +715,7 @@ function selectActiveTopic(topicId) {
     if (topicControlRow) topicControlRow.classList.remove("d-none");
     if (topicTabsWrapper) topicTabsWrapper.classList.remove("d-none");
 
-    // Video vs Reading
+    // Video vs Reading View
     if (activeTopic.type === "video" && activeTopic.videoUrl) {
         if (videoContainer) videoContainer.classList.remove("d-none");
         if (textBanner) textBanner.classList.add("d-none");
@@ -580,14 +734,16 @@ function selectActiveTopic(topicId) {
         if (textBannerTitle) textBannerTitle.textContent = activeTopic.title;
     }
 
-    // Update Header Labels
-    const chNameEl = document.getElementById("active-chapter-name") || document.getElementById("active-module-name");
+    // Update 3-Tier Breadcrumbs & Labels
+    const modNameEl = document.getElementById("active-module-name");
+    const chNameEl = document.getElementById("active-chapter-name");
     const titleEl = document.getElementById("active-topic-title") || document.getElementById("active-lesson-title");
     const durationEl = document.getElementById("active-topic-duration") || document.getElementById("active-lesson-duration");
     const typeEl = document.getElementById("active-topic-type") || document.getElementById("active-lesson-type");
     const badgeEl = document.getElementById("active-topic-badge");
 
-    if (chNameEl) chNameEl.textContent = parentChapter ? parentChapter.name : "Course Chapter";
+    if (modNameEl) modNameEl.textContent = parentModule ? parentModule.name : "Module";
+    if (chNameEl) chNameEl.textContent = parentChapter ? parentChapter.name : "Chapter";
     if (titleEl) titleEl.textContent = activeTopic.title;
     if (durationEl) durationEl.textContent = activeTopic.duration;
     if (typeEl) typeEl.textContent = activeTopic.type === "video" ? "Video Lecture" : "Read Notes / Article";
@@ -627,7 +783,7 @@ function selectActiveTopic(topicId) {
     renderQaFeed();
 
     // Up Next Banner
-    updateUpNextBanner(activeTopic, chapters);
+    updateUpNextBanner(activeTopic, modules);
 }
 
 // Backward-compatibility alias
@@ -635,8 +791,8 @@ function selectActiveLesson(lessonId) {
     selectActiveTopic(lessonId);
 }
 
-function updateUpNextBanner(currentTopic, chapters) {
-    const allTopics = getAllCourseTopics(chapters);
+function updateUpNextBanner(currentTopic, modules) {
+    const allTopics = getAllCourseTopics(modules);
     const currentIdx = allTopics.findIndex(t => t.id === currentTopic.id);
     const upNextBanner = document.getElementById("up-next-banner");
     const upNextTitle = document.getElementById("up-next-title");
@@ -734,11 +890,14 @@ function initQuizStudio(topic) {
     activeQuizData = topic.quizData || generateFallbackQuiz(topic.title);
 
     // Dynamic Quiz Header
+    const modCrumb = document.getElementById("quiz-module-crumb");
     const typeBadge = document.getElementById("quiz-type-badge");
     const crumbEl = document.getElementById("quiz-chapter-crumb");
     const titleEl = document.getElementById("quiz-title-display");
     const subtitleEl = document.getElementById("quiz-subtitle-display");
     const timerDisplay = document.getElementById("quiz-timer-display");
+
+    if (modCrumb) modCrumb.textContent = topic.moduleName || "Module";
 
     if (typeBadge) {
         if (topic.quizType === "chapter") {
@@ -747,11 +906,12 @@ function initQuizStudio(topic) {
             typeBadge.innerHTML = `<i class="fa-solid fa-award me-1"></i> Chapter Assessment`;
         } else {
             typeBadge.className = "badge bg-warning text-dark fw-bold text-xs px-2.5 py-1";
+            typeBadge.style.backgroundColor = "";
             typeBadge.innerHTML = `<i class="fa-solid fa-clipboard-question me-1"></i> Topic Quiz`;
         }
     }
 
-    if (crumbEl) crumbEl.textContent = `${topic.chapterName || 'Curriculum'} • Quiz`;
+    if (crumbEl) crumbEl.textContent = `${topic.chapterName || 'Chapter'} • Assessment`;
     if (titleEl) titleEl.textContent = activeQuizData.title || topic.title;
     if (subtitleEl) subtitleEl.textContent = activeQuizData.subtitle || "Single Best Answer Multiple Choice Questions.";
 
@@ -759,7 +919,7 @@ function initQuizStudio(topic) {
     const timeMins = activeQuizData.timeLimitMinutes || 5;
     if (timerDisplay) timerDisplay.textContent = formatTimerSeconds(timeMins * 60);
 
-    // Switch to Start / Overview Screen
+    // Switch to Start Screen
     const startScreen = document.getElementById("quiz-start-screen");
     const playerScreen = document.getElementById("quiz-player-screen");
     const scorecardScreen = document.getElementById("quiz-scorecard-screen");
@@ -870,18 +1030,18 @@ function loadQuizQuestion(qIdx) {
     const total = questions.length;
     const currentQ = questions[qIdx];
 
-    // Question number tracker
+    // Tracker label
     const qnumLabel = document.getElementById("quiz-qnum-label");
     if (qnumLabel) qnumLabel.textContent = `Question ${qIdx + 1} of ${total}`;
 
-    // Render Navigator Dots
+    // Navigator Dots
     renderQuizNavDots();
 
     // Question statement
     const stmtEl = document.getElementById("quiz-question-statement");
     if (stmtEl) stmtEl.textContent = currentQ.question;
 
-    // Render Options
+    // Options Cards
     const optionsContainer = document.getElementById("quiz-options-container");
     if (optionsContainer) {
         optionsContainer.innerHTML = "";
@@ -1073,7 +1233,7 @@ function submitQuizSession() {
     if (accuracyRatio) accuracyRatio.textContent = `${percent}%`;
     if (timeSpentEl) timeSpentEl.textContent = formatTimerSeconds(timeSpentSec);
 
-    // Wire Retake and Proceed buttons
+    // Retake and Proceed buttons
     const retakeBtn = document.getElementById("quiz-retake-btn");
     if (retakeBtn) {
         retakeBtn.onclick = () => {
@@ -1087,8 +1247,8 @@ function submitQuizSession() {
             const db = getDb();
             const rawCourse = db[activeCourseId];
             if (!rawCourse) return;
-            const chapters = normalizeCourseContent(rawCourse);
-            const allTopics = getAllCourseTopics(chapters);
+            const modules = normalizeCourseContent(rawCourse);
+            const allTopics = getAllCourseTopics(modules);
             const currentIdx = allTopics.findIndex(t => t.id === currentQuizTopic.id);
 
             if (currentIdx !== -1 && currentIdx < allTopics.length - 1) {
@@ -1128,8 +1288,8 @@ function updateProgressUi() {
     const rawCourse = db[activeCourseId];
     if (!rawCourse) return;
 
-    const chapters = normalizeCourseContent(rawCourse);
-    const allTopics = getAllCourseTopics(chapters);
+    const modules = normalizeCourseContent(rawCourse);
+    const allTopics = getAllCourseTopics(modules);
     const totalItems = allTopics.length;
 
     const completedList = getCompletedItems(activeCourseId);
@@ -1235,7 +1395,7 @@ function initStudyPortal() {
         if (bannerTitle) bannerTitle.textContent = course.title;
         if (breadcrumbName) breadcrumbName.textContent = course.title;
 
-        // Course dropdown switch
+        // Course dropdown switcher
         const courseSelect = document.getElementById("enrolledCourseSelect");
         if (courseSelect) {
             courseSelect.value = activeCourseId;
@@ -1246,26 +1406,31 @@ function initStudyPortal() {
             });
         }
 
-        // Set initial active topic
-        const chapters = normalizeCourseContent(course);
-        if (chapters.length > 0 && chapters[0].topics.length > 0) {
-            activeTopicId = chapters[0].topics[0].id;
+        const modules = normalizeCourseContent(course);
+
+        // Render Module Filter Pills (All Modules / Biology / Chemistry / etc.)
+        renderModulePills(modules);
+
+        // Find initial active topic
+        if (modules.length > 0 && modules[0].chapters.length > 0 && modules[0].chapters[0].topics.length > 0) {
+            activeTopicId = modules[0].chapters[0].topics[0].id;
         }
     }
 
-    // Filter Buttons Listener
+    // Type Filter Buttons (All / Topics / Quizzes)
     document.querySelectorAll(".syllabus-filter-btn").forEach(btn => {
         btn.addEventListener("click", () => {
             document.querySelectorAll(".syllabus-filter-btn").forEach(b => b.classList.remove("active"));
             btn.classList.add("active");
-            renderCurriculumSidebar(btn.dataset.filter || "all");
+            activeTypeFilter = btn.dataset.filter || "all";
+            renderCurriculumSidebar();
         });
     });
 
-    // Render Curriculum
-    renderCurriculumSidebar("all");
+    // Render Outline
+    renderCurriculumSidebar();
 
-    // Activate initial topic
+    // Select Initial Topic
     if (activeTopicId) {
         selectActiveTopic(activeTopicId);
     }

@@ -38,6 +38,60 @@
         flex-direction: column;
         box-shadow: var(--std-shadow);
     }
+    .syllabus-module-bar {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+        border-bottom: 1px dashed var(--std-border);
+        overflow-x: auto;
+        scrollbar-width: none;
+    }
+    .syllabus-module-bar::-webkit-scrollbar {
+        display: none;
+    }
+    .module-pill-btn {
+        font-size: 11px;
+        font-weight: 600;
+        padding: 4px 10px;
+        border-radius: 16px;
+        border: 1px solid var(--std-border);
+        background: #f8fafc;
+        color: #475569;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        white-space: nowrap;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
+    .module-pill-btn:hover {
+        background: #f1f5f9;
+        color: var(--std-primary);
+    }
+    .module-pill-btn.active {
+        background: var(--std-primary);
+        color: #ffffff;
+        border-color: var(--std-primary);
+        box-shadow: 0 2px 6px rgba(92, 50, 255, 0.25);
+    }
+    .module-group-header {
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--std-primary);
+        background: rgba(92, 50, 255, 0.05);
+        border: 1px solid rgba(92, 50, 255, 0.12);
+        padding: 6px 12px;
+        border-radius: 6px;
+        margin-top: 10px;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
     .syllabus-filter-bar {
         display: flex;
         align-items: center;
@@ -436,7 +490,7 @@
                         <div class="d-flex align-items-center gap-2">
                             <span class="text-xs fw-bold text-uppercase text-primary tracking-wide">Classroom &bull; Enrolled Track</span>
                             <span class="badge bg-light text-dark border font-11 px-2 py-0.5 rounded-pill" id="classroom-mode-badge">
-                                <i class="fa-solid fa-graduation-cap text-primary me-1"></i> Chapters &amp; Topics
+                                <i class="fa-solid fa-graduation-cap text-primary me-1"></i> Modules &bull; Chapters &bull; Topics
                             </span>
                         </div>
                         <select id="enrolledCourseSelect"
@@ -504,7 +558,8 @@
                     {{-- Quiz Dynamic Header --}}
                     <div class="quiz-studio-header">
                         <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-2">
-                            <div class="d-flex align-items-center gap-2">
+                            <div class="d-flex align-items-center gap-2 flex-wrap">
+                                <span class="badge bg-white text-dark fw-bold font-10 px-2 py-0.5" id="quiz-module-crumb">Module 1: Biology</span>
                                 <span class="badge bg-warning text-dark fw-bold text-xs px-2 py-1" id="quiz-type-badge">
                                     <i class="fa-solid fa-clipboard-question me-1"></i> Topic Quiz
                                 </span>
@@ -663,8 +718,9 @@
                      ========================================================= --}}
                 <div id="topic-control-row" class="d-flex align-items-center justify-content-between flex-wrap gap-3 pb-3 mb-3 border-bottom">
                     <div>
-                        <div class="d-flex align-items-center gap-2">
-                            <span class="text-xs fw-bold text-uppercase text-primary" id="active-chapter-name">Chapter 1: Cell Biology</span>
+                        <div class="d-flex align-items-center gap-2 flex-wrap">
+                            <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 font-11 px-2.5 py-0.5 rounded-pill" id="active-module-name">Module 1: Biology</span>
+                            <span class="text-xs text-muted" id="active-chapter-name">Chapter 1: Cell Biology</span>
                             <span class="badge bg-light text-secondary border font-10 px-2 py-0.5 rounded-pill" id="active-topic-badge">Topic</span>
                         </div>
                         <h2 class="h5 fw-bold text-dark mb-1 mt-1" id="active-topic-title">Select a Topic</h2>
@@ -799,6 +855,11 @@
                     <span class="badge bg-light text-dark border px-2 py-1 text-xs fw-semibold">
                         <i class="fa-solid fa-list-ol text-primary me-1"></i> Syllabus
                     </span>
+                </div>
+
+                {{-- Module Filter Pills Bar (All Modules / Biology / Chemistry / Physics / English) --}}
+                <div class="syllabus-module-bar" id="modulePillsBar">
+                    <!-- Populated dynamically by course-portal.js -->
                 </div>
 
                 {{-- Filter Bar (All / Topics / Quizzes) --}}
