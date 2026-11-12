@@ -38,87 +38,65 @@
         flex-direction: column;
         box-shadow: var(--std-shadow);
     }
-    .syllabus-module-bar {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        padding-bottom: 10px;
-        margin-bottom: 10px;
-        border-bottom: 1px dashed var(--std-border);
-        overflow-x: auto;
-        scrollbar-width: none;
-    }
-    .syllabus-module-bar::-webkit-scrollbar {
-        display: none;
-    }
-    .module-pill-btn {
-        font-size: 11px;
-        font-weight: 600;
-        padding: 4px 10px;
-        border-radius: 16px;
-        border: 1px solid var(--std-border);
+    .curriculum-module-header {
         background: #f8fafc;
-        color: #475569;
-        cursor: pointer;
-        transition: all 0.15s ease;
-        white-space: nowrap;
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-    }
-    .module-pill-btn:hover {
-        background: #f1f5f9;
-        color: var(--std-primary);
-    }
-    .module-pill-btn.active {
-        background: var(--std-primary);
-        color: #ffffff;
-        border-color: var(--std-primary);
-        box-shadow: 0 2px 6px rgba(92, 50, 255, 0.25);
-    }
-    .module-group-header {
-        font-size: 11px;
-        font-weight: 800;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        color: var(--std-primary);
-        background: rgba(92, 50, 255, 0.05);
-        border: 1px solid rgba(92, 50, 255, 0.12);
-        padding: 6px 12px;
-        border-radius: 6px;
-        margin-top: 10px;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 8px 12px;
+        margin-top: 14px;
         margin-bottom: 8px;
         display: flex;
         align-items: center;
         justify-content: space-between;
     }
-    .syllabus-filter-bar {
+    .curriculum-module-header:first-child {
+        margin-top: 2px;
+    }
+    .curriculum-module-header .module-icon {
+        width: 24px;
+        height: 24px;
+        border-radius: 6px;
+        background: rgba(92, 50, 255, 0.1);
+        color: var(--std-primary);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        margin-right: 8px;
+    }
+    .chapter-accordion-item {
+        border: 1px solid #e2e8f0;
+        border-radius: 8px !important;
+        margin-bottom: 6px;
+        overflow: hidden;
+        background: #ffffff;
+        transition: border-color 0.15s ease;
+    }
+    .chapter-accordion-item:hover {
+        border-color: #cbd5e1;
+    }
+    .chapter-accordion-btn {
+        padding: 9px 12px;
+        background: #ffffff;
+        font-size: 12px;
+        font-weight: 600;
+        color: #1e293b;
+        border: none;
+        box-shadow: none !important;
         display: flex;
         align-items: center;
-        gap: 6px;
-        padding-bottom: 12px;
-        margin-bottom: 12px;
-        border-bottom: 1px dashed var(--std-border);
+        width: 100%;
+        text-align: left;
     }
-    .syllabus-filter-btn {
-        font-size: 11.5px;
-        font-weight: 600;
-        padding: 4px 10px;
-        border-radius: 20px;
-        border: 1px solid var(--std-border);
-        background: #ffffff;
-        color: var(--std-text-muted);
-        cursor: pointer;
-        transition: all 0.15s ease;
-    }
-    .syllabus-filter-btn:hover {
+    .chapter-accordion-btn:not(.collapsed) {
         background: #f8fafc;
         color: var(--std-primary);
+        border-bottom: 1px solid #f1f5f9;
     }
-    .syllabus-filter-btn.active {
-        background: var(--std-primary);
-        color: #ffffff;
-        border-color: var(--std-primary);
+    .chapter-accordion-btn::after {
+        width: 13px;
+        height: 13px;
+        background-size: 13px;
     }
     .syllabus-accordion-wrap {
         max-height: 650px;
@@ -135,13 +113,13 @@
     .topic-study-item {
         display: flex;
         align-items: center;
-        gap: 12px;
-        padding: 10px 12px;
-        border-radius: 8px;
+        gap: 10px;
+        padding: 8px 10px;
+        border-radius: 6px;
         cursor: pointer;
         transition: all 0.15s ease;
-        margin-bottom: 4px;
-        font-size: 13px;
+        margin-bottom: 3px;
+        font-size: 12.5px;
         border: 1px solid transparent;
         position: relative;
     }
@@ -155,7 +133,7 @@
         color: var(--std-primary);
     }
     .topic-study-item.is-quiz-item {
-        background: #fffbeb;
+        background: #fffdf5;
         border-color: rgba(245, 158, 11, 0.2);
     }
     .topic-study-item.is-quiz-item:hover {
@@ -167,7 +145,7 @@
         color: #b45309;
     }
     .topic-study-item.is-chapter-quiz-item {
-        background: #f5f3ff;
+        background: #faf8ff;
         border-color: rgba(139, 92, 246, 0.25);
     }
     .topic-study-item.is-chapter-quiz-item:hover {
@@ -193,15 +171,15 @@
         color: #94a3b8;
     }
     .topic-icon-wrapper {
-        width: 30px;
-        height: 30px;
+        width: 26px;
+        height: 26px;
         border-radius: 6px;
         background: #f8fafc;
         display: flex;
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
-        font-size: 13px;
+        font-size: 11px;
         color: var(--std-primary);
     }
     .topic-study-item.is-quiz-item .topic-icon-wrapper {
@@ -213,10 +191,10 @@
         color: #7c3aed;
     }
     .topic-badge-pill {
-        font-size: 10px;
+        font-size: 9.5px;
         font-weight: 700;
-        padding: 2px 7px;
-        border-radius: 12px;
+        padding: 1px 6px;
+        border-radius: 10px;
         text-transform: uppercase;
         letter-spacing: 0.3px;
     }
@@ -718,12 +696,14 @@
                      ========================================================= --}}
                 <div id="topic-control-row" class="d-flex align-items-center justify-content-between flex-wrap gap-3 pb-3 mb-3 border-bottom">
                     <div>
-                        <div class="d-flex align-items-center gap-2 flex-wrap">
-                            <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 font-11 px-2.5 py-0.5 rounded-pill" id="active-module-name">Module 1: Biology</span>
-                            <span class="text-xs text-muted" id="active-chapter-name">Chapter 1: Cell Biology</span>
-                            <span class="badge bg-light text-secondary border font-10 px-2 py-0.5 rounded-pill" id="active-topic-badge">Topic</span>
+                        <div class="d-flex align-items-center gap-2 flex-wrap mb-1" style="font-size: 12px;">
+                            <span class="fw-bold text-primary" id="active-module-name">Module 1: Biology</span>
+                            <span class="text-muted">&bull;</span>
+                            <span class="text-secondary fw-semibold" id="active-chapter-name">Chapter 1: Cell Biology &amp; Cytology</span>
+                            <span class="text-muted">&bull;</span>
+                            <span class="badge bg-light text-dark border font-10 px-2 py-0.5 rounded-pill" id="active-topic-badge">Video Lecture</span>
                         </div>
-                        <h2 class="h5 fw-bold text-dark mb-1 mt-1" id="active-topic-title">Select a Topic</h2>
+                        <h2 class="h5 fw-bold text-dark mb-1" id="active-topic-title">Select a Topic</h2>
                         <div class="d-flex align-items-center gap-3 text-muted text-xs mt-1">
                             <span><i class="fa-regular fa-clock me-1 text-primary"></i> <span id="active-topic-duration">0 min</span></span>
                             <span><i class="fa-solid fa-layer-group me-1 text-primary"></i> <span id="active-topic-type">Topic Lecture</span></span>
@@ -847,37 +827,19 @@
         {{-- Right Area: Chapters & Topics Curriculum Outline --}}
         <div class="col-xl-4">
             <div class="syllabus-card">
-                <div class="d-flex align-items-center justify-content-between pb-2 mb-2">
+                <div class="d-flex align-items-center justify-content-between pb-3 mb-2 border-bottom">
                     <div>
-                        <h3 class="fw-bold text-dark mb-0" style="font-size: 15.5px;">Curriculum Outline</h3>
-                        <span class="text-muted text-xs" id="syllabus-summary-text">Chapters, Topics &amp; Practice Quizzes</span>
+                        <h3 class="fw-bold text-dark mb-0" style="font-size: 15px;">Curriculum Outline</h3>
+                        <span class="text-muted text-xs">Modules &bull; Chapters &bull; Topics &amp; Quizzes</span>
                     </div>
-                    <span class="badge bg-light text-dark border px-2 py-1 text-xs fw-semibold">
-                        <i class="fa-solid fa-list-ol text-primary me-1"></i> Syllabus
+                    <span class="badge bg-light text-primary border px-2.5 py-1 text-xs fw-semibold" id="syllabus-items-count">
+                        <i class="fa-solid fa-list-check me-1"></i> Syllabus
                     </span>
-                </div>
-
-                {{-- Module Filter Pills Bar (All Modules / Biology / Chemistry / Physics / English) --}}
-                <div class="syllabus-module-bar" id="modulePillsBar">
-                    <!-- Populated dynamically by course-portal.js -->
-                </div>
-
-                {{-- Filter Bar (All / Topics / Quizzes) --}}
-                <div class="syllabus-filter-bar">
-                    <button type="button" class="syllabus-filter-btn active" data-filter="all">
-                        All <span id="filter-cnt-all">(0)</span>
-                    </button>
-                    <button type="button" class="syllabus-filter-btn" data-filter="topics">
-                        <i class="fa-solid fa-book-bookmark me-1 text-primary"></i> Topics <span id="filter-cnt-topics">(0)</span>
-                    </button>
-                    <button type="button" class="syllabus-filter-btn" data-filter="quizzes">
-                        <i class="fa-solid fa-clipboard-question me-1 text-warning"></i> Quizzes <span id="filter-cnt-quizzes">(0)</span>
-                    </button>
                 </div>
 
                 <div class="syllabus-accordion-wrap flex-grow-1">
                     <div class="accordion syllabus-accordion" id="syllabusAccordion">
-                        <!-- Injected dynamically by course-portal.js -->
+                        <!-- Direct tree structure injected dynamically by course-portal.js -->
                     </div>
                 </div>
 

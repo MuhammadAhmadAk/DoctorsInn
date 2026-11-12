@@ -432,41 +432,7 @@ function saveTopicQa(topicId, thread) {
 // =============================================================================
 
 function renderModulePills(modules) {
-    const bar = document.getElementById("modulePillsBar");
-    if (!bar) return;
-    bar.innerHTML = "";
-
-    if (modules.length <= 1) {
-        bar.classList.add("d-none");
-        return;
-    }
-    bar.classList.remove("d-none");
-
-    // All Modules Pill
-    const allBtn = document.createElement("button");
-    allBtn.type = "button";
-    allBtn.className = `module-pill-btn ${activeModuleFilter === 'all' ? 'active' : ''}`;
-    allBtn.innerHTML = `<i class="fa-solid fa-shapes"></i> All Modules`;
-    allBtn.addEventListener("click", () => {
-        activeModuleFilter = "all";
-        renderModulePills(modules);
-        renderCurriculumSidebar();
-    });
-    bar.appendChild(allBtn);
-
-    // Individual Module Pills
-    modules.forEach(mod => {
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = `module-pill-btn ${activeModuleFilter === mod.id ? 'active' : ''}`;
-        btn.innerHTML = `<i class="${mod.icon}"></i> ${mod.name.replace(/^Module\s*\d+\s*:\s*/i, "")}`;
-        btn.addEventListener("click", () => {
-            activeModuleFilter = mod.id;
-            renderModulePills(modules);
-            renderCurriculumSidebar();
-        });
-        bar.appendChild(btn);
-    });
+    // Replaced with direct, clean tree outline
 }
 
 function renderCurriculumSidebar() {
@@ -495,13 +461,10 @@ function renderCurriculumSidebar() {
         });
     });
 
-    const filterAllEl = document.getElementById("filter-cnt-all");
-    const filterTopicsEl = document.getElementById("filter-cnt-topics");
-    const filterQuizzesEl = document.getElementById("filter-cnt-quizzes");
-
-    if (filterAllEl) filterAllEl.textContent = `(${cntAll})`;
-    if (filterTopicsEl) filterTopicsEl.textContent = `(${cntTopics})`;
-    if (filterQuizzesEl) filterQuizzesEl.textContent = `(${cntQuizzes})`;
+    const syllabusItemsEl = document.getElementById("syllabus-items-count");
+    if (syllabusItemsEl) {
+        syllabusItemsEl.innerHTML = `<i class="fa-solid fa-list-check me-1"></i> ${cntAll} Items`;
+    }
 
     // Attach click listener for items once
     if (!accordionContainer._hasTopicListener) {
@@ -517,35 +480,26 @@ function renderCurriculumSidebar() {
 
     const completedList = getCompletedItems(activeCourseId);
 
-    // Filter modules based on activeModuleFilter
-    const targetModules = activeModuleFilter === "all"
-        ? modules
-        : modules.filter(m => m.id === activeModuleFilter);
-
-    targetModules.forEach((mod, modIdx) => {
-        // Module Section Header when viewing "All Modules"
-        if (activeModuleFilter === "all" && modules.length > 1) {
-            const modHeaderHtml = `
-                <div class="module-group-header">
-                    <span><i class="${mod.icon} me-1.5"></i> ${mod.name}</span>
-                    <span class="badge bg-white text-primary border" style="font-size: 9.5px;">${mod.chapters.length} Chapters</span>
+    modules.forEach((mod, modIdx) => {
+        // Module Section Header
+        const modHeaderHtml = `
+            <div class="curriculum-module-header">
+                <div class="d-flex align-items-center">
+                    <span class="module-icon"><i class="${mod.icon}"></i></span>
+                    <span class="fw-bold text-dark text-xs text-uppercase tracking-wider">${mod.name}</span>
                 </div>
-            `;
-            accordionContainer.insertAdjacentHTML("beforeend", modHeaderHtml);
-        }
+                <span class="badge bg-white text-secondary border font-10">${mod.chapters.length} ${mod.chapters.length === 1 ? 'Chapter' : 'Chapters'}</span>
+            </div>
+        `;
+        accordionContainer.insertAdjacentHTML("beforeend", modHeaderHtml);
 
         // Render each Chapter in this module
         mod.chapters.forEach((chapter, chIdx) => {
-            const accordionId = `chapterCollapse_${mod.id}_${chIdx}`;
+            const safeModId = String(mod.id).replace(/[^a-zA-Z0-9_-]/g, "_");
+            const safeChId = String(chapter.id || chIdx).replace(/[^a-zA-Z0-9_-]/g, "_");
+            const accordionId = `chCollapse_${safeModId}_${safeChId}`;
 
-            // Filter topics according to activeTypeFilter
-            const visibleTopics = chapter.topics.filter(tp => {
-                if (activeTypeFilter === "topics") return !tp.isQuiz;
-                if (activeTypeFilter === "quizzes") return tp.isQuiz;
-                return true;
-            });
-
-            // Expand chapter if it contains the active topic
+            // Check if this chapter contains the active topic
             const containsActive = chapter.topics.some(tp => tp.id === activeTopicId);
             const shouldExpand = containsActive || (modIdx === 0 && chIdx === 0 && !activeTopicId);
             const isShow = shouldExpand ? "show" : "";
@@ -553,80 +507,75 @@ function renderCurriculumSidebar() {
             const buttonCollapsed = shouldExpand ? "" : "collapsed";
 
             let topicsHtml = "";
-            if (visibleTopics.length === 0) {
-                topicsHtml = `
-                    <div class="text-center py-3 text-muted text-xs">
-                        No ${activeTypeFilter} in this chapter.
+            chapter.topics.forEach(topic => {
+                const isCompleted = completedList.includes(topic.id);
+                const completedClass = isCompleted ? "completed" : "";
+                const activeClass = topic.id === activeTopicId ? "active" : "";
+
+                let iconClass = "fa-solid fa-play";
+                let badgeClass = "badge-pill-video";
+                let badgeText = "VIDEO";
+                let quizItemClass = "";
+
+                if (topic.isQuiz) {
+                    if (topic.quizType === "chapter") {
+                        iconClass = "fa-solid fa-award";
+                        badgeClass = "badge-pill-chapter-quiz";
+                        badgeText = "CHAPTER QUIZ";
+                        quizItemClass = "is-chapter-quiz-item";
+                    } else {
+                        iconClass = "fa-solid fa-clipboard-question";
+                        badgeClass = "badge-pill-topic-quiz";
+                        badgeText = "TOPIC QUIZ";
+                        quizItemClass = "is-quiz-item";
+                    }
+                } else if (topic.type === "reading" || topic.type === "text") {
+                    iconClass = "fa-solid fa-book-open-reader";
+                    badgeClass = "badge-pill-reading";
+                    badgeText = "READING";
+                }
+
+                topicsHtml += `
+                    <div class="topic-study-item ${activeClass} ${completedClass} ${quizItemClass}" id="item-${topic.id}" data-topic-id="${topic.id}" data-lesson-id="${topic.id}">
+                        <span class="topic-icon-wrapper">
+                            <i class="${iconClass}"></i>
+                        </span>
+                        <div class="topic-meta-info flex-grow-1" style="min-width: 0;">
+                            <div class="d-flex align-items-center justify-content-between gap-1">
+                                <span class="topic-badge-pill ${badgeClass}">${badgeText}</span>
+                                <span class="topic-time text-muted text-xs"><i class="fa-regular fa-clock me-1"></i>${topic.duration}</span>
+                            </div>
+                            <div class="topic-title-text text-truncate fw-semibold text-dark mt-1" title="${topic.title}">
+                                ${topic.title}
+                            </div>
+                        </div>
+                        <span class="status-indicator ms-2">
+                            <i class="fa-solid fa-circle-check checkmark"></i>
+                            <i class="fa-regular fa-circle bullet"></i>
+                        </span>
                     </div>
                 `;
-            } else {
-                visibleTopics.forEach(topic => {
-                    const isCompleted = completedList.includes(topic.id);
-                    const completedClass = isCompleted ? "completed" : "";
-                    const activeClass = topic.id === activeTopicId ? "active" : "";
-
-                    let iconClass = "fa-solid fa-play";
-                    let badgeClass = "badge-pill-video";
-                    let badgeText = "VIDEO";
-                    let quizItemClass = "";
-
-                    if (topic.isQuiz) {
-                        if (topic.quizType === "chapter") {
-                            iconClass = "fa-solid fa-award";
-                            badgeClass = "badge-pill-chapter-quiz";
-                            badgeText = "CHAPTER QUIZ";
-                            quizItemClass = "is-chapter-quiz-item";
-                        } else {
-                            iconClass = "fa-solid fa-clipboard-question";
-                            badgeClass = "badge-pill-topic-quiz";
-                            badgeText = "TOPIC QUIZ";
-                            quizItemClass = "is-quiz-item";
-                        }
-                    } else if (topic.type === "reading" || topic.type === "text") {
-                        iconClass = "fa-solid fa-book-open-reader";
-                        badgeClass = "badge-pill-reading";
-                        badgeText = "READING";
-                    }
-
-                    topicsHtml += `
-                        <div class="topic-study-item ${activeClass} ${completedClass} ${quizItemClass}" id="item-${topic.id}" data-topic-id="${topic.id}" data-lesson-id="${topic.id}">
-                            <span class="topic-icon-wrapper">
-                                <i class="${iconClass}"></i>
-                            </span>
-                            <div class="topic-meta-info flex-grow-1" style="min-width: 0;">
-                                <div class="d-flex align-items-center gap-1 flex-wrap">
-                                    <span class="topic-badge-pill ${badgeClass}">${badgeText}</span>
-                                    <span class="topic-time text-muted text-xs ms-auto">${topic.duration}</span>
-                                </div>
-                                <div class="topic-title-text text-truncate fw-semibold text-dark mt-1" title="${topic.title}">
-                                    ${topic.title}
-                                </div>
-                            </div>
-                            <span class="status-indicator ms-2">
-                                <i class="fa-solid fa-circle-check checkmark"></i>
-                                <i class="fa-regular fa-circle bullet"></i>
-                            </span>
-                        </div>
-                    `;
-                });
-            }
+            });
 
             const chTopicsCount = chapter.topics.filter(t => !t.isQuiz).length;
             const chQuizzesCount = chapter.topics.filter(t => t.isQuiz).length;
             const countMeta = `${chTopicsCount} Topics &bull; ${chQuizzesCount} Quizzes`;
 
             const chapterCardHtml = `
-                <div class="accordion-item study-accordion-item border rounded-3 mb-2 overflow-hidden">
-                    <h2 class="accordion-header" id="heading_${mod.id}_${chIdx}">
-                        <button class="accordion-button ${buttonCollapsed} px-3 py-2.5 bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#${accordionId}" aria-expanded="${isExpanded}" aria-controls="${accordionId}">
-                            <div class="d-flex flex-column text-start">
-                                <span class="fw-bold text-dark text-sm">${chapter.name}</span>
-                                <span class="text-xs text-muted mt-0.5">${countMeta}</span>
+                <div class="accordion-item chapter-accordion-item">
+                    <h2 class="accordion-header" id="heading_${accordionId}">
+                        <button class="accordion-button chapter-accordion-btn ${buttonCollapsed}" type="button" data-bs-toggle="collapse" data-bs-target="#${accordionId}" aria-expanded="${isExpanded}" aria-controls="${accordionId}">
+                            <div class="d-flex align-items-center gap-2 flex-grow-1 min-w-0">
+                                <i class="fa-regular fa-folder-open text-primary text-xs flex-shrink-0"></i>
+                                <div class="d-flex flex-column text-start flex-grow-1 min-w-0">
+                                    <span class="chapter-title fw-bold text-dark text-truncate" style="font-size: 12.5px;">${chapter.name}</span>
+                                    <span class="text-muted" style="font-size: 10.5px;">${countMeta}</span>
+                                </div>
                             </div>
                         </button>
                     </h2>
-                    <div id="${accordionId}" class="accordion-collapse collapse ${isShow}" aria-labelledby="heading_${mod.id}_${chIdx}" data-bs-parent="#syllabusAccordion">
-                        <div class="accordion-body p-2 study-accordion-body bg-white">
+                    <div id="${accordionId}" class="accordion-collapse collapse ${isShow}" aria-labelledby="heading_${accordionId}">
+                        <div class="accordion-body p-1.5 bg-white">
                             ${topicsHtml}
                         </div>
                     </div>
@@ -674,6 +623,23 @@ function selectActiveTopic(topicId) {
     const sidebarItem = document.getElementById(`item-${topicId}`);
     if (sidebarItem) {
         sidebarItem.classList.add("active");
+
+        // Automatically expand the chapter accordion if it is collapsed
+        const parentCollapse = sidebarItem.closest(".accordion-collapse");
+        if (parentCollapse && !parentCollapse.classList.contains("show")) {
+            if (window.bootstrap && bootstrap.Collapse) {
+                const bsCollapse = bootstrap.Collapse.getOrCreateInstance(parentCollapse, { toggle: false });
+                bsCollapse.show();
+            } else {
+                parentCollapse.classList.add("show");
+            }
+            const parentBtn = document.querySelector(`[data-bs-target="#${parentCollapse.id}"]`);
+            if (parentBtn) {
+                parentBtn.classList.remove("collapsed");
+                parentBtn.setAttribute("aria-expanded", "true");
+            }
+        }
+        sidebarItem.scrollIntoView({ behavior: "smooth", block: "nearest" });
     }
 
     // View containers
@@ -1408,24 +1374,11 @@ function initStudyPortal() {
 
         const modules = normalizeCourseContent(course);
 
-        // Render Module Filter Pills (All Modules / Biology / Chemistry / etc.)
-        renderModulePills(modules);
-
         // Find initial active topic
         if (modules.length > 0 && modules[0].chapters.length > 0 && modules[0].chapters[0].topics.length > 0) {
             activeTopicId = modules[0].chapters[0].topics[0].id;
         }
     }
-
-    // Type Filter Buttons (All / Topics / Quizzes)
-    document.querySelectorAll(".syllabus-filter-btn").forEach(btn => {
-        btn.addEventListener("click", () => {
-            document.querySelectorAll(".syllabus-filter-btn").forEach(b => b.classList.remove("active"));
-            btn.classList.add("active");
-            activeTypeFilter = btn.dataset.filter || "all";
-            renderCurriculumSidebar();
-        });
-    });
 
     // Render Outline
     renderCurriculumSidebar();
