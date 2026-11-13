@@ -36,7 +36,6 @@
         els.container = $('lecture-player-container');
         els.title = $('lecture-player-title');
         els.subtitle = $('lecture-player-subtitle');
-        els.status = $('lecture-status-pill');
         els.quality = $('lecture-quality-select');
         els.speed = $('lecture-speed-select');
         els.loading = $('lecture-player-loading');
@@ -112,7 +111,7 @@
                 ? 'Processing failed: ' + lecture.error
                 : (lecture.status === 'queued'
                     ? 'This lecture is queued for processing. It will unlock automatically.'
-                    : 'This lecture is being processed into adaptive HLS (' + pct + '%).');
+                    : 'This lecture is being prepared for playback (' + pct + '%).');
         }
         if (els.processingBar) els.processingBar.style.width = pct + '%';
         show(els.processing, true);
@@ -439,17 +438,10 @@
         const isHls = lecture.hls !== false;
         if (els.title) els.title.textContent = lecture.title || 'Lecture';
         if (els.subtitle) {
-            const qualities = lecture.qualities && lecture.qualities.length
-                ? 'Adaptive HLS · ' + lecture.qualities.join(' / ')
-                : (isHls ? 'Adaptive HLS streaming' : 'Direct secure stream');
-            els.subtitle.textContent = qualities;
-        }
-        if (els.status) {
-            const ready = lecture.status === 'ready';
-            els.status.innerHTML = ready
-                ? '<i class="fa-solid fa-shield-halved"></i> ' + (isHls ? 'Secure HLS' : 'Secure stream')
-                : '<i class="fa-solid fa-gear fa-spin"></i> Processing';
-            els.status.classList.toggle('is-processing', !ready);
+            const qualities = lecture.qualities && lecture.qualities.length;
+            els.subtitle.textContent = qualities
+                ? lecture.qualities.join(' / ')
+                : (isHls ? 'Auto quality' : '');
         }
         if (els.quality) show(els.quality, lecture.status === 'ready' && isHls);
         if (els.percent) els.percent.textContent = '0% watched';

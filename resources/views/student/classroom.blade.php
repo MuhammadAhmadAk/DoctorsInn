@@ -490,41 +490,13 @@
         text-overflow: ellipsis;
         white-space: nowrap;
     }
-    .lecture-player-meta {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        min-width: 0;
-        margin-top: 2px;
-    }
     .lecture-player-subtitle {
+        margin-top: 1px;
         color: #a0a8b8;
         font-size: 10.5px;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-    }
-    .lecture-secure-pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        padding: 0;
-        border: 0;
-        background: transparent;
-        color: #059669;
-        font-size: 9px;
-        font-weight: 700;
-        letter-spacing: .04em;
-        text-transform: uppercase;
-        white-space: nowrap;
-    }
-    .lecture-secure-pill i {
-        font-size: 8.5px;
-    }
-    .lecture-secure-pill.is-processing {
-        background: transparent;
-        border: 0;
-        color: #6366f1;
     }
     .lecture-player-tools {
         display: flex;
@@ -787,10 +759,7 @@
                     <div class="lecture-player-header">
                         <div class="lecture-player-heading">
                             <h3 class="lecture-player-title" id="lecture-player-title">Lecture</h3>
-                            <div class="lecture-player-meta">
-                                <span class="lecture-secure-pill" id="lecture-status-pill"><i class="fa-solid fa-shield-halved"></i> Secure HLS</span>
-                                <span class="lecture-player-subtitle" id="lecture-player-subtitle">Adaptive HLS streaming</span>
-                            </div>
+                            <div class="lecture-player-subtitle" id="lecture-player-subtitle"></div>
                         </div>
                         <div class="lecture-player-tools">
                             <label class="lecture-tool">
