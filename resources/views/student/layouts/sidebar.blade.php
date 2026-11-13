@@ -40,7 +40,7 @@
         <li>
             <a href="{{ route('student.courses') }}" class="sidebar-link {{ request()->routeIs('student.courses*') || request()->routeIs('student.classroom*') ? 'active' : '' }}">
                 <i class="fa-solid fa-circle-play"></i>
-                <span>Video Lectures</span>
+                <span>Enroll Courses</span>
                 <span class="badge-counter">{{ $coursesCount }}</span>
             </a>
         </li>

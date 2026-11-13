@@ -69,6 +69,13 @@
             </a>
         </li>
 
+        <li class="sidebar-item">
+            <a href="{{ route('admin.staff') }}" class="sidebar-link {{ request()->routeIs('admin.staff*') ? 'active' : '' }}">
+                <i class="fa-solid fa-user-shield"></i>
+                <span>Staff Access</span>
+            </a>
+        </li>
+
         <li class="sidebar-item mt-2 pt-2 border-top border-secondary border-opacity-10">
             <a href="{{ route('admin.settings') }}" class="sidebar-link {{ request()->routeIs('admin.settings*') ? 'active' : '' }}">
                 <i class="fa-solid fa-sliders"></i>

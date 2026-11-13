@@ -143,6 +143,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::delete('/blogs/{slug}', [AdminController::class, 'deleteBlog'])->name('blogs.delete');
 
         Route::get('/students', [AdminController::class, 'students'])->name('students');
+        Route::view('/staff-access', 'backend.staff.index')->name('staff');
         Route::get('/settings', [AdminController::class, 'settings'])->name('settings');
         Route::post('/settings', [AdminController::class, 'saveSettings'])->name('settings.save');
     });
