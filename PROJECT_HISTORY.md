@@ -55,3 +55,4 @@
 - `c5be235` :: "2026-11-13 | 11:13 AM" - "feat: make modules collapsible with module 1 open by default, and refine clean item selection style"
 - `29ad4bc` :: "2026-11-13 | 11:44 AM" - "feat: implement 3-tier course curriculum builder studio in admin panel matching student classroom"
 - `48287ea` :: "2026-11-13 | 02:01 PM" - "feat: migrate courses & curriculum to database, add direct video & PDF uploads with progress bar in admin course studio"
+- `a55fc8d` :: "2026-11-13 | 02:31 PM" - "fix: support both 3-tier modules and legacy curriculum in public course details view"
