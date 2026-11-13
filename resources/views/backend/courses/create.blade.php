@@ -27,18 +27,6 @@
         justify-content: space-between;
         gap: 8px;
     }
-    .builder-module-icon {
-        width: 32px;
-        height: 32px;
-        border-radius: 8px;
-        background: #5C32FF;
-        color: #ffffff;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 13px;
-        flex-shrink: 0;
-    }
     .builder-chapter-card {
         background: #fcfcfd;
         border: 1px solid #e5e7eb;
@@ -70,42 +58,6 @@
     }
     .builder-topic-row:hover {
         background: #f8fafc;
-    }
-    .type-badge-video {
-        background: #eff6ff;
-        color: #2563eb;
-        font-size: 10.5px;
-        font-weight: 600;
-        padding: 2px 7px;
-        border-radius: 4px;
-        border: 1px solid #bfdbfe;
-    }
-    .type-badge-reading {
-        background: #ecfdf5;
-        color: #059669;
-        font-size: 10.5px;
-        font-weight: 600;
-        padding: 2px 7px;
-        border-radius: 4px;
-        border: 1px solid #a7f3d0;
-    }
-    .type-badge-topic-quiz {
-        background: #fffbeb;
-        color: #d97706;
-        font-size: 10.5px;
-        font-weight: 600;
-        padding: 2px 7px;
-        border-radius: 4px;
-        border: 1px solid #fde68a;
-    }
-    .type-badge-chapter-quiz {
-        background: #f5f3ff;
-        color: #7c3aed;
-        font-size: 10.5px;
-        font-weight: 600;
-        padding: 2px 7px;
-        border-radius: 4px;
-        border: 1px solid #ddd6fe;
     }
     .action-icon-btn {
         width: 26px;
@@ -1101,9 +1053,7 @@ function renderBuilder() {
             <div class="builder-module-card" data-module-idx="${modIdx}">
                 <div class="builder-module-header">
                     <div class="d-flex align-items-center gap-2.5 flex-grow-1 text-truncate">
-                        <div class="builder-module-icon">
-                            <i class="${escapeHtml(modIcon)}"></i>
-                        </div>
+                        <i class="${escapeHtml(modIcon)} text-primary font-13"></i>
                         <div class="text-truncate">
                             <div class="fw-bold text-dark font-13 text-truncate">${escapeHtml(modName)}</div>
                             <div class="text-muted font-10">
@@ -1145,7 +1095,7 @@ function renderBuilder() {
                                     <div class="d-flex align-items-center gap-2 text-truncate">
                                         <i class="fa-solid fa-folder text-warning font-12"></i>
                                         <span class="fw-semibold text-dark font-12 text-truncate">${escapeHtml(ch.name || `Chapter ${chIdx + 1}`)}</span>
-                                        <span class="badge bg-secondary bg-opacity-10 text-secondary font-10">${topics.length} items</span>
+                                        <span class="text-muted font-10">${topics.length} items</span>
                                     </div>
                                     <div class="d-flex align-items-center gap-1">
                                         <div class="dropdown">
@@ -1179,21 +1129,16 @@ function renderBuilder() {
                                         const quizType = top.quizType || (top.title && top.title.toLowerCase().includes('chapter') ? 'chapter' : 'topic');
                                         const questionsCount = (top.quizData && Array.isArray(top.quizData.questions)) ? top.quizData.questions.length : 0;
 
-                                        let badgeHtml = '';
                                         let iconHtml = '';
                                         if (isQuiz) {
                                             if (quizType === 'chapter') {
-                                                badgeHtml = `<span class="type-badge-chapter-quiz">Chapter Quiz</span>`;
                                                 iconHtml = `<i class="fa-solid fa-trophy text-purple font-12" style="color: #7c3aed;"></i>`;
                                             } else {
-                                                badgeHtml = `<span class="type-badge-topic-quiz">Topic Quiz</span>`;
                                                 iconHtml = `<i class="fa-solid fa-pen-clip text-warning font-12"></i>`;
                                             }
                                         } else if (top.type === 'reading') {
-                                            badgeHtml = `<span class="type-badge-reading">Reading</span>`;
                                             iconHtml = `<i class="fa-solid fa-book-open text-success font-12"></i>`;
                                         } else {
-                                            badgeHtml = `<span class="type-badge-video">Video</span>`;
                                             iconHtml = `<i class="fa-solid fa-circle-play text-primary font-12"></i>`;
                                         }
 
@@ -1204,7 +1149,6 @@ function renderBuilder() {
                                                     <div class="text-truncate">
                                                         <div class="fw-semibold text-dark font-12 text-truncate">${escapeHtml(top.title || 'Untitled Topic')}</div>
                                                         <div class="d-flex align-items-center gap-2 font-10 text-muted">
-                                                            ${badgeHtml}
                                                             <span>${top.duration || '15 min'}</span>
                                                             ${isQuiz ? `<span>&bull; ${questionsCount} Questions</span>` : ''}
                                                             ${top.resources && top.resources.length ? `<span>&bull; <i class="fa-regular fa-file-pdf text-danger"></i> Handout</span>` : ''}
