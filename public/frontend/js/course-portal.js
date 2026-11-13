@@ -481,27 +481,28 @@ function renderCurriculumSidebar() {
     const completedList = getCompletedItems(activeCourseId);
 
     modules.forEach((mod, modIdx) => {
-        // Module Section Header (Clean minimal divider, no heavy boxes)
-        const modHeaderHtml = `
-            <div class="module-section-title">
-                <i class="${mod.icon} text-primary me-2"></i>
-                <span>${mod.name}</span>
-            </div>
-        `;
-        accordionContainer.insertAdjacentHTML("beforeend", modHeaderHtml);
+        const safeModId = String(mod.id).replace(/[^a-zA-Z0-9_-]/g, "_");
+        const modCollapseId = `modCollapse_${safeModId}`;
 
-        // Render each Chapter in this module
+        // Module 1 is open by default, OR any module that contains the active topic
+        const modContainsActive = mod.chapters.some(ch => ch.topics.some(tp => tp.id === activeTopicId));
+        const shouldExpandMod = modContainsActive || (modIdx === 0 && !activeTopicId);
+        const modIsShow = shouldExpandMod ? "show" : "";
+        const modCollapsedClass = shouldExpandMod ? "" : "collapsed";
+        const modIsExpanded = shouldExpandMod ? "true" : "false";
+
+        // Generate Chapters HTML for this module
+        let chaptersHtml = "";
         mod.chapters.forEach((chapter, chIdx) => {
-            const safeModId = String(mod.id).replace(/[^a-zA-Z0-9_-]/g, "_");
             const safeChId = String(chapter.id || chIdx).replace(/[^a-zA-Z0-9_-]/g, "_");
-            const accordionId = `chCollapse_${safeModId}_${safeChId}`;
+            const chAccordionId = `chCollapse_${safeModId}_${safeChId}`;
 
             // Check if this chapter contains the active topic
-            const containsActive = chapter.topics.some(tp => tp.id === activeTopicId);
-            const shouldExpand = containsActive || (modIdx === 0 && chIdx === 0 && !activeTopicId);
-            const isShow = shouldExpand ? "show" : "";
-            const isExpanded = shouldExpand ? "true" : "false";
-            const buttonCollapsed = shouldExpand ? "" : "collapsed";
+            const chContainsActive = chapter.topics.some(tp => tp.id === activeTopicId);
+            const shouldExpandCh = chContainsActive || (modIdx === 0 && chIdx === 0 && !activeTopicId);
+            const chIsShow = shouldExpandCh ? "show" : "";
+            const chIsExpanded = shouldExpandCh ? "true" : "false";
+            const chButtonCollapsed = shouldExpandCh ? "" : "collapsed";
 
             let topicsHtml = "";
             chapter.topics.forEach(topic => {
@@ -544,25 +545,48 @@ function renderCurriculumSidebar() {
                 `;
             });
 
-            const chapterCardHtml = `
+            chaptersHtml += `
                 <div class="accordion-item chapter-accordion-item">
-                    <h2 class="accordion-header" id="heading_${accordionId}">
-                        <button class="accordion-button chapter-accordion-btn ${buttonCollapsed}" type="button" data-bs-toggle="collapse" data-bs-target="#${accordionId}" aria-expanded="${isExpanded}" aria-controls="${accordionId}">
+                    <h2 class="accordion-header" id="heading_${chAccordionId}">
+                        <button class="accordion-button chapter-accordion-btn ${chButtonCollapsed}" type="button" data-bs-toggle="collapse" data-bs-target="#${chAccordionId}" aria-expanded="${chIsExpanded}" aria-controls="${chAccordionId}">
                             <div class="d-flex align-items-center justify-content-between flex-grow-1 min-w-0 pe-2">
                                 <span class="chapter-title fw-semibold text-dark text-truncate">${chapter.name}</span>
                                 <span class="text-muted text-xs ms-2 flex-shrink-0" style="font-size: 11px;">${chapter.topics.length} items</span>
                             </div>
                         </button>
                     </h2>
-                    <div id="${accordionId}" class="accordion-collapse collapse ${isShow}" aria-labelledby="heading_${accordionId}">
+                    <div id="${chAccordionId}" class="accordion-collapse collapse ${chIsShow}" aria-labelledby="heading_${chAccordionId}">
                         <div class="accordion-body px-1 py-1 bg-white">
                             ${topicsHtml}
                         </div>
                     </div>
                 </div>
             `;
-            accordionContainer.insertAdjacentHTML("beforeend", chapterCardHtml);
         });
+
+        // Module Accordion Item HTML (Collapsible)
+        const moduleCardHtml = `
+            <div class="accordion-item module-accordion-item">
+                <h2 class="accordion-header" id="heading_${modCollapseId}">
+                    <button class="accordion-button module-accordion-btn ${modCollapsedClass}" type="button" data-bs-toggle="collapse" data-bs-target="#${modCollapseId}" aria-expanded="${modIsExpanded}" aria-controls="${modCollapseId}">
+                        <div class="d-flex align-items-center justify-content-between flex-grow-1 min-w-0 pe-2">
+                            <div class="d-flex align-items-center min-w-0">
+                                <i class="${mod.icon} text-primary me-2 flex-shrink-0"></i>
+                                <span class="module-title fw-bold text-truncate">${mod.name}</span>
+                            </div>
+                            <span class="text-muted text-xs ms-2 flex-shrink-0" style="font-size: 10.5px;">${mod.chapters.length} Ch</span>
+                        </div>
+                    </button>
+                </h2>
+                <div id="${modCollapseId}" class="accordion-collapse collapse ${modIsShow}" aria-labelledby="heading_${modCollapseId}">
+                    <div class="module-accordion-body">
+                        ${chaptersHtml}
+                    </div>
+                </div>
+            </div>
+        `;
+
+        accordionContainer.insertAdjacentHTML("beforeend", moduleCardHtml);
     });
 }
 
@@ -605,20 +629,35 @@ function selectActiveTopic(topicId) {
         sidebarItem.classList.add("active");
 
         // Automatically expand the chapter accordion if it is collapsed
-        const parentCollapse = sidebarItem.closest(".accordion-collapse");
-        if (parentCollapse && !parentCollapse.classList.contains("show")) {
+        const parentChapterCollapse = sidebarItem.closest(".chapter-accordion-item .collapse, .accordion-collapse");
+        if (parentChapterCollapse && !parentChapterCollapse.classList.contains("show")) {
             if (window.bootstrap && bootstrap.Collapse) {
-                const bsCollapse = bootstrap.Collapse.getOrCreateInstance(parentCollapse, { toggle: false });
-                bsCollapse.show();
+                bootstrap.Collapse.getOrCreateInstance(parentChapterCollapse, { toggle: false }).show();
             } else {
-                parentCollapse.classList.add("show");
+                parentChapterCollapse.classList.add("show");
             }
-            const parentBtn = document.querySelector(`[data-bs-target="#${parentCollapse.id}"]`);
+            const parentBtn = document.querySelector(`[data-bs-target="#${parentChapterCollapse.id}"]`);
             if (parentBtn) {
                 parentBtn.classList.remove("collapsed");
                 parentBtn.setAttribute("aria-expanded", "true");
             }
         }
+
+        // Automatically expand the module accordion if it is collapsed
+        const parentModuleCollapse = sidebarItem.closest(".module-accordion-item .collapse");
+        if (parentModuleCollapse && !parentModuleCollapse.classList.contains("show")) {
+            if (window.bootstrap && bootstrap.Collapse) {
+                bootstrap.Collapse.getOrCreateInstance(parentModuleCollapse, { toggle: false }).show();
+            } else {
+                parentModuleCollapse.classList.add("show");
+            }
+            const modBtn = document.querySelector(`[data-bs-target="#${parentModuleCollapse.id}"]`);
+            if (modBtn) {
+                modBtn.classList.remove("collapsed");
+                modBtn.setAttribute("aria-expanded", "true");
+            }
+        }
+
         sidebarItem.scrollIntoView({ behavior: "smooth", block: "nearest" });
     }
 

@@ -38,22 +38,51 @@
         flex-direction: column;
         box-shadow: var(--std-shadow);
     }
-    /* Module Section Heading (Clean, light section divider) */
-    .module-section-title {
+    /* Module Accordion (Collapsible Modules, Default Module 1 Open) */
+    .module-accordion-item {
+        border: none;
+        border-bottom: 1px solid #f1f5f9;
+        margin-bottom: 6px;
+        background: transparent;
+    }
+    .module-accordion-item:last-child {
+        border-bottom: none;
+    }
+    .module-accordion-btn {
+        padding: 9px 10px;
+        background: #f8fafc;
+        border: 1px solid #eef2f6;
+        border-radius: 6px;
         font-size: 11px;
         font-weight: 700;
         text-transform: uppercase;
-        letter-spacing: 0.6px;
-        color: #64748b;
-        padding: 12px 6px 6px;
-        margin-top: 6px;
-        border-bottom: 1px solid #f1f5f9;
+        letter-spacing: 0.5px;
+        color: #475569;
         display: flex;
         align-items: center;
+        width: 100%;
+        text-align: left;
+        box-shadow: none !important;
+        transition: all 0.15s ease;
     }
-    .module-section-title:first-child {
-        margin-top: 0;
-        padding-top: 2px;
+    .module-accordion-btn:hover {
+        background: #f1f5f9;
+        color: #1e293b;
+    }
+    .module-accordion-btn:not(.collapsed) {
+        background: #f8fafc;
+        color: var(--std-primary);
+        border-color: #e2e8f0;
+    }
+    .module-accordion-btn::after {
+        width: 10px;
+        height: 10px;
+        background-size: 10px;
+        opacity: 0.5;
+        margin-left: 6px;
+    }
+    .module-accordion-body {
+        padding: 4px 0 4px 4px;
     }
 
     /* Chapter Accordion (Light, borderless, seamless) */
@@ -64,9 +93,9 @@
         margin-bottom: 2px;
     }
     .chapter-accordion-btn {
-        padding: 9px 8px;
+        padding: 8px 8px;
         background: transparent;
-        font-size: 12.5px;
+        font-size: 12px;
         font-weight: 600;
         color: #1e293b;
         border: none;
@@ -86,9 +115,9 @@
         color: var(--std-primary);
     }
     .chapter-accordion-btn::after {
-        width: 10px;
-        height: 10px;
-        background-size: 10px;
+        width: 9px;
+        height: 9px;
+        background-size: 9px;
         opacity: 0.45;
         margin-left: 6px;
     }
@@ -115,24 +144,25 @@
         border-radius: 6px;
         cursor: pointer;
         transition: all 0.12s ease;
-        font-size: 12.5px;
+        font-size: 12px;
         color: #334155;
-        border-left: 2.5px solid transparent;
-        margin-bottom: 2px;
         background: transparent;
-        border-top: none;
-        border-right: none;
-        border-bottom: none;
+        margin-bottom: 2px;
+        border: 1px solid transparent;
     }
     .topic-row:hover, .topic-study-item:hover {
         background: #f8fafc;
         color: #0f172a;
     }
     .topic-row.active, .topic-study-item.active {
-        background: rgba(92, 50, 255, 0.06);
-        color: var(--std-primary);
+        background: #f1f5f9;
+        border-color: #e2e8f0;
+        color: #0f172a;
         font-weight: 600;
-        border-left-color: var(--std-primary);
+    }
+    .topic-row.active .topic-title, .topic-study-item.active .topic-title {
+        color: #0f172a;
+        font-weight: 600;
     }
     .topic-row-start {
         display: flex;
