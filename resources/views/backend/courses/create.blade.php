@@ -529,6 +529,40 @@
         border-color: #e2e8f0;
         color: #64748b;
     }
+
+    /* Utility shims used by the studio markup (not in the global bundles) */
+    .studio-page .font-10 { font-size: 10px; }
+    .studio-page .font-11 { font-size: 11px; }
+    .studio-page .font-12 { font-size: 12px; }
+    .studio-page .font-13 { font-size: 13px; }
+    .studio-page .gap-2\.5 { gap: 8px; }
+    .studio-page .py-0\.5 { padding-top: 2px; padding-bottom: 2px; }
+    .studio-page .px-2\.5 { padding-left: 10px; padding-right: 10px; }
+    .studio-page .border-dashed { border-style: dashed !important; }
+
+    .builder-module-title-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-grow: 1;
+        min-width: 0;
+    }
+    .builder-module-icon {
+        width: 18px;
+        text-align: center;
+        font-size: 12px;
+        color: #5c32ff;
+    }
+    .builder-module-name {
+        font-size: 13px;
+        font-weight: 700;
+        color: #0f172a;
+    }
+    .builder-module-meta {
+        margin-top: 1px;
+        font-size: 10.5px;
+        color: #94a3b8;
+    }
 </style>
 @endsection
 
@@ -930,7 +964,7 @@
                 <div class="mb-3">
                     <label class="form-label">Module icon</label>
                     <select id="inputModuleIcon" class="form-select">
-                        <option value="fa-solid fa-dna">DNA &middot; Biology</option>
+                        <option value="fa-solid fa-microscope">Microscope &middot; Biology</option>
                         <option value="fa-solid fa-flask-vial">Flask &middot; Chemistry</option>
                         <option value="fa-solid fa-bolt">Bolt &middot; Physics</option>
                         <option value="fa-solid fa-brain">Brain &middot; Logic &amp; Reasoning</option>
@@ -1253,7 +1287,7 @@ const standardPmdcTemplate = [
     {
         id: "mod-bio",
         name: "Module 1: Biology",
-        icon: "fa-solid fa-dna",
+        icon: "fa-solid fa-microscope",
         description: "Core PMDC Biology syllabus: Cell Biology, Biological Molecules & Genetics.",
         chapters: [
             {
@@ -1555,7 +1589,7 @@ function renderBuilder() {
 
     courseModules.forEach((mod, modIdx) => {
         const modName = mod.name || `Module ${modIdx + 1}`;
-        const modIcon = mod.icon || 'fa-solid fa-dna';
+        const modIcon = mod.icon === 'fa-solid fa-dna' ? 'fa-solid fa-microscope' : (mod.icon || 'fa-solid fa-microscope');
         const chapters = Array.isArray(mod.chapters) ? mod.chapters : [];
 
         let totalModTopics = 0;
@@ -1570,11 +1604,11 @@ function renderBuilder() {
         html += `
             <div class="builder-module-card" data-module-idx="${modIdx}">
                 <div class="builder-module-header">
-                    <div class="d-flex align-items-center gap-2.5 flex-grow-1 text-truncate">
-                        <i class="${escapeHtml(modIcon)} text-primary font-13"></i>
+                    <div class="builder-module-title-row text-truncate">
+                        <i class="${escapeHtml(modIcon)} builder-module-icon"></i>
                         <div class="text-truncate">
-                            <div class="fw-bold text-dark font-13 text-truncate">${escapeHtml(modName)}</div>
-                            <div class="text-muted font-10">
+                            <div class="builder-module-name text-truncate">${escapeHtml(modName)}</div>
+                            <div class="builder-module-meta">
                                 ${chapters.length} Chapters &bull; ${totalModTopics} Lectures &bull; ${totalModQuizzes} Quizzes
                             </div>
                         </div>
@@ -1755,12 +1789,13 @@ function openModuleModal(idx = -1) {
     if (idx >= 0 && courseModules[idx]) {
         document.getElementById('modalModuleTitle').textContent = 'Edit Module / Subject';
         document.getElementById('inputModuleName').value = courseModules[idx].name || '';
-        document.getElementById('inputModuleIcon').value = courseModules[idx].icon || 'fa-solid fa-dna';
+        const savedIcon = courseModules[idx].icon === 'fa-solid fa-dna' ? 'fa-solid fa-microscope' : courseModules[idx].icon;
+        document.getElementById('inputModuleIcon').value = savedIcon || 'fa-solid fa-microscope';
         document.getElementById('inputModuleDesc').value = courseModules[idx].description || '';
     } else {
         document.getElementById('modalModuleTitle').textContent = 'Add New Module / Subject';
         document.getElementById('inputModuleName').value = `Module ${courseModules.length + 1}: Subject Name`;
-        document.getElementById('inputModuleIcon').value = 'fa-solid fa-dna';
+        document.getElementById('inputModuleIcon').value = 'fa-solid fa-microscope';
         document.getElementById('inputModuleDesc').value = '';
     }
     if (bsModalModule) bsModalModule.show();
