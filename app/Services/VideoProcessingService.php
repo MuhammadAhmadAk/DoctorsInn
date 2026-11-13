@@ -248,6 +248,7 @@ class VideoProcessingService
             '-b:a', (string) $rendition['audio_bitrate'],
             '-ac', '2',
             '-ar', '48000',
+            '-af', 'loudnorm=I=-16:TP=-1.5:LRA=11',
             '-hls_time', (string) $segmentSeconds,
             '-hls_playlist_type', 'vod',
             '-hls_flags', 'independent_segments',
