@@ -37,6 +37,9 @@ class ProcessLectureVideoJob implements ShouldQueue, ShouldBeUnique
 
     public function handle(VideoProcessingService $processor): void
     {
+        @set_time_limit(0);
+        @ignore_user_abort(true);
+
         $video = $this->video->fresh();
         if (! $video) {
             return;
