@@ -542,7 +542,7 @@
         <div class="modal-content border-0 shadow" style="border-radius: 10px;">
             <div class="modal-header py-2.5 px-3 border-bottom bg-light">
                 <h5 class="modal-title font-13 fw-bold text-dark" id="modalTopicTitle">Configure Topic</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="font-size: 10px;"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="font-size: 10px;" onclick="cancelVideoUpload(); cancelHandoutUpload();"></button>
             </div>
             <div class="modal-body p-3">
                 <input type="hidden" id="inputTopicModuleIdx" value="-1">
@@ -589,13 +589,21 @@
                             <input type="file" id="videoFileInput" accept="video/mp4,video/webm,video/quicktime,video/x-matroska,video/*" class="d-none">
                         </div>
 
-                        <!-- Upload Progress Bar -->
-                        <div id="videoUploadProgressWrapper" class="d-none mt-2">
-                            <div class="d-flex justify-content-between font-11 mb-1">
-                                <span class="text-dark fw-semibold" id="videoUploadProgressText">Uploading video to server...</span>
-                                <span class="text-primary fw-bold" id="videoUploadPercent">0%</span>
+                        <!-- Upload Progress Bar with Cancel Button -->
+                        <div id="videoUploadProgressWrapper" class="d-none mt-2 p-2.5 rounded-2 border bg-white shadow-sm">
+                            <div class="d-flex align-items-center justify-content-between font-11 mb-1.5">
+                                <div class="d-flex align-items-center gap-2 text-truncate me-2">
+                                    <span class="spinner-border spinner-border-sm text-primary flex-shrink-0" style="width: 13px; height: 13px;" role="status"></span>
+                                    <span class="text-dark fw-semibold text-truncate" id="videoUploadProgressText">Uploading video to server...</span>
+                                </div>
+                                <div class="d-flex align-items-center gap-2 flex-shrink-0">
+                                    <span class="text-primary fw-bold font-12" id="videoUploadPercent">0%</span>
+                                    <button type="button" class="btn btn-sm btn-outline-danger py-0.5 px-2 font-11 rounded" id="btnCancelVideoUpload" onclick="cancelVideoUpload()" title="Abort this video upload immediately">
+                                        <i class="fa-solid fa-xmark me-1"></i> Cancel Upload
+                                    </button>
+                                </div>
                             </div>
-                            <div class="progress" style="height: 6px;">
+                            <div class="progress" style="height: 7px; border-radius: 4px;">
                                 <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" id="videoProgressBar" role="progressbar" style="width: 0%;"></div>
                             </div>
                         </div>
@@ -652,7 +660,7 @@
                 </div>
             </div>
             <div class="modal-footer py-2 px-3 bg-light border-top">
-                <button type="button" class="btn-adm btn-adm-outline py-1 px-3 font-11" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn-adm btn-adm-outline py-1 px-3 font-11" data-bs-dismiss="modal" onclick="cancelVideoUpload(); cancelHandoutUpload();">Cancel</button>
                 <button type="button" class="btn-adm btn-adm-primary py-1 px-3 font-11" id="btnSaveTopic">Save Topic</button>
             </div>
         </div>
@@ -997,6 +1005,15 @@ document.addEventListener('DOMContentLoaded', function () {
     if (handoutInput) {
         handoutInput.addEventListener('change', function () {
             if (this.files && this.files[0]) uploadHandoutPdf(this.files[0]);
+        });
+    }
+
+    // Modal Close Cleanup: abort upload if modal is closed via Backdrop or Escape key
+    const modalTopicEl = document.getElementById('modalTopic');
+    if (modalTopicEl) {
+        modalTopicEl.addEventListener('hidden.bs.modal', function () {
+            cancelVideoUpload();
+            cancelHandoutUpload();
         });
     }
 
@@ -1382,7 +1399,51 @@ function switchVideoMode(mode) {
     }
 }
 
+// Active XHR Upload Trackers
+let currentVideoXhr = null;
+let currentHandoutXhr = null;
+
+function cancelVideoUpload() {
+    if (currentVideoXhr) {
+        try {
+            currentVideoXhr.abort();
+        } catch (e) {}
+        currentVideoXhr = null;
+    }
+    resetVideoUploadUi();
+}
+
+function cancelHandoutUpload() {
+    if (currentHandoutXhr) {
+        try {
+            currentHandoutXhr.abort();
+        } catch (e) {}
+        currentHandoutXhr = null;
+    }
+    const indicator = document.getElementById('handoutUploadIndicator');
+    const handoutInput = document.getElementById('handoutFileInput');
+    if (indicator) indicator.innerHTML = '';
+    if (handoutInput) handoutInput.value = '';
+}
+
+function resetVideoUploadUi() {
+    const progressWrap = document.getElementById('videoUploadProgressWrapper');
+    const progressBar = document.getElementById('videoProgressBar');
+    const progressPercent = document.getElementById('videoUploadPercent');
+    const progressText = document.getElementById('videoUploadProgressText');
+    const fileInput = document.getElementById('videoFileInput');
+    const saveBtn = document.getElementById('btnSaveTopic');
+
+    if (progressWrap) progressWrap.classList.add('d-none');
+    if (progressBar) progressBar.style.width = '0%';
+    if (progressPercent) progressPercent.textContent = '0%';
+    if (progressText) progressText.textContent = 'Uploading video to server...';
+    if (fileInput) fileInput.value = '';
+    if (saveBtn) saveBtn.disabled = false;
+}
+
 function clearUploadedVideo() {
+    cancelVideoUpload();
     const urlInput = document.getElementById('inputTopicVideoUrl');
     const player = document.getElementById('videoModalPlayer');
     const previewWrap = document.getElementById('videoPreviewWrapper');
@@ -1415,10 +1476,14 @@ function onVideoUrlManualInput(val) {
 function uploadVideoFile(file) {
     if (!file) return;
 
-    // Validate size (up to 1.5GB)
+    // 1. Immediately abort any prior or lingering upload so there is ZERO overlap!
+    cancelVideoUpload();
+
+    // 2. Validate size (up to 1.5GB)
     const maxBytes = 1536 * 1024 * 1024;
     if (file.size > maxBytes) {
         alert('File size exceeds the 1.5 GB limit.');
+        resetVideoUploadUi();
         return;
     }
 
@@ -1431,6 +1496,9 @@ function uploadVideoFile(file) {
 
     if (progressWrap) progressWrap.classList.remove('d-none');
     if (previewWrap) previewWrap.classList.add('d-none');
+    if (progressBar) progressBar.style.width = '0%';
+    if (progressPercent) progressPercent.textContent = '0%';
+    if (progressText) progressText.textContent = `Preparing: ${file.name}...`;
     if (saveBtn) saveBtn.disabled = true;
 
     const formData = new FormData();
@@ -1438,10 +1506,14 @@ function uploadVideoFile(file) {
     formData.append('_token', '{{ csrf_token() }}');
 
     const xhr = new XMLHttpRequest();
+    currentVideoXhr = xhr;
+
     xhr.open('POST', '{{ route("admin.courses.uploadVideo") }}', true);
     xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 
     xhr.upload.onprogress = function (e) {
+        if (currentVideoXhr !== xhr) return;
+
         if (e.lengthComputable) {
             const pct = Math.round((e.loaded / e.total) * 100);
             const loadedMb = (e.loaded / (1024 * 1024)).toFixed(1);
@@ -1453,6 +1525,9 @@ function uploadVideoFile(file) {
     };
 
     xhr.onload = function () {
+        if (currentVideoXhr !== xhr) return;
+        currentVideoXhr = null;
+
         if (saveBtn) saveBtn.disabled = false;
         if (progressWrap) progressWrap.classList.add('d-none');
 
@@ -1473,21 +1548,33 @@ function uploadVideoFile(file) {
                         player.load();
                     }
                     if (previewWrap) previewWrap.classList.remove('d-none');
+                    const fileInput = document.getElementById('videoFileInput');
+                    if (fileInput) fileInput.value = '';
                 } else {
                     alert('Upload failed: ' + (res.message || 'Unknown error'));
+                    resetVideoUploadUi();
                 }
             } catch (err) {
                 alert('Server returned invalid response.');
+                resetVideoUploadUi();
             }
         } else {
-            alert('Upload failed with status code ' + xhr.status);
+            alert('Upload error from server (Status ' + xhr.status + ').');
+            resetVideoUploadUi();
         }
     };
 
+    xhr.onabort = function () {
+        resetVideoUploadUi();
+    };
+
     xhr.onerror = function () {
+        if (currentVideoXhr !== xhr) return;
+        currentVideoXhr = null;
         if (saveBtn) saveBtn.disabled = false;
         if (progressWrap) progressWrap.classList.add('d-none');
         alert('Network error occurred during video upload.');
+        resetVideoUploadUi();
     };
 
     xhr.send(formData);
@@ -1495,6 +1582,8 @@ function uploadVideoFile(file) {
 
 function uploadHandoutPdf(file) {
     if (!file) return;
+
+    cancelHandoutUpload();
 
     const indicator = document.getElementById('handoutUploadIndicator');
     if (indicator) {
@@ -1506,10 +1595,15 @@ function uploadHandoutPdf(file) {
     formData.append('_token', '{{ csrf_token() }}');
 
     const xhr = new XMLHttpRequest();
+    currentHandoutXhr = xhr;
+
     xhr.open('POST', '{{ route("admin.courses.uploadResource") }}', true);
     xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 
     xhr.onload = function () {
+        if (currentHandoutXhr !== xhr) return;
+        currentHandoutXhr = null;
+
         if (xhr.status >= 200 && xhr.status < 300) {
             try {
                 const res = JSON.parse(xhr.responseText);
@@ -1525,6 +1619,8 @@ function uploadHandoutPdf(file) {
                     if (indicator) {
                         indicator.innerHTML = `<span class="text-success"><i class="fa-solid fa-circle-check me-1"></i> Uploaded: ${res.filename} (${res.size})</span>`;
                     }
+                    const hFileInput = document.getElementById('handoutFileInput');
+                    if (hFileInput) hFileInput.value = '';
                 } else {
                     if (indicator) indicator.innerHTML = `<span class="text-danger">Upload failed: ${res.message || 'Error'}</span>`;
                 }
@@ -1536,7 +1632,13 @@ function uploadHandoutPdf(file) {
         }
     };
 
+    xhr.onabort = function () {
+        if (indicator) indicator.innerHTML = '';
+    };
+
     xhr.onerror = function () {
+        if (currentHandoutXhr !== xhr) return;
+        currentHandoutXhr = null;
         if (indicator) indicator.innerHTML = `<span class="text-danger">Network error</span>`;
     };
 
@@ -1544,6 +1646,10 @@ function uploadHandoutPdf(file) {
 }
 
 function openTopicModal(modIdx, chIdx, topIdx = -1, defaultType = 'video') {
+    // Abort and reset any lingering uploads before opening any topic
+    cancelVideoUpload();
+    cancelHandoutUpload();
+
     document.getElementById('inputTopicModuleIdx').value = modIdx;
     document.getElementById('inputTopicChapterIdx').value = chIdx;
     document.getElementById('inputTopicIdx').value = topIdx;
@@ -1607,6 +1713,11 @@ function openTopicModal(modIdx, chIdx, topIdx = -1, defaultType = 'video') {
 }
 
 function saveTopic() {
+    if (currentVideoXhr) {
+        alert('A video lecture is currently uploading. Please wait for it to finish or click "Cancel Upload" before saving.');
+        return;
+    }
+
     const modIdx = parseInt(document.getElementById('inputTopicModuleIdx').value, 10);
     const chIdx = parseInt(document.getElementById('inputTopicChapterIdx').value, 10);
     const topIdx = parseInt(document.getElementById('inputTopicIdx').value, 10);

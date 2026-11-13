@@ -508,7 +508,7 @@
                      1. VIDEO PLAYER CONTAINER (Visible when Topic Type == video)
                      ========================================================= --}}
                 <div id="video-player-container" class="classroom-video-box mb-4">
-                    <video id="main-video-player" controls controlslist="nodownload" playsinline>
+                    <video id="main-video-player" controls controlslist="nodownload" playsinline preload="metadata">
                         <source src="" type="video/mp4">
                         Your browser does not support the video tag.
                     </video>

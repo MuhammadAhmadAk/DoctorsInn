@@ -733,6 +733,7 @@ function selectActiveTopic(topicId) {
             if (vUrl && !vUrl.startsWith('http') && !vUrl.startsWith('/')) {
                 vUrl = '/' + vUrl;
             }
+            videoPlayer.preload = "metadata";
             videoPlayer.src = vUrl;
             videoPlayer.load();
         }
