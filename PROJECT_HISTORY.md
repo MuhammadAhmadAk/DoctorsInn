@@ -59,3 +59,4 @@
 - `5394708` :: "2026-11-13 | 03:41 PM" - "fix: eliminate automatic course sync and config fallback, enable full manual admin CRUD with instant cache flushing"
 - `7e018e5` :: "2026-11-13 | 04:41 PM" - "cleanup: remove useless static JS and setup files, decouple frontend from hardcoded course scripts"
 - `bb697ce` :: "2026-11-13 | 05:25 PM" - "feat: add admin staff access management module and update sidebar labels"
+- `d5c7cae` :: "2026-11-13 | 06:12 PM" - "style: refine staff permissions table UI"
