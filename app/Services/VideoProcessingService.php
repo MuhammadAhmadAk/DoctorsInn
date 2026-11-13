@@ -234,6 +234,7 @@ class VideoProcessingService
             '-vf', 'scale=-2:' . $rendition['height'] . ':flags=lanczos,setsar=1,format=yuv420p',
             '-c:v', 'libx264',
             '-preset', 'veryfast',
+            '-threads', (string) max(1, (int) config('video.ffmpeg_threads', 4)),
             '-profile:v', 'main',
             '-level', (string) $rendition['level'],
             '-b:v', (string) $rendition['video_bitrate'],

@@ -32,6 +32,16 @@ return [
 
     'hls_segment_seconds' => (int) env('HLS_SEGMENT_SECONDS', 6),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Encoder Threads
+    |--------------------------------------------------------------------------
+    | Shared hosts often limit per-process threads; x264 auto-detecting every
+    | CPU core fails to initialise the encoder alongside the audio stream.
+    */
+
+    'ffmpeg_threads' => (int) env('FFMPEG_THREADS', 4),
+
     'completion_threshold' => (int) env('LECTURE_COMPLETION_THRESHOLD', 90),
 
     'playback_url_ttl_minutes' => (int) env('LECTURE_PLAYBACK_TTL_MINUTES', 180),
