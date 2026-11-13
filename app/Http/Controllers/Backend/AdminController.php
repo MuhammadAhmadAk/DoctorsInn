@@ -287,29 +287,25 @@ class AdminController extends Controller
 
         $file->move($targetDir, $filename);
 
-        $fullPath = $targetDir . '/' . $filename;
-
-        // ── MP4 Fast Start Optimization ──────────────────────────────────────
-        // Moves the moov atom (metadata) to the front of the file so browsers
-        // can begin streaming/playing before the entire file is downloaded.
-        // Pure PHP implementation — no ffmpeg required.
-        $optimized = false;
-        $optimizeReason = 'skipped';
-        try {
-            $optimizer = new Mp4FastStartService();
-            $result = $optimizer->optimize($fullPath);
-            $optimized = $result['optimized'];
-            $optimizeReason = $result['reason'];
-        } catch (\Throwable $e) {
-            // Non-fatal: video still works, just not fast-start optimized
-            $optimizeReason = 'error: ' . $e->getMessage();
-        }
-        // ─────────────────────────────────────────────────────────────────────
-
+        $fullPath    = $targetDir . '/' . $filename;
         $relativeUrl = 'uploads/courses/videos/' . $filename;
-        $fullUrl = asset($relativeUrl);
+        $fullUrl     = asset($relativeUrl);
         $fileSizeBytes = file_exists($fullPath) ? filesize($fullPath) : 0;
         $formattedSize = round($fileSizeBytes / (1024 * 1024), 2) . ' MB';
+
+        // ── Background: MP4 Fast Start Optimization ───────────────────────────
+        // Run after response is sent — does NOT block upload speed.
+        // Uses register_shutdown_function so it fires after HTTP response flush.
+        $optimizer  = new Mp4FastStartService();
+        $pathToOpt  = $fullPath; // capture for closure
+        register_shutdown_function(function () use ($optimizer, $pathToOpt) {
+            try {
+                $optimizer->optimize($pathToOpt);
+            } catch (\Throwable $e) {
+                // Silently ignore — video works fine without fast-start
+            }
+        });
+        // ─────────────────────────────────────────────────────────────────────
 
         return response()->json([
             'success'      => true,
@@ -318,7 +314,6 @@ class AdminController extends Controller
             'filename'     => $file->getClientOriginalName(),
             'size'         => $formattedSize,
             'mime'         => $file->getClientMimeType() ?: 'video/mp4',
-            'optimized'    => $optimized,
         ]);
     }
 
