@@ -30,7 +30,7 @@ return [
     |--------------------------------------------------------------------------
     */
 
-    'hls_segment_seconds' => (int) env('HLS_SEGMENT_SECONDS', 3),
+    'hls_segment_seconds' => (int) env('HLS_SEGMENT_SECONDS', 6),
 
     /*
     |--------------------------------------------------------------------------
@@ -53,43 +53,55 @@ return [
     | Adaptive Renditions
     |--------------------------------------------------------------------------
     | Only renditions whose height is <= the source height are generated,
-    | so low resolution uploads are never upscaled.
+    | so low resolution uploads are never upscaled. Bitrates stay modest on
+    | purpose: segments are delivered through PHP on shared hosting, so a
+    | student needs real headroom below the nominal stream bitrate to keep
+    | playing without stalling.
     */
 
     'renditions' => [
         [
+            'height' => 240,
+            'video_bitrate' => 220000,
+            'maxrate' => 260000,
+            'bufsize' => 520000,
+            'audio_bitrate' => 64000,
+            'level' => '3.0',
+            'codecs' => 'avc1.4d401e,mp4a.40.2',
+        ],
+        [
             'height' => 360,
-            'video_bitrate' => 800000,
-            'maxrate' => 900000,
-            'bufsize' => 1800000,
+            'video_bitrate' => 400000,
+            'maxrate' => 460000,
+            'bufsize' => 920000,
             'audio_bitrate' => 96000,
             'level' => '3.0',
             'codecs' => 'avc1.4d401e,mp4a.40.2',
         ],
         [
             'height' => 480,
-            'video_bitrate' => 1200000,
-            'maxrate' => 1350000,
-            'bufsize' => 2700000,
-            'audio_bitrate' => 128000,
+            'video_bitrate' => 750000,
+            'maxrate' => 840000,
+            'bufsize' => 1680000,
+            'audio_bitrate' => 96000,
             'level' => '3.1',
             'codecs' => 'avc1.4d401f,mp4a.40.2',
         ],
         [
             'height' => 720,
-            'video_bitrate' => 2500000,
-            'maxrate' => 2800000,
-            'bufsize' => 5600000,
+            'video_bitrate' => 1500000,
+            'maxrate' => 1680000,
+            'bufsize' => 3360000,
             'audio_bitrate' => 128000,
             'level' => '3.1',
             'codecs' => 'avc1.4d401f,mp4a.40.2',
         ],
         [
             'height' => 1080,
-            'video_bitrate' => 5000000,
-            'maxrate' => 5600000,
-            'bufsize' => 11200000,
-            'audio_bitrate' => 192000,
+            'video_bitrate' => 3000000,
+            'maxrate' => 3360000,
+            'bufsize' => 6720000,
+            'audio_bitrate' => 128000,
             'level' => '4.0',
             'codecs' => 'avc1.4d4028,mp4a.40.2',
         ],

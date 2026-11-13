@@ -9,6 +9,7 @@ use App\Services\LectureStreamService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class LectureStreamController extends Controller
 {
@@ -60,7 +61,7 @@ class LectureStreamController extends Controller
         return response()->file($path, [
             'Content-Type' => $mime,
             'Content-Disposition' => 'inline',
-            'Cache-Control' => 'private, max-age=3600',
+            'Cache-Control' => 'private, max-age=3600, immutable',
             'X-Content-Type-Options' => 'nosniff',
             'Accept-Ranges' => 'bytes',
         ]);
@@ -200,12 +201,32 @@ class LectureStreamController extends Controller
 
     protected function authorizeView(Request $request, LectureVideo $video): void
     {
-        $isAdmin = $request->session()->has('admin_user');
+        if ($request->session()->has('admin_user')) {
+            return;
+        }
+
         $user = Auth::user();
         $sessionStudent = session('user');
         $userId = $user?->id ?: (is_array($sessionStudent) ? ($sessionStudent['id'] ?? null) : null);
 
-        if (! $this->streams->canView($video, $isAdmin, (bool) ($user || $sessionStudent), $userId)) {
+        if (! $user && ! $sessionStudent) {
+            abort(403, 'You are not allowed to watch this lecture.');
+        }
+
+        if (! $userId) {
+            $allowed = $this->streams->canView($video, false, true, null);
+        } else {
+            // HLS players request dozens of segments per lecture; cache the
+            // access decision so each segment does not repeat the user/enrollment
+            // lookups on top of an already costly PHP bootstrap.
+            $allowed = Cache::remember(
+                'lecture-access:' . (int) $userId . ':' . ($video->course_id ?? 0),
+                now()->addMinutes(5),
+                fn () => $this->streams->canView($video, false, true, (int) $userId)
+            );
+        }
+
+        if (! $allowed) {
             abort(403, 'You are not allowed to watch this lecture.');
         }
     }
