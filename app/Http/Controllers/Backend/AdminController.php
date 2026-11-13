@@ -274,38 +274,24 @@ class AdminController extends Controller
             return response()->json(['success' => false, 'message' => 'Invalid or missing video file.'], 400);
         }
 
-        $file = $request->file('video');
+        $file      = $request->file('video');
         $targetDir = public_path('uploads/courses/videos');
         if (!is_dir($targetDir)) {
             mkdir($targetDir, 0755, true);
         }
 
         $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-        $safeBase = Str::slug($originalName) ?: 'lecture-video';
-        $ext = strtolower($file->getClientOriginalExtension() ?: 'mp4');
-        $filename = $safeBase . '-' . time() . '-' . Str::random(6) . '.' . $ext;
+        $safeBase     = Str::slug($originalName) ?: 'lecture-video';
+        $ext          = strtolower($file->getClientOriginalExtension() ?: 'mp4');
+        $filename     = $safeBase . '-' . time() . '-' . Str::random(6) . '.' . $ext;
 
         $file->move($targetDir, $filename);
 
-        $fullPath    = $targetDir . '/' . $filename;
-        $relativeUrl = 'uploads/courses/videos/' . $filename;
-        $fullUrl     = asset($relativeUrl);
+        $fullPath      = $targetDir . '/' . $filename;
+        $relativeUrl   = 'uploads/courses/videos/' . $filename;
+        $fullUrl       = asset($relativeUrl);
         $fileSizeBytes = file_exists($fullPath) ? filesize($fullPath) : 0;
         $formattedSize = round($fileSizeBytes / (1024 * 1024), 2) . ' MB';
-
-        // ── Background: MP4 Fast Start Optimization ───────────────────────────
-        // Run after response is sent — does NOT block upload speed.
-        // Uses register_shutdown_function so it fires after HTTP response flush.
-        $optimizer  = new Mp4FastStartService();
-        $pathToOpt  = $fullPath; // capture for closure
-        register_shutdown_function(function () use ($optimizer, $pathToOpt) {
-            try {
-                $optimizer->optimize($pathToOpt);
-            } catch (\Throwable $e) {
-                // Silently ignore — video works fine without fast-start
-            }
-        });
-        // ─────────────────────────────────────────────────────────────────────
 
         return response()->json([
             'success'      => true,
