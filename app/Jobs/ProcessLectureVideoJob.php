@@ -20,7 +20,7 @@ class ProcessLectureVideoJob implements ShouldQueue, ShouldBeUnique
 
     public int $tries = 2;
 
-    public int $timeout = 3600;
+    public int $timeout = 21600;
 
     public int $backoff = 60;
 

@@ -46,7 +46,7 @@ return [
 
     'playback_url_ttl_minutes' => (int) env('LECTURE_PLAYBACK_TTL_MINUTES', 180),
 
-    'process_timeout_seconds' => (int) env('LECTURE_PROCESS_TIMEOUT', 3600),
+    'process_timeout_seconds' => (int) env('LECTURE_PROCESS_TIMEOUT', 14400),
 
     /*
     |--------------------------------------------------------------------------
