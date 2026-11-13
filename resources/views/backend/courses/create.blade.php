@@ -9,7 +9,7 @@
     .builder-module-card {
         background: #ffffff;
         border: 1px solid #eaedf3;
-        border-radius: 12px;
+        border-radius: 8px;
         margin-bottom: 12px;
         transition: border-color 0.15s ease;
     }
@@ -30,7 +30,7 @@
     .builder-chapter-card {
         background: #ffffff;
         border: 1px solid #eef1f6;
-        border-radius: 10px;
+        border-radius: 8px;
         margin-bottom: 8px;
         overflow: hidden;
     }
@@ -46,7 +46,7 @@
         text-align: center;
         background: #fafbff;
         border: 1.5px dashed #e2e8f0;
-        border-radius: 12px;
+        border-radius: 8px;
     }
     .studio-empty-icon {
         display: inline-flex;
@@ -55,7 +55,7 @@
         width: 40px;
         height: 40px;
         margin-bottom: 8px;
-        border-radius: 12px;
+        border-radius: 8px;
         background: #f1f5f9;
         color: #94a3b8;
         font-size: 15px;
@@ -112,7 +112,7 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        border-radius: 6px;
+        border-radius: 8px;
         font-size: 11px;
         color: #94a3b8;
         background: transparent;
@@ -132,7 +132,7 @@
         align-items: center;
         margin-left: 5px;
         padding: 1px 6px;
-        border-radius: 99px;
+        border-radius: 8px;
         background: #f1edff;
         color: #5c32ff;
         font-size: 9.5px;
@@ -145,7 +145,7 @@
         align-items: center;
         gap: 4px;
         padding: 2px 8px;
-        border-radius: 99px;
+        border-radius: 8px;
         font-size: 10px;
         font-weight: 600;
         white-space: nowrap;
@@ -181,7 +181,7 @@
         margin-bottom: 14px;
         background: #ffffff;
         border: 1px solid #eaeef4;
-        border-radius: 14px;
+        border-radius: 8px;
     }
     .studio-head-main {
         display: flex;
@@ -192,7 +192,7 @@
     .studio-head-icon {
         width: 46px;
         height: 46px;
-        border-radius: 13px;
+        border-radius: 8px;
         background: #f1edff;
         color: #5c32ff;
         display: inline-flex;
@@ -240,7 +240,7 @@
     .studio-head-actions .btn-adm {
         padding: 8px 14px;
         font-size: 12.5px;
-        border-radius: 9px;
+        border-radius: 8px;
     }
 
     /* ── Curriculum stats strip ─────────────────────────────────────── */
@@ -259,7 +259,7 @@
     /* Lighten the standard admin cards inside the studio */
     .studio-page .adm-card {
         border-color: #eaedf3;
-        border-radius: 14px;
+        border-radius: 8px;
         box-shadow: none;
     }
     .studio-page .adm-card-header {
@@ -282,13 +282,13 @@
         padding: 14px;
         background: #fafbfd;
         border: 1px solid #eef1f6;
-        border-radius: 10px;
+        border-radius: 8px;
     }
     .studio-thumb {
         padding: 6px;
         background: #f8fafc;
         border: 1px solid #eef1f6;
-        border-radius: 10px;
+        border-radius: 8px;
     }
     .studio-page .form-label {
         margin-bottom: 5px;
@@ -306,11 +306,18 @@
         border-color: #5c32ff;
         box-shadow: 0 0 0 3px rgba(92, 50, 255, 0.1);
     }
+    .studio-page .btn,
+    .studio-page .btn-adm,
+    .studio-page .form-control,
+    .studio-page .form-select,
+    .studio-page .input-group-text {
+        border-radius: 8px !important;
+    }
 
     /* ── Topic / chapter / quiz modals ──────────────────────────────── */
     .studio-modal .modal-content {
         border: 0;
-        border-radius: 16px;
+        border-radius: 8px;
         box-shadow: 0 24px 64px rgba(15, 23, 42, 0.18);
         overflow: hidden;
     }
@@ -349,7 +356,7 @@
     .studio-modal .modal-footer .btn-adm {
         padding: 8px 18px;
         font-size: 12.5px;
-        border-radius: 9px;
+        border-radius: 8px;
     }
     .studio-modal .form-label {
         margin-bottom: 5px;
@@ -398,7 +405,7 @@
         gap: 2px;
         padding: 3px;
         background: #f1f5f9;
-        border-radius: 9px;
+        border-radius: 8px;
     }
     .studio-seg {
         display: inline-flex;
@@ -406,7 +413,7 @@
         gap: 6px;
         padding: 5px 12px;
         border: 0;
-        border-radius: 7px;
+        border-radius: 8px;
         background: transparent;
         font-size: 12px;
         font-weight: 600;
@@ -429,7 +436,7 @@
         text-align: center;
         background: #fafbff;
         border: 1.5px dashed #cbd5e1;
-        border-radius: 12px;
+        border-radius: 8px;
         cursor: pointer;
         transition: border-color 0.15s ease, background-color 0.15s ease;
     }
@@ -445,7 +452,7 @@
         width: 40px;
         height: 40px;
         margin-bottom: 8px;
-        border-radius: 12px;
+        border-radius: 8px;
         background: #f1edff;
         color: #5c32ff;
         font-size: 16px;
@@ -466,19 +473,19 @@
         padding: 12px 14px;
         background: #f8fafc;
         border: 1px solid #eef1f6;
-        border-radius: 10px;
+        border-radius: 8px;
     }
     .studio-panel .progress {
         height: 6px;
-        border-radius: 99px;
+        border-radius: 8px;
         background: #e2e8f0;
     }
     .studio-panel .progress-bar {
-        border-radius: 99px;
+        border-radius: 8px;
         font-size: 0;
     }
     .studio-panel .btn-sm {
-        border-radius: 7px;
+        border-radius: 8px;
         font-weight: 600;
     }
 

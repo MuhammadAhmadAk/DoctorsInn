@@ -464,54 +464,59 @@
        ========================================================================= */
     .lecture-player-shell {
         overflow: hidden;
-        border-radius: 14px;
-        background: #0b1020;
-        border: 1px solid rgba(148, 163, 184, .18);
-        box-shadow: 0 18px 40px -22px rgba(2, 6, 23, .65);
+        border-radius: 8px;
+        background: #ffffff;
+        border: 1px solid #e6eaf2;
     }
     .lecture-player-header {
         display: flex;
-        align-items: flex-start;
+        align-items: center;
         justify-content: space-between;
         gap: 14px;
-        padding: 14px 16px;
-        background: linear-gradient(135deg, #111a33 0%, #0b1020 100%);
-        border-bottom: 1px solid rgba(148, 163, 184, .14);
+        padding: 12px 14px;
+        background: #ffffff;
+        border-bottom: 1px solid #eef1f6;
+    }
+    .lecture-player-heading {
+        min-width: 0;
     }
     .lecture-player-title {
-        margin: 6px 0 2px;
-        color: #f8fafc;
-        font-size: 16px;
+        margin: 5px 0 1px;
+        color: #0f172a;
+        font-size: 15px;
         font-weight: 700;
         line-height: 1.35;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
     .lecture-player-subtitle {
-        color: #93a4c3;
-        font-size: 11.5px;
+        color: #94a3b8;
+        font-size: 11px;
     }
     .lecture-secure-pill {
         display: inline-flex;
         align-items: center;
-        gap: 5px;
-        padding: 3px 8px;
-        border-radius: 999px;
-        background: rgba(16, 185, 129, .12);
-        border: 1px solid rgba(16, 185, 129, .28);
-        color: #6ee7b7;
+        gap: 4px;
+        padding: 2px 7px;
+        border-radius: 8px;
+        background: #ecfdf5;
+        border: 1px solid #d1fae5;
+        color: #047857;
         font-size: 9.5px;
         font-weight: 700;
-        letter-spacing: .04em;
+        letter-spacing: .05em;
         text-transform: uppercase;
     }
     .lecture-secure-pill.is-processing {
-        background: rgba(99, 102, 241, .14);
-        border-color: rgba(99, 102, 241, .32);
-        color: #c7d2fe;
+        background: #eef2ff;
+        border-color: #e0e7ff;
+        color: #4f46e5;
     }
     .lecture-player-tools {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 6px;
         flex-wrap: wrap;
         justify-content: flex-end;
     }
@@ -519,42 +524,52 @@
         display: flex;
         align-items: center;
         gap: 5px;
-        color: #93a4c3;
-        font-size: 10px;
-        font-weight: 600;
+        color: #94a3b8;
+        font-size: 9.5px;
+        font-weight: 700;
         text-transform: uppercase;
-        letter-spacing: .04em;
+        letter-spacing: .05em;
     }
     .lecture-tool select {
-        height: 27px;
-        padding: 2px 22px 2px 8px;
-        border: 1px solid rgba(148, 163, 184, .28);
-        border-radius: 6px;
-        background: #17203b;
-        color: #e2e8f0;
-        font-size: 10.5px;
+        height: 30px;
+        padding: 2px 24px 2px 9px;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        background: #f8fafc;
+        color: #334155;
+        font-size: 11px;
         font-weight: 600;
         cursor: pointer;
+    }
+    .lecture-tool select:focus {
+        outline: none;
+        border-color: #5c32ff;
+        box-shadow: 0 0 0 3px rgba(92, 50, 255, .1);
     }
     .lecture-nav-btns {
         display: flex;
         gap: 4px;
     }
     .lecture-nav-btns button {
-        width: 28px;
-        height: 27px;
+        width: 30px;
+        height: 30px;
         display: inline-grid;
         place-items: center;
-        border: 1px solid rgba(148, 163, 184, .28);
-        border-radius: 6px;
-        background: #17203b;
-        color: #cbd5e1;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        background: #f8fafc;
+        color: #64748b;
         font-size: 10px;
         transition: all .15s ease;
     }
     .lecture-nav-btns button:hover {
-        border-color: rgba(129, 140, 248, .6);
-        color: #e0e7ff;
+        border-color: #cbd5e1;
+        background: #f1f5f9;
+        color: #0f172a;
+    }
+    .lecture-nav-btns button:disabled {
+        opacity: .45;
+        cursor: not-allowed;
     }
     .lecture-player-stage {
         position: relative;
@@ -565,26 +580,30 @@
         background: #000;
     }
     .lecture-player-stage .video-js .vjs-control-bar {
-        background: linear-gradient(0deg, rgba(2, 6, 23, .92), rgba(2, 6, 23, .45));
-        height: 42px;
+        background: linear-gradient(0deg, rgba(2, 6, 23, .9), rgba(2, 6, 23, .35));
+        height: 40px;
     }
     .lecture-player-stage .video-js .vjs-play-progress,
     .lecture-player-stage .video-js .vjs-volume-level {
-        background: #6366f1;
+        background: #5c32ff;
     }
     .lecture-player-stage .video-js .vjs-slider {
-        background-color: rgba(148, 163, 184, .25);
+        background-color: rgba(148, 163, 184, .3);
     }
     .lecture-player-stage .video-js .vjs-big-play-button {
-        border-color: rgba(255, 255, 255, .85);
-        background: rgba(15, 23, 42, .55);
-        border-radius: 999px;
-        width: 62px;
-        height: 62px;
-        line-height: 60px;
-        margin-left: -31px;
-        margin-top: -31px;
-        backdrop-filter: blur(4px);
+        width: 56px;
+        height: 56px;
+        line-height: 54px;
+        margin-left: -28px;
+        margin-top: -28px;
+        border: 0;
+        border-radius: 50%;
+        background: rgba(92, 50, 255, .92);
+        box-shadow: 0 10px 24px -8px rgba(2, 6, 23, .6);
+    }
+    .lecture-player-stage .video-js:hover .vjs-big-play-button,
+    .lecture-player-stage .video-js:focus .vjs-big-play-button {
+        background: #5c32ff;
     }
     .lecture-overlay {
         position: absolute;
@@ -627,7 +646,7 @@
         width: 220px;
         height: 6px;
         overflow: hidden;
-        border-radius: 999px;
+        border-radius: 8px;
         background: rgba(148, 163, 184, .2);
     }
     .lecture-processing-track span {
@@ -646,10 +665,10 @@
         justify-content: space-between;
         gap: 10px;
         flex-wrap: wrap;
-        padding: 9px 14px;
-        background: #0e1629;
-        border-top: 1px solid rgba(148, 163, 184, .12);
-        color: #93a4c3;
+        padding: 8px 14px;
+        background: #ffffff;
+        border-top: 1px solid #eef1f6;
+        color: #94a3b8;
         font-size: 10.5px;
     }
     .lecture-skip-group {
@@ -661,43 +680,45 @@
         align-items: center;
         gap: 5px;
         padding: 4px 9px;
-        border: 1px solid rgba(148, 163, 184, .24);
-        border-radius: 6px;
-        background: #17203b;
-        color: #cbd5e1;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        background: #f8fafc;
+        color: #475569;
         font-size: 10px;
         font-weight: 600;
         transition: all .15s ease;
     }
     .lecture-skip-group button:hover {
-        border-color: rgba(129, 140, 248, .6);
-        color: #e0e7ff;
-        background: #1c2748;
+        border-color: #cbd5e1;
+        background: #f1f5f9;
+        color: #0f172a;
     }
     .lecture-progress-meta {
         display: flex;
         align-items: center;
         gap: 10px;
     }
-    .lecture-secure-note {
+    .lecture-percent {
         display: inline-flex;
         align-items: center;
         gap: 5px;
         color: #64748b;
-        font-size: 9.5px;
+        font-weight: 600;
+    }
+    .lecture-percent i {
+        color: #5c32ff;
+        font-size: 9px;
     }
     @media (max-width: 767.98px) {
         .lecture-player-header {
             flex-direction: column;
+            align-items: stretch;
         }
         .lecture-player-tools {
             justify-content: flex-start;
         }
-        .lecture-secure-note {
-            display: none;
-        }
         .lecture-player-title {
-            font-size: 14.5px;
+            font-size: 14px;
         }
     }
 </style>
@@ -805,10 +826,9 @@
                             <button type="button" data-lecture-skip="10" title="Forward 10 seconds"><span>10s</span><i class="fa-solid fa-rotate-right"></i></button>
                         </div>
                         <div class="lecture-progress-meta">
-                            <span id="lecture-percent-label">0% watched</span>
+                            <span class="lecture-percent"><i class="fa-solid fa-circle-play"></i><span id="lecture-percent-label">0% watched</span></span>
                             <span id="lecture-resume-label"></span>
                         </div>
-                        <div class="lecture-secure-note"><i class="fa-solid fa-lock"></i> Signed, time-limited access</div>
                     </div>
                 </div>
 
