@@ -51,3 +51,4 @@
 - `9a59747` :: "2026-11-12 | 11:56 PM" - "feat: upgrade classroom modules to chapters and topics with dedicated interactive Quiz Studio"
 - `e70a3af` :: "2026-11-13 | 01:14 AM" - "feat: implement 3-tier hierarchy (Modules -> Chapters -> Topics & Quizzes) with module filter pills"
 - `0500d95` :: "2026-11-13 | 02:22 AM" - "refactor: clean classroom curriculum outline into direct tree with zero heavy tabs, remove redundant filter rows, and refine breadcrumbs"
+- `7145fa0` :: "2026-11-13 | 10:58 AM" - "refactor: ultra-clean classroom UI, remove redundant tags, badge pills, heavy borders, and streamline to single-line topic rows"
