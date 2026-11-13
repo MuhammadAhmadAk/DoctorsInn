@@ -135,16 +135,26 @@
                                             <div class="course-curriculam-list">
                                                 <ul class="list-unstyled mb-0">
                                                     @foreach ($course['curriculum'] as $curr)
-                                                        <li class="p-3 mb-3 rounded-3 legacy-inline-f5d80dce85"
-                                                           >
+                                                        @php
+                                                            $currTitle = $curr['title'] ?? ($curr['name'] ?? 'Module');
+                                                            $currDesc = $curr['desc'] ?? ($curr['description'] ?? '');
+                                                            if (empty($currDesc) && !empty($curr['chapters']) && is_array($curr['chapters'])) {
+                                                                $chCount = count($curr['chapters']);
+                                                                $topCount = 0;
+                                                                foreach ($curr['chapters'] as $chItem) {
+                                                                    $topCount += count($chItem['topics'] ?? []);
+                                                                }
+                                                                $currDesc = "{$chCount} Chapters • {$topCount} Topics & Quizzes";
+                                                            }
+                                                        @endphp
+                                                        <li class="p-3 mb-3 rounded-3 legacy-inline-f5d80dce85">
                                                             <div class="d-flex align-items-center">
-                                                                <i
-                                                                    class="fa-solid fa-circle-check text-theme me-3 fs-5"></i>
+                                                                <i class="fa-solid fa-circle-check text-theme me-3 fs-5"></i>
                                                                 <div>
-                                                                    <h6 class="mb-1 fw-bold text-title">
-                                                                        {{ $curr['title'] }}</h6>
-                                                                    <p class="mb-0 text-body small">{{ $curr['desc'] }}
-                                                                    </p>
+                                                                    <h6 class="mb-1 fw-bold text-title">{{ $currTitle }}</h6>
+                                                                    @if(!empty($currDesc))
+                                                                        <p class="mb-0 text-body small">{{ $currDesc }}</p>
+                                                                    @endif
                                                                 </div>
                                                             </div>
                                                         </li>
