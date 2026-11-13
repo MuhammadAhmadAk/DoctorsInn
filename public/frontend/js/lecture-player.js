@@ -244,22 +244,68 @@
                 els.quality.value = current;
             }
             show(els.quality, hasLevels);
+            applyRateAwareSelection();
+        }
+
+        function levelList() {
+            return levels.levels_ || levels.levels || [];
+        }
+
+        // Faster playback drains the buffer proportionally, so cap the
+        // rendition height instead of letting 720p/1080p starve at 1.5x+.
+        function maxHeightForRate() {
+            const rate = state.player ? state.player.playbackRate() : 1;
+            if (rate >= 1.75) return 360;
+            if (rate >= 1.25) return 480;
+            return Infinity;
+        }
+
+        let manualBeforeCap = null;
+
+        function applyRateAwareSelection() {
+            const cap = maxHeightForRate();
+            const list = levelList();
+            const fitting = list.filter(function (level) { return level.height && level.height <= cap; });
+
+            if (!fitting.length) {
+                list.forEach(function (level) { level.enabled = true; });
+                return;
+            }
+
+            if (cap === Infinity && manualBeforeCap) {
+                if (els.quality.querySelector('option[value="' + manualBeforeCap + '"]')) {
+                    els.quality.value = manualBeforeCap;
+                }
+                manualBeforeCap = null;
+            }
+
+            let value = els.quality.value || 'auto';
+            if (value !== 'auto') {
+                const chosen = list[parseInt(value, 10)];
+                if (chosen && chosen.height && chosen.height > cap) {
+                    manualBeforeCap = value;
+                    value = String(list.indexOf(fitting[fitting.length - 1]));
+                    if (els.quality.querySelector('option[value="' + value + '"]')) {
+                        els.quality.value = value;
+                    }
+                }
+            }
+
+            list.forEach(function (level, index) {
+                if (!level.height) return;
+                const withinCap = level.height <= cap;
+                level.enabled = value === 'auto' ? withinCap : (withinCap && String(index) === value);
+            });
         }
 
         levels.on('addqualitylevel', rebuild);
         rebuild();
 
         els.quality.addEventListener('change', function () {
-            const value = els.quality.value;
-            const list = levels.levels_ || levels.levels || [];
-            if (value === 'auto') {
-                list.forEach(function (level) { level.enabled = true; });
-            } else {
-                list.forEach(function (level, index) {
-                    level.enabled = String(index) === value;
-                });
-            }
+            manualBeforeCap = null;
+            applyRateAwareSelection();
         });
+        player.on('ratechange', applyRateAwareSelection);
     }
 
     function onKeydown(event) {
