@@ -20,8 +20,8 @@
         padding: 12px 14px;
         background: #ffffff;
         border-bottom: 1px solid #eef1f6;
-        border-top-left-radius: 11px;
-        border-top-right-radius: 11px;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -325,6 +325,8 @@
         align-items: flex-start;
         padding: 18px 22px 14px;
         border-bottom: 1px solid #eef1f6;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
     }
     .studio-modal .modal-title {
         margin: 0;

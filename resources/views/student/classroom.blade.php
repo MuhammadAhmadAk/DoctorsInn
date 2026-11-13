@@ -466,57 +466,70 @@
         overflow: hidden;
         border-radius: 8px;
         background: #ffffff;
-        border: 1px solid #e6eaf2;
+        border: 1px solid #eceff5;
     }
     .lecture-player-header {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 14px;
-        padding: 12px 14px;
+        gap: 12px;
+        padding: 10px 12px;
         background: #ffffff;
-        border-bottom: 1px solid #eef1f6;
+        border-bottom: 1px solid #f1f3f8;
     }
     .lecture-player-heading {
         min-width: 0;
     }
     .lecture-player-title {
-        margin: 5px 0 1px;
-        color: #0f172a;
-        font-size: 15px;
-        font-weight: 700;
+        margin: 0;
+        color: #111827;
+        font-size: 14px;
+        font-weight: 600;
         line-height: 1.35;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
     }
+    .lecture-player-meta {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 0;
+        margin-top: 2px;
+    }
     .lecture-player-subtitle {
-        color: #94a3b8;
-        font-size: 11px;
+        color: #a0a8b8;
+        font-size: 10.5px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
     .lecture-secure-pill {
         display: inline-flex;
         align-items: center;
         gap: 4px;
-        padding: 2px 7px;
-        border-radius: 8px;
-        background: #ecfdf5;
-        border: 1px solid #d1fae5;
-        color: #047857;
-        font-size: 9.5px;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        color: #059669;
+        font-size: 9px;
         font-weight: 700;
-        letter-spacing: .05em;
+        letter-spacing: .04em;
         text-transform: uppercase;
+        white-space: nowrap;
+    }
+    .lecture-secure-pill i {
+        font-size: 8.5px;
     }
     .lecture-secure-pill.is-processing {
-        background: #eef2ff;
-        border-color: #e0e7ff;
-        color: #4f46e5;
+        background: transparent;
+        border: 0;
+        color: #6366f1;
     }
     .lecture-player-tools {
         display: flex;
         align-items: center;
-        gap: 6px;
+        gap: 4px;
         flex-wrap: wrap;
         justify-content: flex-end;
     }
@@ -524,48 +537,52 @@
         display: flex;
         align-items: center;
         gap: 5px;
-        color: #94a3b8;
-        font-size: 9.5px;
+        color: #b3bac6;
+        font-size: 9px;
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: .05em;
     }
     .lecture-tool select {
-        height: 30px;
-        padding: 2px 24px 2px 9px;
-        border: 1px solid #e2e8f0;
+        height: 28px;
+        padding: 2px 22px 2px 9px;
+        border: 1px solid transparent;
         border-radius: 8px;
-        background: #f8fafc;
-        color: #334155;
+        background: #f5f6fa;
+        color: #4b5563;
         font-size: 11px;
         font-weight: 600;
         cursor: pointer;
+        transition: border-color .15s ease, background .15s ease;
+    }
+    .lecture-tool select:hover {
+        background: #eef0f5;
     }
     .lecture-tool select:focus {
         outline: none;
+        background: #ffffff;
         border-color: #5c32ff;
         box-shadow: 0 0 0 3px rgba(92, 50, 255, .1);
     }
     .lecture-nav-btns {
         display: flex;
-        gap: 4px;
+        gap: 2px;
     }
     .lecture-nav-btns button {
-        width: 30px;
-        height: 30px;
+        width: 28px;
+        height: 28px;
         display: inline-grid;
         place-items: center;
-        border: 1px solid #e2e8f0;
+        border: 0;
         border-radius: 8px;
-        background: #f8fafc;
-        color: #64748b;
+        background: transparent;
+        color: #9aa3b2;
         font-size: 10px;
-        transition: all .15s ease;
+        transition: background .15s ease, color .15s ease;
     }
     .lecture-nav-btns button:hover {
-        border-color: #cbd5e1;
-        background: #f1f5f9;
-        color: #0f172a;
+        background: #f4f5f8;
+        color: #111827;
     }
     .lecture-nav-btns button:disabled {
         opacity: .45;
@@ -665,33 +682,32 @@
         justify-content: space-between;
         gap: 10px;
         flex-wrap: wrap;
-        padding: 8px 14px;
+        padding: 6px 12px;
         background: #ffffff;
-        border-top: 1px solid #eef1f6;
-        color: #94a3b8;
+        border-top: 1px solid #f1f3f8;
+        color: #a0a8b8;
         font-size: 10.5px;
     }
     .lecture-skip-group {
         display: flex;
-        gap: 6px;
+        gap: 2px;
     }
     .lecture-skip-group button {
         display: inline-flex;
         align-items: center;
         gap: 5px;
-        padding: 4px 9px;
-        border: 1px solid #e2e8f0;
+        padding: 4px 8px;
+        border: 0;
         border-radius: 8px;
-        background: #f8fafc;
-        color: #475569;
+        background: transparent;
+        color: #8b93a3;
         font-size: 10px;
         font-weight: 600;
-        transition: all .15s ease;
+        transition: background .15s ease, color .15s ease;
     }
     .lecture-skip-group button:hover {
-        border-color: #cbd5e1;
-        background: #f1f5f9;
-        color: #0f172a;
+        background: #f4f5f8;
+        color: #111827;
     }
     .lecture-progress-meta {
         display: flex;
@@ -701,13 +717,9 @@
     .lecture-percent {
         display: inline-flex;
         align-items: center;
-        gap: 5px;
-        color: #64748b;
+        gap: 4px;
+        color: #6b7280;
         font-weight: 600;
-    }
-    .lecture-percent i {
-        color: #5c32ff;
-        font-size: 9px;
     }
     @media (max-width: 767.98px) {
         .lecture-player-header {
@@ -774,9 +786,11 @@
                 <div id="lecture-player-container" class="lecture-player-shell mb-4 d-none">
                     <div class="lecture-player-header">
                         <div class="lecture-player-heading">
-                            <span class="lecture-secure-pill" id="lecture-status-pill"><i class="fa-solid fa-shield-halved"></i> Secure HLS</span>
                             <h3 class="lecture-player-title" id="lecture-player-title">Lecture</h3>
-                            <div class="lecture-player-subtitle" id="lecture-player-subtitle">Adaptive HLS streaming</div>
+                            <div class="lecture-player-meta">
+                                <span class="lecture-secure-pill" id="lecture-status-pill"><i class="fa-solid fa-shield-halved"></i> Secure HLS</span>
+                                <span class="lecture-player-subtitle" id="lecture-player-subtitle">Adaptive HLS streaming</span>
+                            </div>
                         </div>
                         <div class="lecture-player-tools">
                             <label class="lecture-tool">
@@ -826,7 +840,7 @@
                             <button type="button" data-lecture-skip="10" title="Forward 10 seconds"><span>10s</span><i class="fa-solid fa-rotate-right"></i></button>
                         </div>
                         <div class="lecture-progress-meta">
-                            <span class="lecture-percent"><i class="fa-solid fa-circle-play"></i><span id="lecture-percent-label">0% watched</span></span>
+                            <span class="lecture-percent"><span id="lecture-percent-label">0% watched</span></span>
                             <span id="lecture-resume-label"></span>
                         </div>
                     </div>
