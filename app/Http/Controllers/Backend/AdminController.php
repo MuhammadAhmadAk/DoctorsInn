@@ -263,6 +263,10 @@ class AdminController extends Controller
 
     /**
      * Handle Direct Video Lecture Upload (MP4, WebM, MOV, MKV, etc.)
+     *
+     * Upload is instant — MP4 fast-start optimization runs AFTER the HTTP
+     * response is sent to the browser via Laravel's kernel terminate phase.
+     * Students get fast-loading video; admins get fast upload confirmation.
      */
     public function uploadCourseVideo(Request $request)
     {
@@ -292,6 +296,25 @@ class AdminController extends Controller
         $fullUrl       = asset($relativeUrl);
         $fileSizeBytes = file_exists($fullPath) ? filesize($fullPath) : 0;
         $formattedSize = round($fileSizeBytes / (1024 * 1024), 2) . ' MB';
+
+        // ── True Non-Blocking MP4 Fast-Start Optimization ─────────────────────
+        // Laravel's kernel calls terminate() AFTER $response->send() in index.php.
+        // This means the browser already received the JSON before this closure runs.
+        // The PHP-FPM process continues optimizing the file in the background
+        // without keeping the HTTP connection open.
+        // Result: admin sees instant upload ✅ + students get fast-start video ✅
+        $pathToOptimize = $fullPath;
+        app()->terminating(function () use ($pathToOptimize) {
+            try {
+                ignore_user_abort(true);
+                set_time_limit(300); // Allow up to 5 min for large files
+                $optimizer = new Mp4FastStartService();
+                $optimizer->optimize($pathToOptimize);
+            } catch (\Throwable $e) {
+                // Non-fatal — video still streams fine via CDN Range requests
+            }
+        });
+        // ──────────────────────────────────────────────────────────────────────
 
         return response()->json([
             'success'      => true,
