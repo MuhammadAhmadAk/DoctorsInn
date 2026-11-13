@@ -124,6 +124,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         // Courses, Tests, E-Library, Blogs CRUD
         Route::get('/courses', [AdminController::class, 'courses'])->name('courses');
         Route::get('/courses/create', [AdminController::class, 'createCourse'])->name('courses.create');
+        Route::get('/courses/{slug}/edit', [AdminController::class, 'editCourse'])->name('courses.edit');
         Route::post('/courses', [AdminController::class, 'storeCourse'])->name('courses.store');
         Route::delete('/courses/{slug}', [AdminController::class, 'deleteCourse'])->name('courses.delete');
 

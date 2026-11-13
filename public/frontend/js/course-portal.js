@@ -4,8 +4,34 @@
  * File: public/frontend/js/course-portal.js
  */
 
-// Global database reference (loaded from my-courses-data.js)
-const getDb = () => (typeof myCoursesData !== 'undefined' ? myCoursesData : (typeof coursesDatabase !== 'undefined' ? coursesDatabase : {}));
+// Global database reference (loaded from my-courses-data.js & dynamic DB)
+const getDb = () => {
+    let db = (typeof myCoursesData !== 'undefined' ? myCoursesData : (typeof coursesDatabase !== 'undefined' ? coursesDatabase : {}));
+    if (window.activeDbCourses && typeof window.activeDbCourses === 'object') {
+        Object.keys(window.activeDbCourses).forEach(slug => {
+            const c = window.activeDbCourses[slug];
+            if (c) {
+                const modules = (Array.isArray(c.modules) && c.modules.length > 0)
+                    ? c.modules
+                    : ((Array.isArray(c.curriculum) && c.curriculum[0] && (c.curriculum[0].chapters || c.curriculum[0].topics)) ? c.curriculum : null);
+                
+                if (modules) {
+                    if (!db[slug]) {
+                        db[slug] = {
+                            id: slug,
+                            title: c.title || slug,
+                            description: c.overview || '',
+                            modules: modules
+                        };
+                    } else {
+                        db[slug].modules = modules;
+                    }
+                }
+            }
+        });
+    }
+    return db;
+};
 
 // Global State
 let activeCourseId = "mdcat-reboot-60-day";

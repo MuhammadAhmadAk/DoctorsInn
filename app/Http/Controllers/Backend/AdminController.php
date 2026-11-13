@@ -139,6 +139,25 @@ class AdminController extends Controller
     }
 
     /**
+     * Show Form to Edit Existing Course & Curriculum
+     */
+    public function editCourse($slug)
+    {
+        $course = Course::where('slug', $slug)->first();
+        if (!$course) {
+            $all = SiteContentService::getAllCourses();
+            if (isset($all[$slug])) {
+                $course = new Course($all[$slug]);
+                $course->slug = $slug;
+            }
+        }
+        if (!$course) {
+            return redirect()->route('admin.courses')->with('error', 'Course not found.');
+        }
+        return view('backend.courses.create', compact('course'));
+    }
+
+    /**
      * Store or Update Course (Persisted to DB + Cache Flushed)
      */
     public function storeCourse(Request $request)
@@ -152,13 +171,61 @@ class AdminController extends Controller
         ]);
 
         $slug = $request->input('slug') ?: Str::slug($request->title);
-        $catMap = ['mdcat' => 'MDCAT', 'nums' => 'NUMS', 'army' => 'Army / AMC'];
+        $catMap = [
+            'mdcat' => 'MDCAT',
+            'nums' => 'NUMS',
+            'army' => 'Army / AMC',
+            'past_papers' => 'FLPs / Past Papers',
+        ];
         $category = strtolower($request->category);
 
         $imagePath = $request->input('existing_image');
         if ($request->hasFile('thumbnail')) {
             $imagePath = SiteContentService::uploadImage($request->file('thumbnail'), 'courses');
         }
+
+        // Process Curriculum / Modules JSON
+        $curriculum = null;
+        if ($request->filled('curriculum_json')) {
+            $decoded = json_decode($request->input('curriculum_json'), true);
+            if (is_array($decoded)) {
+                $curriculum = $decoded;
+            }
+        } elseif ($request->filled('curriculum')) {
+            $curriculum = is_array($request->curriculum) ? $request->curriculum : json_decode($request->curriculum, true);
+        }
+
+        // Calculate dynamic lecture and quiz counts from modules hierarchy
+        $totalTopics = 0;
+        $totalQuizzes = 0;
+        $totalModules = is_array($curriculum) ? count($curriculum) : 0;
+        if (is_array($curriculum)) {
+            foreach ($curriculum as $mod) {
+                if (!empty($mod['chapters']) && is_array($mod['chapters'])) {
+                    foreach ($mod['chapters'] as $ch) {
+                        if (!empty($ch['topics']) && is_array($ch['topics'])) {
+                            foreach ($ch['topics'] as $top) {
+                                if (!empty($top['isQuiz']) || ($top['type'] ?? '') === 'quiz') {
+                                    $totalQuizzes++;
+                                } else {
+                                    $totalTopics++;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        $lessonsBadge = $request->input('lessons');
+        if (empty($lessonsBadge) && ($totalTopics > 0 || $totalQuizzes > 0)) {
+            $lessonsBadge = "{$totalTopics} Lectures • {$totalQuizzes} Quizzes";
+        } elseif (empty($lessonsBadge)) {
+            $lessonsBadge = "{$totalModules} Modules";
+        }
+
+        $existing = Course::where('slug', $slug)->first();
+        $finalImage = $imagePath ?: ($existing ? $existing->image : 'frontend/img/course/course1-1.jpg');
 
         Course::updateOrCreate(
             ['slug' => $slug],
@@ -169,18 +236,20 @@ class AdminController extends Controller
                 'price' => $request->price,
                 'original_price' => $request->input('original_price'),
                 'duration' => $request->duration,
-                'lessons' => $request->input('lessons', '40+ Lectures'),
+                'lessons' => $lessonsBadge,
                 'students' => $request->input('students', '500+ Students'),
-                'instructor' => $request->input('instructor', 'DoctorsInn Faculty'),
+                'instructor' => $request->input('instructor', 'DoctorsInn Medical Faculty Panel'),
+                'success_badge' => $request->input('success_badge', '300+ Qualifiers in Top Medical Colleges'),
                 'overview' => $request->input('overview', 'Structured medical entry test preparation batch.'),
-                'image' => $imagePath ?: 'frontend/img/course/course1-1.jpg',
-                'detail_image' => $imagePath ?: 'frontend/img/course/course1-1.jpg',
+                'image' => $finalImage,
+                'detail_image' => $finalImage,
+                'curriculum' => $curriculum,
                 'is_featured' => true,
                 'is_active' => true,
             ]
         );
 
-        return redirect()->route('admin.courses')->with('success', 'Course "' . $request->title . '" saved and published live!');
+        return redirect()->route('admin.courses')->with('success', 'Course "' . $request->title . '" and 3-Tier Curriculum saved successfully!');
     }
 
     public function deleteCourse($slug)

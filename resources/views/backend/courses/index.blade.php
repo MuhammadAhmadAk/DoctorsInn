@@ -105,6 +105,9 @@
                     </td>
                     <td>
                         <div class="table-actions">
+                            <a href="{{ route('admin.courses.edit', $slug) }}" class="action-btn" title="Edit Course & Curriculum">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </a>
                             <a href="{{ route('course-details', $slug) }}" target="_blank" class="action-btn" title="View Public Page">
                                 <i class="fa-solid fa-arrow-up-right-from-square"></i>
                             </a>

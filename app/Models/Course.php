@@ -52,6 +52,9 @@ class Course extends Model
             'overview' => $this->overview,
             'what_will_you_learn' => $this->what_will_you_learn ?? [],
             'curriculum' => $this->curriculum ?? [],
+            'modules' => (is_array($this->curriculum) && !empty($this->curriculum) && isset($this->curriculum[0]['chapters']))
+                ? $this->curriculum
+                : ($this->modules ?? []),
             'instructor_info' => $this->instructor_info ?? ['name' => $this->instructor ?? 'DoctorsInn'],
             'success_stories' => $this->success_stories ?? [],
             'reviews' => $this->reviews ?? [],
