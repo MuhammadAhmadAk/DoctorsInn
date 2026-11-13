@@ -7,7 +7,7 @@
         background: #ffffff;
         border: 1px solid var(--std-border);
         border-radius: var(--std-radius);
-        padding: 20px;
+        padding: 16px;
         transition: border-color 0.15s ease, box-shadow 0.15s ease;
         display: flex;
         flex-direction: column;

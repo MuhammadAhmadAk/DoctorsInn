@@ -7,13 +7,13 @@
         background: linear-gradient(135deg, #FFFFFF 0%, #F4F0FF 100%);
         border: 1px solid var(--std-primary-border);
         border-radius: var(--std-radius);
-        padding: 24px 28px;
-        margin-bottom: 22px;
+        padding: 18px 22px;
+        margin-bottom: 18px;
         box-shadow: var(--std-shadow);
     }
     .dash-avatar {
-        width: 56px;
-        height: 56px;
+        width: 48px;
+        height: 48px;
         border-radius: 50%;
         object-fit: cover;
         border: 2.5px solid #FFFFFF;
@@ -22,13 +22,12 @@
     .countdown-widget {
         background: #FFFFFF;
         border: 1px solid var(--std-primary-border);
-        border-radius: 14px;
-        padding: 12px 20px;
+        border-radius: 8px;
+        padding: 10px 16px;
         text-align: center;
-        box-shadow: 0 2px 8px rgba(92, 50, 255, 0.06);
     }
     .countdown-num {
-        font-size: 23px;
+        font-size: 20px;
         font-weight: 800;
         color: var(--std-primary);
         letter-spacing: -0.02em;
@@ -45,8 +44,8 @@
         border: 1px solid var(--std-border);
         border-left: 4px solid var(--std-primary);
         border-radius: var(--std-radius);
-        padding: 20px 24px;
-        margin-bottom: 22px;
+        padding: 16px 20px;
+        margin-bottom: 18px;
         box-shadow: var(--std-shadow);
         display: flex;
         align-items: center;
@@ -55,9 +54,9 @@
         flex-wrap: wrap;
     }
     .resume-play-badge {
-        width: 50px;
-        height: 50px;
-        border-radius: 14px;
+        width: 42px;
+        height: 42px;
+        border-radius: 8px;
         background: var(--std-primary-light);
         color: var(--std-primary);
         display: flex;

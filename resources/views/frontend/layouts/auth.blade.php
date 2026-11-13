@@ -58,7 +58,6 @@
 
     <script src="{{ asset('frontend/js/vendor/jquery-3.7.1.min.js') }}" defer></script>
     <script src="{{ asset('frontend/js/app.min.js') }}" defer></script>
-    <script src="{{ asset('frontend/js/hover-effect.umd.js') }}" defer></script>
     <script src="{{ asset('frontend/js/main.js') }}" defer></script>
     <script src="{{ asset('frontend/js/preloader.js') }}" defer></script>
 

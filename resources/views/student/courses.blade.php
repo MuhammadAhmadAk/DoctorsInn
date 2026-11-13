@@ -20,7 +20,7 @@
     }
     .course-thumb-box {
         position: relative;
-        height: 175px;
+        height: 155px;
         background: #0f172a;
         overflow: hidden;
     }
@@ -42,7 +42,7 @@
         border: 1px solid rgba(255, 255, 255, 0.15);
     }
     .course-card-body {
-        padding: 18px;
+        padding: 16px;
         display: flex;
         flex-direction: column;
         flex-grow: 1;

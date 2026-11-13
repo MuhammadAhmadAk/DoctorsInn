@@ -20,7 +20,7 @@
     }
     .elib-thumb-wrap {
         position: relative;
-        height: 150px;
+        height: 140px;
         background: #0f172a;
         overflow: hidden;
     }
@@ -53,7 +53,7 @@
         border-radius: 4px;
     }
     .elib-card-body {
-        padding: 18px;
+        padding: 16px;
         display: flex;
         flex-direction: column;
         flex-grow: 1;

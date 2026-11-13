@@ -28,10 +28,6 @@ const getDb = () => {
         return db;
     }
 
-    // Fallback only if window.activeDbCourses is undefined
-    if (typeof myCoursesData !== 'undefined' && Object.keys(myCoursesData).length > 0) {
-        return myCoursesData;
-    }
     return {};
 };
 

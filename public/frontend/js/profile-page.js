@@ -88,15 +88,10 @@
     }
 
     function initializeCourseProgress() {
-        const courseLessonsCount = {
-            'mdcat-reboot-60-day': 14,
-            'mdcat-2026-parvaaz-flps': 10,
-            'mdcat-2026-al-fateh-cts': 14,
-            'amc-prep-course-2026-ansaar': 12,
-            'kts-mock-test-doctorsinnelite': 8
-        };
-
-        Object.entries(courseLessonsCount).forEach(([slug, total]) => {
+        document.querySelectorAll('[id^="course-prog-bar-"]').forEach(progressBar => {
+            const slug = progressBar.id.replace('course-prog-bar-', '');
+            const progressText = document.getElementById(`course-prog-txt-${slug}`);
+            const total = parseInt(progressBar.getAttribute('data-total') || '10', 10);
             let completed = [];
 
             try {
@@ -107,18 +102,16 @@
             }
 
             const count = completed.length;
-            const percent = Math.min(100, Math.round((count / total) * 100));
-            const progressBar = document.getElementById(`course-prog-bar-${slug}`);
-            const progressText = document.getElementById(`course-prog-txt-${slug}`);
-
-            if (!progressBar || !progressText) return;
+            const percent = total > 0 ? Math.min(100, Math.round((count / total) * 100)) : 0;
 
             progressBar.style.width = `${count > 0 ? percent : 0}%`;
-            progressText.textContent = count > 0 ? `${percent}% Completed (${count}/${total})` : '0% Completed';
+            if (progressText) {
+                progressText.textContent = count > 0 ? `${percent}% Completed (${count}/${total})` : '0% Completed';
+            }
 
             if (percent === 100) {
                 progressBar.classList.add('bg-success');
-                progressText.className = 'fw-bold text-success';
+                if (progressText) progressText.className = 'fw-bold text-success';
             }
         });
     }
