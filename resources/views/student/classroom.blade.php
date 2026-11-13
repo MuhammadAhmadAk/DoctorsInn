@@ -608,7 +608,6 @@
         color: #cbd5e1;
         text-align: center;
         font-size: 12.5px;
-        backdrop-filter: blur(3px);
     }
     .lecture-spinner {
         width: 34px;

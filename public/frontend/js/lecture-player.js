@@ -23,6 +23,7 @@
         saving: false,
         completedNotified: false,
         processingTimer: null,
+        bufferTimer: null,
         qualityReady: false
     };
 
@@ -133,16 +134,31 @@
                     bandwidth: 500000,
                     maxBufferLength: 40,
                     maxMaxBufferLength: 120,
-                    backBufferLength: 30
+                    backBufferLength: 30,
+                    useBandwidthFromLocalStorage: true
                 }
             }
         });
 
         const player = state.player;
 
-        player.on('waiting', function () { setLoading(true, 'Buffering secure stream…'); });
-        player.on('canplay', function () { setLoading(false); hideError(); });
-        player.on('playing', function () { setLoading(false); });
+        player.on('waiting', function () {
+            window.clearTimeout(state.bufferTimer);
+            state.bufferTimer = window.setTimeout(function () {
+                if (state.open && state.player && !state.player.paused() && state.player.currentTime() > 0.5) {
+                    setLoading(true, 'Buffering…');
+                }
+            }, 1200);
+        });
+        player.on('canplay', function () {
+            window.clearTimeout(state.bufferTimer);
+            setLoading(false);
+            hideError();
+        });
+        player.on('playing', function () {
+            window.clearTimeout(state.bufferTimer);
+            setLoading(false);
+        });
         player.on('pause', function () { saveProgress(false); });
         player.on('ended', function () {
             saveProgress(true);
@@ -464,6 +480,7 @@
 
         cacheElements();
         initPlayer();
+        window.clearTimeout(state.bufferTimer);
 
         if (state.player) {
             try {
@@ -500,6 +517,7 @@
 
     function close() {
         clearProcessingTimer();
+        window.clearTimeout(state.bufferTimer);
         if (state.open) {
             saveProgress(true);
         }
