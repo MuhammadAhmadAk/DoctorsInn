@@ -57,3 +57,4 @@
 - `48287ea` :: "2026-11-13 | 02:01 PM" - "feat: migrate courses & curriculum to database, add direct video & PDF uploads with progress bar in admin course studio"
 - `a55fc8d` :: "2026-11-13 | 02:31 PM" - "fix: support both 3-tier modules and legacy curriculum in public course details view"
 - `5394708` :: "2026-11-13 | 03:41 PM" - "fix: eliminate automatic course sync and config fallback, enable full manual admin CRUD with instant cache flushing"
+- `7e018e5` :: "2026-11-13 | 04:41 PM" - "cleanup: remove useless static JS and setup files, decouple frontend from hardcoded course scripts"
