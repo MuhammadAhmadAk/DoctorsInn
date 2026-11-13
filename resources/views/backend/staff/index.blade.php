@@ -11,7 +11,7 @@
         font-size: 12px;
     }
     .staff-access .page-header {
-        margin-bottom: 14px;
+        margin-bottom: 10px;
     }
     .staff-access .page-title {
         font-size: 18px;
@@ -27,8 +27,8 @@
         display: flex;
         align-items: center;
         gap: 7px;
-        margin-bottom: 12px;
-        padding: 8px 10px;
+        margin-bottom: 8px;
+        padding: 6px 9px;
         border: 1px solid #DCE7F8;
         border-radius: 7px;
         background: #F7FAFF;
@@ -44,31 +44,31 @@
     }
     .staff-access .access-stat {
         display: flex;
-        min-height: 68px;
+        min-height: 56px;
         align-items: center;
-        gap: 9px;
-        padding: 10px 12px;
+        gap: 8px;
+        padding: 7px 10px;
     }
     .staff-access .stat-icon {
         display: grid;
-        width: 32px;
-        height: 32px;
-        flex: 0 0 32px;
+        width: 28px;
+        height: 28px;
+        flex: 0 0 28px;
         place-items: center;
         border-radius: 7px;
         background: var(--adm-primary-light, #F1EDFF);
         color: var(--staff-primary);
-        font-size: 13px;
+        font-size: 11px;
     }
     .staff-access .stat-label {
         margin-bottom: 2px;
         color: var(--adm-text-muted, #64748B);
-        font-size: 10px;
+        font-size: 9.5px;
         font-weight: 600;
     }
     .staff-access .stat-value {
         color: var(--adm-title-color, #0F172A);
-        font-size: 17px;
+        font-size: 15px;
         font-weight: 700;
         line-height: 1.1;
     }
@@ -82,7 +82,7 @@
         align-items: center;
         justify-content: space-between;
         gap: 10px;
-        padding: 10px 12px;
+        padding: 8px 10px;
         border-bottom: 1px solid var(--staff-border);
     }
     .staff-access .table-heading {
@@ -127,21 +127,22 @@
         font-size: 10.5px;
     }
     .staff-access .table-responsive {
-        max-height: calc(100vh - 330px);
-        min-height: 150px;
+        max-height: calc(100vh - 290px);
+        min-height: 120px;
     }
     .staff-access .staff-table {
         width: 100%;
-        min-width: 1150px;
+        min-width: 980px;
         margin: 0;
         border-collapse: separate;
         border-spacing: 0;
+        table-layout: fixed;
     }
     .staff-access .staff-table th {
         position: sticky;
         top: 0;
         z-index: 2;
-        padding: 8px 9px;
+        padding: 7px 7px;
         border-bottom: 1px solid var(--staff-border);
         background: #F7F8FC;
         color: var(--adm-text-muted, #64748B);
@@ -164,7 +165,7 @@
         background: #F7F8FC;
     }
     .staff-access .staff-table td {
-        padding: 8px 9px;
+        padding: 6px 7px;
         border-bottom: 1px solid #EEF1F5;
         vertical-align: middle;
         font-size: 10.5px;
@@ -179,16 +180,16 @@
         background: #FAFAFD;
     }
     .staff-access .identity-column {
-        width: 165px;
-        min-width: 165px;
+        width: 155px;
+        min-width: 155px;
     }
     .staff-access .role-column {
-        width: 105px;
-        min-width: 105px;
+        width: 88px;
+        min-width: 88px;
     }
     .staff-access .section-column {
-        width: 165px;
-        min-width: 165px;
+        width: 138px;
+        min-width: 138px;
     }
     .staff-access .staff-identity {
         display: flex;
@@ -236,24 +237,25 @@
     }
     .staff-access .permission-list {
         display: flex;
-        flex-direction: column;
-        gap: 4px;
+        flex-wrap: wrap;
+        column-gap: 8px;
+        row-gap: 3px;
     }
     .staff-access .permission-check {
         display: inline-flex;
         align-items: center;
-        gap: 5px;
+        gap: 4px;
         width: fit-content;
         margin: 0;
         color: #475569;
-        font-size: 9.5px;
-        line-height: 1.2;
+        font-size: 9px;
+        line-height: 1.1;
         cursor: pointer;
         white-space: nowrap;
     }
     .staff-access .permission-check input {
-        width: 12px;
-        height: 12px;
+        width: 11px;
+        height: 11px;
         margin: 0;
         accent-color: var(--staff-primary);
         cursor: pointer;
@@ -267,15 +269,6 @@
         padding: 24px;
         color: var(--adm-text-muted, #64748B);
         text-align: center;
-    }
-    .staff-access .save-button {
-        padding: 5px 9px;
-        border: 0;
-        border-radius: 6px;
-        background: var(--staff-primary);
-        color: #FFFFFF;
-        font-size: 10.5px;
-        font-weight: 600;
     }
     .staff-access .staff-modal .modal-content {
         border: 1px solid var(--staff-border);
@@ -400,7 +393,7 @@
         <span>Preview only — permission and staff changes are not saved.</span>
     </div>
 
-    <div class="row g-2 mb-3">
+    <div class="row g-2 mb-2">
         <div class="col-6 col-xl-3">
             <div class="access-stat">
                 <div class="stat-icon"><i class="fa-solid fa-user-shield"></i></div>

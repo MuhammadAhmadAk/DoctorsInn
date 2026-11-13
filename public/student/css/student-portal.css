@@ -536,3 +536,267 @@ body {
         padding: 18px 16px;
     }
 }
+
+/* Compact student portal scale */
+.student-sidebar {
+    width: 240px;
+}
+.student-main {
+    margin-left: 240px;
+}
+.student-sidebar .sidebar-brand {
+    padding: 14px 16px;
+}
+.student-sidebar .sidebar-profile-card {
+    margin: 11px 12px 4px;
+    padding: 9px 10px;
+    gap: 9px;
+}
+.student-sidebar .sidebar-profile-card img {
+    width: 36px;
+    height: 36px;
+}
+.student-sidebar .sidebar-profile-name {
+    font-size: 12px;
+    font-weight: 600;
+}
+.student-sidebar .sidebar-profile-exam {
+    font-size: 10px;
+    font-weight: 500;
+}
+.student-sidebar .sidebar-menu {
+    padding: 7px 12px 12px;
+    gap: 2px;
+}
+.student-sidebar .menu-label {
+    padding: 9px 9px 3px;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.55px;
+}
+.student-sidebar .sidebar-link {
+    gap: 10px;
+    padding: 8px 10px;
+    font-size: 11.5px;
+    font-weight: 500;
+}
+.student-sidebar .sidebar-link.active {
+    font-weight: 600;
+}
+.student-sidebar .sidebar-link i {
+    width: 18px;
+    font-size: 13px;
+}
+.student-sidebar .badge-counter {
+    font-size: 10px;
+    padding: 1px 6px;
+}
+.student-navbar {
+    height: 58px;
+    padding: 0 22px;
+}
+.navbar-streak-pill,
+.navbar-countdown-pill {
+    gap: 6px;
+    padding: 4px 10px;
+    font-size: 11px;
+}
+.navbar-user-btn {
+    gap: 7px;
+}
+.navbar-user-avatar {
+    width: 29px;
+    height: 29px;
+}
+.student-navbar .navbar-user-btn span {
+    font-size: 11.5px !important;
+}
+.student-navbar .dropdown-menu {
+    min-width: 190px !important;
+    border-radius: 8px !important;
+    font-size: 11.5px !important;
+}
+.student-navbar .dropdown-item {
+    font-size: 11.5px !important;
+}
+.student-content {
+    padding: 18px 22px;
+    font-size: 12.5px;
+}
+.student-content .row {
+    --bs-gutter-x: 1rem;
+    --bs-gutter-y: 0.75rem;
+}
+.student-content h1,
+.student-content h2,
+.student-content h3,
+.student-content h4,
+.student-content h5,
+.student-content h6 {
+    font-weight: 600 !important;
+}
+.student-content h1 {
+    font-size: 1rem !important;
+}
+.student-content h2 {
+    font-size: 0.95rem !important;
+}
+.student-content h3,
+.student-content h4,
+.student-content h5,
+.student-content h6 {
+    font-size: 0.875rem !important;
+}
+.student-content .fw-bold {
+    font-weight: 600 !important;
+}
+.student-content .fw-semibold {
+    font-weight: 500 !important;
+}
+.student-content p,
+.student-content td,
+.student-content th {
+    font-size: 12px !important;
+}
+.student-content [style*="font-size: 13.5px"] {
+    font-size: 12px !important;
+}
+.student-content [style*="font-size: 14px"] {
+    font-size: 13px !important;
+}
+.student-content [style*="font-size: 15px"] {
+    font-size: 13.5px !important;
+}
+.student-content .text-xs {
+    font-size: 10.5px !important;
+}
+.student-content .text-sm {
+    font-size: 11.5px !important;
+}
+.std-card {
+    padding: 15px 16px;
+    margin-bottom: 14px;
+}
+.std-card-header {
+    padding-bottom: 10px;
+    margin-bottom: 12px;
+}
+.std-kpi {
+    gap: 11px;
+    padding: 11px 12px;
+}
+.std-kpi-icon {
+    width: 35px;
+    height: 35px;
+    font-size: 15px;
+}
+.std-kpi-val {
+    font-size: 17px;
+    font-weight: 700;
+}
+.std-kpi-lbl {
+    margin-top: 2px;
+    font-size: 11px;
+    font-weight: 500;
+}
+.badge-status {
+    gap: 4px;
+    padding: 4px 8px;
+    font-size: 10px;
+    font-weight: 600;
+}
+.std-progress-track,
+.progress {
+    height: 6px !important;
+}
+.dash-welcome-card {
+    padding: 16px 18px !important;
+    margin-bottom: 14px !important;
+    box-shadow: none !important;
+}
+.dash-avatar {
+    width: 44px !important;
+    height: 44px !important;
+    box-shadow: none !important;
+}
+.countdown-widget {
+    padding: 8px 12px !important;
+    box-shadow: none !important;
+}
+.countdown-num {
+    font-size: 18px !important;
+    font-weight: 700 !important;
+}
+.countdown-label {
+    font-size: 10px !important;
+    font-weight: 500 !important;
+}
+.resume-course-card {
+    gap: 14px;
+    padding: 13px 16px !important;
+    margin-bottom: 14px !important;
+    box-shadow: none !important;
+}
+.resume-play-badge {
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 14px !important;
+}
+.subject-row {
+    padding: 10px 12px !important;
+    margin-bottom: 7px !important;
+}
+.subject-icon-pill {
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 12px !important;
+}
+.vault-file-row {
+    padding: 8px 10px !important;
+}
+.course-portal-card,
+.test-practice-card,
+.elib-portal-card,
+.analytics-metric-box,
+.classroom-header-bar,
+.syllabus-card,
+.quiz-studio-box {
+    border-radius: 8px !important;
+    box-shadow: none !important;
+}
+.course-portal-card:hover,
+.test-practice-card:hover,
+.elib-portal-card:hover {
+    box-shadow: none !important;
+}
+.course-card-body,
+.elib-card-body {
+    padding: 14px !important;
+}
+.course-thumb-box {
+    height: 145px !important;
+}
+.elib-thumb-wrap {
+    height: 125px !important;
+}
+.test-practice-card {
+    padding: 14px !important;
+}
+.analytics-metric-box {
+    padding: 13px 14px !important;
+}
+.student-content .btn {
+    font-weight: 500;
+}
+
+@media (max-width: 991.98px) {
+    .student-main {
+        margin-left: 0;
+    }
+    .student-content {
+        padding: 16px 14px;
+    }
+    .student-navbar {
+        padding: 0 14px;
+    }
+}
