@@ -9,6 +9,7 @@ use App\Models\ElibraryResource;
 use App\Models\MockTest;
 use App\Models\SiteContent;
 use App\Services\SiteContentService;
+use App\Services\Mp4FastStartService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -286,18 +287,38 @@ class AdminController extends Controller
 
         $file->move($targetDir, $filename);
 
+        $fullPath = $targetDir . '/' . $filename;
+
+        // ── MP4 Fast Start Optimization ──────────────────────────────────────
+        // Moves the moov atom (metadata) to the front of the file so browsers
+        // can begin streaming/playing before the entire file is downloaded.
+        // Pure PHP implementation — no ffmpeg required.
+        $optimized = false;
+        $optimizeReason = 'skipped';
+        try {
+            $optimizer = new Mp4FastStartService();
+            $result = $optimizer->optimize($fullPath);
+            $optimized = $result['optimized'];
+            $optimizeReason = $result['reason'];
+        } catch (\Throwable $e) {
+            // Non-fatal: video still works, just not fast-start optimized
+            $optimizeReason = 'error: ' . $e->getMessage();
+        }
+        // ─────────────────────────────────────────────────────────────────────
+
         $relativeUrl = 'uploads/courses/videos/' . $filename;
         $fullUrl = asset($relativeUrl);
-        $fileSizeBytes = file_exists($targetDir . '/' . $filename) ? filesize($targetDir . '/' . $filename) : 0;
+        $fileSizeBytes = file_exists($fullPath) ? filesize($fullPath) : 0;
         $formattedSize = round($fileSizeBytes / (1024 * 1024), 2) . ' MB';
 
         return response()->json([
-            'success' => true,
-            'url' => $fullUrl,
+            'success'      => true,
+            'url'          => $fullUrl,
             'relative_url' => $relativeUrl,
-            'filename' => $file->getClientOriginalName(),
-            'size' => $formattedSize,
-            'mime' => $file->getClientMimeType() ?: 'video/mp4',
+            'filename'     => $file->getClientOriginalName(),
+            'size'         => $formattedSize,
+            'mime'         => $file->getClientMimeType() ?: 'video/mp4',
+            'optimized'    => $optimized,
         ]);
     }
 
