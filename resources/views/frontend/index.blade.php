@@ -131,7 +131,7 @@
             </div>
 
             @php
-                $sliderCourses = $courses ?? config('courses', []);
+                $sliderCourses = $courses ?? \App\Services\SiteContentService::getAllCourses();
                 $courseCategories = [
                     'all' => [
                         'label' => 'All Courses',

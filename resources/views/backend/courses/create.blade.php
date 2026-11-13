@@ -214,7 +214,7 @@
                         <label class="form-label">Course Title <span class="text-danger">*</span></label>
                         <input type="text" name="title" class="form-control font-13 fw-semibold" 
                                placeholder="e.g. MDCAT 2026: Complete All-Subject Medical Prep Batch" 
-                               value="{{ old('title', $course->title ?? 'MDCAT 2026: Complete All-Subject Medical Prep Batch') }}" required>
+                               value="{{ old('title', $course->title ?? '') }}" required>
                     </div>
 
                     <div class="row g-3 mb-3">
@@ -231,7 +231,8 @@
                         <div class="col-md-6">
                             <label class="form-label">Lead Faculty / Department</label>
                             <input type="text" name="instructor" class="form-control font-12" 
-                                   value="{{ old('instructor', $course->instructor ?? 'DoctorsInn Medical Faculty Panel') }}">
+                                   placeholder="e.g. DoctorsInn Medical Faculty Panel"
+                                   value="{{ old('instructor', $course->instructor ?? '') }}">
                         </div>
                     </div>
 
@@ -240,7 +241,7 @@
                             <label class="form-label">Success Highlight Badge</label>
                             <input type="text" name="success_badge" class="form-control font-12" 
                                    placeholder="e.g. 300+ Qualifiers in Top Medical Colleges" 
-                                   value="{{ old('success_badge', $course->success_badge ?? '300+ Qualifiers in Top Medical Colleges') }}">
+                                   value="{{ old('success_badge', $course->success_badge ?? '') }}">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Lectures & Quizzes Badge Label</label>
@@ -252,7 +253,7 @@
 
                     <div class="mb-0">
                         <label class="form-label">Detailed Course Overview</label>
-                        <textarea name="overview" class="form-control font-12" rows="3" placeholder="Course overview, syllabus breakdown, and live mentorship features...">{{ old('overview', $course->overview ?? 'This comprehensive MDCAT program provides end-to-end preparation for all 5 core subjects: Biology, Chemistry, Physics, English, and Logical Reasoning. Built specifically around the updated PMDC syllabus, each subject is taught from foundational fundamentals to advanced exam-trap MCQs, supplemented by weekly unit tests and full-length simulated mock exams.') }}</textarea>
+                        <textarea name="overview" class="form-control font-12" rows="3" placeholder="Course overview, syllabus breakdown, and live mentorship features...">{{ old('overview', $course->overview ?? '') }}</textarea>
                     </div>
                 </div>
             </div>
@@ -409,17 +410,19 @@
                         <div class="col-6">
                             <label class="form-label">Duration <span class="text-danger">*</span></label>
                             <input type="text" name="duration" class="form-control font-12" 
-                                   value="{{ old('duration', $course->duration ?? '90 Days') }}" required>
+                                   placeholder="e.g. 60 Days"
+                                   value="{{ old('duration', $course->duration ?? '') }}" required>
                         </div>
                         <div class="col-6">
                             <label class="form-label">Seat Limit</label>
-                            <input type="number" name="seats" class="form-control font-12" value="350">
+                            <input type="number" name="seats" class="form-control font-12" value="{{ old('seats', $course->seats ?? 350) }}">
                         </div>
                     </div>
 
                     <div class="mb-0">
                         <label class="form-label">Language of Instruction</label>
                         <input type="text" name="language" class="form-control font-12" 
+                               placeholder="e.g. Urdu / English"
                                value="{{ old('language', $course->language ?? 'Urdu / English') }}">
                     </div>
                 </div>
@@ -436,7 +439,8 @@
                         <div class="input-group">
                             <span class="input-group-text bg-light text-muted font-12">Rs.</span>
                             <input type="text" name="price" class="form-control font-13 fw-bold" 
-                                   value="{{ old('price', $course->price ?? '3,500') }}" required>
+                                   placeholder="e.g. 3,500"
+                                   value="{{ old('price', $course->price ?? '') }}" required>
                         </div>
                     </div>
 
@@ -445,7 +449,8 @@
                         <div class="input-group">
                             <span class="input-group-text bg-light text-muted font-12">Rs.</span>
                             <input type="text" name="original_price" class="form-control font-12 text-muted" 
-                                   value="{{ old('original_price', $course->original_price ?? '6,000') }}">
+                                   placeholder="e.g. 6,000"
+                                   value="{{ old('original_price', $course->original_price ?? '') }}">
                         </div>
                         <div class="text-muted font-10 mt-1">Displays strike-through discount to students.</div>
                     </div>
@@ -963,9 +968,9 @@ const standardPmdcTemplate = [
     }
 ];
 
-// If no modules exist yet, initialize with standard template by default so user has an immediate working setup
-if (!Array.isArray(courseModules) || courseModules.length === 0) {
-    courseModules = JSON.parse(JSON.stringify(standardPmdcTemplate));
+// Clean default: empty modules if creating new course (template can be loaded manually via 'Load PMDC Starter')
+if (!Array.isArray(courseModules)) {
+    courseModules = [];
 }
 
 // Global Modal Instances

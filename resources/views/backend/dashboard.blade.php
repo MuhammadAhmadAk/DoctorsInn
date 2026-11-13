@@ -44,7 +44,7 @@
         <div class="stat-card">
             <div class="stat-info">
                 <div class="label">Active Courses & Batches</div>
-                <h3 class="number">{{ count(config('courses', [])) }}</h3>
+                <h3 class="number">{{ count($courses ?? []) }}</h3>
                 <div class="growth up">
                     <i class="fa-solid fa-check"></i>
                     <span>100% Batches On Schedule</span>
@@ -285,22 +285,26 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach(array_slice(config('courses', []), 0, 4) as $key => $course)
+                        @forelse(array_slice($courses ?? [], 0, 4) as $key => $course)
                         <tr>
                             <td>
                                 <div class="item-thumb-box">
-                                    <img src="{{ asset($course['thumbnail'] ?? 'frontend/img/normal/about_2_1.jpg') }}" alt="Course">
+                                    <img src="{{ asset($course['thumbnail'] ?? ($course['image'] ?? 'frontend/img/normal/about_2_1.jpg')) }}" alt="Course">
                                     <div>
                                         <div class="title">{{ Str::limit($course['title'] ?? 'Course Title', 22) }}</div>
                                         <div class="subtitle">{{ $course['category'] ?? 'MDCAT' }}</div>
                                     </div>
                                 </div>
                             </td>
-                            <td><span class="fw-bold text-dark">{{ rand(140, 480) }}</span></td>
+                            <td><span class="fw-bold text-dark">{{ $course['students'] ?? 'Active' }}</span></td>
                             <td><span class="fw-bold text-primary">{{ $course['price'] ?? 'Rs. 15,000' }}</span></td>
                             <td><span class="adm-badge adm-badge-success">Active</span></td>
                         </tr>
-                        @endforeach
+                        @empty
+                        <tr>
+                            <td colspan="4" class="text-center py-3 text-muted">No courses created in database yet. <a href="{{ route('admin.courses.create') }}">Add new course</a></td>
+                        </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>

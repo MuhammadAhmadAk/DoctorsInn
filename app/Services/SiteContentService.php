@@ -54,20 +54,20 @@ class SiteContentService
     /**
      * Shared cache-first query helper: checks Schema::hasTable ONLY on cold cache miss.
      */
-    protected static function rememberTableQuery(string $cacheKey, string $table, callable $fetcher, $fallback = [])
+    protected static function rememberTableQuery(string $cacheKey, string $table, callable $fetcher, $fallback = [], bool $fallbackIfEmpty = false)
     {
         try {
-            return Cache::rememberForever($cacheKey, function () use ($table, $fetcher, $fallback) {
+            return Cache::rememberForever($cacheKey, function () use ($table, $fetcher, $fallback, $fallbackIfEmpty) {
                 if (!Schema::hasTable($table)) {
                     return is_callable($fallback) ? $fallback() : $fallback;
                 }
 
                 $result = $fetcher();
-                if (empty($result) && is_callable($fallback)) {
+                if ($fallbackIfEmpty && empty($result) && is_callable($fallback)) {
                     return $fallback();
                 }
 
-                return $result;
+                return $result ?? [];
             });
         } catch (\Throwable $e) {
             return is_callable($fallback) ? $fallback() : $fallback;
@@ -118,11 +118,7 @@ class SiteContentService
                         ->get()
                         ->mapWithKeys(fn ($c) => [$c->slug => $c->toFrontendArray()])
                         ->toArray()
-                    : config('courses', []);
-
-                if (empty($courses)) {
-                    $courses = config('courses', []);
-                }
+                    : [];
 
                 $blogs = Schema::hasTable('blogs')
                     ? Blog::query()
@@ -173,7 +169,7 @@ class SiteContentService
             });
         } catch (\Throwable $e) {
             return [
-                'courses' => config('courses', []),
+                'courses' => [],
                 'blogs' => array_slice(config('blogs', []), 0, 3),
                 'instructors' => [],
                 'testimonials' => [],
@@ -183,7 +179,7 @@ class SiteContentService
     }
 
     /**
-     * Indexed, cached course catalog keyed by slug (compatible with all Blade views).
+     * Indexed, cached course catalog keyed by slug (strictly from database).
      */
     public static function getAllCourses(): array
     {
@@ -197,7 +193,7 @@ class SiteContentService
                 ->get()
                 ->mapWithKeys(fn ($c) => [$c->slug => $c->toFrontendArray()])
                 ->toArray(),
-            fn () => config('courses', [])
+            fn () => []
         );
     }
 

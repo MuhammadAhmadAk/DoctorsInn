@@ -122,11 +122,17 @@ class AdminController extends Controller
     }
 
     /**
-     * Manage Courses & Batches
+     * Manage Courses & Batches (Direct from Database)
      */
     public function courses()
     {
-        $courses = SiteContentService::getAllCourses();
+        $courses = Course::query()
+            ->orderBy('sort_order')
+            ->orderBy('id')
+            ->get()
+            ->mapWithKeys(fn ($c) => [$c->slug => $c->toFrontendArray()])
+            ->toArray();
+
         return view('backend.courses.index', compact('courses'));
     }
 
@@ -145,14 +151,7 @@ class AdminController extends Controller
     {
         $course = Course::where('slug', $slug)->first();
         if (!$course) {
-            $all = SiteContentService::getAllCourses();
-            if (isset($all[$slug])) {
-                $course = new Course($all[$slug]);
-                $course->slug = $slug;
-            }
-        }
-        if (!$course) {
-            return redirect()->route('admin.courses')->with('error', 'Course not found.');
+            return redirect()->route('admin.courses')->with('error', 'Course not found in database.');
         }
         return view('backend.courses.create', compact('course'));
     }
@@ -249,13 +248,16 @@ class AdminController extends Controller
             ]
         );
 
+        SiteContentService::flushCache();
+
         return redirect()->route('admin.courses')->with('success', 'Course "' . $request->title . '" and 3-Tier Curriculum saved successfully!');
     }
 
     public function deleteCourse($slug)
     {
         Course::where('slug', $slug)->delete();
-        return redirect()->route('admin.courses')->with('success', 'Course removed from catalog.');
+        SiteContentService::flushCache();
+        return redirect()->route('admin.courses')->with('success', 'Course permanently removed from database.');
     }
 
     /**

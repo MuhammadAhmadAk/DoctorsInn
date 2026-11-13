@@ -12,7 +12,7 @@
         $studentName = is_array($user) ? ($user['name'] ?? 'MDCAT Aspirant') : ($user->name ?? 'MDCAT Aspirant');
         $studentAvatar = is_array($user) ? ($user['avatar'] ?? 'frontend/img/testimonial/testi_2_1.png') : ($user->avatar ?? 'frontend/img/testimonial/testi_2_1.png');
         $targetExam = strtoupper(is_array($user) ? ($user['target_exam'] ?? 'MDCAT') : ($user->target_exam ?? 'MDCAT'));
-        $coursesCount = count(config('courses', []));
+        $coursesCount = count($courses ?? \App\Services\SiteContentService::getAllCourses());
         $testsCount = count(config('tests.tests', []));
         $libraryCount = count(config('elibrary.resources', []));
     @endphp
