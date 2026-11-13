@@ -128,7 +128,7 @@
             fluid: true,
             aspectRatio: '16:9',
             playbackRates: [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2],
-            html5: { vhs: { overrideNative: true } }
+            html5: { vhs: { overrideNative: true, bandwidth: 800000 } }
         });
 
         const player = state.player;
