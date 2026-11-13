@@ -54,3 +54,4 @@
 - `7145fa0` :: "2026-11-13 | 10:58 AM" - "refactor: ultra-clean classroom UI, remove redundant tags, badge pills, heavy borders, and streamline to single-line topic rows"
 - `c5be235` :: "2026-11-13 | 11:13 AM" - "feat: make modules collapsible with module 1 open by default, and refine clean item selection style"
 - `29ad4bc` :: "2026-11-13 | 11:44 AM" - "feat: implement 3-tier course curriculum builder studio in admin panel matching student classroom"
+- `48287ea` :: "2026-11-13 | 02:01 PM" - "feat: migrate courses & curriculum to database, add direct video & PDF uploads with progress bar in admin course studio"
