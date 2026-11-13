@@ -536,7 +536,7 @@
     .studio-page .font-12 { font-size: 12px; }
     .studio-page .font-13 { font-size: 13px; }
     .studio-page .gap-2\.5 { gap: 8px; }
-    .studio-page .py-0\.5 { padding-top: 2px; padding-bottom: 2px; }
+    .studio-page .py-0\.5 { padding-top: 4px; padding-bottom: 4px; }
     .studio-page .px-2\.5 { padding-left: 10px; padding-right: 10px; }
     .studio-page .border-dashed { border-style: dashed !important; }
 
