@@ -463,7 +463,7 @@ function renderCurriculumSidebar() {
 
     const syllabusItemsEl = document.getElementById("syllabus-items-count");
     if (syllabusItemsEl) {
-        syllabusItemsEl.innerHTML = `<i class="fa-solid fa-list-check me-1"></i> ${cntAll} Items`;
+        syllabusItemsEl.textContent = `${cntAll} items`;
     }
 
     // Attach click listener for items once
@@ -481,14 +481,11 @@ function renderCurriculumSidebar() {
     const completedList = getCompletedItems(activeCourseId);
 
     modules.forEach((mod, modIdx) => {
-        // Module Section Header
+        // Module Section Header (Clean minimal divider, no heavy boxes)
         const modHeaderHtml = `
-            <div class="curriculum-module-header">
-                <div class="d-flex align-items-center">
-                    <span class="module-icon"><i class="${mod.icon}"></i></span>
-                    <span class="fw-bold text-dark text-xs text-uppercase tracking-wider">${mod.name}</span>
-                </div>
-                <span class="badge bg-white text-secondary border font-10">${mod.chapters.length} ${mod.chapters.length === 1 ? 'Chapter' : 'Chapters'}</span>
+            <div class="module-section-title">
+                <i class="${mod.icon} text-primary me-2"></i>
+                <span>${mod.name}</span>
             </div>
         `;
         accordionContainer.insertAdjacentHTML("beforeend", modHeaderHtml);
@@ -513,69 +510,52 @@ function renderCurriculumSidebar() {
                 const activeClass = topic.id === activeTopicId ? "active" : "";
 
                 let iconClass = "fa-solid fa-play";
-                let badgeClass = "badge-pill-video";
-                let badgeText = "VIDEO";
-                let quizItemClass = "";
+                let iconColorClass = "text-muted";
 
                 if (topic.isQuiz) {
                     if (topic.quizType === "chapter") {
-                        iconClass = "fa-solid fa-award";
-                        badgeClass = "badge-pill-chapter-quiz";
-                        badgeText = "CHAPTER QUIZ";
-                        quizItemClass = "is-chapter-quiz-item";
+                        iconClass = "fa-solid fa-trophy";
+                        iconColorClass = "icon-assessment";
                     } else {
                         iconClass = "fa-solid fa-clipboard-question";
-                        badgeClass = "badge-pill-topic-quiz";
-                        badgeText = "TOPIC QUIZ";
-                        quizItemClass = "is-quiz-item";
+                        iconColorClass = "icon-quiz";
                     }
                 } else if (topic.type === "reading" || topic.type === "text") {
-                    iconClass = "fa-solid fa-book-open-reader";
-                    badgeClass = "badge-pill-reading";
-                    badgeText = "READING";
+                    iconClass = "fa-regular fa-file-lines";
+                    iconColorClass = "text-muted";
                 }
 
                 topicsHtml += `
-                    <div class="topic-study-item ${activeClass} ${completedClass} ${quizItemClass}" id="item-${topic.id}" data-topic-id="${topic.id}" data-lesson-id="${topic.id}">
-                        <span class="topic-icon-wrapper">
-                            <i class="${iconClass}"></i>
-                        </span>
-                        <div class="topic-meta-info flex-grow-1" style="min-width: 0;">
-                            <div class="d-flex align-items-center justify-content-between gap-1">
-                                <span class="topic-badge-pill ${badgeClass}">${badgeText}</span>
-                                <span class="topic-time text-muted text-xs"><i class="fa-regular fa-clock me-1"></i>${topic.duration}</span>
-                            </div>
-                            <div class="topic-title-text text-truncate fw-semibold text-dark mt-1" title="${topic.title}">
-                                ${topic.title}
-                            </div>
+                    <div class="topic-row ${activeClass} ${completedClass}" id="item-${topic.id}" data-topic-id="${topic.id}" data-lesson-id="${topic.id}">
+                        <div class="topic-row-start">
+                            <span class="topic-type-icon ${iconColorClass}">
+                                <i class="${iconClass}"></i>
+                            </span>
+                            <span class="topic-title" title="${topic.title}">${topic.title}</span>
                         </div>
-                        <span class="status-indicator ms-2">
-                            <i class="fa-solid fa-circle-check checkmark"></i>
-                            <i class="fa-regular fa-circle bullet"></i>
-                        </span>
+                        <div class="topic-row-end">
+                            <span class="topic-duration">${topic.duration}</span>
+                            <span class="topic-check">
+                                <i class="fa-solid fa-circle-check checkmark"></i>
+                                <i class="fa-regular fa-circle bullet"></i>
+                            </span>
+                        </div>
                     </div>
                 `;
             });
-
-            const chTopicsCount = chapter.topics.filter(t => !t.isQuiz).length;
-            const chQuizzesCount = chapter.topics.filter(t => t.isQuiz).length;
-            const countMeta = `${chTopicsCount} Topics &bull; ${chQuizzesCount} Quizzes`;
 
             const chapterCardHtml = `
                 <div class="accordion-item chapter-accordion-item">
                     <h2 class="accordion-header" id="heading_${accordionId}">
                         <button class="accordion-button chapter-accordion-btn ${buttonCollapsed}" type="button" data-bs-toggle="collapse" data-bs-target="#${accordionId}" aria-expanded="${isExpanded}" aria-controls="${accordionId}">
-                            <div class="d-flex align-items-center gap-2 flex-grow-1 min-w-0">
-                                <i class="fa-regular fa-folder-open text-primary text-xs flex-shrink-0"></i>
-                                <div class="d-flex flex-column text-start flex-grow-1 min-w-0">
-                                    <span class="chapter-title fw-bold text-dark text-truncate" style="font-size: 12.5px;">${chapter.name}</span>
-                                    <span class="text-muted" style="font-size: 10.5px;">${countMeta}</span>
-                                </div>
+                            <div class="d-flex align-items-center justify-content-between flex-grow-1 min-w-0 pe-2">
+                                <span class="chapter-title fw-semibold text-dark text-truncate">${chapter.name}</span>
+                                <span class="text-muted text-xs ms-2 flex-shrink-0" style="font-size: 11px;">${chapter.topics.length} items</span>
                             </div>
                         </button>
                     </h2>
                     <div id="${accordionId}" class="accordion-collapse collapse ${isShow}" aria-labelledby="heading_${accordionId}">
-                        <div class="accordion-body p-1.5 bg-white">
+                        <div class="accordion-body px-1 py-1 bg-white">
                             ${topicsHtml}
                         </div>
                     </div>
@@ -617,7 +597,7 @@ function selectActiveTopic(topicId) {
     if (!activeTopic) return;
 
     // Highlight active item in sidebar
-    document.querySelectorAll(".topic-study-item, .lesson-study-item").forEach(item => {
+    document.querySelectorAll(".topic-row, .topic-study-item, .lesson-study-item").forEach(item => {
         item.classList.remove("active");
     });
     const sidebarItem = document.getElementById(`item-${topicId}`);
@@ -856,12 +836,17 @@ function initQuizStudio(topic) {
     activeQuizData = topic.quizData || generateFallbackQuiz(topic.title);
 
     // Dynamic Quiz Header
+    const quizBreadcrumb = document.getElementById("quiz-breadcrumb");
     const modCrumb = document.getElementById("quiz-module-crumb");
     const typeBadge = document.getElementById("quiz-type-badge");
     const crumbEl = document.getElementById("quiz-chapter-crumb");
     const titleEl = document.getElementById("quiz-title-display");
     const subtitleEl = document.getElementById("quiz-subtitle-display");
     const timerDisplay = document.getElementById("quiz-timer-display");
+
+    if (quizBreadcrumb) {
+        quizBreadcrumb.textContent = `${topic.moduleName || 'Module'} • ${topic.chapterName || 'Chapter'} • ${topic.quizType === 'chapter' ? 'Mastery Assessment' : 'Checkpoint Quiz'}`;
+    }
 
     if (modCrumb) modCrumb.textContent = topic.moduleName || "Module";
 
@@ -1241,11 +1226,11 @@ function updateCompleteButtonUi(isCompleted) {
     const btn = document.getElementById("complete-lesson-btn");
     if (!btn) return;
     if (isCompleted) {
-        btn.innerHTML = `<i class="fa-solid fa-circle-check me-2"></i> Completed`;
-        btn.className = "btn btn-sm btn-success text-white border-0 fw-semibold";
+        btn.innerHTML = `<i class="fa-solid fa-circle-check me-1.5"></i> Completed`;
+        btn.className = "btn btn-sm btn-success text-white border-0 fw-semibold px-3 py-1.5 rounded-pill";
     } else {
-        btn.innerHTML = `<i class="fa-regular fa-circle-check me-2"></i> Mark Complete`;
-        btn.className = "btn btn-sm btn-primary fw-semibold";
+        btn.innerHTML = `<i class="fa-regular fa-circle-check me-1.5"></i> Mark Complete`;
+        btn.className = "btn btn-sm btn-outline-primary fw-semibold px-3 py-1.5 rounded-pill";
     }
 }
 
@@ -1266,14 +1251,14 @@ function updateProgressUi() {
     const ratioEl = document.getElementById("progress-ratio");
     const barEl = document.getElementById("study-progress-bar");
 
-    if (percentEl) percentEl.textContent = `${progressPercent}% Complete`;
-    if (ratioEl) ratioEl.textContent = `${completedCount}/${totalItems} Completed`;
+    if (percentEl) percentEl.textContent = `${progressPercent}%`;
+    if (ratioEl) ratioEl.textContent = `${completedCount}/${totalItems} Lessons`;
     if (barEl) barEl.style.width = `${progressPercent}%`;
 }
 
 function updateSidebarCheckmarks() {
     const completedList = getCompletedItems(activeCourseId);
-    document.querySelectorAll(".topic-study-item, .lesson-study-item").forEach(item => {
+    document.querySelectorAll(".topic-row, .topic-study-item, .lesson-study-item").forEach(item => {
         const itemId = item.id.replace("item-", "");
         if (completedList.includes(itemId)) {
             item.classList.add("completed");

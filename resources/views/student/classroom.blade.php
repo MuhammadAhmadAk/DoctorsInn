@@ -38,47 +38,35 @@
         flex-direction: column;
         box-shadow: var(--std-shadow);
     }
-    .curriculum-module-header {
-        background: #f8fafc;
-        border: 1px solid #e2e8f0;
-        border-radius: 8px;
-        padding: 8px 12px;
-        margin-top: 14px;
-        margin-bottom: 8px;
+    /* Module Section Heading (Clean, light section divider) */
+    .module-section-title {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        color: #64748b;
+        padding: 12px 6px 6px;
+        margin-top: 6px;
+        border-bottom: 1px solid #f1f5f9;
         display: flex;
         align-items: center;
-        justify-content: space-between;
     }
-    .curriculum-module-header:first-child {
-        margin-top: 2px;
+    .module-section-title:first-child {
+        margin-top: 0;
+        padding-top: 2px;
     }
-    .curriculum-module-header .module-icon {
-        width: 24px;
-        height: 24px;
-        border-radius: 6px;
-        background: rgba(92, 50, 255, 0.1);
-        color: var(--std-primary);
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 11px;
-        margin-right: 8px;
-    }
+
+    /* Chapter Accordion (Light, borderless, seamless) */
     .chapter-accordion-item {
-        border: 1px solid #e2e8f0;
-        border-radius: 8px !important;
-        margin-bottom: 6px;
-        overflow: hidden;
-        background: #ffffff;
-        transition: border-color 0.15s ease;
-    }
-    .chapter-accordion-item:hover {
-        border-color: #cbd5e1;
+        border: none;
+        border-bottom: 1px solid #f8fafc;
+        background: transparent;
+        margin-bottom: 2px;
     }
     .chapter-accordion-btn {
-        padding: 9px 12px;
-        background: #ffffff;
-        font-size: 12px;
+        padding: 9px 8px;
+        background: transparent;
+        font-size: 12.5px;
         font-weight: 600;
         color: #1e293b;
         border: none;
@@ -87,134 +75,124 @@
         align-items: center;
         width: 100%;
         text-align: left;
+        border-radius: 6px;
+        transition: background 0.15s ease;
+    }
+    .chapter-accordion-btn:hover {
+        background: #f8fafc;
     }
     .chapter-accordion-btn:not(.collapsed) {
         background: #f8fafc;
         color: var(--std-primary);
-        border-bottom: 1px solid #f1f5f9;
     }
     .chapter-accordion-btn::after {
-        width: 13px;
-        height: 13px;
-        background-size: 13px;
+        width: 10px;
+        height: 10px;
+        background-size: 10px;
+        opacity: 0.45;
+        margin-left: 6px;
     }
     .syllabus-accordion-wrap {
         max-height: 650px;
         overflow-y: auto;
-        padding-right: 4px;
+        padding-right: 2px;
     }
     .syllabus-accordion-wrap::-webkit-scrollbar {
-        width: 5px;
+        width: 4px;
     }
     .syllabus-accordion-wrap::-webkit-scrollbar-thumb {
-        background: #cbd5e1;
+        background: #e2e8f0;
         border-radius: 4px;
     }
-    .topic-study-item {
+
+    /* Topic & Quiz Rows (Clean, Single Line, ZERO Clutter Badges) */
+    .topic-row, .topic-study-item {
         display: flex;
         align-items: center;
-        gap: 10px;
-        padding: 8px 10px;
+        justify-content: space-between;
+        gap: 8px;
+        padding: 7px 10px;
         border-radius: 6px;
         cursor: pointer;
-        transition: all 0.15s ease;
-        margin-bottom: 3px;
+        transition: all 0.12s ease;
         font-size: 12.5px;
-        border: 1px solid transparent;
-        position: relative;
+        color: #334155;
+        border-left: 2.5px solid transparent;
+        margin-bottom: 2px;
+        background: transparent;
+        border-top: none;
+        border-right: none;
+        border-bottom: none;
     }
-    .topic-study-item:hover {
-        background: #f1f5f9;
-    }
-    .topic-study-item.active {
-        background: rgba(92, 50, 255, 0.08);
-        border-color: rgba(92, 50, 255, 0.25);
-        font-weight: 600;
-        color: var(--std-primary);
-    }
-    .topic-study-item.is-quiz-item {
-        background: #fffdf5;
-        border-color: rgba(245, 158, 11, 0.2);
-    }
-    .topic-study-item.is-quiz-item:hover {
-        background: #fef3c7;
-    }
-    .topic-study-item.is-quiz-item.active {
-        background: #fef3c7;
-        border-color: #f59e0b;
-        color: #b45309;
-    }
-    .topic-study-item.is-chapter-quiz-item {
-        background: #faf8ff;
-        border-color: rgba(139, 92, 246, 0.25);
-    }
-    .topic-study-item.is-chapter-quiz-item:hover {
-        background: #ede9fe;
-    }
-    .topic-study-item.is-chapter-quiz-item.active {
-        background: #ede9fe;
-        border-color: #8b5cf6;
-        color: #6d28d9;
-    }
-    .topic-study-item.completed .status-indicator .checkmark {
-        display: inline-block;
-        color: #10b981;
-    }
-    .topic-study-item.completed .status-indicator .bullet {
-        display: none;
-    }
-    .topic-study-item:not(.completed) .status-indicator .checkmark {
-        display: none;
-    }
-    .topic-study-item:not(.completed) .status-indicator .bullet {
-        display: inline-block;
-        color: #94a3b8;
-    }
-    .topic-icon-wrapper {
-        width: 26px;
-        height: 26px;
-        border-radius: 6px;
+    .topic-row:hover, .topic-study-item:hover {
         background: #f8fafc;
+        color: #0f172a;
+    }
+    .topic-row.active, .topic-study-item.active {
+        background: rgba(92, 50, 255, 0.06);
+        color: var(--std-primary);
+        font-weight: 600;
+        border-left-color: var(--std-primary);
+    }
+    .topic-row-start {
         display: flex;
         align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
+        gap: 9px;
+        min-width: 0;
+        flex: 1;
+    }
+    .topic-type-icon {
+        width: 16px;
+        text-align: center;
         font-size: 11px;
+        flex-shrink: 0;
+        color: #94a3b8;
+    }
+    .topic-row.active .topic-type-icon, .topic-study-item.active .topic-type-icon {
         color: var(--std-primary);
     }
-    .topic-study-item.is-quiz-item .topic-icon-wrapper {
-        background: #fef3c7;
+    .topic-type-icon.icon-quiz {
         color: #d97706;
     }
-    .topic-study-item.is-chapter-quiz-item .topic-icon-wrapper {
-        background: #ede9fe;
+    .topic-type-icon.icon-assessment {
         color: #7c3aed;
     }
-    .topic-badge-pill {
-        font-size: 9.5px;
-        font-weight: 700;
-        padding: 1px 6px;
-        border-radius: 10px;
-        text-transform: uppercase;
-        letter-spacing: 0.3px;
+    .topic-title {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: 12.5px;
+        line-height: 1.4;
     }
-    .badge-pill-topic-quiz {
-        background: #fef3c7;
-        color: #b45309;
-        border: 1px solid rgba(245, 158, 11, 0.3);
+    .topic-row-end {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-shrink: 0;
+        font-size: 11px;
+        color: #94a3b8;
     }
-    .badge-pill-chapter-quiz {
-        background: #ede9fe;
-        color: #6d28d9;
-        border: 1px solid rgba(139, 92, 246, 0.3);
+    .topic-row.active .topic-row-end, .topic-study-item.active .topic-row-end {
+        color: var(--std-primary);
     }
-    .badge-pill-video {
-        background: #e0e7ff;
-        color: #3730a3;
+    .topic-check .checkmark {
+        display: none;
+        color: #10b981;
+        font-size: 11.5px;
     }
-    .badge-pill-reading {
-        background: #e0f2fe;
-        color: #0369a1;
+    .topic-check .bullet {
+        display: inline-block;
+        color: #cbd5e1;
+        font-size: 10px;
+    }
+    .topic-row.completed .topic-check .checkmark, .topic-study-item.completed .topic-check .checkmark {
+        display: inline-block;
+    }
+    .topic-row.completed .topic-check .bullet, .topic-study-item.completed .topic-check .bullet {
+        display: none;
+    }
+    .topic-row.completed .topic-title, .topic-study-item.completed .topic-title {
+        color: #64748b;
     }
     .classroom-tab-nav {
         border-bottom: 1px solid var(--std-border);
@@ -458,44 +436,32 @@
 
     {{-- Top Action Bar --}}
     <div class="classroom-header-bar">
-        <div class="row align-items-center gy-3">
-            <div class="col-lg-6">
-                <div class="d-flex align-items-center gap-3">
-                    <a href="{{ route('student.courses') }}" class="btn btn-sm btn-light border py-1 px-2 rounded-2 text-secondary" title="Back to Courses">
-                        <i class="fa-solid fa-arrow-left"></i>
-                    </a>
-                    <div class="flex-grow-1">
-                        <div class="d-flex align-items-center gap-2">
-                            <span class="text-xs fw-bold text-uppercase text-primary tracking-wide">Classroom &bull; Enrolled Track</span>
-                            <span class="badge bg-light text-dark border font-11 px-2 py-0.5 rounded-pill" id="classroom-mode-badge">
-                                <i class="fa-solid fa-graduation-cap text-primary me-1"></i> Modules &bull; Chapters &bull; Topics
-                            </span>
-                        </div>
-                        <select id="enrolledCourseSelect"
-                            class="form-select form-select-sm rounded-3 fw-bold text-dark mt-1"
-                            data-instructor-image="{{ asset($activeCourse['instructor_info']['image'] ?? $activeCourse['instructor_image'] ?? 'frontend/img/testimonial/testi_2_2.png') }}"
-                            data-student-avatar="{{ asset($studentData['avatar']) }}"
-                            data-course-url="{{ route('student.classroom') }}">
-                            @foreach ($courses as $c)
-                                <option value="{{ $c['slug'] }}" {{ ($activeCourse['slug'] ?? '') === $c['slug'] ? 'selected' : '' }}>
-                                    {{ $c['title'] }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+            <div class="d-flex align-items-center gap-2 flex-grow-1" style="max-width: 480px;">
+                <a href="{{ route('student.courses') }}" class="btn btn-sm btn-light border py-1.5 px-2.5 rounded-2 text-secondary flex-shrink-0" title="Back to Courses">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </a>
+                <select id="enrolledCourseSelect"
+                    class="form-select form-select-sm rounded-3 fw-bold text-dark"
+                    data-instructor-image="{{ asset($activeCourse['instructor_info']['image'] ?? $activeCourse['instructor_image'] ?? 'frontend/img/testimonial/testi_2_2.png') }}"
+                    data-student-avatar="{{ asset($studentData['avatar']) }}"
+                    data-course-url="{{ route('student.classroom') }}">
+                    @foreach ($courses as $c)
+                        <option value="{{ $c['slug'] }}" {{ ($activeCourse['slug'] ?? '') === $c['slug'] ? 'selected' : '' }}>
+                            {{ $c['title'] }}
+                        </option>
+                    @endforeach
+                </select>
             </div>
 
-            <div class="col-lg-6">
-                <div class="d-flex align-items-center justify-content-lg-end gap-3">
-                    {{-- Progress Summary --}}
-                    <div class="text-end d-none d-sm-block">
-                        <div class="text-xs text-dark fw-bold mb-1" id="progress-ratio">0/0 Topics Completed</div>
-                        <div class="std-progress-track mt-0" style="width: 150px; height: 8px;">
-                            <div class="std-progress-fill fill-success" id="study-progress-bar" style="width: 0%;"></div>
-                        </div>
+            <div class="d-flex align-items-center gap-3">
+                <div class="text-end">
+                    <div class="text-xs text-secondary fw-semibold mb-1" style="font-size: 11.5px;">
+                        <span id="progress-percent" class="fw-bold text-primary">0%</span> Complete &bull; <span id="progress-ratio">0/0 Lessons</span>
                     </div>
-                    <span class="badge-status badge-status-primary px-3 py-2 fw-bold" id="progress-percent" style="font-size: 12px;">0% Complete</span>
+                    <div class="std-progress-track mt-0" style="width: 130px; height: 5px;">
+                        <div class="std-progress-fill fill-success" id="study-progress-bar" style="width: 0%;"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -536,13 +502,7 @@
                     {{-- Quiz Dynamic Header --}}
                     <div class="quiz-studio-header">
                         <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-2">
-                            <div class="d-flex align-items-center gap-2 flex-wrap">
-                                <span class="badge bg-white text-dark fw-bold font-10 px-2 py-0.5" id="quiz-module-crumb">Module 1: Biology</span>
-                                <span class="badge bg-warning text-dark fw-bold text-xs px-2 py-1" id="quiz-type-badge">
-                                    <i class="fa-solid fa-clipboard-question me-1"></i> Topic Quiz
-                                </span>
-                                <span class="text-xs text-white-50" id="quiz-chapter-crumb">Chapter 1 &bull; Assessment</span>
-                            </div>
+                            <span class="text-white-50 text-xs" id="quiz-breadcrumb">Module 1: Biology &bull; Chapter 1 &bull; Quiz</span>
                             <div class="quiz-timer-pill" id="quiz-timer-pill">
                                 <i class="fa-regular fa-clock"></i>
                                 <span id="quiz-timer-display">08:00</span>
@@ -692,25 +652,22 @@
                 </div>
 
                 {{-- =========================================================
-                     TOPIC METADATA & CONTROL ROW (When Video/Reading is Active)
+                     TOPIC TITLE & ACTION ROW
                      ========================================================= --}}
                 <div id="topic-control-row" class="d-flex align-items-center justify-content-between flex-wrap gap-3 pb-3 mb-3 border-bottom">
                     <div>
-                        <div class="d-flex align-items-center gap-2 flex-wrap mb-1" style="font-size: 12px;">
-                            <span class="fw-bold text-primary" id="active-module-name">Module 1: Biology</span>
-                            <span class="text-muted">&bull;</span>
-                            <span class="text-secondary fw-semibold" id="active-chapter-name">Chapter 1: Cell Biology &amp; Cytology</span>
-                            <span class="text-muted">&bull;</span>
-                            <span class="badge bg-light text-dark border font-10 px-2 py-0.5 rounded-pill" id="active-topic-badge">Video Lecture</span>
+                        <div class="text-muted mb-1" style="font-size: 11.5px;">
+                            <span class="fw-semibold text-primary" id="active-module-name">Module 1: Biology</span>
+                            <span class="mx-1">&bull;</span>
+                            <span class="text-secondary" id="active-chapter-name">Chapter 1: Cell Biology &amp; Cytology</span>
                         </div>
                         <h2 class="h5 fw-bold text-dark mb-1" id="active-topic-title">Select a Topic</h2>
-                        <div class="d-flex align-items-center gap-3 text-muted text-xs mt-1">
-                            <span><i class="fa-regular fa-clock me-1 text-primary"></i> <span id="active-topic-duration">0 min</span></span>
-                            <span><i class="fa-solid fa-layer-group me-1 text-primary"></i> <span id="active-topic-type">Topic Lecture</span></span>
+                        <div class="text-muted" style="font-size: 11.5px;">
+                            <i class="fa-regular fa-clock me-1 text-primary"></i> <span id="active-topic-duration">0 min</span>
                         </div>
                     </div>
                     <div>
-                        <button class="btn btn-primary d-inline-flex align-items-center gap-2 px-3 py-2 fw-semibold" id="complete-lesson-btn" style="border-radius: 8px; font-size: 13.5px;">
+                        <button class="btn btn-sm btn-outline-primary d-inline-flex align-items-center gap-2 px-3 py-1.5 fw-semibold rounded-pill" id="complete-lesson-btn" style="font-size: 12.5px;">
                             <i class="fa-regular fa-circle-check"></i>
                             <span>Mark Complete</span>
                         </button>
@@ -824,31 +781,18 @@
             </div>
         </div>
 
-        {{-- Right Area: Chapters & Topics Curriculum Outline --}}
+        {{-- Right Area: Course Content Outline --}}
         <div class="col-xl-4">
             <div class="syllabus-card">
-                <div class="d-flex align-items-center justify-content-between pb-3 mb-2 border-bottom">
-                    <div>
-                        <h3 class="fw-bold text-dark mb-0" style="font-size: 15px;">Curriculum Outline</h3>
-                        <span class="text-muted text-xs">Modules &bull; Chapters &bull; Topics &amp; Quizzes</span>
-                    </div>
-                    <span class="badge bg-light text-primary border px-2.5 py-1 text-xs fw-semibold" id="syllabus-items-count">
-                        <i class="fa-solid fa-list-check me-1"></i> Syllabus
-                    </span>
+                <div class="d-flex align-items-center justify-content-between pb-2 mb-2 border-bottom">
+                    <span class="fw-bold text-dark" style="font-size: 14px;">Curriculum Outline</span>
+                    <span class="text-muted text-xs font-11" id="syllabus-items-count">0 items</span>
                 </div>
 
                 <div class="syllabus-accordion-wrap flex-grow-1">
                     <div class="accordion syllabus-accordion" id="syllabusAccordion">
                         <!-- Direct tree structure injected dynamically by course-portal.js -->
                     </div>
-                </div>
-
-                {{-- WhatsApp Assistance --}}
-                <div class="mt-3 pt-3 border-top">
-                    <a href="https://wa.me/923001234567?text=Hello%20DoctorsInn%2C%20I%20have%20a%20doubt%20in%20the%20active%20chapter%20or%20quiz." target="_blank" class="btn btn-outline-success w-100 py-2 fw-semibold d-flex align-items-center justify-content-center gap-2" style="font-size: 13px; border-radius: 8px;">
-                        <i class="fa-brands fa-whatsapp fs-5"></i>
-                        <span>Ask Teacher on WhatsApp</span>
-                    </a>
                 </div>
             </div>
         </div>
