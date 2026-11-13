@@ -259,6 +259,87 @@ class AdminController extends Controller
     }
 
     /**
+     * Handle Direct Video Lecture Upload (MP4, WebM, MOV, MKV, etc.)
+     */
+    public function uploadCourseVideo(Request $request)
+    {
+        $request->validate([
+            'video' => 'required|file|mimes:mp4,webm,mov,mkv,avi,m4v,qt|max:1572864',
+        ]);
+
+        if (!$request->hasFile('video') || !$request->file('video')->isValid()) {
+            return response()->json(['success' => false, 'message' => 'Invalid or missing video file.'], 400);
+        }
+
+        $file = $request->file('video');
+        $targetDir = public_path('uploads/courses/videos');
+        if (!is_dir($targetDir)) {
+            mkdir($targetDir, 0755, true);
+        }
+
+        $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+        $safeBase = Str::slug($originalName) ?: 'lecture-video';
+        $ext = strtolower($file->getClientOriginalExtension() ?: 'mp4');
+        $filename = $safeBase . '-' . time() . '-' . Str::random(6) . '.' . $ext;
+
+        $file->move($targetDir, $filename);
+
+        $relativeUrl = 'uploads/courses/videos/' . $filename;
+        $fullUrl = asset($relativeUrl);
+        $fileSizeBytes = file_exists($targetDir . '/' . $filename) ? filesize($targetDir . '/' . $filename) : 0;
+        $formattedSize = round($fileSizeBytes / (1024 * 1024), 2) . ' MB';
+
+        return response()->json([
+            'success' => true,
+            'url' => $fullUrl,
+            'relative_url' => $relativeUrl,
+            'filename' => $file->getClientOriginalName(),
+            'size' => $formattedSize,
+            'mime' => $file->getClientMimeType() ?: 'video/mp4',
+        ]);
+    }
+
+    /**
+     * Handle Direct Course Resource / PDF Notes Upload
+     */
+    public function uploadCourseResource(Request $request)
+    {
+        $request->validate([
+            'resource' => 'required|file|mimes:pdf,doc,docx,zip,ppt,pptx|max:102400',
+        ]);
+
+        if (!$request->hasFile('resource') || !$request->file('resource')->isValid()) {
+            return response()->json(['success' => false, 'message' => 'Invalid or missing document file.'], 400);
+        }
+
+        $file = $request->file('resource');
+        $targetDir = public_path('uploads/courses/handouts');
+        if (!is_dir($targetDir)) {
+            mkdir($targetDir, 0755, true);
+        }
+
+        $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+        $safeBase = Str::slug($originalName) ?: 'handout';
+        $ext = strtolower($file->getClientOriginalExtension() ?: 'pdf');
+        $filename = $safeBase . '-' . time() . '-' . Str::random(6) . '.' . $ext;
+
+        $file->move($targetDir, $filename);
+
+        $relativeUrl = 'uploads/courses/handouts/' . $filename;
+        $fullUrl = asset($relativeUrl);
+        $fileSizeBytes = file_exists($targetDir . '/' . $filename) ? filesize($targetDir . '/' . $filename) : 0;
+        $formattedSize = round($fileSizeBytes / 1024, 1) . ' KB';
+
+        return response()->json([
+            'success' => true,
+            'url' => $fullUrl,
+            'relative_url' => $relativeUrl,
+            'filename' => $file->getClientOriginalName(),
+            'size' => $formattedSize,
+        ]);
+    }
+
+    /**
      * Manage Mock Tests & Questions
      */
     public function tests()

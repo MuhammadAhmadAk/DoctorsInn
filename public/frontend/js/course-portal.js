@@ -731,7 +731,11 @@ function selectActiveTopic(topicId) {
         if (videoContainer) videoContainer.classList.remove("d-none");
         if (textBanner) textBanner.classList.add("d-none");
         if (videoPlayer) {
-            videoPlayer.src = activeTopic.videoUrl;
+            let vUrl = activeTopic.videoUrl;
+            if (vUrl && !vUrl.startsWith('http') && !vUrl.startsWith('/')) {
+                vUrl = '/' + vUrl;
+            }
+            videoPlayer.src = vUrl;
             videoPlayer.load();
         }
     } else {

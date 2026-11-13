@@ -138,9 +138,22 @@ class SiteCmsSeeder extends Seeder
 
     protected function seedCourses(): void
     {
+        $curriculumData = [];
+        $curriculumFile = database_path('data/courses_curriculum.json');
+        if (file_exists($curriculumFile)) {
+            $curriculumData = json_decode(file_get_contents($curriculumFile), true) ?: [];
+        }
+
         $order = 1;
         foreach (config('courses', []) as $slug => $c) {
-            Course::firstOrCreate(
+            $curriculum = null;
+            if (!empty($curriculumData[$slug]['modules'])) {
+                $curriculum = $curriculumData[$slug]['modules'];
+            } elseif (!empty($c['curriculum']) && isset($c['curriculum'][0]['chapters'])) {
+                $curriculum = $c['curriculum'];
+            }
+
+            Course::updateOrCreate(
                 ['slug' => $c['slug'] ?? $slug],
                 [
                     'category' => $c['category'] ?? 'mdcat',
@@ -162,7 +175,7 @@ class SiteCmsSeeder extends Seeder
                     'success_badge' => $c['success_badge'] ?? null,
                     'overview' => $c['overview'] ?? '',
                     'what_will_you_learn' => $c['what_will_you_learn'] ?? [],
-                    'curriculum' => $c['curriculum'] ?? [],
+                    'curriculum' => $curriculum,
                     'instructor_info' => $c['instructor_info'] ?? [],
                     'success_stories' => $c['success_stories'] ?? [],
                     'reviews' => $c['reviews'] ?? [],

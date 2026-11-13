@@ -611,9 +611,59 @@
                 </div>
 
                 <div class="mb-3" id="videoUrlGroup">
-                    <label class="form-label font-12">Video Stream URL (MP4 / YouTube / Vimeo / CDN) <span class="text-danger">*</span></label>
-                    <input type="text" id="inputTopicVideoUrl" class="form-control font-12" placeholder="https://commondatastorage.googleapis.com/... or YouTube link">
-                    <div class="font-10 text-muted mt-1">Direct MP4 or unlisted YouTube video playable in student video player.</div>
+                    <div class="d-flex align-items-center justify-content-between mb-1.5">
+                        <label class="form-label font-12 fw-semibold text-dark mb-0">Video Lecture Source <span class="text-danger">*</span></label>
+                        <div class="btn-group btn-group-sm" role="group">
+                            <button type="button" class="btn btn-outline-primary py-0.5 px-2.5 font-11 active" id="btnTabUploadVideo" onclick="switchVideoMode('upload')">
+                                <i class="fa-solid fa-cloud-arrow-up me-1"></i> Upload Video File
+                            </button>
+                            <button type="button" class="btn btn-outline-primary py-0.5 px-2.5 font-11" id="btnTabUrlVideo" onclick="switchVideoMode('url')">
+                                <i class="fa-solid fa-link me-1"></i> External Stream / URL
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Mode A: Direct Video Upload Box -->
+                    <div id="videoUploadBox">
+                        <div class="border border-2 border-dashed rounded-3 p-3 text-center bg-light" id="videoDropZone" style="cursor: pointer;" onclick="document.getElementById('videoFileInput').click();">
+                            <i class="fa-solid fa-film text-primary font-24 mb-1"></i>
+                            <div class="fw-semibold text-dark font-12">Click to Upload Video Lecture or Drag & Drop</div>
+                            <div class="text-muted font-10">Direct MP4, WebM, MOV, MKV up to 1.5 GB. Automatically served via fast streaming CDN.</div>
+                            <input type="file" id="videoFileInput" accept="video/mp4,video/webm,video/quicktime,video/x-matroska,video/*" class="d-none">
+                        </div>
+
+                        <!-- Upload Progress Bar -->
+                        <div id="videoUploadProgressWrapper" class="d-none mt-2">
+                            <div class="d-flex justify-content-between font-11 mb-1">
+                                <span class="text-dark fw-semibold" id="videoUploadProgressText">Uploading video to server...</span>
+                                <span class="text-primary fw-bold" id="videoUploadPercent">0%</span>
+                            </div>
+                            <div class="progress" style="height: 6px;">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" id="videoProgressBar" role="progressbar" style="width: 0%;"></div>
+                            </div>
+                        </div>
+
+                        <!-- Video Preview Box -->
+                        <div id="videoPreviewWrapper" class="d-none mt-2 p-2 border rounded-2 bg-white">
+                            <div class="d-flex align-items-center justify-content-between mb-1.5">
+                                <div class="d-flex align-items-center gap-2 text-truncate">
+                                    <span class="badge bg-success bg-opacity-10 text-success font-10"><i class="fa-solid fa-circle-check me-1"></i> Video Ready</span>
+                                    <span class="font-11 fw-semibold text-dark text-truncate" id="videoPreviewName">video.mp4</span>
+                                    <span class="font-10 text-muted" id="videoPreviewSize">0 MB</span>
+                                </div>
+                                <button type="button" class="btn btn-sm btn-link text-danger p-0 font-11 text-decoration-none" onclick="clearUploadedVideo()">
+                                    <i class="fa-solid fa-trash me-1"></i> Remove
+                                </button>
+                            </div>
+                            <video id="videoModalPlayer" controls class="w-100 rounded" style="max-height: 180px; background: #000;"></video>
+                        </div>
+                    </div>
+
+                    <!-- Mode B: External Stream / URL Box -->
+                    <div id="videoUrlBox" class="d-none">
+                        <input type="text" id="inputTopicVideoUrl" class="form-control font-12" placeholder="https://commondatastorage.googleapis.com/... or unlisted YouTube/Vimeo/CDN link" oninput="onVideoUrlManualInput(this.value)">
+                        <div class="font-10 text-muted mt-1">Direct stream or unlisted video link.</div>
+                    </div>
                 </div>
 
                 <div class="row g-2 mb-3">
@@ -622,8 +672,20 @@
                         <input type="text" id="inputTopicHandout" class="form-control font-12" placeholder="e.g. Chapter 1 High-Yield Handout.pdf">
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label font-12">PDF Handout Download Link</label>
-                        <input type="text" id="inputTopicHandoutUrl" class="form-control font-12" placeholder="e.g. /downloads/notes/ch1.pdf or external URL">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <label class="form-label font-12 mb-0">PDF Handout Download Link</label>
+                            <button type="button" class="btn btn-sm btn-link text-primary p-0 font-11 text-decoration-none" onclick="document.getElementById('handoutFileInput').click();">
+                                <i class="fa-solid fa-cloud-arrow-up me-1"></i> Upload PDF
+                            </button>
+                        </div>
+                        <div class="input-group input-group-sm">
+                            <input type="text" id="inputTopicHandoutUrl" class="form-control font-11" placeholder="Upload file or enter URL">
+                            <button type="button" class="btn btn-outline-secondary font-11" onclick="document.getElementById('handoutFileInput').click();" title="Upload Handout PDF">
+                                <i class="fa-solid fa-file-arrow-up"></i>
+                            </button>
+                        </div>
+                        <input type="file" id="handoutFileInput" accept="application/pdf,.doc,.docx" class="d-none">
+                        <div id="handoutUploadIndicator" class="font-10 text-muted mt-0.5"></div>
                     </div>
                 </div>
 
@@ -941,6 +1003,45 @@ document.addEventListener('DOMContentLoaded', function () {
             renderBuilder();
         }
     });
+
+    // Video File Upload Drag & Drop and File Input
+    const videoInput = document.getElementById('videoFileInput');
+    if (videoInput) {
+        videoInput.addEventListener('change', function () {
+            if (this.files && this.files[0]) uploadVideoFile(this.files[0]);
+        });
+    }
+
+    const videoDropZone = document.getElementById('videoDropZone');
+    if (videoDropZone) {
+        ['dragenter', 'dragover'].forEach(eventName => {
+            videoDropZone.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                videoDropZone.classList.add('border-primary', 'bg-white');
+            }, false);
+        });
+        ['dragleave', 'drop'].forEach(eventName => {
+            videoDropZone.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                videoDropZone.classList.remove('border-primary', 'bg-white');
+            }, false);
+        });
+        videoDropZone.addEventListener('drop', (e) => {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            if (files && files[0]) uploadVideoFile(files[0]);
+        }, false);
+    }
+
+    // Handout File Input
+    const handoutInput = document.getElementById('handoutFileInput');
+    if (handoutInput) {
+        handoutInput.addEventListener('change', function () {
+            if (this.files && this.files[0]) uploadHandoutPdf(this.files[0]);
+        });
+    }
 
     // Form Submit Hook to ensure curriculum_json is populated
     document.getElementById('courseForm')?.addEventListener('submit', function () {
@@ -1313,19 +1414,202 @@ function toggleTopicTypeFields() {
     }
 }
 
+function switchVideoMode(mode) {
+    const btnUpload = document.getElementById('btnTabUploadVideo');
+    const btnUrl = document.getElementById('btnTabUrlVideo');
+    const boxUpload = document.getElementById('videoUploadBox');
+    const boxUrl = document.getElementById('videoUrlBox');
+
+    if (mode === 'upload') {
+        btnUpload?.classList.add('active');
+        btnUrl?.classList.remove('active');
+        boxUpload?.classList.remove('d-none');
+        boxUrl?.classList.add('d-none');
+    } else {
+        btnUrl?.classList.add('active');
+        btnUpload?.classList.remove('active');
+        boxUrl?.classList.remove('d-none');
+        boxUpload?.classList.add('d-none');
+    }
+}
+
+function clearUploadedVideo() {
+    const urlInput = document.getElementById('inputTopicVideoUrl');
+    const player = document.getElementById('videoModalPlayer');
+    const previewWrap = document.getElementById('videoPreviewWrapper');
+    const fileInput = document.getElementById('videoFileInput');
+
+    if (urlInput) urlInput.value = '';
+    if (player) {
+        player.pause();
+        player.src = '';
+    }
+    if (previewWrap) previewWrap.classList.add('d-none');
+    if (fileInput) fileInput.value = '';
+}
+
+function onVideoUrlManualInput(val) {
+    val = (val || '').trim();
+    const player = document.getElementById('videoModalPlayer');
+    const previewWrap = document.getElementById('videoPreviewWrapper');
+    const nameEl = document.getElementById('videoPreviewName');
+    const sizeEl = document.getElementById('videoPreviewSize');
+
+    if (val && !val.includes('youtube.com') && !val.includes('youtu.be') && !val.includes('vimeo.com')) {
+        if (player) player.src = val;
+        if (nameEl) nameEl.textContent = val.split('/').pop() || 'External Video';
+        if (sizeEl) sizeEl.textContent = 'Stream Link';
+        if (previewWrap) previewWrap.classList.remove('d-none');
+    }
+}
+
+function uploadVideoFile(file) {
+    if (!file) return;
+
+    // Validate size (up to 1.5GB)
+    const maxBytes = 1536 * 1024 * 1024;
+    if (file.size > maxBytes) {
+        alert('File size exceeds the 1.5 GB limit.');
+        return;
+    }
+
+    const progressWrap = document.getElementById('videoUploadProgressWrapper');
+    const progressBar = document.getElementById('videoProgressBar');
+    const progressPercent = document.getElementById('videoUploadPercent');
+    const progressText = document.getElementById('videoUploadProgressText');
+    const previewWrap = document.getElementById('videoPreviewWrapper');
+    const saveBtn = document.getElementById('btnSaveTopic');
+
+    if (progressWrap) progressWrap.classList.remove('d-none');
+    if (previewWrap) previewWrap.classList.add('d-none');
+    if (saveBtn) saveBtn.disabled = true;
+
+    const formData = new FormData();
+    formData.append('video', file);
+    formData.append('_token', '{{ csrf_token() }}');
+
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', '{{ route("admin.courses.uploadVideo") }}', true);
+    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+
+    xhr.upload.onprogress = function (e) {
+        if (e.lengthComputable) {
+            const pct = Math.round((e.loaded / e.total) * 100);
+            const loadedMb = (e.loaded / (1024 * 1024)).toFixed(1);
+            const totalMb = (e.total / (1024 * 1024)).toFixed(1);
+            if (progressBar) progressBar.style.width = pct + '%';
+            if (progressPercent) progressPercent.textContent = pct + '%';
+            if (progressText) progressText.textContent = `Uploading: ${loadedMb} MB / ${totalMb} MB (${pct}%)...`;
+        }
+    };
+
+    xhr.onload = function () {
+        if (saveBtn) saveBtn.disabled = false;
+        if (progressWrap) progressWrap.classList.add('d-none');
+
+        if (xhr.status >= 200 && xhr.status < 300) {
+            try {
+                const res = JSON.parse(xhr.responseText);
+                if (res.success) {
+                    const urlInput = document.getElementById('inputTopicVideoUrl');
+                    const player = document.getElementById('videoModalPlayer');
+                    const nameEl = document.getElementById('videoPreviewName');
+                    const sizeEl = document.getElementById('videoPreviewSize');
+
+                    if (urlInput) urlInput.value = res.relative_url || res.url;
+                    if (nameEl) nameEl.textContent = res.filename;
+                    if (sizeEl) sizeEl.textContent = res.size;
+                    if (player) {
+                        player.src = res.url;
+                        player.load();
+                    }
+                    if (previewWrap) previewWrap.classList.remove('d-none');
+                } else {
+                    alert('Upload failed: ' + (res.message || 'Unknown error'));
+                }
+            } catch (err) {
+                alert('Server returned invalid response.');
+            }
+        } else {
+            alert('Upload failed with status code ' + xhr.status);
+        }
+    };
+
+    xhr.onerror = function () {
+        if (saveBtn) saveBtn.disabled = false;
+        if (progressWrap) progressWrap.classList.add('d-none');
+        alert('Network error occurred during video upload.');
+    };
+
+    xhr.send(formData);
+}
+
+function uploadHandoutPdf(file) {
+    if (!file) return;
+
+    const indicator = document.getElementById('handoutUploadIndicator');
+    if (indicator) {
+        indicator.innerHTML = `<span class="text-primary"><i class="fa-solid fa-spinner fa-spin me-1"></i> Uploading ${file.name}...</span>`;
+    }
+
+    const formData = new FormData();
+    formData.append('resource', file);
+    formData.append('_token', '{{ csrf_token() }}');
+
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', '{{ route("admin.courses.uploadResource") }}', true);
+    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+
+    xhr.onload = function () {
+        if (xhr.status >= 200 && xhr.status < 300) {
+            try {
+                const res = JSON.parse(xhr.responseText);
+                if (res.success) {
+                    const titleInput = document.getElementById('inputTopicHandout');
+                    const urlInput = document.getElementById('inputTopicHandoutUrl');
+
+                    if (urlInput) urlInput.value = res.relative_url || res.url;
+                    if (titleInput && (!titleInput.value || titleInput.value.includes('Handout.pdf'))) {
+                        titleInput.value = res.filename;
+                    }
+
+                    if (indicator) {
+                        indicator.innerHTML = `<span class="text-success"><i class="fa-solid fa-circle-check me-1"></i> Uploaded: ${res.filename} (${res.size})</span>`;
+                    }
+                } else {
+                    if (indicator) indicator.innerHTML = `<span class="text-danger">Upload failed: ${res.message || 'Error'}</span>`;
+                }
+            } catch (err) {
+                if (indicator) indicator.innerHTML = `<span class="text-danger">Invalid server response</span>`;
+            }
+        } else {
+            if (indicator) indicator.innerHTML = `<span class="text-danger">Upload failed (${xhr.status})</span>`;
+        }
+    };
+
+    xhr.onerror = function () {
+        if (indicator) indicator.innerHTML = `<span class="text-danger">Network error</span>`;
+    };
+
+    xhr.send(formData);
+}
+
 function openTopicModal(modIdx, chIdx, topIdx = -1, defaultType = 'video') {
     document.getElementById('inputTopicModuleIdx').value = modIdx;
     document.getElementById('inputTopicChapterIdx').value = chIdx;
     document.getElementById('inputTopicIdx').value = topIdx;
 
     const ch = courseModules[modIdx]?.chapters[chIdx];
+    let videoUrl = '';
+
     if (topIdx >= 0 && ch && ch.topics[topIdx]) {
         const top = ch.topics[topIdx];
         document.getElementById('modalTopicTitle').textContent = 'Edit Topic';
         document.getElementById('inputTopicType').value = top.type || 'video';
         document.getElementById('inputTopicName').value = top.title || '';
         document.getElementById('inputTopicDuration').value = top.duration || '35 min';
-        document.getElementById('inputTopicVideoUrl').value = top.videoUrl || '';
+        videoUrl = top.videoUrl || '';
+        document.getElementById('inputTopicVideoUrl').value = videoUrl;
         document.getElementById('inputTopicNotes').value = top.readContent || '';
 
         const res = (top.resources && top.resources[0]) || {};
@@ -1340,6 +1624,33 @@ function openTopicModal(modIdx, chIdx, topIdx = -1, defaultType = 'video') {
         document.getElementById('inputTopicNotes').value = '';
         document.getElementById('inputTopicHandout').value = '';
         document.getElementById('inputTopicHandoutUrl').value = '';
+    }
+
+    // Configure Video player preview & mode
+    const previewWrap = document.getElementById('videoPreviewWrapper');
+    const player = document.getElementById('videoModalPlayer');
+    const progressWrap = document.getElementById('videoUploadProgressWrapper');
+    const indicator = document.getElementById('handoutUploadIndicator');
+    if (progressWrap) progressWrap.classList.add('d-none');
+    if (indicator) indicator.innerHTML = '';
+
+    if (videoUrl) {
+        if (videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be') || videoUrl.includes('vimeo.com')) {
+            switchVideoMode('url');
+        } else {
+            switchVideoMode('upload');
+            if (player) {
+                player.src = videoUrl.startsWith('http') || videoUrl.startsWith('/') ? videoUrl : ('/' + videoUrl);
+            }
+            const nameEl = document.getElementById('videoPreviewName');
+            const sizeEl = document.getElementById('videoPreviewSize');
+            if (nameEl) nameEl.textContent = videoUrl.split('/').pop() || 'Video Lecture';
+            if (sizeEl) sizeEl.textContent = 'Active Video';
+            if (previewWrap) previewWrap.classList.remove('d-none');
+        }
+    } else {
+        switchVideoMode('upload');
+        clearUploadedVideo();
     }
 
     toggleTopicTypeFields();
