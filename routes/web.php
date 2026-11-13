@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Backend\AdminController;
+use App\Http\Controllers\Backend\AdminLectureController;
+use App\Http\Controllers\LectureStreamController;
 use App\Http\Controllers\RouteController;
 use Illuminate\Support\Facades\Route;
 
@@ -88,7 +90,22 @@ Route::prefix('student')->name('student.')->group(function () {
     Route::get('/analytics', [StudentDashboardController::class, 'analytics'])->name('analytics');
     Route::get('/settings', [StudentDashboardController::class, 'settings'])->name('settings');
     Route::post('/settings', [StudentDashboardController::class, 'updateSettings'])->name('settings.update');
+
+    // Secure lecture playback sessions & watch progress
+    Route::post('/lectures/{video}/playback-url', [LectureStreamController::class, 'playbackUrl'])->name('lectures.url');
+    Route::post('/lectures/{video}/progress', [LectureStreamController::class, 'saveProgress'])->name('lectures.progress');
 });
+
+// Signed delivery for lectures. Segments/playlists come from HLS; `source` is
+// the direct-progress fallback used when FFmpeg is not installed.
+Route::get('/media/lectures/{video}/source', [LectureStreamController::class, 'streamOriginal'])
+    ->middleware(['signed', 'throttle:1200,1'])
+    ->name('lectures.original');
+
+Route::get('/media/lectures/{video}/{file}', [LectureStreamController::class, 'stream'])
+    ->where('file', '.*')
+    ->middleware(['signed', 'throttle:1200,1'])
+    ->name('lectures.hls');
 
 Route::get('/dashboard', function () {
     return redirect()->route('student.dashboard');
@@ -141,6 +158,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/blogs', [AdminController::class, 'blogs'])->name('blogs');
         Route::post('/blogs', [AdminController::class, 'storeBlog'])->name('blogs.store');
         Route::delete('/blogs/{slug}', [AdminController::class, 'deleteBlog'])->name('blogs.delete');
+
+        // Lecture video library, processing status & secure preview
+        Route::post('/lectures', [AdminLectureController::class, 'store'])->name('lectures.store');
+        Route::get('/lectures/{video}/status', [AdminLectureController::class, 'status'])->name('lectures.status');
+        Route::get('/lectures/{video}/preview-url', [LectureStreamController::class, 'adminPlaybackUrl'])->name('lectures.preview');
+        Route::post('/lectures/{video}/retry', [AdminLectureController::class, 'retry'])->name('lectures.retry');
 
         Route::get('/students', [AdminController::class, 'students'])->name('students');
         Route::view('/staff-access', 'backend.staff.index')->name('staff');

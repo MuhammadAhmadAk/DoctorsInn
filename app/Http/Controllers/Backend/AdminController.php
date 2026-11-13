@@ -142,7 +142,7 @@ class AdminController extends Controller
      */
     public function createCourse()
     {
-        return view('backend.courses.create');
+        return view('backend.courses.create', ['maxUploadMb' => $this->uploadLimitMb()]);
     }
 
     /**
@@ -154,7 +154,38 @@ class AdminController extends Controller
         if (!$course) {
             return redirect()->route('admin.courses')->with('error', 'Course not found in database.');
         }
-        return view('backend.courses.create', compact('course'));
+        return view('backend.courses.create', ['course' => $course, 'maxUploadMb' => $this->uploadLimitMb()]);
+    }
+
+    /**
+     * Effective PHP upload limit in megabytes.
+     */
+    protected function uploadLimitMb(): float
+    {
+        $toBytes = static function (string $value): int {
+            $value = trim($value);
+            if ($value === '' || $value === '-1') {
+                return 0;
+            }
+            $unit = strtolower(substr($value, -1));
+            $number = (float) $value;
+
+            return (int) match ($unit) {
+                'g' => $number * 1073741824,
+                'm' => $number * 1048576,
+                'k' => $number * 1024,
+                default => $number,
+            };
+        };
+
+        $upload = $toBytes((string) ini_get('upload_max_filesize'));
+        $post = $toBytes((string) ini_get('post_max_size'));
+        $bytes = $upload > 0 ? $upload : $post;
+        if ($post > 0) {
+            $bytes = $bytes > 0 ? min($bytes, $post) : $post;
+        }
+
+        return round(max(1, $bytes) / 1048576, 1);
     }
 
     /**

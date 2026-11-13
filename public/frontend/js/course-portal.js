@@ -112,6 +112,8 @@ function normalizeCourseContent(course) {
                             quizType: quizType,
                             duration: tp.duration || (isQuiz ? "5 min" : "35 min"),
                             videoUrl: tp.videoUrl || "",
+                            lectureId: tp.lectureId || null,
+                            lectureTitle: tp.lectureTitle || null,
                             readContent: tp.readContent || "",
                             resources: tp.resources || course.defaultResources || [],
                             quizData: tp.quizData || (isQuiz ? generateFallbackQuiz(tp.title) : null),
@@ -160,6 +162,8 @@ function normalizeCourseContent(course) {
                     quizType: isQuiz ? (les.quizType || "topic") : "topic",
                     duration: les.duration || "30 min",
                     videoUrl: les.videoUrl || "",
+                    lectureId: les.lectureId || null,
+                    lectureTitle: les.lectureTitle || null,
                     readContent: les.readContent || "",
                     resources: les.resources || course.defaultResources || [],
                     quizData: les.quizData || (isQuiz ? generateFallbackQuiz(les.title) : null),
@@ -618,6 +622,15 @@ function renderCurriculumSidebar() {
 // 4. TOPIC & QUIZ SELECTION CONTROLLER
 // =============================================================================
 
+function resolveCourseMediaUrl(url) {
+    url = (url || '').trim();
+    if (!url) return '';
+    if (/^(https?:)?\/\//i.test(url) || /^(blob:|data:)/i.test(url)) return url;
+    if (url.startsWith('/')) return url;
+    const base = (window.APP_BASE_URL || '').replace(/\/+$/, '');
+    return base ? base + '/' + url.replace(/^\/+/, '') : '/' + url.replace(/^\/+/, '');
+}
+
 function selectActiveTopic(topicId) {
     activeTopicId = topicId;
 
@@ -703,6 +716,7 @@ function selectActiveTopic(topicId) {
     // CASE A: QUIZ STUDIO ITEM (Topic Quiz or Chapter Assessment)
     // =========================================================================
     if (activeTopic.isQuiz) {
+        if (window.LecturePlayer) window.LecturePlayer.close();
         if (videoPlayer) {
             videoPlayer.pause();
             videoPlayer.src = "";
@@ -725,19 +739,55 @@ function selectActiveTopic(topicId) {
     if (topicTabsWrapper) topicTabsWrapper.classList.remove("d-none");
 
     // Video vs Reading View
-    if (activeTopic.type === "video" && activeTopic.videoUrl) {
+    const lectureLibrary = window.lectureLibrary || {};
+    const lectureRecord = activeTopic.lectureId ? lectureLibrary[activeTopic.lectureId] : null;
+    const lecturePlayer = window.LecturePlayer;
+
+    if (activeTopic.type === "video" && lectureRecord && lecturePlayer) {
+        // Secure HLS lecture (private storage + signed, time-limited URLs)
+        if (videoContainer) videoContainer.classList.add("d-none");
+        if (textBanner) textBanner.classList.add("d-none");
+        if (videoPlayer) {
+            videoPlayer.pause();
+            videoPlayer.src = "";
+        }
+
+        const allTopics = getAllCourseTopics(modules);
+        const currentIdx = allTopics.findIndex(t => t.id === activeTopic.id);
+        const savedProgress = (window.lectureProgressMap || {})[lectureRecord.id] || {};
+
+        lecturePlayer.open(lectureRecord, {
+            topicId: activeTopic.id,
+            resume: savedProgress.position || 0,
+            alreadyCompleted: Boolean(savedProgress.completed),
+            onCompleted: function () {
+                const completedList = getCompletedItems(activeCourseId);
+                if (!completedList.includes(activeTopic.id)) {
+                    setItemCompleted(activeCourseId, activeTopic.id, true);
+                }
+                updateCompleteButtonUi(true);
+            },
+            onPrev: function () {
+                if (currentIdx > 0) selectActiveTopic(allTopics[currentIdx - 1].id);
+            },
+            onNext: function () {
+                if (currentIdx >= 0 && currentIdx < allTopics.length - 1) {
+                    selectActiveTopic(allTopics[currentIdx + 1].id);
+                }
+            }
+        });
+    } else if (activeTopic.type === "video" && activeTopic.videoUrl) {
+        if (window.LecturePlayer) window.LecturePlayer.close();
         if (videoContainer) videoContainer.classList.remove("d-none");
         if (textBanner) textBanner.classList.add("d-none");
         if (videoPlayer) {
-            let vUrl = activeTopic.videoUrl;
-            if (vUrl && !vUrl.startsWith('http') && !vUrl.startsWith('/')) {
-                vUrl = '/' + vUrl;
-            }
+            const vUrl = resolveCourseMediaUrl(activeTopic.videoUrl);
             videoPlayer.preload = "metadata";
             videoPlayer.src = vUrl;
             videoPlayer.load();
         }
     } else {
+        if (window.LecturePlayer) window.LecturePlayer.close();
         if (videoContainer) videoContainer.classList.add("d-none");
         if (textBanner) textBanner.classList.remove("d-none");
         if (videoPlayer) {

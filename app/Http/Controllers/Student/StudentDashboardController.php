@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
+use App\Models\LectureProgress;
+use App\Models\LectureVideo;
 use App\Services\SiteContentService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Schema;
 
 class StudentDashboardController extends Controller
 {
@@ -179,7 +182,103 @@ class StudentDashboardController extends Controller
 
         $activeCourse = $courses[$slug] ?? reset($courses);
 
-        return view('student.classroom', compact('studentData', 'courses', 'activeCourse'));
+        $lectureLibrary = [];
+        $lectureProgressMap = [];
+
+        try {
+            if ($activeCourse && Schema::hasTable('lecture_videos')) {
+                $lectureIds = $this->collectLectureIds($activeCourse['curriculum'] ?? $activeCourse['modules'] ?? []);
+                $courseId = $activeCourse['id'] ?? null;
+
+                if ($lectureIds || $courseId) {
+                    $lectures = LectureVideo::query()
+                        ->where(function ($query) use ($lectureIds, $courseId) {
+                            if ($lectureIds) {
+                                $query->whereIn('id', $lectureIds);
+                            }
+                            if ($courseId) {
+                                $query->orWhere('course_id', $courseId);
+                            }
+                        })
+                        ->get();
+
+                    $lectureLibrary = $lectures->mapWithKeys(fn (LectureVideo $video) => [
+                        $video->id => [
+                            'id' => $video->id,
+                            'title' => $video->title,
+                            'status' => $video->status,
+                            'progress' => (int) $video->progress,
+                            'error' => $video->error_message,
+                            'duration' => $video->duration_seconds,
+                            'hls' => (bool) $video->hls_path,
+                            'qualities' => array_keys($video->qualities ?: []),
+                        ],
+                    ])->all();
+
+                    if (Schema::hasTable('lecture_progress')) {
+                        $lectureProgressMap = LectureProgress::query()
+                            ->where('user_id', $studentData['id'])
+                            ->whereIn('lecture_video_id', $lectures->pluck('id'))
+                            ->get()
+                            ->mapWithKeys(fn (LectureProgress $progress) => [
+                                $progress->lecture_video_id => [
+                                    'position' => (int) $progress->position_seconds,
+                                    'duration' => (int) $progress->duration_seconds,
+                                    'percent' => (int) $progress->percent,
+                                    'completed' => (bool) $progress->completed,
+                                ],
+                            ])
+                            ->all();
+                    }
+                }
+            }
+        } catch (\Throwable $e) {
+            // Lecture tables not migrated yet — keep the classroom usable.
+            $lectureLibrary = [];
+            $lectureProgressMap = [];
+        }
+
+        return view('student.classroom', compact(
+            'studentData',
+            'courses',
+            'activeCourse',
+            'lectureLibrary',
+            'lectureProgressMap'
+        ));
+    }
+
+    /**
+     * Recursively collect lecture ids referenced inside a curriculum payload.
+     */
+    protected function collectLectureIds($data, array &$ids = []): array
+    {
+        if (is_string($data)) {
+            $decoded = json_decode($data, true);
+            if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                $this->collectLectureIds($decoded, $ids);
+            }
+
+            return array_keys($ids);
+        }
+
+        if (! is_array($data)) {
+            return array_keys($ids);
+        }
+
+        foreach ($data as $key => $value) {
+            if ($key === 'lectureId') {
+                if (is_numeric($value) && (int) $value > 0) {
+                    $ids[(int) $value] = true;
+                }
+                continue;
+            }
+
+            if (is_array($value) || is_string($value)) {
+                $this->collectLectureIds($value, $ids);
+            }
+        }
+
+        return array_keys($ids);
     }
 
     /**

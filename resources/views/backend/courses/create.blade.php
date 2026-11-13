@@ -3,6 +3,7 @@
 @section('title', isset($course) ? 'Edit Course: ' . $course->title : 'Add New Course')
 
 @section('extra_css')
+<link rel="stylesheet" href="https://vjs.zencdn.net/8.10.0/video-js.css">
 <style>
     /* Course Studio & 3-Tier Builder Refined Styling */
     .builder-module-card {
@@ -580,13 +581,14 @@
                         </div>
                     </div>
 
-                    <!-- Mode A: Direct Video Upload Box -->
+                    <!-- Mode A: Secure HLS Lecture Upload -->
                     <div id="videoUploadBox">
+                        <input type="hidden" id="inputTopicLectureId" value="">
                         <div class="border border-2 border-dashed rounded-3 p-3 text-center bg-light" id="videoDropZone" style="cursor: pointer;" onclick="document.getElementById('videoFileInput').click();">
                             <i class="fa-solid fa-film text-primary font-24 mb-1"></i>
-                            <div class="fw-semibold text-dark font-12">Click to Upload Video Lecture or Drag & Drop</div>
-                            <div class="text-muted font-10">Direct MP4, WebM, MOV, MKV up to 1.5 GB. Automatically served via fast streaming CDN.</div>
-                            <input type="file" id="videoFileInput" accept="video/mp4,video/webm,video/quicktime,video/x-matroska,video/*" class="d-none">
+                            <div class="fw-semibold text-dark font-12">Click to Upload Video Lecture or Drag &amp; Drop</div>
+                            <div class="text-muted font-10">MP4, MOV, M4V, WebM, MKV or AVI up to {{ $maxUploadMb ?? 40 }} MB. Stored privately and streamed securely; adaptive HLS when FFmpeg is available.</div>
+                            <input type="file" id="videoFileInput" accept="video/mp4,video/webm,video/quicktime,video/x-matroska,video/x-msvideo,video/*" class="d-none">
                         </div>
 
                         <!-- Upload Progress Bar with Cancel Button -->
@@ -608,11 +610,36 @@
                             </div>
                         </div>
 
+                        <!-- Background Processing / Transcoding Status -->
+                        <div id="videoProcessingWrapper" class="d-none mt-2 p-2.5 rounded-2 border bg-white shadow-sm">
+                            <div class="d-flex align-items-center justify-content-between font-11 mb-1.5">
+                                <div class="d-flex align-items-center gap-2 text-truncate me-2">
+                                    <span class="spinner-border spinner-border-sm text-primary flex-shrink-0" style="width: 13px; height: 13px;" role="status"></span>
+                                    <span class="text-dark fw-semibold text-truncate" id="videoProcessingText">Processing lecture into HLS…</span>
+                                </div>
+                                <div class="d-flex align-items-center gap-2 flex-shrink-0">
+                                    <span class="text-primary fw-bold font-12" id="videoProcessingPercent">0%</span>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary py-0.5 px-2 font-11 rounded" onclick="stopLecturePolling()" title="Continue processing in the background">
+                                        <i class="fa-solid fa-eye-slash me-1"></i> Hide
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="progress" style="height: 7px; border-radius: 4px;">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" id="videoProcessingBar" role="progressbar" style="width: 0%;"></div>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between mt-1.5">
+                                <div class="font-10 text-danger d-none" id="videoProcessingError"></div>
+                                <button type="button" class="btn btn-sm btn-outline-primary py-0.5 px-2 font-10 rounded d-none" id="btnRetryLectureProcessing" onclick="retryLectureProcessing()">
+                                    <i class="fa-solid fa-rotate-right me-1"></i> Retry Processing
+                                </button>
+                            </div>
+                        </div>
+
                         <!-- Video Preview Box -->
                         <div id="videoPreviewWrapper" class="d-none mt-2 p-2 border rounded-2 bg-white">
                             <div class="d-flex align-items-center justify-content-between mb-1.5">
                                 <div class="d-flex align-items-center gap-2 text-truncate">
-                                    <span class="badge bg-success bg-opacity-10 text-success font-10"><i class="fa-solid fa-circle-check me-1"></i> Video Ready</span>
+                                    <span class="badge bg-success bg-opacity-10 text-success font-10" id="videoPreviewBadge"><i class="fa-solid fa-circle-check me-1"></i> HLS Ready</span>
                                     <span class="font-11 fw-semibold text-dark text-truncate" id="videoPreviewName">video.mp4</span>
                                     <span class="font-10 text-muted" id="videoPreviewSize">0 MB</span>
                                 </div>
@@ -620,7 +647,7 @@
                                     <i class="fa-solid fa-trash me-1"></i> Remove
                                 </button>
                             </div>
-                            <video id="videoModalPlayer" controls class="w-100 rounded" style="max-height: 180px; background: #000;"></video>
+                            <video id="videoModalPlayer" class="video-js vjs-big-play-centered w-100 rounded" controls preload="auto" playsinline style="max-height: 220px; background: #000;"></video>
                         </div>
                     </div>
 
@@ -730,11 +757,17 @@
 @endsection
 
 @section('extra_js')
+<script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/videojs-contrib-quality-levels@4.1.0/dist/videojs-contrib-quality-levels.min.js"></script>
 <script>
 /**
  * DoctorsInn Admin Course & 3-Tier Hierarchy Studio
  * Modules -> Chapters -> Topics & Quizzes
  */
+
+const COURSE_STUDIO_ID = @json($course->id ?? null);
+const COURSE_STUDIO_UPLOAD_MAX_MB = {{ $maxUploadMb ?? 40 }};
+const COURSE_STUDIO_BASE_URL = @json(url('/'));
 
 // Initial Seed Data (from DB or default starter)
 @php
@@ -768,7 +801,7 @@ const standardPmdcTemplate = [
                         title: "1.1 Cell Membrane & Fluid Mosaic Architecture",
                         type: "video",
                         duration: "35 min",
-                        videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+                        videoUrl: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
                         readContent: "<p><strong>Summary:</strong> Covers Singer & Nicolson's Fluid Mosaic Model, lipid bilayer, cholesterol buffer and transport mechanisms.</p>",
                         resources: [{ name: "Cell Biology Chapter Notes — PDF", type: "pdf" }]
                     },
@@ -873,7 +906,7 @@ const standardPmdcTemplate = [
                         title: "1.1 Orbital Hybridization & Bond Angles",
                         type: "video",
                         duration: "40 min",
-                        videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+                        videoUrl: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
                         readContent: "<p>Determining steric numbers, hybrid orbitals and geometry deviations.</p>",
                         resources: [{ name: "Hybridization Shortcut Chart — PDF", type: "pdf" }]
                     },
@@ -1012,9 +1045,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const modalTopicEl = document.getElementById('modalTopic');
     if (modalTopicEl) {
         modalTopicEl.addEventListener('hidden.bs.modal', function () {
-            cancelVideoUpload();
-            cancelHandoutUpload();
-        });
+        cancelVideoUpload();
+        cancelHandoutUpload();
+        stopLecturePolling();
+        if (topicVideoJs) { try { topicVideoJs.pause(); } catch (e) {} }
+    });
     }
 
     // Form Submit Hook to ensure curriculum_json is populated
@@ -1164,7 +1199,9 @@ function renderBuilder() {
                                                 <div class="d-flex align-items-center gap-2 flex-grow-1 text-truncate">
                                                     ${iconHtml}
                                                     <div class="text-truncate">
-                                                        <div class="fw-semibold text-dark font-12 text-truncate">${escapeHtml(top.title || 'Untitled Topic')}</div>
+                                                        <div class="fw-semibold text-dark font-12 text-truncate">${escapeHtml(top.title || 'Untitled Topic')}
+                                                            ${top.lectureId ? '<span class="badge bg-primary bg-opacity-10 text-primary font-10 ms-1">HLS</span>' : ''}
+                                                        </div>
                                                         <div class="d-flex align-items-center gap-2 font-10 text-muted">
                                                             <span>${top.duration || '15 min'}</span>
                                                             ${isQuiz ? `<span>&bull; ${questionsCount} Questions</span>` : ''}
@@ -1411,6 +1448,10 @@ function cancelVideoUpload() {
         currentVideoXhr = null;
     }
     resetVideoUploadUi();
+    if (!currentLecture) {
+        const saveBtn = document.getElementById('btnSaveTopic');
+        if (saveBtn) saveBtn.disabled = false;
+    }
 }
 
 function cancelHandoutUpload() {
@@ -1432,43 +1473,298 @@ function resetVideoUploadUi() {
     const progressPercent = document.getElementById('videoUploadPercent');
     const progressText = document.getElementById('videoUploadProgressText');
     const fileInput = document.getElementById('videoFileInput');
-    const saveBtn = document.getElementById('btnSaveTopic');
 
     if (progressWrap) progressWrap.classList.add('d-none');
     if (progressBar) progressBar.style.width = '0%';
     if (progressPercent) progressPercent.textContent = '0%';
     if (progressText) progressText.textContent = 'Uploading video to server...';
     if (fileInput) fileInput.value = '';
-    if (saveBtn) saveBtn.disabled = false;
+}
+
+// =============================================================================
+// SECURE HLS LECTURE PIPELINE (upload -> background transcode -> signed preview)
+// =============================================================================
+let currentLecture = null;
+let lecturePollTimer = null;
+let topicVideoJs = null;
+
+function getTopicPlayer() {
+    if (!window.videojs) return null;
+    if (!topicVideoJs) {
+        topicVideoJs = videojs('videoModalPlayer', {
+            controls: true,
+            autoplay: false,
+            preload: 'auto',
+            fluid: false,
+            aspectRatio: '16:9',
+            html5: { vhs: { overrideNative: true } }
+        });
+        topicVideoJs.qualityLevels();
+    }
+    return topicVideoJs;
+}
+
+function resolveMediaUrl(url) {
+    url = (url || '').trim();
+    if (!url) return '';
+    if (/^(https?:)?\/\//i.test(url) || /^(blob:|data:)/i.test(url)) return url;
+    return COURSE_STUDIO_BASE_URL.replace(/\/+$/, '') + '/' + url.replace(/^\/+/, '');
+}
+
+function setTopicVideoSource(src, mime) {
+    const el = document.getElementById('videoModalPlayer');
+    if (!window.videojs) {
+        if (!el) return;
+        if (!src) { el.pause(); el.removeAttribute('src'); el.load(); return; }
+        el.src = src;
+        el.load();
+        return;
+    }
+    const player = getTopicPlayer();
+    if (!player) return;
+    if (!src) {
+        try { player.pause(); player.reset(); } catch (e) {}
+        return;
+    }
+    player.src({ src: src, type: mime || (/\.m3u8(\?|$)/i.test(src) ? 'application/x-mpegURL' : 'video/mp4') });
+    const playPromise = player.play();
+    if (playPromise && playPromise.catch) playPromise.catch(function () {});
+}
+
+function stopLecturePolling() {
+    if (lecturePollTimer) {
+        window.clearTimeout(lecturePollTimer);
+        lecturePollTimer = null;
+    }
+}
+
+function formatLectureBytes(bytes) {
+    if (!bytes) return '';
+    if (bytes >= 1073741824) return (bytes / 1073741824).toFixed(1) + ' GB';
+    return (bytes / 1048576).toFixed(1) + ' MB';
+}
+
+function updateLecturePreviewMeta(lecture) {
+    const nameEl = document.getElementById('videoPreviewName');
+    const sizeEl = document.getElementById('videoPreviewSize');
+    if (nameEl && lecture.title) nameEl.textContent = lecture.title;
+    if (sizeEl) {
+        const size = formatLectureBytes(lecture.size_bytes);
+        const qualities = (lecture.qualities && lecture.qualities.length)
+            ? ' · HLS ' + lecture.qualities.join('/')
+            : (lecture.ready && lecture.hls === false ? ' · Direct stream' : '');
+        if (size || qualities) sizeEl.textContent = (size || 'Ready') + qualities;
+    }
+}
+
+async function loadLecturePreview(lectureId) {
+    try {
+        const res = await fetch(`${COURSE_STUDIO_BASE_URL.replace(/\/+$/, '')}/admin/lectures/${lectureId}/preview-url`, {
+            headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' }
+        });
+        const data = await res.json();
+        if (!res.ok || !data.ready) {
+            showProcessingError(data.message || 'Lecture is still being processed.');
+            return;
+        }
+        const previewWrap = document.getElementById('videoPreviewWrapper');
+        if (previewWrap) previewWrap.classList.remove('d-none');
+        setTopicVideoSource(data.url, data.type || 'application/x-mpegURL');
+    } catch (e) {
+        showProcessingError('Could not load the secure preview. Please try again.');
+    }
+}
+
+function showProcessingError(message) {
+    const errEl = document.getElementById('videoProcessingError');
+    if (!errEl) return;
+    errEl.textContent = message;
+    errEl.classList.remove('d-none');
+}
+
+function applyLectureState(lecture, fromPoll = false) {
+    if (!fromPoll) stopLecturePolling();
+    currentLecture = lecture || null;
+
+    const hidden = document.getElementById('inputTopicLectureId');
+    const uploadWrap = document.getElementById('videoUploadProgressWrapper');
+    const processingWrap = document.getElementById('videoProcessingWrapper');
+    const previewWrap = document.getElementById('videoPreviewWrapper');
+    const saveBtn = document.getElementById('btnSaveTopic');
+    const errEl = document.getElementById('videoProcessingError');
+    const retryBtn = document.getElementById('btnRetryLectureProcessing');
+    const procText = document.getElementById('videoProcessingText');
+    const procPercent = document.getElementById('videoProcessingPercent');
+    const procBar = document.getElementById('videoProcessingBar');
+
+    if (uploadWrap) uploadWrap.classList.add('d-none');
+
+    if (!lecture) {
+        if (hidden) hidden.value = '';
+        if (processingWrap) processingWrap.classList.add('d-none');
+        if (previewWrap) previewWrap.classList.add('d-none');
+        if (errEl) errEl.classList.add('d-none');
+        if (retryBtn) retryBtn.classList.add('d-none');
+        if (saveBtn) saveBtn.disabled = false;
+        stopLecturePolling();
+        return;
+    }
+
+    if (hidden) hidden.value = lecture.id;
+    updateLecturePreviewMeta(lecture);
+
+    if (lecture.status === 'ready') {
+        if (processingWrap) processingWrap.classList.add('d-none');
+        if (retryBtn) retryBtn.classList.add('d-none');
+        if (saveBtn) saveBtn.disabled = false;
+        loadLecturePreview(lecture.id);
+        stopLecturePolling();
+        return;
+    }
+
+    if (previewWrap) previewWrap.classList.add('d-none');
+    if (processingWrap) processingWrap.classList.remove('d-none');
+
+    const pct = Math.max(0, Math.min(100, lecture.progress || 0));
+    if (procPercent) procPercent.textContent = pct + '%';
+    if (procBar) procBar.style.width = pct + '%';
+    if (procText) {
+        procText.textContent = lecture.status === 'failed'
+            ? 'Processing failed'
+            : (lecture.status === 'queued' ? 'Queued for background processing…' : 'Transcoding to adaptive HLS…');
+    }
+    if (errEl) {
+        if (lecture.error) {
+            errEl.textContent = lecture.error;
+            errEl.classList.remove('d-none');
+        } else {
+            errEl.classList.add('d-none');
+        }
+    }
+
+    if (lecture.status === 'failed') {
+        if (retryBtn) retryBtn.classList.remove('d-none');
+        if (saveBtn) saveBtn.disabled = true;
+        stopLecturePolling();
+        return;
+    }
+
+    // queued / processing
+    if (retryBtn) retryBtn.classList.add('d-none');
+    if (saveBtn) saveBtn.disabled = true;
+    if (!fromPoll) startLecturePolling(lecture.id);
+}
+
+function startLecturePolling(lectureId) {
+    stopLecturePolling();
+    const id = String(lectureId);
+    const tick = async function () {
+        lecturePollTimer = null;
+        let lecture = null;
+        try {
+            const res = await fetch(`${COURSE_STUDIO_BASE_URL.replace(/\/+$/, '')}/admin/lectures/${id}/status`, {
+                headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' }
+            });
+            if (res.ok) lecture = await res.json();
+        } catch (e) { /* keep polling */ }
+
+        if (!currentLecture || String(currentLecture.id) !== id) return;
+        if (lecture) applyLectureState(lecture, true);
+
+        if (!lecture || (currentLecture && currentLecture.status !== 'ready' && currentLecture.status !== 'failed')) {
+            lecturePollTimer = window.setTimeout(tick, 3000);
+        }
+    };
+    lecturePollTimer = window.setTimeout(tick, 3000);
+}
+
+async function loadLectureById(lectureId) {
+    try {
+        const res = await fetch(`${COURSE_STUDIO_BASE_URL.replace(/\/+$/, '')}/admin/lectures/${lectureId}/status`, {
+            headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' }
+        });
+        if (!res.ok) {
+            applyLectureState({ id: lectureId, status: 'failed', progress: 0, error: 'This lecture could not be found. It may have been deleted.' });
+            return;
+        }
+        applyLectureState(await res.json());
+    } catch (e) {
+        applyLectureState({ id: lectureId, status: 'failed', progress: 0, error: 'Could not load lecture status. Check your connection and retry.' });
+    }
+}
+
+async function retryLectureProcessing() {
+    if (!currentLecture || !currentLecture.id) return;
+    const retryBtn = document.getElementById('btnRetryLectureProcessing');
+    if (retryBtn) retryBtn.disabled = true;
+    try {
+        const res = await fetch(`${COURSE_STUDIO_BASE_URL.replace(/\/+$/, '')}/admin/lectures/${currentLecture.id}/retry`, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        });
+        const data = await res.json();
+        if (!res.ok) {
+            showProcessingError(data.message || 'Could not retry processing.');
+            return;
+        }
+        applyLectureState(data.lecture || { id: currentLecture.id, status: 'queued', progress: 0 });
+    } catch (e) {
+        showProcessingError('Network error while retrying processing.');
+    } finally {
+        if (retryBtn) retryBtn.disabled = false;
+    }
 }
 
 function clearUploadedVideo() {
     cancelVideoUpload();
+    stopLecturePolling();
+    currentLecture = null;
+
+    const lectureInput = document.getElementById('inputTopicLectureId');
     const urlInput = document.getElementById('inputTopicVideoUrl');
-    const player = document.getElementById('videoModalPlayer');
     const previewWrap = document.getElementById('videoPreviewWrapper');
     const fileInput = document.getElementById('videoFileInput');
+    const processingWrap = document.getElementById('videoProcessingWrapper');
+    const errEl = document.getElementById('videoProcessingError');
+    const retryBtn = document.getElementById('btnRetryLectureProcessing');
+    const saveBtn = document.getElementById('btnSaveTopic');
 
+    if (lectureInput) lectureInput.value = '';
     if (urlInput) urlInput.value = '';
-    if (player) {
-        player.pause();
-        player.src = '';
-    }
     if (previewWrap) previewWrap.classList.add('d-none');
+    if (processingWrap) processingWrap.classList.add('d-none');
+    if (errEl) errEl.classList.add('d-none');
+    if (retryBtn) retryBtn.classList.add('d-none');
+    if (saveBtn) saveBtn.disabled = false;
     if (fileInput) fileInput.value = '';
+    setTopicVideoSource('');
 }
 
 function onVideoUrlManualInput(val) {
     val = (val || '').trim();
-    const player = document.getElementById('videoModalPlayer');
-    const previewWrap = document.getElementById('videoPreviewWrapper');
     const nameEl = document.getElementById('videoPreviewName');
     const sizeEl = document.getElementById('videoPreviewSize');
 
+    if (val) {
+        // Manual external URL replaces any uploaded lecture binding.
+        const lectureInput = document.getElementById('inputTopicLectureId');
+        if (lectureInput) lectureInput.value = '';
+        stopLecturePolling();
+        currentLecture = null;
+        const processingWrap = document.getElementById('videoProcessingWrapper');
+        if (processingWrap) processingWrap.classList.add('d-none');
+    }
+
     if (val && !val.includes('youtube.com') && !val.includes('youtu.be') && !val.includes('vimeo.com')) {
-        if (player) player.src = val;
+        setTopicVideoSource(resolveMediaUrl(val));
         if (nameEl) nameEl.textContent = val.split('/').pop() || 'External Video';
         if (sizeEl) sizeEl.textContent = 'Stream Link';
+        const previewWrap = document.getElementById('videoPreviewWrapper');
         if (previewWrap) previewWrap.classList.remove('d-none');
     }
 }
@@ -1478,11 +1774,19 @@ function uploadVideoFile(file) {
 
     // 1. Immediately abort any prior or lingering upload so there is ZERO overlap!
     cancelVideoUpload();
+    stopLecturePolling();
+    currentLecture = null;
 
-    // 2. Validate size (up to 1.5GB)
-    const maxBytes = 1536 * 1024 * 1024;
+    // 2. Validate type & size against the server upload limit.
+    const ext = (file.name.split('.').pop() || '').toLowerCase();
+    if (!['mp4', 'mov', 'm4v', 'webm', 'mkv', 'avi', 'qt'].includes(ext)) {
+        alert('Unsupported video format. Please upload MP4, MOV, M4V, WebM, MKV or AVI.');
+        resetVideoUploadUi();
+        return;
+    }
+    const maxBytes = (COURSE_STUDIO_UPLOAD_MAX_MB || 40) * 1024 * 1024;
     if (file.size > maxBytes) {
-        alert('File size exceeds the 1.5 GB limit.');
+        alert(`File size exceeds the server upload limit of ${COURSE_STUDIO_UPLOAD_MAX_MB} MB. Increase upload_max_filesize / post_max_size in php.ini.`);
         resetVideoUploadUi();
         return;
     }
@@ -1491,10 +1795,14 @@ function uploadVideoFile(file) {
     const progressBar = document.getElementById('videoProgressBar');
     const progressPercent = document.getElementById('videoUploadPercent');
     const progressText = document.getElementById('videoUploadProgressText');
+    const processingWrap = document.getElementById('videoProcessingWrapper');
     const previewWrap = document.getElementById('videoPreviewWrapper');
+    const urlInput = document.getElementById('inputTopicVideoUrl');
     const saveBtn = document.getElementById('btnSaveTopic');
 
+    if (urlInput) urlInput.value = '';
     if (progressWrap) progressWrap.classList.remove('d-none');
+    if (processingWrap) processingWrap.classList.add('d-none');
     if (previewWrap) previewWrap.classList.add('d-none');
     if (progressBar) progressBar.style.width = '0%';
     if (progressPercent) progressPercent.textContent = '0%';
@@ -1503,17 +1811,23 @@ function uploadVideoFile(file) {
 
     const formData = new FormData();
     formData.append('video', file);
-    formData.append('_token', '{{ csrf_token() }}');
+    formData.append('title', document.getElementById('inputTopicName').value.trim());
+    if (COURSE_STUDIO_ID) formData.append('course_id', COURSE_STUDIO_ID);
+    const currentTopicId = document.getElementById('inputTopicModuleIdx').value !== '-1'
+        ? (document.getElementById('inputTopicModuleIdx').value + '-' + document.getElementById('inputTopicChapterIdx').value + '-' + document.getElementById('inputTopicIdx').value)
+        : '';
+    if (currentTopicId) formData.append('topic_id', currentTopicId);
 
     const xhr = new XMLHttpRequest();
     currentVideoXhr = xhr;
 
-    xhr.open('POST', '{{ route("admin.courses.uploadVideo") }}', true);
+    xhr.open('POST', '{{ route("admin.lectures.store") }}', true);
     xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+    xhr.setRequestHeader('Accept', 'application/json');
+    xhr.setRequestHeader('X-CSRF-TOKEN', '{{ csrf_token() }}');
 
     xhr.upload.onprogress = function (e) {
         if (currentVideoXhr !== xhr) return;
-
         if (e.lengthComputable) {
             const pct = Math.round((e.loaded / e.total) * 100);
             const loadedMb = (e.loaded / (1024 * 1024)).toFixed(1);
@@ -1527,40 +1841,21 @@ function uploadVideoFile(file) {
     xhr.onload = function () {
         if (currentVideoXhr !== xhr) return;
         currentVideoXhr = null;
-
-        if (saveBtn) saveBtn.disabled = false;
         if (progressWrap) progressWrap.classList.add('d-none');
+        if (progressBar) progressBar.style.width = '0%';
 
-        if (xhr.status >= 200 && xhr.status < 300) {
-            try {
-                const res = JSON.parse(xhr.responseText);
-                if (res.success) {
-                    const urlInput = document.getElementById('inputTopicVideoUrl');
-                    const player = document.getElementById('videoModalPlayer');
-                    const nameEl = document.getElementById('videoPreviewName');
-                    const sizeEl = document.getElementById('videoPreviewSize');
+        let res = {};
+        try { res = JSON.parse(xhr.responseText); } catch (e) {}
 
-                    if (urlInput) urlInput.value = res.relative_url || res.url;
-                    if (nameEl) nameEl.textContent = res.filename;
-                    if (sizeEl) sizeEl.textContent = res.size;
-                    if (player) {
-                        player.src = res.url;
-                        player.load();
-                    }
-                    if (previewWrap) previewWrap.classList.remove('d-none');
-                    const fileInput = document.getElementById('videoFileInput');
-                    if (fileInput) fileInput.value = '';
-                } else {
-                    alert('Upload failed: ' + (res.message || 'Unknown error'));
-                    resetVideoUploadUi();
-                }
-            } catch (err) {
-                alert('Server returned invalid response.');
-                resetVideoUploadUi();
-            }
+        if (xhr.status >= 200 && xhr.status < 300 && res.lecture) {
+            const fileInput = document.getElementById('videoFileInput');
+            if (fileInput) fileInput.value = '';
+            applyLectureState(res.lecture);
         } else {
-            alert('Upload error from server (Status ' + xhr.status + ').');
+            const message = res.message || (res.errors && Object.values(res.errors).flat()[0]) || ('Upload failed (status ' + xhr.status + ').');
+            alert(message);
             resetVideoUploadUi();
+            if (saveBtn) saveBtn.disabled = false;
         }
     };
 
@@ -1649,6 +1944,8 @@ function openTopicModal(modIdx, chIdx, topIdx = -1, defaultType = 'video') {
     // Abort and reset any lingering uploads before opening any topic
     cancelVideoUpload();
     cancelHandoutUpload();
+    stopLecturePolling();
+    applyLectureState(null);
 
     document.getElementById('inputTopicModuleIdx').value = modIdx;
     document.getElementById('inputTopicChapterIdx').value = chIdx;
@@ -1656,6 +1953,7 @@ function openTopicModal(modIdx, chIdx, topIdx = -1, defaultType = 'video') {
 
     const ch = courseModules[modIdx]?.chapters[chIdx];
     let videoUrl = '';
+    let lectureId = '';
 
     if (topIdx >= 0 && ch && ch.topics[topIdx]) {
         const top = ch.topics[topIdx];
@@ -1664,6 +1962,7 @@ function openTopicModal(modIdx, chIdx, topIdx = -1, defaultType = 'video') {
         document.getElementById('inputTopicName').value = top.title || '';
         document.getElementById('inputTopicDuration').value = top.duration || '35 min';
         videoUrl = top.videoUrl || '';
+        lectureId = top.lectureId || '';
         document.getElementById('inputTopicVideoUrl').value = videoUrl;
         document.getElementById('inputTopicNotes').value = top.readContent || '';
 
@@ -1681,26 +1980,27 @@ function openTopicModal(modIdx, chIdx, topIdx = -1, defaultType = 'video') {
         document.getElementById('inputTopicHandoutUrl').value = '';
     }
 
-    // Configure Video player preview & mode
-    const previewWrap = document.getElementById('videoPreviewWrapper');
-    const player = document.getElementById('videoModalPlayer');
+    // Configure secure lecture preview & mode
     const progressWrap = document.getElementById('videoUploadProgressWrapper');
     const indicator = document.getElementById('handoutUploadIndicator');
     if (progressWrap) progressWrap.classList.add('d-none');
     if (indicator) indicator.innerHTML = '';
 
-    if (videoUrl) {
+    if (lectureId) {
+        switchVideoMode('upload');
+        document.getElementById('inputTopicVideoUrl').value = '';
+        loadLectureById(lectureId);
+    } else if (videoUrl) {
         if (videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be') || videoUrl.includes('vimeo.com')) {
             switchVideoMode('url');
         } else {
             switchVideoMode('upload');
-            if (player) {
-                player.src = videoUrl.startsWith('http') || videoUrl.startsWith('/') ? videoUrl : ('/' + videoUrl);
-            }
+            setTopicVideoSource(resolveMediaUrl(videoUrl));
             const nameEl = document.getElementById('videoPreviewName');
             const sizeEl = document.getElementById('videoPreviewSize');
             if (nameEl) nameEl.textContent = videoUrl.split('/').pop() || 'Video Lecture';
-            if (sizeEl) sizeEl.textContent = 'Active Video';
+            if (sizeEl) sizeEl.textContent = 'Legacy video';
+            const previewWrap = document.getElementById('videoPreviewWrapper');
             if (previewWrap) previewWrap.classList.remove('d-none');
         }
     } else {
@@ -1726,6 +2026,7 @@ function saveTopic() {
     const title = document.getElementById('inputTopicName').value.trim();
     const duration = document.getElementById('inputTopicDuration').value.trim();
     const videoUrl = document.getElementById('inputTopicVideoUrl').value.trim();
+    const lectureId = document.getElementById('inputTopicLectureId').value.trim();
     const notes = document.getElementById('inputTopicNotes').value.trim();
     const handout = document.getElementById('inputTopicHandout').value.trim();
     const handoutUrl = document.getElementById('inputTopicHandoutUrl').value.trim();
@@ -1733,6 +2034,17 @@ function saveTopic() {
     if (!title) {
         alert('Please enter a topic title');
         return;
+    }
+
+    if (type === 'video') {
+        if (!lectureId && !videoUrl) {
+            alert('Please upload a lecture video or provide an external stream URL.');
+            return;
+        }
+        if (lectureId && (!currentLecture || String(currentLecture.id) !== String(lectureId) || currentLecture.status !== 'ready')) {
+            alert('This lecture is still being processed. Wait until it is ready before saving the topic.');
+            return;
+        }
     }
 
     const ch = courseModules[modIdx]?.chapters[chIdx];
@@ -1747,7 +2059,9 @@ function saveTopic() {
         type: type,
         isQuiz: false,
         duration: duration || (type === 'video' ? '35 min' : '15 min'),
-        videoUrl: videoUrl,
+        videoUrl: lectureId ? '' : videoUrl,
+        lectureId: lectureId || null,
+        lectureTitle: lectureId ? title : null,
         readContent: notes,
         resources: resources
     };
@@ -1758,6 +2072,7 @@ function saveTopic() {
         ch.topics.push(topicData);
     }
 
+    stopLecturePolling();
     if (bsModalTopic) bsModalTopic.hide();
     renderBuilder();
 }

@@ -4,10 +4,16 @@ namespace App\Models;
 
 use App\Models\Concerns\ClearsSiteCache;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Course extends Model
 {
     use ClearsSiteCache;
+
+    public function lectureVideos(): HasMany
+    {
+        return $this->hasMany(LectureVideo::class);
+    }
 
     protected $fillable = [
         'slug', 'category', 'category_name', 'title', 'price', 'original_price',

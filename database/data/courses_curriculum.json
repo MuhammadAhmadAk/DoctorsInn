@@ -45,7 +45,7 @@
                 "title": "1.1 Cell Membrane & Fluid Mosaic Architecture",
                 "type": "video",
                 "duration": "35 min",
-                "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+                "videoUrl": "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
                 "readContent": "\n                            <div class=\"lesson-header-box mb-4\">\n                                <span class=\"badge bg-primary text-white px-3 py-1 rounded-pill mb-2\">Module 1: Biology &bull; Chapter 1</span>\n                                <h3 class=\"fw-bold text-dark\">1.1 Cell Membrane & Fluid Mosaic Dynamics</h3>\n                            </div>\n                            <div class=\"alert alert-primary bg-light border-primary p-3 rounded-3 mb-4\">\n                                <p class=\"mb-0 text-dark\"><strong>Summary:</strong> Covers Singer & Nicolson's Fluid Mosaic Model, lipid bilayer composition, integral vs peripheral proteins, cholesterol fluidity buffer, and transport mechanisms.</p>\n                            </div>\n                            <h4>1. Molecular Architecture of Biological Membranes</h4>\n                            <p>According to the Fluid Mosaic Model (Singer & Nicolson, 1972), biological membranes behave as a quasi-fluid two-dimensional liquid wherein amphipathic phospholipids and proteins are in continuous lateral motion.</p>\n                            <ul>\n                                <li><strong>Phospholipid Bilayer:</strong> Hydrophilic polar heads face aqueous environments; hydrophobic non-polar fatty acid tails sequester inward.</li>\n                                <li><strong>Cholesterol (Animal Cells):</strong> Acts as a biophysical fluidity buffer. It prevents crystallized packing at cold temperatures and stabilizes excess fluidity at elevated temperatures.</li>\n                                <li><strong>Glycocalyx:</strong> Surface oligosaccharide chains linked to lipids (glycolipids) or proteins (glycoproteins) enabling cell-cell recognition and immune identity.</li>\n                            </ul>\n                        ",
                 "resources": [
                   {
@@ -972,7 +972,7 @@
                 "title": "1.1 Projectile Trajectories & Newton's Laws",
                 "type": "video",
                 "duration": "45 min",
-                "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+                "videoUrl": "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
                 "readContent": "\n                            <div class=\"lesson-header-box mb-4\">\n                                <span class=\"badge bg-warning text-dark px-3 py-1 rounded-pill mb-2\">Module 3: Physics &bull; Chapter 1</span>\n                                <h3 class=\"fw-bold text-dark\">1.1 Projectile Trajectories & Newton's Laws</h3>\n                            </div>\n                            <p>Independence of horizontal and vertical velocity components, maximum height (H = v0^2 sin^2 theta / 2g), time of flight, and maximum range at 45 degrees.</p>\n                        ",
                 "resources": [
                   {
@@ -1436,7 +1436,7 @@
             "title": "FLP 1 Answer Key + Video Explanation",
             "type": "video",
             "duration": "60 min",
-            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+            "videoUrl": "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
             "readContent": "\n                            <h3 class=\"fw-bold text-title\">FLP 1 Video Explanation & Answers</h3>\n                            <p>Detailed breakdown of challenging Biology and Chemistry MCQs by DoctorsInn mentors.</p>\n                        ",
             "resources": [
               {
@@ -1478,7 +1478,7 @@
             "title": "FLP 4 Answer Key + Video Explanation",
             "type": "video",
             "duration": "60 min",
-            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+            "videoUrl": "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
             "readContent": "\n                            <h3 class=\"fw-bold text-title\">FLP 4 Video Explanation & Answers</h3>\n                            <p>Pacing analysis and time-management tips for tricky questions.</p>\n                        ",
             "resources": [
               {
@@ -1786,7 +1786,7 @@
             "title": "Lesson 1 — Genetics & Molecular Biology",
             "type": "video",
             "duration": "45 min",
-            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+            "videoUrl": "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
             "readContent": "\n                            <h3 class=\"fw-bold text-title\">Lesson 1: Genetics & Molecular Biology</h3>\n                            <p>DNA replication, transcription, translation, and AMC high-yield past questions.</p>\n                        ",
             "resources": [
               {
@@ -1881,7 +1881,7 @@
             "title": "Lesson 7 — Mechanics & Thermodynamics",
             "type": "video",
             "duration": "50 min",
-            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+            "videoUrl": "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
             "readContent": "\n                            <h3 class=\"fw-bold text-title\">Lesson 7: Mechanics & Thermodynamics</h3>\n                            <p>Laws of thermodynamics, Carnot engine efficiency, and gas kinetic theory.</p>\n                        ",
             "resources": [
               {
@@ -1959,7 +1959,7 @@
             "title": "Lesson 12 — Final Mock + Interview Tips",
             "type": "video",
             "duration": "50 min",
-            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+            "videoUrl": "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
             "readContent": "\n                            <h3 class=\"fw-bold text-title\">Lesson 12: Final Mock + Interview Tips</h3>\n                            <p>Full length mock exam followed by Army Selection & Recruitment Centre (AS&RC) interview advice.</p>\n                        ",
             "resources": [
               {

@@ -2,6 +2,7 @@
 @section('title', 'LMS Classroom Video Player & Quiz Studio — DoctorsInn Elite')
 
 @section('extra_css')
+<link rel="stylesheet" href="https://vjs.zencdn.net/8.10.0/video-js.css">
 <style>
     .classroom-container {
         padding-bottom: 30px;
@@ -457,6 +458,248 @@
         padding: 16px 20px;
         margin-top: 24px;
     }
+
+    /* =========================================================================
+       SECURE LECTURE PLAYER (Video.js / HLS)
+       ========================================================================= */
+    .lecture-player-shell {
+        overflow: hidden;
+        border-radius: 14px;
+        background: #0b1020;
+        border: 1px solid rgba(148, 163, 184, .18);
+        box-shadow: 0 18px 40px -22px rgba(2, 6, 23, .65);
+    }
+    .lecture-player-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 14px;
+        padding: 14px 16px;
+        background: linear-gradient(135deg, #111a33 0%, #0b1020 100%);
+        border-bottom: 1px solid rgba(148, 163, 184, .14);
+    }
+    .lecture-player-title {
+        margin: 6px 0 2px;
+        color: #f8fafc;
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 1.35;
+    }
+    .lecture-player-subtitle {
+        color: #93a4c3;
+        font-size: 11.5px;
+    }
+    .lecture-secure-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 3px 8px;
+        border-radius: 999px;
+        background: rgba(16, 185, 129, .12);
+        border: 1px solid rgba(16, 185, 129, .28);
+        color: #6ee7b7;
+        font-size: 9.5px;
+        font-weight: 700;
+        letter-spacing: .04em;
+        text-transform: uppercase;
+    }
+    .lecture-secure-pill.is-processing {
+        background: rgba(99, 102, 241, .14);
+        border-color: rgba(99, 102, 241, .32);
+        color: #c7d2fe;
+    }
+    .lecture-player-tools {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+    .lecture-tool {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        color: #93a4c3;
+        font-size: 10px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: .04em;
+    }
+    .lecture-tool select {
+        height: 27px;
+        padding: 2px 22px 2px 8px;
+        border: 1px solid rgba(148, 163, 184, .28);
+        border-radius: 6px;
+        background: #17203b;
+        color: #e2e8f0;
+        font-size: 10.5px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+    .lecture-nav-btns {
+        display: flex;
+        gap: 4px;
+    }
+    .lecture-nav-btns button {
+        width: 28px;
+        height: 27px;
+        display: inline-grid;
+        place-items: center;
+        border: 1px solid rgba(148, 163, 184, .28);
+        border-radius: 6px;
+        background: #17203b;
+        color: #cbd5e1;
+        font-size: 10px;
+        transition: all .15s ease;
+    }
+    .lecture-nav-btns button:hover {
+        border-color: rgba(129, 140, 248, .6);
+        color: #e0e7ff;
+    }
+    .lecture-player-stage {
+        position: relative;
+        background: #000;
+    }
+    .lecture-player-stage .video-js {
+        width: 100%;
+        background: #000;
+    }
+    .lecture-player-stage .video-js .vjs-control-bar {
+        background: linear-gradient(0deg, rgba(2, 6, 23, .92), rgba(2, 6, 23, .45));
+        height: 42px;
+    }
+    .lecture-player-stage .video-js .vjs-play-progress,
+    .lecture-player-stage .video-js .vjs-volume-level {
+        background: #6366f1;
+    }
+    .lecture-player-stage .video-js .vjs-slider {
+        background-color: rgba(148, 163, 184, .25);
+    }
+    .lecture-player-stage .video-js .vjs-big-play-button {
+        border-color: rgba(255, 255, 255, .85);
+        background: rgba(15, 23, 42, .55);
+        border-radius: 999px;
+        width: 62px;
+        height: 62px;
+        line-height: 60px;
+        margin-left: -31px;
+        margin-top: -31px;
+        backdrop-filter: blur(4px);
+    }
+    .lecture-overlay {
+        position: absolute;
+        inset: 0;
+        z-index: 5;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 24px;
+        background: rgba(2, 6, 23, .82);
+        color: #cbd5e1;
+        text-align: center;
+        font-size: 12.5px;
+        backdrop-filter: blur(3px);
+    }
+    .lecture-spinner {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        border: 3px solid rgba(148, 163, 184, .25);
+        border-top-color: #818cf8;
+        animation: lectureSpin .8s linear infinite;
+    }
+    @keyframes lectureSpin {
+        to { transform: rotate(360deg); }
+    }
+    .lecture-overlay i {
+        font-size: 24px;
+        color: #818cf8;
+    }
+    .lecture-processing p,
+    .lecture-error p {
+        max-width: 440px;
+        margin: 0;
+        line-height: 1.55;
+    }
+    .lecture-processing-track {
+        width: 220px;
+        height: 6px;
+        overflow: hidden;
+        border-radius: 999px;
+        background: rgba(148, 163, 184, .2);
+    }
+    .lecture-processing-track span {
+        display: block;
+        height: 100%;
+        width: 0;
+        background: linear-gradient(90deg, #6366f1, #a855f7);
+        transition: width .4s ease;
+    }
+    .lecture-error i {
+        color: #f87171;
+    }
+    .lecture-player-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        flex-wrap: wrap;
+        padding: 9px 14px;
+        background: #0e1629;
+        border-top: 1px solid rgba(148, 163, 184, .12);
+        color: #93a4c3;
+        font-size: 10.5px;
+    }
+    .lecture-skip-group {
+        display: flex;
+        gap: 6px;
+    }
+    .lecture-skip-group button {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 9px;
+        border: 1px solid rgba(148, 163, 184, .24);
+        border-radius: 6px;
+        background: #17203b;
+        color: #cbd5e1;
+        font-size: 10px;
+        font-weight: 600;
+        transition: all .15s ease;
+    }
+    .lecture-skip-group button:hover {
+        border-color: rgba(129, 140, 248, .6);
+        color: #e0e7ff;
+        background: #1c2748;
+    }
+    .lecture-progress-meta {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .lecture-secure-note {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        color: #64748b;
+        font-size: 9.5px;
+    }
+    @media (max-width: 767.98px) {
+        .lecture-player-header {
+            flex-direction: column;
+        }
+        .lecture-player-tools {
+            justify-content: flex-start;
+        }
+        .lecture-secure-note {
+            display: none;
+        }
+        .lecture-player-title {
+            font-size: 14.5px;
+        }
+    }
 </style>
 @endsection
 
@@ -503,6 +746,71 @@
         {{-- Left Area: Video Player / Quiz Studio / Notes Tabs --}}
         <div class="col-xl-8">
             <div class="std-card p-4 mb-4">
+
+                {{-- =========================================================
+                     0. SECURE HLS LECTURE PLAYER (Signed, adaptive streaming)
+                     ========================================================= --}}
+                <div id="lecture-player-container" class="lecture-player-shell mb-4 d-none">
+                    <div class="lecture-player-header">
+                        <div class="lecture-player-heading">
+                            <span class="lecture-secure-pill" id="lecture-status-pill"><i class="fa-solid fa-shield-halved"></i> Secure HLS</span>
+                            <h3 class="lecture-player-title" id="lecture-player-title">Lecture</h3>
+                            <div class="lecture-player-subtitle" id="lecture-player-subtitle">Adaptive HLS streaming</div>
+                        </div>
+                        <div class="lecture-player-tools">
+                            <label class="lecture-tool">
+                                <span>Quality</span>
+                                <select id="lecture-quality-select" aria-label="Video quality">
+                                    <option value="auto">Auto</option>
+                                </select>
+                            </label>
+                            <label class="lecture-tool">
+                                <span>Speed</span>
+                                <select id="lecture-speed-select" aria-label="Playback speed">
+                                    <option value="0.5">0.5x</option>
+                                    <option value="0.75">0.75x</option>
+                                    <option value="1" selected>1x</option>
+                                    <option value="1.25">1.25x</option>
+                                    <option value="1.5">1.5x</option>
+                                    <option value="1.75">1.75x</option>
+                                    <option value="2">2x</option>
+                                </select>
+                            </label>
+                            <div class="lecture-nav-btns">
+                                <button type="button" id="lecture-prev-btn" title="Previous topic" aria-label="Previous topic"><i class="fa-solid fa-backward-step"></i></button>
+                                <button type="button" id="lecture-next-btn" title="Next topic" aria-label="Next topic"><i class="fa-solid fa-forward-step"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lecture-player-stage">
+                        <video id="lecture-video-player" class="video-js vjs-big-play-centered" controls playsinline preload="auto"></video>
+                        <div id="lecture-player-loading" class="lecture-overlay d-none">
+                            <div class="lecture-spinner"></div>
+                            <span data-loading-text>Preparing secure stream…</span>
+                        </div>
+                        <div id="lecture-player-processing" class="lecture-overlay lecture-processing d-none">
+                            <i class="fa-solid fa-gear fa-spin"></i>
+                            <p id="lecture-processing-text">This lecture is being processed…</p>
+                            <div class="lecture-processing-track"><span id="lecture-processing-bar"></span></div>
+                        </div>
+                        <div id="lecture-player-error" class="lecture-overlay lecture-error d-none">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            <p id="lecture-error-text">Playback failed.</p>
+                            <button type="button" class="btn btn-sm btn-light" id="lecture-retry-btn"><i class="fa-solid fa-rotate-right me-1"></i> Retry Playback</button>
+                        </div>
+                    </div>
+                    <div class="lecture-player-footer">
+                        <div class="lecture-skip-group">
+                            <button type="button" data-lecture-skip="-10" title="Back 10 seconds"><i class="fa-solid fa-rotate-left"></i><span>10s</span></button>
+                            <button type="button" data-lecture-skip="10" title="Forward 10 seconds"><span>10s</span><i class="fa-solid fa-rotate-right"></i></button>
+                        </div>
+                        <div class="lecture-progress-meta">
+                            <span id="lecture-percent-label">0% watched</span>
+                            <span id="lecture-resume-label"></span>
+                        </div>
+                        <div class="lecture-secure-note"><i class="fa-solid fa-lock"></i> Signed, time-limited access</div>
+                    </div>
+                </div>
 
                 {{-- =========================================================
                      1. VIDEO PLAYER CONTAINER (Visible when Topic Type == video)
@@ -834,9 +1142,20 @@
 @endsection
 
 @section('extra_js')
+    <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/videojs-contrib-quality-levels@4.1.0/dist/videojs-contrib-quality-levels.min.js"></script>
     <script>
+        window.APP_BASE_URL = @json(url('/'));
         window.activeDbCourses = @json($courses);
         window.activeCourseData = @json($activeCourse);
+        window.lectureLibrary = @json((object) $lectureLibrary);
+        window.lectureProgressMap = @json((object) $lectureProgressMap);
+        window.lectureEndpoints = {
+            base: @json(url('/student/lectures')),
+            csrf: @json(csrf_token())
+        };
+        window.lectureCompletionThreshold = {{ (int) config('video.completion_threshold', 90) }};
     </script>
+    <script src="{{ asset('frontend/js/lecture-player.js') }}?v={{ file_exists(public_path('frontend/js/lecture-player.js')) ? filemtime(public_path('frontend/js/lecture-player.js')) : time() }}"></script>
     <script src="{{ asset('frontend/js/course-portal.js') }}?v={{ file_exists(public_path('frontend/js/course-portal.js')) ? filemtime(public_path('frontend/js/course-portal.js')) : time() }}"></script>
 @endsection
