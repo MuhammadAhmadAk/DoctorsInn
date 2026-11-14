@@ -2360,7 +2360,26 @@ async function retryLectureProcessing() {
     }
 }
 
-function clearUploadedVideo() {
+async function clearUploadedVideo() {
+    const lectureToDelete = currentLecture && currentLecture.id ? currentLecture.id : null;
+    if (lectureToDelete) {
+        const choice = confirm('Do you want to permanently delete this video file from server storage to free disk space?\n\n• Click OK to permanently delete the video and its files from the server.\n• Click Cancel to only detach it from this topic.');
+        if (choice) {
+            try {
+                await fetch(`${COURSE_STUDIO_BASE_URL.replace(/\/+$/, '')}/admin/lectures/${lectureToDelete}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+            } catch (e) {
+                console.error('Failed to delete lecture on server:', e);
+            }
+        }
+    }
+
     cancelVideoUpload();
     clearTopicVideoDuration();
     stopLecturePolling();

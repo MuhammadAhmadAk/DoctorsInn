@@ -183,6 +183,7 @@ class SiteContentService
             self::CACHE_COURSES,
             'courses',
             fn () => Course::query()
+                ->with(['reviewsList' => fn ($q) => $q->where('status', 'approved')->latest()])
                 ->where('is_active', true)
                 ->orderBy('sort_order')
                 ->orderBy('id')

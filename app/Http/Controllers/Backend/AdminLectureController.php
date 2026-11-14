@@ -118,6 +118,46 @@ class AdminLectureController extends Controller
         return response()->json(['message' => 'Processing restarted.', 'lecture' => $this->serialize($video->fresh())]);
     }
 
+    public function destroy(LectureVideo $video): JsonResponse
+    {
+        try {
+            $disk = Storage::disk(LectureVideo::diskName());
+
+            // 1. Delete HLS rendition directory
+            $hlsDir = $video->hls_path ?: ('hls/' . $video->id);
+            if ($disk->exists($hlsDir)) {
+                $disk->deleteDirectory($hlsDir);
+            }
+
+            // 2. Delete original source video file
+            if ($video->original_path && $disk->exists($video->original_path)) {
+                $disk->delete($video->original_path);
+            }
+
+            // 3. Delete processing log if present
+            $logFile = storage_path('logs/lecture-' . $video->id . '.log');
+            if (is_file($logFile)) {
+                @unlink($logFile);
+            }
+
+            // 4. Delete progress tracking records
+            $video->progressRecords()->delete();
+
+            // 5. Delete database record
+            $video->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Lecture video and all associated media files permanently deleted.',
+            ]);
+        } catch (Throwable $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to delete lecture: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
     /**
      * Transcoding must not depend on a long-running queue worker: shared hosts
      * kill those daemons and uploads silently stall. Spawn a detached CLI

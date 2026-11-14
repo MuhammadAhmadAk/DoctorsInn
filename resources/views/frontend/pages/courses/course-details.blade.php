@@ -193,77 +193,113 @@
                                 {{-- Tab 4: Reviews --}}
                                 <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
                                     <div class="course-reviews">
-                                        <div class="th-comments-wrap mt-0">
-                                            <ul class="comment-list">
-                                                @if (!empty($course['reviews']))
-                                                    @foreach ($course['reviews'] as $rev)
-                                                        <li class="review th-comment-item">
-                                                            <div class="th-post-comment">
-                                                                <div class="comment-avater">
-                                                                    @if (!empty($rev['image']))
-                                                                        <img src="{{ asset($rev['image']) }}"
-                                                                            alt="{{ $rev['name'] }}" loading="lazy" decoding="async">
-                                                                    @else
-                                                                        <span class="review-avatar-initials"
-                                                                            aria-label="{{ $rev['name'] }}">{{ strtoupper(substr($rev['name'], 0, 1)) }}</span>
-                                                                    @endif
+
+                                        @if(session('review_success'))
+                                        <div class="alert alert-success d-flex align-items-center gap-2 py-2.5 px-3 mb-3 border-0 rounded-3 text-white font-13" style="background: #10B981;">
+                                            <i class="fa-solid fa-circle-check"></i>
+                                            <span>{{ session('review_success') }}</span>
+                                        </div>
+                                        @endif
+
+                                        @if($errors->any())
+                                        <div class="alert alert-danger py-2 px-3 mb-3 rounded-3 font-12 border-0" style="background: #FEF2F2; color: #991B1B;">
+                                            <ul class="mb-0 ps-3">
+                                                @foreach($errors->all() as $err)
+                                                    <li>{{ $err }}</li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                        @endif
+
+                                        @php
+                                            $reviewsList = !empty($course['reviews']) ? $course['reviews'] : [];
+                                        @endphp
+
+                                        <div class="reviews-list-wrapper mb-4">
+                                            @if(!empty($reviewsList))
+                                                <ul class="list-unstyled mb-0">
+                                                    @foreach($reviewsList as $rev)
+                                                        <li class="review-item-card p-3 mb-3 rounded-3 bg-white border d-flex gap-3 align-items-start">
+                                                            <div class="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold font-13 flex-shrink-0" style="width: 40px; height: 40px; background: #4F46E5;">
+                                                                {{ strtoupper(substr($rev['name'] ?? 'S', 0, 1)) }}
+                                                            </div>
+                                                            <div class="flex-grow-1">
+                                                                <div class="d-flex align-items-center justify-content-between mb-1">
+                                                                    <h6 class="fw-bold text-dark font-13 mb-0">{{ $rev['name'] ?? 'Student' }}</h6>
+                                                                    <span class="font-11 text-muted">{{ $rev['date'] ?? 'Recently' }}</span>
                                                                 </div>
-                                                                <div class="comment-content">
-                                                                    <h4 class="name">{{ $rev['name'] }}</h4>
-                                                                    <span class="commented-on"><i
-                                                                            class="fal fa-calendar-alt"></i>{{ $rev['date'] ?? 'Recently' }}</span>
-                                                                    <div class="star-rating" role="img"
-                                                                        aria-label="Rated {{ $rev['rating'] }}.00 out of 5">
-                                                                        <span class="star-rating-full">
-                                                                            @for ($i = 0; $i < $rev['rating']; $i++)
-                                                                                ★
-                                                                            @endfor
-                                                                        </span>
-                                                                    </div>
-                                                                    <p class="text">{{ $rev['comment'] }}</p>
+                                                                <div class="text-warning font-11 mb-2">
+                                                                    @for($i = 1; $i <= 5; $i++)
+                                                                        <i class="fa-solid fa-star {{ $i <= ($rev['rating'] ?? 5) ? 'text-warning' : 'text-muted text-opacity-25' }}"></i>
+                                                                    @endfor
                                                                 </div>
+                                                                <p class="font-12 text-secondary mb-0" style="line-height: 1.55;">{{ $rev['comment'] ?? '' }}</p>
                                                             </div>
                                                         </li>
                                                     @endforeach
-                                                @endif
-                                            </ul>
+                                                </ul>
+                                            @else
+                                                <div class="text-center py-4 bg-light rounded-3">
+                                                    <i class="fa-regular fa-comment-dots font-28 text-muted mb-2"></i>
+                                                    <div class="fw-bold font-13 text-dark">No reviews yet</div>
+                                                    <p class="font-11 text-muted mb-0">Be the first student to review this course!</p>
+                                                </div>
+                                            @endif
                                         </div>
 
                                         {{-- Add a review form --}}
-                                        <div class="th-comment-form mb-0 mt-40">
-                                            <div class="form-title">
-                                                <h3 class="blog-inner-title">Add a review</h3>
+                                        <div class="add-review-box p-3.5 rounded-3 border bg-light">
+                                            <div class="d-flex align-items-center gap-2 mb-1">
+                                                <i class="fa-solid fa-pen-to-square text-primary font-14"></i>
+                                                <h5 class="fw-bold font-14 text-dark mb-0">Write a Review</h5>
                                             </div>
-                                            <div class="row">
-                                                <div class="form-group rating-select d-flex align-items-center">
-                                                    <label>Your Rating</label>
-                                                    <p class="stars"><span><a class="star-1" href="#">1</a> <a
-                                                                class="star-2" href="#">2</a> <a class="star-3"
-                                                                href="#">3</a> <a class="star-4"
-                                                                href="#">4</a> <a class="star-5"
-                                                                href="#">5</a></span></p>
+                                            <p class="font-11 text-muted mb-3">Share your learning experience with other medical aspirants.</p>
+
+                                            <form method="POST" action="{{ route('courses.review.store', $course['slug']) }}">
+                                                @csrf
+                                                <div class="mb-3">
+                                                    <label class="font-11 fw-bold text-dark d-block mb-1">Your Rating <span class="text-danger">*</span></label>
+                                                    <div class="rating-stars-picker">
+                                                        <input type="radio" id="star5" name="rating" value="5" checked><label for="star5" title="5 Stars">★</label>
+                                                        <input type="radio" id="star4" name="rating" value="4"><label for="star4" title="4 Stars">★</label>
+                                                        <input type="radio" id="star3" name="rating" value="3"><label for="star3" title="3 Stars">★</label>
+                                                        <input type="radio" id="star2" name="rating" value="2"><label for="star2" title="2 Stars">★</label>
+                                                        <input type="radio" id="star1" name="rating" value="1"><label for="star1" title="1 Star">★</label>
+                                                    </div>
                                                 </div>
-                                                <div class="col-12 form-group">
-                                                    <textarea placeholder="Write a Message" class="form-control"></textarea>
-                                                    <i class="text-title far fa-pencil-alt"></i>
+
+                                                <div class="mb-3">
+                                                    <label class="font-11 fw-semibold text-dark mb-1">Review Message <span class="text-danger">*</span></label>
+                                                    <textarea name="comment" rows="3" class="form-control font-12 bg-white rounded-2" placeholder="Tell other students what you liked about the lectures, quizzes, and curriculum..." required>{{ old('comment') }}</textarea>
                                                 </div>
-                                                <div class="col-md-6 form-group">
-                                                    <input type="text" placeholder="Your Name" class="form-control">
-                                                    <i class="text-title far fa-user"></i>
+
+                                                <div class="row g-2 mb-3">
+                                                    @auth
+                                                        <div class="col-md-6">
+                                                            <label class="font-11 text-muted mb-1">Student Name</label>
+                                                            <input type="text" class="form-control font-12 bg-white" value="{{ auth()->user()->name }}" readonly>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="font-11 text-muted mb-1">Email</label>
+                                                            <input type="email" class="form-control font-12 bg-white" value="{{ auth()->user()->email }}" readonly>
+                                                        </div>
+                                                    @else
+                                                        <div class="col-md-6">
+                                                            <label class="font-11 fw-semibold text-dark mb-1">Your Name <span class="text-danger">*</span></label>
+                                                            <input type="text" name="name" value="{{ old('name') }}" class="form-control font-12 bg-white" placeholder="e.g. Dr. Ayesha Khan" required>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="font-11 fw-semibold text-dark mb-1">Your Email (Optional)</label>
+                                                            <input type="email" name="email" value="{{ old('email') }}" class="form-control font-12 bg-white" placeholder="e.g. ayesha@gmail.com">
+                                                        </div>
+                                                    @endauth
                                                 </div>
-                                                <div class="col-md-6 form-group">
-                                                    <input type="text" placeholder="Your Email" class="form-control">
-                                                    <i class="text-title far fa-envelope"></i>
-                                                </div>
-                                                <div class="col-12 form-group">
-                                                    <input id="reviewcheck" name="reviewcheck" type="checkbox">
-                                                    <label for="reviewcheck">Save my name, email, and website in this
-                                                        browser for the next time I comment.</label>
-                                                </div>
-                                                <div class="col-12 form-group mb-0">
-                                                    <button class="th-btn">POST REVIEW</button>
-                                                </div>
-                                            </div>
+
+                                                <button type="submit" class="btn btn-primary px-3 py-1.5 font-12 fw-semibold rounded-2 d-inline-flex align-items-center gap-2">
+                                                    <i class="fa-solid fa-paper-plane"></i>
+                                                    <span>Post Review</span>
+                                                </button>
+                                            </form>
                                         </div>
 
                                     </div>
@@ -278,65 +314,89 @@
                 {{-- Right Side Info Box --}}
                 <div class="col-xxl-4 col-lg-5">
                     <aside class="sidebar-area pt-0">
-                        <div class="widget widget_info widget_course_info">
+                        <div class="widget widget_info widget_course_info course-sidebar-card">
 
-                            <div class="th-video">
+                            <div class="th-video sidebar-video-frame">
                                 <img src="{{ asset($course['detail_image'] ?? $course['image']) }}"
                                     alt="{{ $course['title'] }}">
-                                <a href="https://www.youtube.com/watch?v=_sI_Ps7JSEk" class="play-btn popup-video"><i
-                                        class="far fa-play"></i></a>
+                                <a href="https://www.youtube.com/watch?v=_sI_Ps7JSEk" class="play-btn popup-video" aria-label="Play course overview video">
+                                    <i class="fa-solid fa-play"></i>
+                                </a>
                             </div>
 
-                            <h4 class="course-price">
-                                {{ $course['price'] }}
-                                @if (!empty($course['original_price']))
-                                    <del class="text-muted ms-2 fs-6">{{ $course['original_price'] }}</del>
-                                @endif
-                                @if (!empty($course['discount_tag']))
-                                    <span class="tag ms-2">{{ $course['discount_tag'] }}</span>
-                                @endif
-                            </h4>
-
                             @php
+                                $priceRaw = trim((string)($course['price'] ?? 'Free'));
+                                $numericPrice = preg_replace('/[^0-9]/', '', $priceRaw);
+                                $isFree = empty($numericPrice) || $numericPrice === '0' || stripos($priceRaw, 'free') !== false;
+                                $formattedPrice = $isFree ? 'Free' : ('Rs. ' . number_format((int)$numericPrice));
+
+                                $origRaw = trim((string)($course['original_price'] ?? ''));
+                                $numericOrig = preg_replace('/[^0-9]/', '', $origRaw);
+                                $formattedOrig = ($numericOrig !== '' && $numericOrig !== '0') ? ('Rs. ' . number_format((int)$numericOrig)) : '';
+
                                 $enrolled = auth()->check() && !empty($course['id'])
                                     && auth()->user()->hasAccessToCourse($course['id']);
                             @endphp
 
-                            <div class="btn-wrap">
+                            <div class="course-price-wrap">
+                                <span class="course-price-main">{{ $formattedPrice }}</span>
+                                @if(!empty($formattedOrig))
+                                    <del class="course-price-del">{{ $formattedOrig }}</del>
+                                @endif
+                                @if(!empty($course['discount_tag']))
+                                    <span class="course-price-badge">{{ $course['discount_tag'] }}</span>
+                                @endif
+                            </div>
+
+                            <div class="sidebar-action-btns">
                                 @if ($enrolled)
-                                    <a href="{{ route('student.classroom', $course['slug']) }}" class="th-btn w-100">
-                                        <i class="fal fa-graduation-cap me-2"></i>GO TO CLASSROOM
+                                    <a href="{{ route('student.classroom', $course['slug']) }}" class="btn-course-action btn-course-primary">
+                                        <i class="fa-solid fa-graduation-cap"></i>
+                                        <span>Go to Classroom</span>
                                     </a>
                                 @else
-                                    <a href="{{ route('checkout', ['course' => $course['slug']]) }}" class="th-btn w-100" id="buy-now-btn">
-                                        <i class="fal fa-bolt me-2"></i>{{ !empty($course['is_free']) ? 'ENROLL FREE' : 'ENROLL NOW' }}
-                                        <svg class="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M7.5264 0C7.5264 0.6962 8.21633 1.738 8.9138 2.61293C9.81193 3.7394 10.8838 4.72347 12.1137 5.4748C13.0351 6.0374 14.154 6.57747 15.0528 6.57747M7.5264 13.1712C7.5264 12.475 8.21633 11.4332 8.9138 10.5583C9.81193 9.43187 10.8838 8.44773 12.1137 7.6964C13.0351 7.1338 14.154 6.59373 15.0528 6.59373M15.0528 6.5856H0" stroke="currentColor" stroke-width="1.5"></path>
-                                        </svg>
+                                    <a href="{{ route('checkout', ['course' => $course['slug']]) }}" class="btn-course-action btn-course-primary" id="buy-now-btn">
+                                        <i class="fa-solid fa-bolt"></i>
+                                        <span>{{ !empty($course['is_free']) ? 'Enroll Free' : 'Enroll Now' }}</span>
+                                        <i class="fa-solid fa-arrow-right font-11"></i>
                                     </a>
                                 @endif
-                                <a href="{{ route('course') }}" class="th-btn style-border2 w-100 mt-2">
-                                    <i class="fal fa-graduation-cap me-2"></i>Browse All Courses
+                                <a href="{{ route('course') }}" class="btn-course-action btn-course-secondary">
+                                    <i class="fa-solid fa-compass"></i>
+                                    <span>Browse All Courses</span>
                                 </a>
                             </div>
 
-                            <h3 class="widget_title">Course Information</h3>
-
-                            <div class="info-list">
-                                <ul>
-                                    <li><i class="fa-light fa-user"></i> <strong>Instructor:
-                                        </strong><span>{{ $course['instructor'] }}</span></li>
-                                    <li><i class="fa-light fa-file"></i> <strong>Lessons:
-                                        </strong><span>{{ $course['lessons'] }}</span></li>
-                                    <li><i class="fa-light fa-clock"></i> <strong>Duration:
-                                        </strong><span>{{ $course['duration'] }}</span></li>
-                                    <li><i class="fa-light fa-tag"></i> <strong>Course Level:
-                                        </strong><span>{{ $course['level'] }}</span></li>
-                                    <li><i class="fa-light fa-globe"></i> <strong>Language:
-                                        </strong><span>{{ $course['language'] }}</span></li>
-                                    <li><i class="fal fa-users"></i> <strong>Students:
-                                        </strong><span>{{ $course['students'] }}</span></li>
-                                </ul>
+                            <div class="sidebar-info-block">
+                                <h3 class="sidebar-info-header">Course Information</h3>
+                                <div class="sidebar-info-list">
+                                    <ul>
+                                        <li>
+                                            <span class="info-label"><i class="fa-solid fa-user-tie"></i> Instructor:</span>
+                                            <span class="info-val">{{ $course['instructor'] ?? 'DoctorsInn Faculty' }}</span>
+                                        </li>
+                                        <li>
+                                            <span class="info-label"><i class="fa-solid fa-book-open"></i> Lessons:</span>
+                                            <span class="info-val">{{ $course['lessons'] ?? '6 Lectures • 3 Quizzes' }}</span>
+                                        </li>
+                                        <li>
+                                            <span class="info-label"><i class="fa-solid fa-clock"></i> Duration:</span>
+                                            <span class="info-val">{{ $course['duration'] ?? 'Self-paced' }}</span>
+                                        </li>
+                                        <li>
+                                            <span class="info-label"><i class="fa-solid fa-layer-group"></i> Course Level:</span>
+                                            <span class="info-val">{{ $course['level'] ?? 'MDCAT Prep' }}</span>
+                                        </li>
+                                        <li>
+                                            <span class="info-label"><i class="fa-solid fa-globe"></i> Language:</span>
+                                            <span class="info-val">{{ $course['language'] ?? 'English / Urdu' }}</span>
+                                        </li>
+                                        <li>
+                                            <span class="info-label"><i class="fa-solid fa-user-graduate"></i> Enrolled:</span>
+                                            <span class="info-val">{{ $course['students'] ?? '500+ Students' }}</span>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
 
                         </div>
@@ -426,6 +486,218 @@
             @endif
         </div>
     </section>
+
+<style>
+/* Sleek Modern Course Details Card Proportions */
+.course-single .course-single-top,
+.course-single .course-single-bottom,
+.widget_course_info.course-sidebar-card {
+    border-radius: 14px !important;
+    border: 1px solid rgba(15, 23, 42, 0.08) !important;
+    box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05) !important;
+    padding: 22px !important;
+}
+
+/* Sidebar Video Preview */
+.sidebar-video-frame {
+    border-radius: 10px !important;
+    overflow: hidden !important;
+    position: relative !important;
+    max-height: 200px !important;
+    margin-bottom: 18px !important;
+}
+.sidebar-video-frame img {
+    height: 190px !important;
+    object-fit: cover !important;
+    width: 100% !important;
+}
+.sidebar-video-frame .play-btn {
+    --icon-size: 50px !important;
+    width: 50px !important;
+    height: 50px !important;
+    font-size: 15px !important;
+}
+
+/* Price Box */
+.course-price-wrap {
+    display: flex !important;
+    align-items: baseline !important;
+    gap: 10px !important;
+    margin: 16px 0 18px 0 !important;
+    flex-wrap: wrap !important;
+}
+.course-price-main {
+    font-size: 28px !important;
+    font-weight: 800 !important;
+    color: #0F172A !important;
+    line-height: 1 !important;
+    letter-spacing: -0.5px !important;
+}
+.course-price-del {
+    font-size: 15px !important;
+    color: #94A3B8 !important;
+    font-weight: 500 !important;
+}
+.course-price-badge {
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    padding: 3px 8px !important;
+    border-radius: 12px !important;
+    background: #ECFDF5 !important;
+    color: #059669 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.3px !important;
+}
+
+/* Sidebar Buttons Aligned */
+.sidebar-action-btns {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 9px !important;
+    margin-bottom: 22px !important;
+}
+.btn-course-action {
+    height: 46px !important;
+    border-radius: 10px !important;
+    font-size: 13.5px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.2px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    padding: 0 16px !important;
+    text-decoration: none !important;
+    transition: all 0.2s ease !important;
+}
+.btn-course-primary {
+    background: linear-gradient(135deg, #4F46E5 0%, #4338CA 100%) !important;
+    color: #FFFFFF !important;
+    border: none !important;
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.22) !important;
+}
+.btn-course-primary:hover {
+    background: linear-gradient(135deg, #4338CA 0%, #3730A3 100%) !important;
+    color: #FFFFFF !important;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(79, 70, 229, 0.3) !important;
+}
+.btn-course-secondary {
+    background: #FFFFFF !important;
+    color: #334155 !important;
+    border: 1.5px solid #CBD5E1 !important;
+}
+.btn-course-secondary:hover {
+    background: #F8FAFC !important;
+    color: #0F172A !important;
+    border-color: #94A3B8 !important;
+    transform: translateY(-1px);
+}
+
+/* Course Information List */
+.sidebar-info-header {
+    font-size: 14.5px !important;
+    font-weight: 700 !important;
+    color: #0F172A !important;
+    margin-bottom: 12px !important;
+    padding-bottom: 8px !important;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08) !important;
+}
+.sidebar-info-list ul {
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+.sidebar-info-list li {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 8.5px 0 !important;
+    font-size: 12.5px !important;
+    border-bottom: 1px dashed rgba(15, 23, 42, 0.06) !important;
+}
+.sidebar-info-list li:last-child {
+    border-bottom: none !important;
+}
+.sidebar-info-list li .info-label {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    color: #64748B !important;
+    font-weight: 500 !important;
+}
+.sidebar-info-list li .info-label i {
+    font-size: 13px !important;
+    color: #6366F1 !important;
+    width: 16px !important;
+    text-align: center !important;
+}
+.sidebar-info-list li .info-val {
+    color: #0F172A !important;
+    font-weight: 600 !important;
+}
+
+/* Top Overview Card Clean Proportions */
+.course-single-top .course-img {
+    margin-bottom: 18px !important;
+    border-radius: 10px !important;
+    overflow: hidden !important;
+}
+.course-single-top .course-title {
+    font-size: 26px !important;
+    font-weight: 700 !important;
+    margin-bottom: 6px !important;
+}
+.course-single-top .box-content {
+    margin-top: 18px !important;
+    padding: 12px 18px !important;
+    gap: 24px !important;
+    border-radius: 10px !important;
+    background: #F8FAFC !important;
+    border: 1px solid rgba(15, 23, 42, 0.06) !important;
+}
+.course-single-top .meta-box .meta-thumb img {
+    width: 36px !important;
+    height: 36px !important;
+    border-radius: 50% !important;
+}
+.course-single-top .meta-box .box-name {
+    font-size: 13px !important;
+    font-weight: 700 !important;
+}
+.course-single-top .course-info .box-icon {
+    font-size: 18px !important;
+}
+.course-single-top .course-info .course-info-title {
+    font-size: 11px !important;
+}
+.course-single-top .course-info .course-info-text {
+    font-size: 12.5px !important;
+}
+
+/* Star Rating Selector in Review Form */
+.rating-stars-picker {
+    display: inline-flex !important;
+    flex-direction: row-reverse !important;
+    gap: 4px !important;
+}
+.rating-stars-picker input {
+    display: none !important;
+}
+.rating-stars-picker label {
+    font-size: 22px !important;
+    color: #CBD5E1 !important;
+    cursor: pointer !important;
+    transition: color 0.15s ease !important;
+    margin-bottom: 0 !important;
+    padding: 0 2px !important;
+}
+.rating-stars-picker label:hover,
+.rating-stars-picker label:hover ~ label,
+.rating-stars-picker input:checked ~ label {
+    color: #F59E0B !important;
+}
+</style>
 
 @endsection
 

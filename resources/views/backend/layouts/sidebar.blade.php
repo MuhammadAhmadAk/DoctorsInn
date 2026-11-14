@@ -45,6 +45,16 @@
                 <span class="badge-count">{{ $navCoursesCount }}</span>
             </a>
         </li>
+        <li class="sidebar-item">
+            <a href="{{ route('admin.reviews') }}" class="sidebar-link {{ request()->routeIs('admin.reviews*') ? 'active' : '' }}">
+                <i class="fa-solid fa-star"></i>
+                <span>Student Reviews</span>
+                @php $navReviewsCount = \App\Models\CourseReview::count(); @endphp
+                @if($navReviewsCount > 0)
+                    <span class="badge-count">{{ $navReviewsCount }}</span>
+                @endif
+            </a>
+        </li>
         @endif
 
         @if ($canAccess('tests'))

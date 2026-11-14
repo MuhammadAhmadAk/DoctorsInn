@@ -4,8 +4,10 @@ use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Backend\AdminController;
 use App\Http\Controllers\Backend\AdminEnrollmentController;
 use App\Http\Controllers\Backend\AdminLectureController;
+use App\Http\Controllers\Backend\AdminReviewController;
 use App\Http\Controllers\Backend\AdminStaffController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\CourseReviewController;
 use App\Http\Controllers\LectureStreamController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\RouteController;
@@ -54,6 +56,9 @@ Route::get('/blog-details/{slug?}', function ($slug = null) {
 // Courses
 Route::get('/course', [RouteController::class, 'Frontend_Course'])->name('course');
 Route::get('/courses/{slug}', [RouteController::class, 'Frontend_CourseDetails'])->name('course-details');
+Route::post('/courses/{slug}/reviews', [CourseReviewController::class, 'store'])
+    ->middleware('throttle:6,1')
+    ->name('courses.review.store');
 Route::get('/course-details/{slug?}', function ($slug = null) {
     return $slug
         ? redirect()->route('course-details', $slug, 301)
@@ -182,6 +187,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/lectures/{video}/status', [AdminLectureController::class, 'status'])->name('lectures.status');
             Route::get('/lectures/{video}/preview-url', [LectureStreamController::class, 'adminPlaybackUrl'])->name('lectures.preview');
             Route::post('/lectures/{video}/retry', [AdminLectureController::class, 'retry'])->name('lectures.retry');
+            Route::delete('/lectures/{video}', [AdminLectureController::class, 'destroy'])->name('lectures.destroy');
+
+            // Course Reviews Management
+            Route::get('/reviews', [AdminReviewController::class, 'index'])->name('reviews');
+            Route::post('/reviews/{review}/toggle', [AdminReviewController::class, 'toggleStatus'])->name('reviews.toggle');
+            Route::delete('/reviews/{review}', [AdminReviewController::class, 'destroy'])->name('reviews.delete');
         });
 
         Route::middleware('admin.permission:tests')->group(function () {

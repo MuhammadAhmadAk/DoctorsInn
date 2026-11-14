@@ -20,6 +20,11 @@ class Course extends Model
         return $this->hasMany(Enrollment::class);
     }
 
+    public function reviewsList(): HasMany
+    {
+        return $this->hasMany(CourseReview::class);
+    }
+
     /**
      * Course prices are stored as display strings ("Free", "Rs 12,000").
      * Return the numeric amount in paisa (PKR * 100) for the gateway.
@@ -103,7 +108,15 @@ class Course extends Model
                 : ($this->modules ?? []),
             'instructor_info' => $this->instructor_info ?? ['name' => $this->instructor ?? 'DoctorsInn'],
             'success_stories' => $this->success_stories ?? [],
-            'reviews' => $this->reviews ?? [],
+            'reviews' => ($this->relationLoaded('reviewsList') && $this->reviewsList->isNotEmpty())
+                ? $this->reviewsList->where('status', 'approved')->map(fn ($r) => [
+                    'id' => $r->id,
+                    'name' => $r->name,
+                    'rating' => (int) $r->rating,
+                    'comment' => $r->comment,
+                    'date' => $r->created_at ? $r->created_at->format('M d, Y') : 'Recently',
+                ])->values()->all()
+                : ($this->reviews ?? []),
         ];
     }
 }
