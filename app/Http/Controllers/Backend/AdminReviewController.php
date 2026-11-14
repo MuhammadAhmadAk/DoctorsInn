@@ -71,7 +71,7 @@ class AdminReviewController extends Controller
         $review->update(['status' => $newStatus]);
 
         $this->recalculateCourseRating($review->course);
-        SiteContentService::flush();
+        SiteContentService::flushCache();
 
         return redirect()->back()->with('success', "Review marked as {$newStatus}.");
     }
@@ -84,7 +84,7 @@ class AdminReviewController extends Controller
         if ($course) {
             $this->recalculateCourseRating($course);
         }
-        SiteContentService::flush();
+        SiteContentService::flushCache();
 
         return redirect()->back()->with('success', 'Review deleted successfully.');
     }

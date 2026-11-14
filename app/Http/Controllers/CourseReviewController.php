@@ -58,7 +58,7 @@ class CourseReviewController extends Controller
             ]);
         }
 
-        SiteContentService::flush();
+        SiteContentService::flushCache();
 
         if ($request->wantsJson()) {
             return response()->json([

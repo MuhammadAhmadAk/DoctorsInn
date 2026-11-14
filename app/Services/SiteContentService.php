@@ -43,6 +43,11 @@ class SiteContentService
         }
     }
 
+    public static function flush(): void
+    {
+        self::flushCache();
+    }
+
     /**
      * Upload and automatically optimize an image (resized + converted to WebP) under public/uploads/{subfolder}.
      */
