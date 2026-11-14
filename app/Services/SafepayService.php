@@ -37,7 +37,7 @@ class SafepayService
 
         $payload = [
             'merchant_api_key' => (string) config('services.safepay.public_key'),
-            'intent' => 'CYBERSOURCE',
+            'intent' => (string) config('services.safepay.intent', 'CYBERSOURCE'),
             'mode' => 'payment',
             'entry_mode' => 'raw',
             'currency' => 'PKR',
