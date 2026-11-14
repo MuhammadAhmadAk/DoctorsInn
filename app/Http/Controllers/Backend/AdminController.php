@@ -511,8 +511,8 @@ class AdminController extends Controller
             'category_name' => ucwords(str_replace('-', ' ', $request->category)),
             'subject' => $request->input('subject', 'All Subjects'),
             'badge' => $request->input('badge', 'Free PDF'),
-            'pages' => $request->input('pages', '60 Pages'),
-            'size' => $request->input('size', '4.2 MB'),
+            'pages' => $request->input('pages') ?: 'N/A',
+            'size' => $request->input('size') ?: '3.5 MB',
             'description' => $request->input('description', 'Official study guide and notes.'),
             'file_name' => $slug . '.pdf',
             'is_active' => true,
@@ -525,13 +525,22 @@ class AdminController extends Controller
                 mkdir($dir, 0775, true);
             }
 
-            $storedName = $slug . '-' . Str::lower(Str::random(8)) . '.' . strtolower($file->getClientOriginalExtension());
+            $extension = strtolower($file->getClientOriginalExtension());
+            $storedName = $slug . '-' . Str::lower(Str::random(8)) . '.' . $extension;
             $sizeBytes = (int) $file->getSize();
             $file->move($dir, $storedName);
 
+            $absolute = $dir . DIRECTORY_SEPARATOR . $storedName;
+
             $data['file_name'] = $file->getClientOriginalName();
             $data['file_path'] = 'uploads/elibrary/' . $storedName;
+            $data['format'] = strtoupper($extension);
             $data['size'] = $this->humanFileSize($sizeBytes);
+
+            $detectedPages = $this->detectPageCount($absolute, $extension);
+            if ($detectedPages) {
+                $data['pages'] = $detectedPages . ' Pages';
+            }
         }
 
         ElibraryResource::updateOrCreate(['slug' => $slug], $data);
@@ -555,6 +564,44 @@ class AdminController extends Controller
         }
 
         return redirect()->route('admin.elibrary')->with('success', 'E-Library resource deleted.');
+    }
+
+    protected function detectPageCount(string $absolutePath, string $extension): ?int
+    {
+        if ($extension === 'pdf') {
+            $content = @file_get_contents($absolutePath);
+            if ($content === false) {
+                return null;
+            }
+
+            preg_match_all('/\/Type\s*\/Page(?![s])/', $content, $pageObjects);
+            $pages = count($pageObjects[0]);
+
+            if ($pages === 0 && preg_match_all('/\/Count\s+(\d+)/', $content, $counts)) {
+                $pages = $counts[1] ? (int) max(array_map('intval', $counts[1])) : 0;
+            }
+
+            return $pages > 0 ? $pages : null;
+        }
+
+        if (in_array($extension, ['docx', 'pptx', 'zip'], true) && class_exists(\ZipArchive::class)) {
+            $zip = new \ZipArchive();
+            if ($zip->open($absolutePath) === true) {
+                $appXml = $zip->getFromName('docProps/app.xml');
+                $zip->close();
+
+                if ($appXml !== false) {
+                    if (preg_match('/<Pages>(\d+)<\/Pages>/', $appXml, $match) && (int) $match[1] > 0) {
+                        return (int) $match[1];
+                    }
+                    if (preg_match('/<Slides>(\d+)<\/Slides>/', $appXml, $match) && (int) $match[1] > 0) {
+                        return (int) $match[1];
+                    }
+                }
+            }
+        }
+
+        return null;
     }
 
     protected function humanFileSize(int $bytes): string

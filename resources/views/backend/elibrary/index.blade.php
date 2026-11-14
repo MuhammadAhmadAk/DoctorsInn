@@ -32,7 +32,7 @@
         <h2 class="adm-card-title"><i class="fa-solid fa-book-medical text-primary"></i> Add E-Library Resource</h2>
     </div>
     <div class="adm-card-body">
-        <form action="{{ route('admin.elibrary.store') }}" method="POST" enctype="multipart/form-data">
+        <form id="elibraryUploadForm" action="{{ route('admin.elibrary.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             @if ($errors->any())
                 <div class="alert alert-danger py-2 px-3 mb-3" style="font-size: 12.5px;">{{ $errors->first() }}</div>
@@ -40,11 +40,11 @@
             <div class="row g-3">
                 <div class="col-md-5">
                     <label class="form-label small fw-bold">Resource Title</label>
-                    <input type="text" name="title" class="form-control" required placeholder="e.g. Chemistry Formula Handbook">
+                    <input type="text" name="title" id="elibTitle" class="form-control" required placeholder="Auto-fills from file name">
                 </div>
                 <div class="col-md-3">
                     <label class="form-label small fw-bold">Category</label>
-                    <select name="category" class="form-select">
+                    <select name="category" id="elibCategory" class="form-select">
                         <option value="mdcat">MDCAT</option>
                         <option value="nums">NUMS</option>
                         <option value="army">Army / AMC</option>
@@ -54,19 +54,20 @@
                 </div>
                 <div class="col-md-2">
                     <label class="form-label small fw-bold">Subject</label>
-                    <input type="text" name="subject" class="form-control" value="All Subjects">
+                    <input type="text" name="subject" id="elibSubject" class="form-control" value="All Subjects">
                 </div>
                 <div class="col-md-2">
                     <label class="form-label small fw-bold">Size</label>
-                    <input type="text" name="size" class="form-control" value="4.2 MB">
+                    <input type="text" name="size" id="elibSize" class="form-control" placeholder="Auto-detect">
                 </div>
                 <div class="col-md-6">
                     <label class="form-label small fw-bold">Resource File <span class="text-muted fw-normal">(PDF/DOC/PPT/ZIP, max 20 MB)</span></label>
-                    <input type="file" name="file" class="form-control" accept=".pdf,.doc,.docx,.ppt,.pptx,.zip">
+                    <input type="file" name="file" id="elibFile" class="form-control" accept=".pdf,.doc,.docx,.ppt,.pptx,.zip">
+                    <div class="form-text" style="font-size: 11.5px;">Title, subject, category, size and pages are filled automatically from the file.</div>
                 </div>
                 <div class="col-md-6">
                     <label class="form-label small fw-bold">Pages</label>
-                    <input type="text" name="pages" class="form-control" value="60 Pages">
+                    <input type="text" name="pages" id="elibPages" class="form-control" placeholder="Auto-detect">
                 </div>
                 <div class="col-12">
                     <label class="form-label small fw-bold">Description</label>
@@ -120,7 +121,7 @@
                     </td>
                     <td>
                         <span class="fw-bold text-dark">{{ $res['size'] ?? ($res['file_size'] ?? '4.2 MB') }}</span>
-                        <div class="small text-muted">{{ $res['pages'] ?? '85 Pages' }} • PDF</div>
+                        <div class="small text-muted">{{ $res['pages'] ?? '85 Pages' }} • {{ $res['format'] ?? 'PDF' }}</div>
                         @if (empty($res['file_path']))
                             <span class="adm-badge adm-badge-warning" style="font-size: 10.5px;">No file uploaded</span>
                         @endif
@@ -149,4 +150,127 @@
         </table>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var form = document.getElementById('elibraryUploadForm');
+    if (!form) return;
+
+    var fileInput = document.getElementById('elibFile');
+    var titleInput = document.getElementById('elibTitle');
+    var categorySelect = document.getElementById('elibCategory');
+    var subjectInput = document.getElementById('elibSubject');
+    var sizeInput = document.getElementById('elibSize');
+    var pagesInput = document.getElementById('elibPages');
+
+    var auto = { title: '', subject: '', size: '', pages: '' };
+
+    function setAuto(input, key, value, replaceable) {
+        if (!value) return;
+
+        var current = input.value.trim();
+        var canReplace = !current || current === auto[key]
+            || (replaceable && replaceable.indexOf(current) !== -1);
+
+        if (canReplace) {
+            input.value = value;
+            auto[key] = value;
+        }
+    }
+
+    function humanize(name) {
+        return name.replace(/\.[^.]+$/, '')
+            .replace(/[-_]+/g, ' ')
+            .replace(/\s+/g, ' ')
+            .trim()
+            .replace(/\b\w/g, function (c) { return c.toUpperCase(); })
+            .replace(/\b(mdcat|nums|amc|pmdc|mcqs|ecat|css|pdf|docx?|pptx?)\b/gi, function (m) {
+                return m.toUpperCase();
+            });
+    }
+
+    function formatSize(bytes) {
+        if (!bytes) return '';
+        if (bytes < 1024) return bytes + ' B';
+        if (bytes < 1048576) return Math.round(bytes / 1024) + ' KB';
+        return (bytes / 1048576).toFixed(1) + ' MB';
+    }
+
+    function guessSubject(name) {
+        var lower = name.toLowerCase();
+        if (/bio/.test(lower)) return 'Biology';
+        if (/chem/.test(lower)) return 'Chemistry';
+        if (/phy/.test(lower)) return 'Physics';
+        if (/english/.test(lower)) return 'English';
+        if (/logic|reasoning/.test(lower)) return 'Logical Reasoning';
+        if (/math/.test(lower)) return 'Mathematics';
+        return 'All Subjects';
+    }
+
+    function guessCategory(name) {
+        var lower = name.toLowerCase();
+        if (/nums/.test(lower)) return 'nums';
+        if (/army|amc/.test(lower)) return 'army';
+        if (/past\s*paper|solved|papers?/.test(lower)) return 'past-papers';
+        return null;
+    }
+
+    function detectPdfPages(file) {
+        return new Promise(function (resolve) {
+            var reader = new FileReader();
+            reader.onload = function () {
+                try {
+                    var text = new TextDecoder('latin1').decode(new Uint8Array(reader.result));
+                    var pageObjects = text.match(/\/Type\s*\/Page(?![s])/g);
+                    var pages = pageObjects ? pageObjects.length : 0;
+
+                    if (!pages) {
+                        var counts = [];
+                        var match;
+                        var re = /\/Count\s+(\d+)/g;
+                        while ((match = re.exec(text)) !== null) {
+                            counts.push(parseInt(match[1], 10));
+                        }
+                        pages = counts.length ? Math.max.apply(null, counts) : 0;
+                    }
+
+                    resolve(pages);
+                } catch (e) {
+                    resolve(0);
+                }
+            };
+            reader.onerror = function () { resolve(0); };
+            reader.readAsArrayBuffer(file);
+        });
+    }
+
+    fileInput.addEventListener('change', function () {
+        var file = fileInput.files && fileInput.files[0];
+        if (!file) return;
+
+        setAuto(titleInput, 'title', humanize(file.name));
+        setAuto(subjectInput, 'subject', guessSubject(file.name), ['All Subjects']);
+        setAuto(sizeInput, 'size', formatSize(file.size));
+
+        var category = guessCategory(file.name);
+        if (category && !categorySelect.dataset.touched) {
+            categorySelect.value = category;
+        }
+
+        if (/\.pdf$/i.test(file.name)) {
+            pagesInput.placeholder = 'Detecting pages...';
+            detectPdfPages(file).then(function (pages) {
+                if (pages > 0) {
+                    setAuto(pagesInput, 'pages', pages + ' Pages');
+                }
+                pagesInput.placeholder = 'Auto-detect';
+            });
+        }
+    });
+
+    categorySelect.addEventListener('change', function () {
+        categorySelect.dataset.touched = '1';
+    });
+});
+</script>
 @endsection
