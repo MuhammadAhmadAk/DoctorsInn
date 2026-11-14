@@ -215,6 +215,7 @@ class SiteContentService
             self::CACHE_TESTS,
             'mock_tests',
             fn () => MockTest::query()
+                ->with('questionBank')
                 ->where('is_active', true)
                 ->orderBy('sort_order')
                 ->orderBy('id')

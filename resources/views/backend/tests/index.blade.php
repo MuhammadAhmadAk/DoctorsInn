@@ -78,7 +78,7 @@
         <div class="stat-card">
             <div class="stat-info">
                 <div class="label">Questions in Question Bank</div>
-                <h3 class="number">12,450+</h3>
+                <h3 class="number">{{ number_format($questionBankSize) }}</h3>
             </div>
             <div class="stat-icon secondary"><i class="fa-solid fa-database"></i></div>
         </div>
@@ -87,7 +87,7 @@
         <div class="stat-card">
             <div class="stat-info">
                 <div class="label">Total Submissions</div>
-                <h3 class="number">8,940</h3>
+                <h3 class="number">{{ number_format($totalAttempts) }}</h3>
             </div>
             <div class="stat-icon success"><i class="fa-solid fa-circle-check"></i></div>
         </div>
@@ -96,7 +96,7 @@
         <div class="stat-card">
             <div class="stat-info">
                 <div class="label">Average Passing Rate</div>
-                <h3 class="number">74.6%</h3>
+                <h3 class="number">{{ $passingRate }}%</h3>
             </div>
             <div class="stat-icon info"><i class="fa-solid fa-chart-simple"></i></div>
         </div>
@@ -144,14 +144,17 @@
                         <div class="small text-muted">{{ $t['marks_per_question'] ?? 1 }} Mark / Question</div>
                     </td>
                     <td>
-                        <span class="fw-bold text-dark">{{ rand(450, 2100) }}</span>
-                        <div class="small text-success">Active attempts</div>
+                        <span class="fw-bold text-dark">{{ $attemptCounts[$t['id']] ?? 0 }}</span>
+                        <div class="small text-muted">Student attempts</div>
                     </td>
                     <td>
                         <span class="adm-badge adm-badge-success">Published</span>
                     </td>
                     <td>
                         <div class="table-actions">
+                            <a href="{{ route('admin.tests.questions', $slug) }}" class="action-btn" title="Manage MCQs ({{ count($t['questions'] ?? []) }})">
+                                <i class="fa-solid fa-list-check"></i>
+                            </a>
                             <a href="{{ route('test.take', $slug) }}" target="_blank" class="action-btn" title="Simulate Test">
                                 <i class="fa-solid fa-play"></i>
                             </a>

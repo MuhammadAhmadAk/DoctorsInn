@@ -7,6 +7,7 @@ use App\Models\Blog;
 use App\Models\Course;
 use App\Models\ElibraryResource;
 use App\Models\MockTest;
+use App\Models\MockTestQuestion;
 use App\Models\SiteContent;
 use App\Models\TestAttempt;
 use App\Models\User;
@@ -443,7 +444,20 @@ class AdminController extends Controller
     public function tests()
     {
         $tests = SiteContentService::getAllTests();
-        return view('backend.tests.index', compact('tests'));
+
+        $attemptCounts = TestAttempt::query()
+            ->whereNotNull('mock_test_id')
+            ->selectRaw('mock_test_id, count(*) as total')
+            ->groupBy('mock_test_id')
+            ->pluck('total', 'mock_test_id');
+
+        $totalAttempts = (int) TestAttempt::count();
+        $passingRate = $totalAttempts > 0
+            ? round(TestAttempt::where('passed', true)->count() / $totalAttempts * 100, 1)
+            : 0.0;
+        $questionBankSize = array_sum(array_map(fn ($t) => count($t['questions'] ?? []), $tests));
+
+        return view('backend.tests.index', compact('tests', 'attemptCounts', 'totalAttempts', 'passingRate', 'questionBankSize'));
     }
 
     public function storeTest(Request $request)
@@ -459,7 +473,7 @@ class AdminController extends Controller
         $catMap = ['mdcat' => 'MDCAT', 'nums' => 'NUMS', 'army' => 'Army / AMC'];
         $category = strtolower($request->category);
 
-        MockTest::updateOrCreate(
+        $test = MockTest::updateOrCreate(
             ['slug' => $slug],
             [
                 'title' => $request->title,
@@ -475,7 +489,104 @@ class AdminController extends Controller
             ]
         );
 
-        return redirect()->route('admin.tests')->with('success', 'Mock test "' . $request->title . '" saved!');
+        return redirect()
+            ->route('admin.tests.questions', $test->slug)
+            ->with('success', 'Mock test "' . $test->title . '" saved. Add its MCQs below.');
+    }
+
+    public function testQuestions(string $slug)
+    {
+        $test = MockTest::where('slug', $slug)->firstOrFail();
+        $questions = $test->questionBank()->get();
+
+        $editing = null;
+        if ($editId = request('edit')) {
+            $editing = $questions->firstWhere('id', (int) $editId);
+        }
+
+        return view('backend.tests.questions', compact('test', 'questions', 'editing'));
+    }
+
+    public function storeQuestion(Request $request, string $slug)
+    {
+        $test = MockTest::where('slug', $slug)->firstOrFail();
+        $data = $this->validatedQuestion($request);
+        $data['sort_order'] = $request->filled('sort_order')
+            ? (int) $request->input('sort_order')
+            : (int) $test->questionBank()->max('sort_order') + 1;
+
+        $test->questionBank()->create($data);
+        $this->syncQuestionCount($test);
+
+        return redirect()
+            ->route('admin.tests.questions', $test->slug)
+            ->with('success', 'MCQ added to "' . $test->title . '".');
+    }
+
+    public function updateQuestion(Request $request, string $slug, MockTestQuestion $question)
+    {
+        $test = MockTest::where('slug', $slug)->firstOrFail();
+        abort_unless($question->mock_test_id === $test->id, 404);
+
+        $data = $this->validatedQuestion($request);
+        $data['sort_order'] = $request->filled('sort_order')
+            ? (int) $request->input('sort_order')
+            : $question->sort_order;
+
+        $question->update($data);
+        $this->syncQuestionCount($test);
+
+        return redirect()
+            ->route('admin.tests.questions', $test->slug)
+            ->with('success', 'MCQ updated.');
+    }
+
+    public function deleteQuestion(string $slug, MockTestQuestion $question)
+    {
+        $test = MockTest::where('slug', $slug)->firstOrFail();
+        abort_unless($question->mock_test_id === $test->id, 404);
+
+        $question->delete();
+        $this->syncQuestionCount($test);
+
+        return redirect()
+            ->route('admin.tests.questions', $test->slug)
+            ->with('success', 'MCQ deleted.');
+    }
+
+    protected function validatedQuestion(Request $request): array
+    {
+        $data = $request->validate([
+            'subject' => ['nullable', 'string', 'max:80'],
+            'question' => ['required', 'string', 'max:2000'],
+            'options' => ['required', 'array'],
+            'options.A' => ['required', 'string', 'max:500'],
+            'options.B' => ['required', 'string', 'max:500'],
+            'options.C' => ['required', 'string', 'max:500'],
+            'options.D' => ['required', 'string', 'max:500'],
+            'correct_option' => ['required', 'in:A,B,C,D'],
+            'explanation' => ['nullable', 'string', 'max:2000'],
+            'sort_order' => ['nullable', 'integer', 'min:0', 'max:9999'],
+        ]);
+
+        return [
+            'subject' => trim((string) ($data['subject'] ?? '')) ?: 'General',
+            'question' => $data['question'],
+            'options' => [
+                'A' => $data['options']['A'],
+                'B' => $data['options']['B'],
+                'C' => $data['options']['C'],
+                'D' => $data['options']['D'],
+            ],
+            'correct_option' => $data['correct_option'],
+            'explanation' => $data['explanation'] ?? null,
+            'is_active' => true,
+        ];
+    }
+
+    protected function syncQuestionCount(MockTest $test): void
+    {
+        $test->forceFill(['total_questions' => $test->questionBank()->count()])->save();
     }
 
     public function deleteTest($slug)

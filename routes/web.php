@@ -155,6 +155,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/tests', [AdminController::class, 'tests'])->name('tests');
         Route::post('/tests', [AdminController::class, 'storeTest'])->name('tests.store');
         Route::delete('/tests/{slug}', [AdminController::class, 'deleteTest'])->name('tests.delete');
+        Route::get('/tests/{slug}/questions', [AdminController::class, 'testQuestions'])->name('tests.questions');
+        Route::post('/tests/{slug}/questions', [AdminController::class, 'storeQuestion'])->name('tests.questions.store');
+        Route::match(['put', 'post'], '/tests/{slug}/questions/{question}', [AdminController::class, 'updateQuestion'])->name('tests.questions.update');
+        Route::delete('/tests/{slug}/questions/{question}', [AdminController::class, 'deleteQuestion'])->name('tests.questions.destroy');
 
         Route::get('/elibrary', [AdminController::class, 'elibrary'])->name('elibrary');
         Route::post('/elibrary', [AdminController::class, 'storeResource'])->name('elibrary.store');

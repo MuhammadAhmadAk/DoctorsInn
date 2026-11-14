@@ -409,7 +409,8 @@ class RouteController extends Controller
     public function Frontend_Tests(Request $request)
     {
         $categoriesConfig = config('tests.categories', []);
-        $allTests = collect(SiteContentService::getAllTests());
+        $allTests = collect(SiteContentService::getAllTests())
+            ->filter(fn ($t) => ! empty($t['questions']));
 
         $testCategories = [
             'all' => [
@@ -453,6 +454,10 @@ class RouteController extends Controller
             return redirect()->route('tests')->with('error', 'Test not found.');
         }
 
+        if (empty($test['questions'])) {
+            return redirect()->route('tests')->with('error', 'This practice test has no questions yet. Please check back soon.');
+        }
+
         return view('frontend.pages.tests.take-test', compact('test', 'user'));
     }
 
@@ -469,6 +474,10 @@ class RouteController extends Controller
 
         if (! $test) {
             return redirect()->route('tests')->with('error', 'Test not found.');
+        }
+
+        if (empty($test['questions'])) {
+            return redirect()->route('tests')->with('error', 'This practice test has no questions yet and cannot be submitted.');
         }
 
         $submittedAnswers = $request->input('answers', []);
