@@ -141,10 +141,13 @@ class AdminLectureController extends Controller
 
     protected function spawnProcessor(LectureVideo $video): bool
     {
+        // Keep this a single simple command: a compound (`cd && nohup ... &`)
+        // leaves the wrapping shell holding proc_open's pipes open, which would
+        // block the upload response until transcoding finishes.
         $command = sprintf(
-            'cd %s && nohup %s artisan lectures:process %d >> %s 2>&1 < /dev/null &',
-            escapeshellarg(base_path()),
+            'nohup %s %s lectures:process %d >> %s 2>&1 < /dev/null &',
             escapeshellarg($this->phpBinary()),
+            escapeshellarg(base_path('artisan')),
             (int) $video->id,
             escapeshellarg(storage_path('logs/lecture-' . $video->id . '.log'))
         );
