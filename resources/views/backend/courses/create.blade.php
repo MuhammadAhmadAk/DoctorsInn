@@ -2095,6 +2095,7 @@ function resetVideoUploadUi() {
 // =============================================================================
 let currentLecture = null;
 let lecturePollTimer = null;
+let lecturePollTick = null;
 let topicVideoJs = null;
 
 function getTopicPlayer() {
@@ -2145,7 +2146,19 @@ function stopLecturePolling() {
         window.clearTimeout(lecturePollTimer);
         lecturePollTimer = null;
     }
+    lecturePollTick = null;
 }
+
+// Background tabs get their timers throttled by Chrome, which leaves the
+// processing percent frozen. Refresh immediately when the tab is visible again.
+document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState !== 'visible' || typeof lecturePollTick !== 'function') return;
+    if (lecturePollTimer) {
+        window.clearTimeout(lecturePollTimer);
+        lecturePollTimer = null;
+    }
+    lecturePollTick();
+});
 
 function formatLectureBytes(bytes) {
     if (!bytes) return '';
@@ -2271,21 +2284,33 @@ function startLecturePolling(lectureId) {
     const version = topicVideoVersion;
     const tick = async function () {
         lecturePollTimer = null;
+        if (version !== topicVideoVersion || !currentLecture || String(currentLecture.id) !== id) return;
+
         let lecture = null;
         try {
             const res = await fetch(`${COURSE_STUDIO_BASE_URL.replace(/\/+$/, '')}/admin/lectures/${id}/status`, {
-                headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' }
+                headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+                cache: 'no-store'
             });
             if (res.ok) lecture = await res.json();
         } catch (e) { /* keep polling */ }
 
         if (version !== topicVideoVersion || !currentLecture || String(currentLecture.id) !== id) return;
-        if (lecture) applyLectureState(lecture, true);
+        if (lecture) {
+            try {
+                applyLectureState(lecture, true);
+            } catch (e) {
+                // Never let a UI update error kill the polling loop.
+                console.warn('Lecture poll update failed', e);
+            }
+        }
 
         if (!lecture || (currentLecture && currentLecture.status !== 'ready' && currentLecture.status !== 'failed')) {
+            lecturePollTick = tick;
             lecturePollTimer = window.setTimeout(tick, 3000);
         }
     };
+    lecturePollTick = tick;
     lecturePollTimer = window.setTimeout(tick, 3000);
 }
 

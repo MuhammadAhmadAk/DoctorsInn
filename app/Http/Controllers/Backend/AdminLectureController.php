@@ -81,7 +81,9 @@ class AdminLectureController extends Controller
 
     public function status(LectureVideo $video): JsonResponse
     {
-        return response()->json($this->serialize($video->fresh()));
+        return response()
+            ->json($this->serialize($video->fresh()))
+            ->header('Cache-Control', 'no-store, max-age=0');
     }
 
     public function retry(LectureVideo $video): JsonResponse
