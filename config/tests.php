@@ -3,7 +3,7 @@
 return [
     'categories' => [
         'all' => [
-            'label' => 'All Mock Tests',
+            'label' => 'All Practice Tests',
             'icon' => 'fa-solid fa-layer-group',
         ],
         'mdcat' => [

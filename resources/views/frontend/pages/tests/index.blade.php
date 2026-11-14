@@ -1,6 +1,6 @@
 @extends('frontend.layouts.main')
-@section('title', 'Online Mock Tests & MCQs Practice | DoctorsInnElite')
-@section('meta_description', 'Attempt free online MDCAT, NUMS & AMC mock tests and MCQs with instant scoring, timer, and detailed explanations.')
+@section('title', 'Online Practice Tests & MCQs | DoctorsInnElite')
+@section('meta_description', 'Attempt free online MDCAT, NUMS & AMC practice tests and MCQs with instant scoring, timer, and detailed explanations.')
 @section('meta_keywords', 'MDCAT mock test online, NUMS biology MCQs test, AMC practice test, free medical test simulator, PMDC mock exam')
 @section('content')
 
@@ -10,10 +10,10 @@
             <div class="row">
                 <div class="col-lg-7">
                     <div class="breadcumb-content">
-                        <h1 class="breadcumb-title">Online Mock Tests & MCQs</h1>
+                        <h1 class="breadcumb-title">Online Practice Tests & MCQs</h1>
                         <ul class="breadcumb-menu">
                             <li><a href="{{ route('home') }}">Home</a></li>
-                            <li>Mock Tests</li>
+                            <li>Practice Tests</li>
                         </ul>
                     </div>
                 </div>
@@ -29,7 +29,7 @@
                     <img src="{{ asset('frontend/img/logo/logo-icon.svg') }}" alt="img">Exam Practice Simulator
                 </span>
                 <h2 class="sec-title th_fade_anim">
-                    <span class="th-text-perspective">Medical Entrance Exam Mock Tests</span>
+                    <span class="th-text-perspective">Medical Entrance Exam Practice Tests</span>
                 </h2>
                 <p class="th_fade_anim max-width-700 mx-auto">
                     Practice with realistic online test simulations. Instant results, detailed answer explanations, and negative marking analysis to boost your preparation.
@@ -59,7 +59,7 @@
                 <div class="test-auth-notice mb-40 text-center th_fade_anim">
                     <div class="notice-pill d-inline-flex align-items-center gap-2 px-3 py-2">
                         <i class="fa-solid fa-circle-info text-theme"></i>
-                        <span>Please <strong>Log In</strong> to your student account to attempt mock tests.</span>
+                        <span>Please <strong>Log In</strong> to your student account to attempt practice tests.</span>
                         <a href="{{ route('login', ['redirect' => route('tests')]) }}" class="text-theme fw-bold text-decoration-underline ms-1">Log In Now &rarr;</a>
                     </div>
                 </div>
@@ -138,7 +138,7 @@
                     </div>
                 @empty
                     <div class="col-12 text-center py-5">
-                        <p class="text-muted">No mock tests available at the moment. Please check back soon.</p>
+                        <p class="text-muted">No practice tests available at the moment. Please check back soon.</p>
                     </div>
                 @endforelse
             </div>

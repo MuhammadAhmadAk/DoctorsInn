@@ -12,7 +12,7 @@
                         <h1 class="breadcumb-title">Test Result & Performance Review</h1>
                         <ul class="breadcumb-menu">
                             <li><a href="{{ route('home') }}">Home</a></li>
-                            <li><a href="{{ route('tests') }}">Mock Tests</a></li>
+                            <li><a href="{{ route('tests') }}">Practice Tests</a></li>
                             <li>Result</li>
                         </ul>
                     </div>
@@ -55,7 +55,7 @@
                     {{-- Right: Test Details & Metrics --}}
                     <div class="col-lg-7">
                         <div class="ps-lg-3">
-                            <span class="badge bg-theme-subtle text-theme fw-semibold mb-2">{{ $test['category_name'] }} Mock Test</span>
+                            <span class="badge bg-theme-subtle text-theme fw-semibold mb-2">{{ $test['category_name'] }} Practice Test</span>
                             <h3 class="result-test-title mb-2">{{ $test['title'] }}</h3>
                             <div class="d-flex flex-wrap align-items-center gap-3 text-muted small mb-4">
                                 <span><i class="fa-solid fa-user-graduate me-1 text-theme"></i>Student: <strong>{{ $resultData['user']['name'] ?? 'Student' }}</strong></span>
@@ -94,7 +94,7 @@
                                     <i class="fa-solid fa-rotate-right me-2"></i>RETAKE TEST
                                 </a>
                                 <a href="{{ route('tests') }}" class="th-btn btn-sm style-border2">
-                                    <i class="fa-solid fa-layer-group me-2"></i>ALL MOCK TESTS
+                                    <i class="fa-solid fa-layer-group me-2"></i>ALL PRACTICE TESTS
                                 </a>
                                 <a href="{{ route('e-library') }}" class="th-btn btn-sm style-border2">
                                     <i class="fa-solid fa-book me-2"></i>FREE STUDY MATERIAL
@@ -204,7 +204,7 @@
             {{-- Bottom CTA --}}
             <div class="text-center mt-5">
                 <a href="{{ route('tests') }}" class="th-btn">
-                    EXPLORE MORE MOCK TESTS <i class="fa-solid fa-arrow-right ms-2"></i>
+                    EXPLORE MORE PRACTICE TESTS <i class="fa-solid fa-arrow-right ms-2"></i>
                 </a>
             </div>
 
