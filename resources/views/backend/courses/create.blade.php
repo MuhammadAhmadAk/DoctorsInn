@@ -32,7 +32,6 @@
         border: 1px solid #eef1f6;
         border-radius: 8px;
         margin-bottom: 8px;
-        overflow: hidden;
     }
     .builder-module-body {
         padding: 10px 12px 12px;
@@ -42,23 +41,23 @@
         padding-top: 12px;
     }
     .studio-empty {
-        padding: 36px 16px;
-        text-align: center;
-        background: #fafbff;
-        border: 1.5px dashed #e2e8f0;
-        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        padding: 24px 8px;
     }
     .studio-empty-icon {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 40px;
-        height: 40px;
-        margin-bottom: 8px;
+        width: 36px;
+        height: 36px;
+        flex-shrink: 0;
         border-radius: 8px;
-        background: #f1f5f9;
-        color: #94a3b8;
-        font-size: 15px;
+        background: #f5f6fa;
+        color: #64748b;
+        font-size: 14px;
     }
     .studio-empty-title {
         font-size: 13px;
@@ -66,9 +65,9 @@
         color: #0f172a;
     }
     .studio-empty-text {
-        margin: 3px 0 12px;
-        font-size: 11.5px;
-        color: #94a3b8;
+        margin: 3px 0 0;
+        font-size: 12px;
+        color: #64748b;
     }
     .builder-chapter-card:last-child {
         margin-bottom: 0;
@@ -81,6 +80,15 @@
         justify-content: space-between;
         gap: 8px;
         border-bottom: 1px solid #eef1f6;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+    }
+    .builder-topics-list > :last-child {
+        border-bottom-left-radius: 8px;
+        border-bottom-right-radius: 8px;
+    }
+    .builder-chapter-header .dropdown-menu {
+        border-radius: 8px;
     }
     .builder-topic-row {
         padding: 8px 12px;
@@ -243,17 +251,72 @@
         border-radius: 8px;
     }
 
-    /* ── Curriculum stats strip ─────────────────────────────────────── */
-    .studio-stats {
-        background: #fafbfd;
-        border-top: 1px solid #eef1f6;
-        border-bottom: 1px solid #eef1f6;
+    .studio-page .curriculum-header {
+        align-items: center;
+    }
+    .curriculum-description {
+        margin: 4px 0 0;
         font-size: 12px;
         color: #64748b;
     }
+    .curriculum-actions {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+    .curriculum-action {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        min-height: 32px;
+        padding: 6px 10px;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        background: #ffffff;
+        color: #475569;
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 1.4;
+        white-space: nowrap;
+    }
+    .curriculum-action:hover {
+        background: #f8fafc;
+        border-color: #cbd5e1;
+    }
+    .curriculum-action:focus-visible {
+        outline: 2px solid #5c32ff;
+        outline-offset: 2px;
+    }
+    .curriculum-action-primary {
+        background: #5c32ff;
+        border-color: #5c32ff;
+        color: #ffffff;
+    }
+    .curriculum-action-primary:hover {
+        background: #4925db;
+        border-color: #4925db;
+    }
+    .curriculum-action-clear {
+        border-color: transparent;
+    }
+    .curriculum-action-clear:hover {
+        color: #b91c1c;
+        background: #fef2f2;
+        border-color: transparent;
+    }
+    .studio-stats {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px 16px;
+        padding: 10px 18px 0;
+        font-size: 11px;
+        color: #64748b;
+    }
     .studio-stats strong {
-        color: #0f172a;
-        font-weight: 700;
+        color: #334155;
+        font-weight: 600;
     }
 
     /* Lighten the standard admin cards inside the studio */
@@ -685,58 +748,37 @@
                 </div>
             </div>
 
-            <!-- 2. 3-Tier Dynamic Course Curriculum Studio (Matching Student Portal) -->
-            <div class="adm-card mb-3">
-                <div class="adm-card-header pb-2.5">
+            <div class="adm-card mb-3" id="curriculumBuilder">
+                <div class="adm-card-header curriculum-header">
                     <div>
-                        <div class="d-flex align-items-center gap-2 mb-1">
-                            <h2 class="adm-card-title mb-0">2. 3-Tier Course Curriculum Builder</h2>
-                            <span class="status-chip primary">Student Portal Synced</span>
-                        </div>
-                        <div class="text-muted font-11">
-                            Build the exact 3-tier hierarchy: <strong>Modules &rarr; Chapters &rarr; Topics & Quizzes (Video, Reading, Topic Quiz, Chapter Quiz)</strong>.
-                        </div>
+                        <h2 class="adm-card-title mb-0">Course curriculum</h2>
+                        <p class="curriculum-description">Modules, chapters and lessons.</p>
                     </div>
-                    <div class="d-flex align-items-center gap-2 flex-wrap">
-                        <button type="button" class="btn btn-sm btn-outline-secondary py-1 px-2 font-11" id="btnLoadTemplate" title="Quickly fill with sample Biology, Chemistry, Physics curriculum">
-                            <i class="fa-solid fa-wand-magic-sparkles me-1 text-warning"></i> Load PMDC Starter
+                    <div class="curriculum-actions">
+                        <button type="button" class="curriculum-action" id="btnLoadTemplate" title="Load the sample PMDC curriculum">
+                            PMDC template
                         </button>
-                        <button type="button" class="btn btn-sm btn-outline-danger py-1 px-2 font-11" id="btnClearCurriculum" title="Empty all modules">
-                            <i class="fa-solid fa-trash me-1"></i> Clear
+                        <button type="button" class="curriculum-action curriculum-action-clear d-none" id="btnClearCurriculum" title="Clear all modules">
+                            Clear
                         </button>
-                        <button type="button" class="btn btn-sm btn-primary py-1 px-2.5 font-11 fw-semibold" id="btnAddModuleBtn">
-                            <i class="fa-solid fa-plus me-1"></i> Add Module
+                        <button type="button" class="curriculum-action curriculum-action-primary" id="btnAddModuleBtn">
+                            <i class="fa-solid fa-plus" aria-hidden="true"></i> Add module
                         </button>
                     </div>
                 </div>
 
-                <!-- Live Summary Statistics Bar -->
-                <div class="studio-stats px-3 py-2 d-flex align-items-center justify-content-between flex-wrap gap-2">
-                    <div class="d-flex align-items-center gap-3">
-                        <span><strong class="text-dark" id="statModulesCount">0</strong> Modules</span>
-                        <span>&bull;</span>
-                        <span><strong class="text-dark" id="statChaptersCount">0</strong> Chapters</span>
-                        <span>&bull;</span>
-                        <span><strong class="text-dark" id="statTopicsCount">0</strong> Lectures</span>
-                        <span>&bull;</span>
-                        <span><strong class="text-dark" id="statQuizzesCount">0</strong> Quizzes</span>
-                    </div>
-                    <div class="font-11 text-secondary">
-                        <i class="fa-solid fa-circle-info me-1"></i> Changes auto-sync to student classroom
-                    </div>
+                <div class="studio-stats d-none" id="curriculumStats" role="status">
+                    <span><strong id="statModulesCount">0</strong> Modules</span>
+                    <span><strong id="statChaptersCount">0</strong> Chapters</span>
+                    <span><strong id="statTopicsCount">0</strong> Lectures</span>
+                    <span><strong id="statQuizzesCount">0</strong> Quizzes</span>
                 </div>
 
                 <div class="adm-card-body">
-                    <!-- Tree Container rendered dynamically by JS -->
-                    <div id="modulesContainer">
-                        <!-- Dynamic Module Cards Injected Here -->
-                    </div>
-
-                    <!-- Bottom Add Module Trigger -->
-                    <div class="text-center pt-2">
-                        <button type="button" class="btn-adm btn-adm-outline w-100 py-2 font-12 text-primary border-dashed" id="btnBottomAddModule">
-                            <i class="fa-solid fa-folder-plus me-1"></i>
-                            <span>+ Add Another Subject / Module</span>
+                    <div id="modulesContainer"></div>
+                    <div class="pt-2 d-none" id="curriculumFooter">
+                        <button type="button" class="curriculum-action w-100" id="btnBottomAddModule">
+                            <i class="fa-solid fa-plus" aria-hidden="true"></i> Add module
                         </button>
                     </div>
                 </div>
@@ -1048,8 +1090,9 @@
                             <input type="text" id="inputTopicName" class="form-control" placeholder="e.g. 1.1 Cell Membrane & Fluid Mosaic Architecture" required>
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">Duration <span class="text-danger">*</span></label>
-                            <input type="text" id="inputTopicDuration" class="form-control" placeholder="e.g. 35 min" value="35 min">
+                            <label for="inputTopicDuration" class="form-label">Duration <span class="text-danger">*</span></label>
+                            <input type="text" id="inputTopicDuration" class="form-control" placeholder="Select a video" aria-describedby="topicDurationHint">
+                            <div id="topicDurationHint" class="font-11 text-secondary mt-1" aria-live="polite">Auto-filled from the selected video.</div>
                         </div>
                     </div>
                 </div>
@@ -1571,13 +1614,11 @@ function renderBuilder() {
     if (!courseModules || courseModules.length === 0) {
         container.innerHTML = `
             <div class="studio-empty">
-                <span class="studio-empty-icon"><i class="fa-solid fa-folder-open"></i></span>
-                <div class="studio-empty-title">No modules yet</div>
-                <p class="studio-empty-text">Add a subject, or start from the PMDC starter template.</p>
-                <button type="button" class="btn-adm btn-adm-primary" onclick="openModuleModal(-1)">
-                    <i class="fa-solid fa-plus"></i>
-                    <span>Add first module</span>
-                </button>
+                <span class="studio-empty-icon" aria-hidden="true"><i class="fa-regular fa-folder-open"></i></span>
+                <div>
+                    <div class="studio-empty-title">No modules yet</div>
+                    <p class="studio-empty-text">Add your first module to organize lessons.</p>
+                </div>
             </div>
         `;
         updateStats();
@@ -1742,6 +1783,9 @@ function renderBuilder() {
 
 function updateStats() {
     let mods = courseModules.length;
+    document.getElementById('curriculumStats').classList.toggle('d-none', mods === 0);
+    document.getElementById('curriculumFooter').classList.toggle('d-none', mods === 0);
+    document.getElementById('btnClearCurriculum').classList.toggle('d-none', mods === 0);
     let chapters = 0;
     let topics = 0;
     let quizzes = 0;
@@ -1916,6 +1960,8 @@ function toggleTopicTypeFields() {
     if (videoGroup) {
         videoGroup.style.display = (type === 'video') ? 'block' : 'none';
     }
+    document.getElementById('inputTopicDuration').placeholder = type === 'video' ? 'Select a video' : 'e.g. 15 min';
+    document.getElementById('topicDurationHint').classList.toggle('d-none', type !== 'video');
 }
 
 function switchVideoMode(mode) {
@@ -1940,8 +1986,70 @@ function switchVideoMode(mode) {
 // Active XHR Upload Trackers
 let currentVideoXhr = null;
 let currentHandoutXhr = null;
+let videoDurationProbe = null;
+let topicVideoVersion = 0;
+
+function setTopicVideoDuration(seconds) {
+    if (document.getElementById('inputTopicType').value !== 'video' || !Number.isFinite(seconds) || seconds <= 0) return false;
+
+    const total = Math.max(1, Math.round(seconds));
+    const hours = Math.floor(total / 3600);
+    const minutes = Math.floor((total % 3600) / 60);
+    const remainder = total % 60;
+    const parts = [];
+    if (hours) parts.push(hours + ' hr');
+    if (minutes) parts.push(minutes + ' min');
+    if (remainder) parts.push(remainder + ' sec');
+    document.getElementById('inputTopicDuration').value = parts.join(' ');
+    document.getElementById('topicDurationHint').textContent = 'Detected from video metadata.';
+    return true;
+}
+
+function clearTopicVideoDuration() {
+    if (document.getElementById('inputTopicType').value !== 'video') return;
+    document.getElementById('inputTopicDuration').value = '';
+    document.getElementById('topicDurationHint').textContent = 'Auto-filled from the selected video.';
+}
+
+function stopVideoDurationRead() {
+    if (!videoDurationProbe) return;
+    const probe = videoDurationProbe;
+    videoDurationProbe = null;
+    window.clearTimeout(probe.timer);
+    probe.video.onloadedmetadata = null;
+    probe.video.onerror = null;
+    probe.video.removeAttribute('src');
+    probe.video.load();
+    URL.revokeObjectURL(probe.url);
+}
+
+function readSelectedVideoDuration(file) {
+    stopVideoDurationRead();
+    clearTopicVideoDuration();
+    const video = document.createElement('video');
+    const probe = { video, url: URL.createObjectURL(file), timer: null };
+    videoDurationProbe = probe;
+    document.getElementById('topicDurationHint').textContent = 'Reading video duration…';
+
+    const finish = function () {
+        if (videoDurationProbe !== probe) return;
+        if (!setTopicVideoDuration(video.duration)) {
+            document.getElementById('topicDurationHint').textContent = 'Enter manually or wait for video processing.';
+        }
+        stopVideoDurationRead();
+    };
+    video.preload = 'metadata';
+    video.onloadedmetadata = finish;
+    video.onerror = finish;
+    probe.timer = window.setTimeout(finish, 15000);
+    video.src = probe.url;
+}
 
 function cancelVideoUpload() {
+    topicVideoVersion++;
+    const wasReadingDuration = Boolean(videoDurationProbe);
+    stopVideoDurationRead();
+    if (currentVideoXhr || wasReadingDuration) clearTopicVideoDuration();
     if (currentVideoXhr) {
         try {
             currentVideoXhr.abort();
@@ -2112,6 +2220,7 @@ function applyLectureState(lecture, fromPoll = false) {
     }
 
     if (hidden) hidden.value = lecture.id;
+    if (setTopicVideoDuration(lecture.duration)) stopVideoDurationRead();
     updateLecturePreviewMeta(lecture);
 
     if (lecture.status === 'ready') {
@@ -2159,6 +2268,7 @@ function applyLectureState(lecture, fromPoll = false) {
 function startLecturePolling(lectureId) {
     stopLecturePolling();
     const id = String(lectureId);
+    const version = topicVideoVersion;
     const tick = async function () {
         lecturePollTimer = null;
         let lecture = null;
@@ -2169,7 +2279,7 @@ function startLecturePolling(lectureId) {
             if (res.ok) lecture = await res.json();
         } catch (e) { /* keep polling */ }
 
-        if (!currentLecture || String(currentLecture.id) !== id) return;
+        if (version !== topicVideoVersion || !currentLecture || String(currentLecture.id) !== id) return;
         if (lecture) applyLectureState(lecture, true);
 
         if (!lecture || (currentLecture && currentLecture.status !== 'ready' && currentLecture.status !== 'failed')) {
@@ -2180,16 +2290,20 @@ function startLecturePolling(lectureId) {
 }
 
 async function loadLectureById(lectureId) {
+    const version = topicVideoVersion;
     try {
         const res = await fetch(`${COURSE_STUDIO_BASE_URL.replace(/\/+$/, '')}/admin/lectures/${lectureId}/status`, {
             headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' }
         });
+        if (version !== topicVideoVersion) return;
         if (!res.ok) {
             applyLectureState({ id: lectureId, status: 'failed', progress: 0, error: 'This lecture could not be found. It may have been deleted.' });
             return;
         }
-        applyLectureState(await res.json());
+        const lecture = await res.json();
+        if (version === topicVideoVersion) applyLectureState(lecture);
     } catch (e) {
+        if (version !== topicVideoVersion) return;
         applyLectureState({ id: lectureId, status: 'failed', progress: 0, error: 'Could not load lecture status. Check your connection and retry.' });
     }
 }
@@ -2223,6 +2337,7 @@ async function retryLectureProcessing() {
 
 function clearUploadedVideo() {
     cancelVideoUpload();
+    clearTopicVideoDuration();
     stopLecturePolling();
     currentLecture = null;
 
@@ -2252,6 +2367,8 @@ function onVideoUrlManualInput(val) {
     const sizeEl = document.getElementById('videoPreviewSize');
 
     if (val) {
+        cancelVideoUpload();
+        clearTopicVideoDuration();
         // Manual external URL replaces any uploaded lecture binding.
         const lectureInput = document.getElementById('inputTopicLectureId');
         if (lectureInput) lectureInput.value = '';
@@ -2291,6 +2408,9 @@ function uploadVideoFile(file) {
         resetVideoUploadUi();
         return;
     }
+
+    readSelectedVideoDuration(file);
+    document.getElementById('inputTopicLectureId').value = '';
 
     const progressWrap = document.getElementById('videoUploadProgressWrapper');
     const progressBar = document.getElementById('videoProgressBar');
@@ -2353,6 +2473,8 @@ function uploadVideoFile(file) {
             if (fileInput) fileInput.value = '';
             applyLectureState(res.lecture);
         } else {
+            stopVideoDurationRead();
+            clearTopicVideoDuration();
             const message = res.message || (res.errors && Object.values(res.errors).flat()[0]) || ('Upload failed (status ' + xhr.status + ').');
             alert(message);
             resetVideoUploadUi();
@@ -2367,6 +2489,8 @@ function uploadVideoFile(file) {
     xhr.onerror = function () {
         if (currentVideoXhr !== xhr) return;
         currentVideoXhr = null;
+        stopVideoDurationRead();
+        clearTopicVideoDuration();
         if (saveBtn) saveBtn.disabled = false;
         if (progressWrap) progressWrap.classList.add('d-none');
         alert('Network error occurred during video upload.');
@@ -2447,6 +2571,7 @@ function openTopicModal(modIdx, chIdx, topIdx = -1, defaultType = 'video') {
     cancelHandoutUpload();
     stopLecturePolling();
     applyLectureState(null);
+    document.getElementById('topicDurationHint').textContent = 'Auto-filled from the selected video.';
 
     document.getElementById('inputTopicModuleIdx').value = modIdx;
     document.getElementById('inputTopicChapterIdx').value = chIdx;
@@ -2461,7 +2586,7 @@ function openTopicModal(modIdx, chIdx, topIdx = -1, defaultType = 'video') {
         document.getElementById('modalTopicTitle').textContent = 'Edit Topic';
         document.getElementById('inputTopicType').value = top.type || 'video';
         document.getElementById('inputTopicName').value = top.title || '';
-        document.getElementById('inputTopicDuration').value = top.duration || '35 min';
+        document.getElementById('inputTopicDuration').value = top.duration || '';
         videoUrl = top.videoUrl || '';
         lectureId = top.lectureId || '';
         document.getElementById('inputTopicVideoUrl').value = videoUrl;
@@ -2474,7 +2599,7 @@ function openTopicModal(modIdx, chIdx, topIdx = -1, defaultType = 'video') {
         document.getElementById('modalTopicTitle').textContent = defaultType === 'video' ? 'Add Video Lecture' : 'Add Reading Topic';
         document.getElementById('inputTopicType').value = defaultType;
         document.getElementById('inputTopicName').value = defaultType === 'video' ? '1.1 Video Lecture Title' : '1.2 High-Yield Notes';
-        document.getElementById('inputTopicDuration').value = defaultType === 'video' ? '35 min' : '15 min';
+        document.getElementById('inputTopicDuration').value = defaultType === 'video' ? '' : '15 min';
         document.getElementById('inputTopicVideoUrl').value = '';
         document.getElementById('inputTopicNotes').value = '';
         document.getElementById('inputTopicHandout').value = '';
@@ -2559,7 +2684,7 @@ function saveTopic() {
         title: title,
         type: type,
         isQuiz: false,
-        duration: duration || (type === 'video' ? '35 min' : '15 min'),
+        duration: duration || (type === 'video' ? '' : '15 min'),
         videoUrl: lectureId ? '' : videoUrl,
         lectureId: lectureId || null,
         lectureTitle: lectureId ? title : null,
