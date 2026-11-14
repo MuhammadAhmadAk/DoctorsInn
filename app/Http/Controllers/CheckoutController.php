@@ -114,8 +114,8 @@ class CheckoutController extends Controller
 
         $this->enrollments->enroll($user, $course, 'free');
 
-        return redirect()->route('student.classroom', $course->slug)
-            ->with('success', 'Enrollment confirmed. Your classroom is ready.');
+        return redirect()->route('student.dashboard')
+            ->with('enrollment_success', $this->enrollmentReceipt($course, false));
     }
 
     /**
@@ -147,8 +147,8 @@ class CheckoutController extends Controller
         $order->refresh();
 
         if ($order->isPaid() && $course) {
-            return redirect()->route('student.classroom', $course->slug)
-                ->with('success', 'Payment confirmed. Your enrollment is active.');
+            return redirect()->route('student.dashboard')
+                ->with('enrollment_success', $this->enrollmentReceipt($course, true));
         }
 
         if ($status === Order::STATUS_CANCELLED) {
@@ -194,11 +194,26 @@ class CheckoutController extends Controller
         $order->refresh();
 
         if ($order->isPaid() && $order->course) {
-            return redirect()->route('student.classroom', $order->course->slug)
-                ->with('success', 'Payment confirmed. Your enrollment is active.');
+            return redirect()->route('student.dashboard')
+                ->with('enrollment_success', $this->enrollmentReceipt($order->course, true));
         }
 
         return back()->with('warning', 'Safepay still shows this payment as pending. If you were charged, contact the academic desk with reference ' . $order->reference . '.');
+    }
+
+    /**
+     * One-time payload for the "you are enrolled" dashboard modal.
+     */
+    protected function enrollmentReceipt(Course $course, bool $paid): array
+    {
+        return [
+            'slug' => $course->slug,
+            'title' => $course->title,
+            'image' => $course->image,
+            'lessons' => $course->lessons,
+            'amount' => $course->priceLabel(),
+            'paid' => $paid,
+        ];
     }
 
     protected function resolveCourse(?string $slug): ?Course

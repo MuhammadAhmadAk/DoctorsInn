@@ -98,6 +98,78 @@
         border-color: var(--std-primary-border);
         background: #FAF9FF;
     }
+    .enroll-modal .modal-content { border: 0; border-radius: 8px; box-shadow: 0 24px 60px rgba(5, 3, 16, .18); }
+    .enroll-check {
+        width: 58px;
+        height: 58px;
+        margin: 0 auto 16px;
+        border-radius: 50%;
+        background: #ECFDF3;
+        color: #12B76A;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        box-shadow: 0 0 0 6px #F3FEF7;
+    }
+    .enroll-title {
+        font-size: 1.2rem;
+        font-weight: 800;
+        color: #0F0C1D;
+        letter-spacing: -0.01em;
+        margin-bottom: 6px;
+    }
+    .enroll-sub {
+        font-size: 13px;
+        color: #6B6780;
+        line-height: 1.55;
+        margin-bottom: 20px;
+    }
+    .enroll-course {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        text-align: left;
+        background: #FBFAFF;
+        border: 1px solid var(--std-border-subtle);
+        border-radius: 8px;
+        padding: 12px;
+    }
+    .enroll-course-thumb {
+        width: 48px;
+        height: 48px;
+        border-radius: 6px;
+        object-fit: cover;
+        flex-shrink: 0;
+    }
+    .enroll-course-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 6px;
+        background: var(--std-primary-light);
+        color: var(--std-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        flex-shrink: 0;
+    }
+    .enroll-course-title {
+        font-size: 13.5px;
+        font-weight: 700;
+        color: #0F0C1D;
+        line-height: 1.35;
+    }
+    .enroll-course-meta {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+        font-size: 11.5px;
+        color: #8B85A8;
+        margin-top: 5px;
+    }
+    .enroll-actions .btn { border-radius: 8px; font-size: 13.5px; }
 </style>
 @endsection
 
@@ -376,4 +448,76 @@
 
     </div>
 
+    {{-- Enrollment success popup (one-time flash) --}}
+    @if (session('enrollment_success'))
+        @php $enrolled = session('enrollment_success'); @endphp
+        <div class="modal fade enroll-modal" id="enrollmentSuccessModal" tabindex="-1"
+            aria-labelledby="enrollmentSuccessTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-body p-4 p-sm-5 text-center">
+                        <div class="enroll-check">
+                            <i class="fa-solid fa-check"></i>
+                        </div>
+
+                        <h2 class="enroll-title" id="enrollmentSuccessTitle">Enrollment confirmed</h2>
+                        <p class="enroll-sub">
+                            @if (! empty($enrolled['paid']))
+                                Payment received. You are now enrolled in this course. Your classroom is ready — start learning right away.
+                            @else
+                                You are now enrolled in this course. Your classroom is ready — start learning right away.
+                            @endif
+                        </p>
+
+                        <div class="enroll-course">
+                            @if (! empty($enrolled['image']))
+                                <img src="{{ asset($enrolled['image']) }}" alt="{{ $enrolled['title'] }}" class="enroll-course-thumb">
+                            @else
+                                <div class="enroll-course-icon">
+                                    <i class="fa-solid fa-graduation-cap"></i>
+                                </div>
+                            @endif
+                            <div>
+                                <div class="enroll-course-title">{{ $enrolled['title'] }}</div>
+                                <div class="enroll-course-meta">
+                                    <span class="badge-status badge-status-success">
+                                        <i class="fa-solid fa-circle-check"></i> Access active
+                                    </span>
+                                    @if (! empty($enrolled['lessons']))
+                                        <span>{{ $enrolled['lessons'] }}</span>
+                                    @endif
+                                    @if (! empty($enrolled['paid']))
+                                        <span>{{ $enrolled['amount'] }} paid</span>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="enroll-actions d-grid gap-2 mt-4">
+                            <a href="{{ route('student.classroom', $enrolled['slug']) }}" class="btn btn-primary py-2 fw-semibold">
+                                <i class="fa-solid fa-play me-2" style="font-size: 11px;"></i>Start Learning
+                            </a>
+                            <button type="button" class="btn btn-link text-muted text-decoration-none py-1" data-bs-dismiss="modal">
+                                Stay on dashboard
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
+@endsection
+
+@section('extra_js')
+    @if (session('enrollment_success'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                var modalEl = document.getElementById('enrollmentSuccessModal');
+                if (modalEl && window.bootstrap) {
+                    window.bootstrap.Modal.getOrCreateInstance(modalEl).show();
+                }
+            });
+        </script>
+    @endif
 @endsection
