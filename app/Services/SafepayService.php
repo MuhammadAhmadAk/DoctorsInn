@@ -31,7 +31,7 @@ class SafepayService
      *
      * @return array{tracker: string, state: ?string, raw: array}
      */
-    public function createTracker(int $amountPaisa, string $reference, array $metadata = []): array
+    public function createTracker(int $amountPaisa, string $reference): array
     {
         $this->ensureConfigured();
 
@@ -42,7 +42,7 @@ class SafepayService
             'entry_mode' => 'raw',
             'currency' => 'PKR',
             'amount' => $amountPaisa,
-            'metadata' => ['order_id' => $reference] + $metadata,
+            'metadata' => ['order_id' => $reference],
             'include_fees' => false,
         ];
 

@@ -40,10 +40,7 @@ class PaymentService
         ]);
 
         try {
-            $tracker = $this->safepay->createTracker($order->amount, $order->reference, [
-                'course_id' => (string) $course->id,
-                'user_id' => (string) $user->id,
-            ]);
+            $tracker = $this->safepay->createTracker($order->amount, $order->reference);
 
             $tbt = $this->safepay->createPassport();
 
