@@ -194,10 +194,10 @@
                                 <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
                                     <div class="course-reviews">
 
-                                        @if(session('review_success'))
+                                        @if(session('review_success') || session('success'))
                                         <div class="alert alert-success d-flex align-items-center gap-2 py-2.5 px-3 mb-3 border-0 rounded-3 text-white font-13" style="background: #10B981;">
                                             <i class="fa-solid fa-circle-check"></i>
-                                            <span>{{ session('review_success') }}</span>
+                                            <span>{{ session('review_success') ?? session('success') }}</span>
                                         </div>
                                         @endif
 
@@ -211,94 +211,80 @@
                                         </div>
                                         @endif
 
-                                        @php
-                                            $reviewsList = !empty($course['reviews']) ? $course['reviews'] : [];
-                                        @endphp
-
-                                        <div class="reviews-list-wrapper mb-4">
-                                            @if(!empty($reviewsList))
-                                                <ul class="list-unstyled mb-0">
-                                                    @foreach($reviewsList as $rev)
-                                                        <li class="review-item-card p-3 mb-3 rounded-3 bg-white border d-flex gap-3 align-items-start">
-                                                            <div class="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold font-13 flex-shrink-0" style="width: 40px; height: 40px; background: #4F46E5;">
-                                                                {{ strtoupper(substr($rev['name'] ?? 'S', 0, 1)) }}
-                                                            </div>
-                                                            <div class="flex-grow-1">
-                                                                <div class="d-flex align-items-center justify-content-between mb-1">
-                                                                    <h6 class="fw-bold text-dark font-13 mb-0">{{ $rev['name'] ?? 'Student' }}</h6>
-                                                                    <span class="font-11 text-muted">{{ $rev['date'] ?? 'Recently' }}</span>
+                                        <div class="th-comments-wrap mt-0">
+                                            <ul class="comment-list">
+                                                @if (!empty($course['reviews']))
+                                                    @foreach ($course['reviews'] as $rev)
+                                                        <li class="review th-comment-item">
+                                                            <div class="th-post-comment">
+                                                                <div class="comment-avater">
+                                                                    @if (!empty($rev['image']))
+                                                                        <img src="{{ asset($rev['image']) }}"
+                                                                            alt="{{ $rev['name'] }}" loading="lazy" decoding="async">
+                                                                    @else
+                                                                        <span class="review-avatar-initials"
+                                                                            aria-label="{{ $rev['name'] }}">{{ strtoupper(substr($rev['name'] ?? 'S', 0, 1)) }}</span>
+                                                                    @endif
                                                                 </div>
-                                                                <div class="text-warning font-11 mb-2">
-                                                                    @for($i = 1; $i <= 5; $i++)
-                                                                        <i class="fa-solid fa-star {{ $i <= ($rev['rating'] ?? 5) ? 'text-warning' : 'text-muted text-opacity-25' }}"></i>
-                                                                    @endfor
+                                                                <div class="comment-content">
+                                                                    <h4 class="name">{{ $rev['name'] }}</h4>
+                                                                    <span class="commented-on"><i
+                                                                            class="fal fa-calendar-alt"></i>{{ $rev['date'] ?? 'Recently' }}</span>
+                                                                    <div class="star-rating" role="img"
+                                                                        aria-label="Rated {{ $rev['rating'] }}.00 out of 5">
+                                                                        <span class="star-rating-full">
+                                                                            @for ($i = 0; $i < ($rev['rating'] ?? 5); $i++)
+                                                                                ★
+                                                                            @endfor
+                                                                        </span>
+                                                                    </div>
+                                                                    <p class="text">{{ $rev['comment'] }}</p>
                                                                 </div>
-                                                                <p class="font-12 text-secondary mb-0" style="line-height: 1.55;">{{ $rev['comment'] ?? '' }}</p>
                                                             </div>
                                                         </li>
                                                     @endforeach
-                                                </ul>
-                                            @else
-                                                <div class="text-center py-4 bg-light rounded-3">
-                                                    <i class="fa-regular fa-comment-dots font-28 text-muted mb-2"></i>
-                                                    <div class="fw-bold font-13 text-dark">No reviews yet</div>
-                                                    <p class="font-11 text-muted mb-0">Be the first student to review this course!</p>
-                                                </div>
-                                            @endif
+                                                @endif
+                                            </ul>
                                         </div>
 
                                         {{-- Add a review form --}}
-                                        <div class="add-review-box p-3.5 rounded-3 border bg-light">
-                                            <div class="d-flex align-items-center gap-2 mb-1">
-                                                <i class="fa-solid fa-pen-to-square text-primary font-14"></i>
-                                                <h5 class="fw-bold font-14 text-dark mb-0">Write a Review</h5>
+                                        <div class="th-comment-form mb-0 mt-40">
+                                            <div class="form-title">
+                                                <h3 class="blog-inner-title">Add a review</h3>
                                             </div>
-                                            <p class="font-11 text-muted mb-3">Share your learning experience with other medical aspirants.</p>
-
                                             <form method="POST" action="{{ route('courses.review.store', $course['slug']) }}">
                                                 @csrf
-                                                <div class="mb-3">
-                                                    <label class="font-11 fw-bold text-dark d-block mb-1">Your Rating <span class="text-danger">*</span></label>
-                                                    <div class="rating-stars-picker">
-                                                        <input type="radio" id="star5" name="rating" value="5" checked><label for="star5" title="5 Stars">★</label>
-                                                        <input type="radio" id="star4" name="rating" value="4"><label for="star4" title="4 Stars">★</label>
-                                                        <input type="radio" id="star3" name="rating" value="3"><label for="star3" title="3 Stars">★</label>
-                                                        <input type="radio" id="star2" name="rating" value="2"><label for="star2" title="2 Stars">★</label>
-                                                        <input type="radio" id="star1" name="rating" value="1"><label for="star1" title="1 Star">★</label>
+                                                <input type="hidden" name="rating" id="reviewRatingInput" value="5">
+                                                <div class="row">
+                                                    <div class="form-group rating-select d-flex align-items-center">
+                                                        <label>Your Rating</label>
+                                                        <p class="stars selected"><span><a class="star-1" href="#" data-rating="1">1</a> <a
+                                                                    class="star-2" href="#" data-rating="2">2</a> <a class="star-3"
+                                                                    href="#" data-rating="3">3</a> <a class="star-4"
+                                                                    href="#" data-rating="4">4</a> <a class="star-5 active"
+                                                                    href="#" data-rating="5">5</a></span></p>
+                                                    </div>
+                                                    <div class="col-12 form-group">
+                                                        <textarea name="comment" placeholder="Write a Message" class="form-control" required>{{ old('comment') }}</textarea>
+                                                        <i class="text-title far fa-pencil-alt"></i>
+                                                    </div>
+                                                    <div class="col-md-6 form-group">
+                                                        <input type="text" name="name" placeholder="Your Name" class="form-control" value="{{ old('name', auth()->check() ? auth()->user()->name : '') }}" required>
+                                                        <i class="text-title far fa-user"></i>
+                                                    </div>
+                                                    <div class="col-md-6 form-group">
+                                                        <input type="email" name="email" placeholder="Your Email" class="form-control" value="{{ old('email', auth()->check() ? auth()->user()->email : '') }}">
+                                                        <i class="text-title far fa-envelope"></i>
+                                                    </div>
+                                                    <div class="col-12 form-group">
+                                                        <input id="reviewcheck" name="reviewcheck" type="checkbox" checked>
+                                                        <label for="reviewcheck">Save my name, email, and website in this
+                                                            browser for the next time I comment.</label>
+                                                    </div>
+                                                    <div class="col-12 form-group mb-0">
+                                                        <button type="submit" class="th-btn">POST REVIEW</button>
                                                     </div>
                                                 </div>
-
-                                                <div class="mb-3">
-                                                    <label class="font-11 fw-semibold text-dark mb-1">Review Message <span class="text-danger">*</span></label>
-                                                    <textarea name="comment" rows="3" class="form-control font-12 bg-white rounded-2" placeholder="Tell other students what you liked about the lectures, quizzes, and curriculum..." required>{{ old('comment') }}</textarea>
-                                                </div>
-
-                                                <div class="row g-2 mb-3">
-                                                    @auth
-                                                        <div class="col-md-6">
-                                                            <label class="font-11 text-muted mb-1">Student Name</label>
-                                                            <input type="text" class="form-control font-12 bg-white" value="{{ auth()->user()->name }}" readonly>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <label class="font-11 text-muted mb-1">Email</label>
-                                                            <input type="email" class="form-control font-12 bg-white" value="{{ auth()->user()->email }}" readonly>
-                                                        </div>
-                                                    @else
-                                                        <div class="col-md-6">
-                                                            <label class="font-11 fw-semibold text-dark mb-1">Your Name <span class="text-danger">*</span></label>
-                                                            <input type="text" name="name" value="{{ old('name') }}" class="form-control font-12 bg-white" placeholder="e.g. Dr. Ayesha Khan" required>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <label class="font-11 fw-semibold text-dark mb-1">Your Email (Optional)</label>
-                                                            <input type="email" name="email" value="{{ old('email') }}" class="form-control font-12 bg-white" placeholder="e.g. ayesha@gmail.com">
-                                                        </div>
-                                                    @endauth
-                                                </div>
-
-                                                <button type="submit" class="btn btn-primary px-3 py-1.5 font-12 fw-semibold rounded-2 d-inline-flex align-items-center gap-2">
-                                                    <i class="fa-solid fa-paper-plane"></i>
-                                                    <span>Post Review</span>
-                                                </button>
                                             </form>
                                         </div>
 
@@ -675,29 +661,32 @@
     font-size: 12.5px !important;
 }
 
-/* Star Rating Selector in Review Form */
-.rating-stars-picker {
-    display: inline-flex !important;
-    flex-direction: row-reverse !important;
-    gap: 4px !important;
-}
-.rating-stars-picker input {
-    display: none !important;
-}
-.rating-stars-picker label {
-    font-size: 22px !important;
-    color: #CBD5E1 !important;
-    cursor: pointer !important;
-    transition: color 0.15s ease !important;
-    margin-bottom: 0 !important;
-    padding: 0 2px !important;
-}
-.rating-stars-picker label:hover,
-.rating-stars-picker label:hover ~ label,
-.rating-stars-picker input:checked ~ label {
-    color: #F59E0B !important;
-}
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var starLinks = document.querySelectorAll('.rating-select p.stars a');
+    var ratingInput = document.getElementById('reviewRatingInput');
+    starLinks.forEach(function (star, index) {
+        star.addEventListener('click', function (e) {
+            e.preventDefault();
+            var rating = index + 1;
+            if (ratingInput) ratingInput.value = rating;
+            var parentStars = this.closest('.stars');
+            if (parentStars) {
+                parentStars.classList.add('selected');
+                parentStars.querySelectorAll('a').forEach(function (a, aIdx) {
+                    if (aIdx === index) {
+                        a.classList.add('active');
+                    } else {
+                        a.classList.remove('active');
+                    }
+                });
+            }
+        });
+    });
+});
+</script>
 
 @endsection
 
