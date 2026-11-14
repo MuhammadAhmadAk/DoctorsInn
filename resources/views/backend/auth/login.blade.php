@@ -308,7 +308,7 @@
                     <div class="input-box">
                         <i class="fa-solid fa-envelope input-icon"></i>
                         <input type="email" id="email" name="email" class="form-control-custom"
-                            placeholder="admin@doctorsinn.pk" value="{{ old('email', 'admin@doctorsinn.pk') }}" required autofocus>
+                            placeholder="admin@doctorsinn.pk" value="{{ old('email') }}" required autofocus>
                     </div>
                 </div>
 
@@ -317,7 +317,7 @@
                     <div class="input-box">
                         <i class="fa-solid fa-lock input-icon"></i>
                         <input type="password" id="password" name="password" class="form-control-custom"
-                            placeholder="••••••••" value="admin123" required>
+                            placeholder="••••••••" required>
                         <button type="button" class="btn-eye" onclick="togglePassword()" aria-label="Toggle password">
                             <i class="fa-solid fa-eye" id="eyeIcon"></i>
                         </button>
@@ -329,7 +329,6 @@
                         <input type="checkbox" name="remember" value="1" checked>
                         <span>Remember me</span>
                     </label>
-                    <span class="demo-tag" title="Demo password">admin123</span>
                 </div>
 
                 <button type="submit" class="btn-theme-login">

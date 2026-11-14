@@ -40,40 +40,18 @@ class AdminController extends Controller
         $email = trim(strtolower($request->email));
         $password = $request->password;
 
-        $validEmails = [
-            'admin@doctorsinn.pk',
-            'admin@doctorsinnelite.com',
-            'ahmad@doctorsinn.pk',
-        ];
-
-        $validPasswords = ['admin', 'admin123', 'admin@123', '12345678', 'password'];
-
+        // Database-only authentication (no fallback credentials).
         $isAuthenticated = false;
         $adminName = 'Dr. M. Ahmad';
 
-        // 1. Check if database user exists
         try {
-            if (class_exists(\App\Models\User::class)) {
-                $user = \App\Models\User::where('email', $email)->first();
-                if ($user && \Illuminate\Support\Facades\Hash::check($password, $user->password)) {
-                    $isAuthenticated = true;
-                    $adminName = $user->name ?: $adminName;
-                }
+            $user = \App\Models\User::where('email', $email)->first();
+            if ($user && $user->role === 'admin' && \Illuminate\Support\Facades\Hash::check($password, $user->password)) {
+                $isAuthenticated = true;
+                $adminName = $user->name ?: $adminName;
             }
         } catch (\Throwable $e) {
-            // DB fallback
-        }
-
-        // 2. Demo & Default Admin check
-        if (!$isAuthenticated) {
-            if ((in_array($email, $validEmails) || str_starts_with($email, 'admin')) && in_array($password, $validPasswords)) {
-                $isAuthenticated = true;
-                $rawName = explode('@', $email)[0];
-                $cleanName = ucwords(str_replace(['.', '_', '-'], ' ', $rawName));
-                if (!empty($cleanName) && strtolower($cleanName) !== 'admin') {
-                    $adminName = $cleanName;
-                }
-            }
+            $isAuthenticated = false;
         }
 
         if ($isAuthenticated) {
@@ -94,7 +72,7 @@ class AdminController extends Controller
 
         return back()
             ->withInput($request->only('email'))
-            ->with('error', 'Invalid admin credentials. Use demo: admin@doctorsinn.pk / admin123');
+            ->with('error', 'Invalid admin credentials. Please verify your email and password.');
     }
 
     /**

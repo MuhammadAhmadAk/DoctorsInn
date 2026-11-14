@@ -14,26 +14,25 @@ use Illuminate\Support\Facades\Schema;
 class StudentDashboardController extends Controller
 {
     /**
-     * Get or build student profile metadata
+     * Build the student profile payload from the authenticated user only.
      */
     protected function getStudentData()
     {
         $user = Auth::user();
-        $sessionUser = session('user');
 
-        if (!$user && !$sessionUser) {
+        if (! $user) {
             return null;
         }
 
         return [
-            'id' => $user->id ?? $sessionUser['id'] ?? 2,
-            'name' => $user->name ?? $sessionUser['name'] ?? 'MDCAT Aspirant',
-            'email' => $user->email ?? $sessionUser['email'] ?? 'student@doctorsinn.pk',
-            'phone' => $user->phone ?? $sessionUser['phone'] ?? '+92 312 9876543',
-            'avatar' => $user->avatar ?? $sessionUser['avatar'] ?? 'frontend/img/testimonial/testi_2_1.png',
-            'target_exam' => strtoupper($user->target_exam ?? $sessionUser['target_exam'] ?? 'MDCAT'),
-            'role' => $user->role ?? $sessionUser['role'] ?? 'student',
-            'joined_date' => (!empty($user) && !empty($user->created_at)) ? $user->created_at->format('M Y') : (session('user.enrolled_date') ?? 'Nov 2026'),
+            'id' => $user->id,
+            'name' => $user->name ?: 'MDCAT Aspirant',
+            'email' => $user->email,
+            'phone' => $user->phone ?? '',
+            'avatar' => $user->avatar ?: 'frontend/img/testimonial/testi_2_1.png',
+            'target_exam' => strtoupper($user->target_exam ?? 'MDCAT'),
+            'role' => $user->role ?? 'student',
+            'joined_date' => !empty($user->created_at) ? $user->created_at->format('M Y') : now()->format('M Y'),
         ];
     }
 
@@ -474,14 +473,21 @@ class StudentDashboardController extends Controller
             $user->save();
         }
 
-        // Also update session
-        $currentSession = session('user', []);
-        $currentSession['name'] = $request->name;
-        $currentSession['phone'] = $request->phone;
-        if ($request->filled('target_exam')) {
-            $currentSession['target_exam'] = strtolower($request->target_exam);
+        // Keep the display-only session cache in sync with the database user.
+        if ($user) {
+            session([
+                'user' => [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'phone' => $user->phone,
+                    'target_exam' => $user->target_exam ?? 'mdcat',
+                    'avatar' => $user->avatar ?: 'frontend/img/testimonial/testi_2_1.png',
+                    'role' => $user->role,
+                    'enrolled_date' => $user->created_at ? $user->created_at->format('M Y') : now()->format('M Y'),
+                ],
+            ]);
         }
-        session(['user' => $currentSession]);
 
         return redirect()->route('student.settings')->with('success', 'Profile and preferences successfully updated!');
     }

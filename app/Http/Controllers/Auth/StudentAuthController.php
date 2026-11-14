@@ -66,24 +66,6 @@ class StudentAuthController extends Controller
             return redirect()->route('home')->with('success', 'Welcome back, ' . $user->name . '!');
         }
 
-        // 2. Demo fallback for student@doctorsinn.pk
-        if ($email === 'student@doctorsinn.pk' && in_array($password, ['12345678', 'student123', 'password'])) {
-            session([
-                'user' => [
-                    'id' => 2,
-                    'name' => 'MDCAT Aspirant',
-                    'email' => 'student@doctorsinn.pk',
-                    'phone' => '+92 312 9876543',
-                    'target_exam' => 'mdcat',
-                    'avatar' => 'frontend/img/testimonial/testi_2_1.png',
-                    'role' => 'student',
-                    'enrolled_date' => now()->format('M Y'),
-                ],
-            ]);
-
-            return redirect()->route('home')->with('success', 'Welcome back, MDCAT Aspirant!');
-        }
-
         return back()
             ->withInput($request->only('email'))
             ->with('error', 'Invalid email or password. Please verify your credentials or register a free account.');

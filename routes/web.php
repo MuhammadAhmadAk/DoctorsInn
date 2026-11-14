@@ -64,9 +64,9 @@ Route::get('/checkout', [RouteController::class, 'Frontend_Checkout'])->name('ch
 use App\Http\Controllers\Auth\StudentAuthController;
 
 Route::get('/login', [StudentAuthController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [StudentAuthController::class, 'login'])->name('login.submit');
+Route::post('/login', [StudentAuthController::class, 'login'])->middleware('throttle:5,1')->name('login.submit');
 Route::get('/register', [StudentAuthController::class, 'showRegisterForm'])->name('register');
-Route::post('/register', [StudentAuthController::class, 'register'])->name('register.submit');
+Route::post('/register', [StudentAuthController::class, 'register'])->middleware('throttle:5,1')->name('register.submit');
 Route::match(['get', 'post'], '/logout', [StudentAuthController::class, 'logout'])->name('logout');
 
 // Google OAuth
@@ -120,7 +120,7 @@ use App\Http\Controllers\Backend\CmsController;
 Route::prefix('admin')->name('admin.')->group(function () {
     // Guest Admin Auth
     Route::get('/login', [AdminController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [AdminController::class, 'login'])->name('login.submit');
+    Route::post('/login', [AdminController::class, 'login'])->middleware('throttle:5,1')->name('login.submit');
     Route::match(['get', 'post'], '/logout', [AdminController::class, 'logout'])->name('logout');
 
     // Protected Admin Studio Routes

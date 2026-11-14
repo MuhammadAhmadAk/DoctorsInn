@@ -254,7 +254,7 @@
                 <div class="auth-field-group">
                     <label class="auth-field-label" for="email">Email Address</label>
                     <div class="auth-input-wrap">
-                        <input type="email" name="email" id="email" placeholder="student@doctorsinn.pk" value="{{ old('email', 'student@doctorsinn.pk') }}" required>
+                        <input type="email" name="email" id="email" placeholder="student@doctorsinn.pk" value="{{ old('email') }}" required>
                         <i class="fal fa-envelope"></i>
                     </div>
                 </div>
@@ -263,7 +263,7 @@
                 <div class="auth-field-group">
                     <label class="auth-field-label" for="password">Password</label>
                     <div class="auth-input-wrap">
-                        <input type="password" name="password" id="password" placeholder="••••••••" value="12345678" required>
+                        <input type="password" name="password" id="password" placeholder="••••••••" required>
                         <i class="fal fa-lock"></i>
                     </div>
                 </div>

@@ -114,7 +114,7 @@ class LectureStreamController extends Controller
 
     public function saveProgress(Request $request, LectureVideo $video): JsonResponse
     {
-        $userId = Auth::id() ?: (int) session('user.id');
+        $userId = (int) Auth::id();
         if (! $userId) {
             return response()->json(['saved' => false, 'message' => 'Authentication required.'], 401);
         }
@@ -206,25 +206,21 @@ class LectureStreamController extends Controller
         }
 
         $user = Auth::user();
-        $sessionStudent = session('user');
-        $userId = $user?->id ?: (is_array($sessionStudent) ? ($sessionStudent['id'] ?? null) : null);
 
-        if (! $user && ! $sessionStudent) {
+        if (! $user) {
             abort(403, 'You are not allowed to watch this lecture.');
         }
 
-        if (! $userId) {
-            $allowed = $this->streams->canView($video, false, true, null);
-        } else {
-            // HLS players request dozens of segments per lecture; cache the
-            // access decision so each segment does not repeat the user/enrollment
-            // lookups on top of an already costly PHP bootstrap.
-            $allowed = Cache::remember(
-                'lecture-access:' . (int) $userId . ':' . ($video->course_id ?? 0),
-                now()->addMinutes(5),
-                fn () => $this->streams->canView($video, false, true, (int) $userId)
-            );
-        }
+        $userId = (int) $user->id;
+
+        // HLS players request dozens of segments per lecture; cache the
+        // access decision so each segment does not repeat the user/enrollment
+        // lookups on top of an already costly PHP bootstrap.
+        $allowed = Cache::remember(
+            'lecture-access:' . $userId . ':' . ($video->course_id ?? 0),
+            now()->addMinutes(5),
+            fn () => $this->streams->canView($video, false, true, $userId)
+        );
 
         if (! $allowed) {
             abort(403, 'You are not allowed to watch this lecture.');

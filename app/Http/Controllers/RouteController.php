@@ -211,16 +211,6 @@ class RouteController extends Controller
     }
 
     // Authentication
-    public function Frontend_Login()
-    {
-        return view('frontend.pages.authentication.login');
-    }
-
-    public function Frontend_Register()
-    {
-        return view('frontend.pages.authentication.register');
-    }
-
     public function Frontend_ForgotPassword()
     {
         return view('frontend.pages.authentication.forgot-password');
@@ -434,7 +424,7 @@ class RouteController extends Controller
     public function Frontend_TakeTest(Request $request, $slug)
     {
         // Enforce Login: User must be logged in to attempt test
-        $user = auth()->user() ?? session('user');
+        $user = auth()->user();
         if (! $user) {
             return redirect()->route('login', ['redirect' => route('test.take', $slug)])
                 ->with('warning', 'Please log in to your student account to attempt this test.');
@@ -452,7 +442,7 @@ class RouteController extends Controller
 
     public function Frontend_SubmitTest(Request $request, $slug)
     {
-        $user = auth()->user() ?? session('user');
+        $user = auth()->user();
         if (! $user) {
             return redirect()->route('login', ['redirect' => route('test.take', $slug)])
                 ->with('warning', 'Please log in to your account to submit the test.');
@@ -527,45 +517,5 @@ class RouteController extends Controller
         ];
 
         return view('frontend.pages.tests.test-result', compact('resultData', 'test'));
-    }
-
-    public function Frontend_LoginSubmit(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
-
-        $rawName = explode('@', $request->email)[0];
-        $formattedName = ucwords(str_replace(['.', '_', '-'], ' ', $rawName));
-        if (empty($formattedName)) {
-            $formattedName = 'Student';
-        }
-
-        session([
-            'user' => [
-                'name' => $formattedName,
-                'email' => $request->email,
-                'avatar' => 'frontend/img/testimonial/testi_2_1.png',
-                'enrolled_date' => now()->format('M Y'),
-            ],
-        ]);
-
-        $redirectUrl = $request->input('redirect');
-        if ($redirectUrl) {
-            return redirect($redirectUrl)->with('success', 'Welcome, ' . $formattedName . '! You may now begin your test.');
-        }
-
-        return redirect()->route('tests')->with('success', 'Welcome back, ' . $formattedName . '!');
-    }
-
-    public function Frontend_Logout(Request $request)
-    {
-        session()->forget('user');
-        if (auth()->check()) {
-            auth()->logout();
-        }
-
-        return redirect()->route('home')->with('success', 'You have been successfully logged out.');
     }
 }
