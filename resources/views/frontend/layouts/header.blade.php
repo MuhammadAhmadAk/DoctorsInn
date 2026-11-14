@@ -75,7 +75,7 @@
                         <li><a href="{{ route('about') }}">About Us</a></li>
                         <li><a href="{{ route('course') }}">Courses</a></li>
                         <li><a href="{{ route('e-library') }}">E-Library</a></li>
-                        <li><a href="{{ route('tests') }}">Mock Tests</a></li>
+                        <li><a href="{{ route('tests') }}">Practice Tests</a></li>
                         <li><a href="{{ route('blog') }}">Blog</a></li>
                         <li><a href="{{ route('faq') }}">FAQS</a></li>
                         <li><a href="{{ route('contact') }}">Contact Us</a></li>
@@ -132,7 +132,7 @@
                                     <li><a href="{{ route('about') }}">About Us</a></li>
                                     <li><a href="{{ route('course') }}">Courses</a></li>
                                     <li><a href="{{ route('e-library') }}">E-Library</a></li>
-                                    <li><a href="{{ route('tests') }}">Mock Tests</a></li>
+                                    <li><a href="{{ route('tests') }}">Practice Tests</a></li>
                                     <li><a href="{{ route('contact') }}">Contact Us</a></li>
                                 </ul>
                             </nav>

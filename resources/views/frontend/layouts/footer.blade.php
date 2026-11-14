@@ -31,7 +31,7 @@
                                 <li><a href="{{ route('about') }}">About Us</a></li>
                                 <li><a href="{{ route('course') }}">Courses</a></li>
                                 <li><a href="{{ route('e-library') }}">E-Library (Free Notes)</a></li>
-                                <li><a href="{{ route('tests') }}">Online Mock Tests</a></li>
+                                <li><a href="{{ route('tests') }}">Online Practice Tests</a></li>
                                 <li><a href="{{ route('blog') }}">Blog & Articles</a></li>
                                 <li><a href="{{ route('faq') }}">FAQS</a></li>
                                 <li><a href="{{ route('contact') }}">Contact Us</a></li>
