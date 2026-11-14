@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
+use App\Models\Course;
 use App\Models\LectureProgress;
 use App\Models\LectureVideo;
+use App\Models\User;
 use App\Services\SiteContentService;
 use App\Services\StudentMetricsService;
 use Illuminate\Http\Request;
@@ -55,7 +57,7 @@ class StudentDashboardController extends Controller
         $examDate = \Carbon\Carbon::create(2026, 8, 25);
         $daysRemaining = max(1, (int) now()->diffInDays($examDate, false));
 
-        $courses = SiteContentService::getAllCourses();
+        $courses = $this->enrolledCourses(Auth::user());
         $activeCourse = reset($courses) ?: null;
 
         $stats = array_merge($this->metrics->stats($studentData['id']), [
@@ -105,8 +107,10 @@ class StudentDashboardController extends Controller
             return redirect()->route('login');
         }
 
-        $courses = SiteContentService::getAllCourses();
-        return view('student.courses', compact('studentData', 'courses'));
+        $courses = $this->enrolledCourses(Auth::user());
+        $courseProgress = $this->progressForCourses($courses, (int) $studentData['id']);
+
+        return view('student.courses', compact('studentData', 'courses', 'courseProgress'));
     }
 
     /**
@@ -119,10 +123,25 @@ class StudentDashboardController extends Controller
             return redirect()->route('login');
         }
 
-        $courses = SiteContentService::getAllCourses();
+        $user = Auth::user();
+        $courses = $this->enrolledCourses($user);
         $slug = $slug ?? $request->query('course') ?? array_key_first($courses);
 
-        $activeCourse = $courses[$slug] ?? reset($courses);
+        if (! $slug) {
+            return redirect()->route('course')
+                ->with('info', 'Enroll in a course to unlock its classroom.');
+        }
+
+        if (! isset($courses[$slug])) {
+            $exists = Course::query()->where('slug', $slug)->where('is_active', true)->exists();
+
+            return $exists
+                ? redirect()->route('checkout', ['course' => $slug])
+                    ->with('warning', 'Enroll in this course to watch its lectures.')
+                : redirect()->route('course')->with('error', 'That course is no longer available.');
+        }
+
+        $activeCourse = $courses[$slug];
 
         $lectureLibrary = [];
         $lectureProgressMap = [];
@@ -187,6 +206,60 @@ class StudentDashboardController extends Controller
             'lectureLibrary',
             'lectureProgressMap'
         ));
+    }
+
+    /**
+     * Only courses with an active enrollment are part of the student portal.
+     */
+    protected function enrolledCourses(?User $user): array
+    {
+        if (! $user) {
+            return [];
+        }
+
+        $ids = $user->enrolledCourseIds();
+        if (empty($ids)) {
+            return [];
+        }
+
+        return array_filter(
+            SiteContentService::getAllCourses(),
+            fn (array $course) => in_array((int) ($course['id'] ?? 0), $ids, true)
+        );
+    }
+
+    /**
+     * Real lecture completion per enrolled course.
+     */
+    protected function progressForCourses(array $courses, int $userId): array
+    {
+        $progress = [];
+
+        try {
+            foreach ($courses as $slug => $course) {
+                $courseId = (int) ($course['id'] ?? 0);
+                if (! $courseId) {
+                    continue;
+                }
+
+                $total = LectureVideo::query()->where('course_id', $courseId)->count();
+                $completed = LectureProgress::query()
+                    ->where('user_id', $userId)
+                    ->where('course_id', $courseId)
+                    ->where('completed', true)
+                    ->count();
+
+                $progress[$slug] = [
+                    'percent' => $total > 0 ? (int) round(($completed / $total) * 100) : 0,
+                    'completed' => $completed,
+                    'total' => $total,
+                ];
+            }
+        } catch (\Throwable $e) {
+            // Lecture tables not migrated yet — show zero progress.
+        }
+
+        return $progress;
     }
 
     /**

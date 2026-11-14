@@ -47,12 +47,21 @@ class AdminController extends Controller
         // Database-only authentication (no fallback credentials).
         $isAuthenticated = false;
         $adminName = 'Dr. M. Ahmad';
+        $adminRole = 'admin';
+        $adminPermissions = [];
 
         try {
             $user = \App\Models\User::where('email', $email)->first();
-            if ($user && $user->role === 'admin' && \Illuminate\Support\Facades\Hash::check($password, $user->password)) {
+            if (
+                $user
+                && in_array($user->role, array_keys(config('staff.roles', [])), true)
+                && $user->is_active !== false
+                && \Illuminate\Support\Facades\Hash::check($password, $user->password)
+            ) {
                 $isAuthenticated = true;
                 $adminName = $user->name ?: $adminName;
+                $adminRole = $user->role;
+                $adminPermissions = (array) ($user->permissions ?? []);
             }
         } catch (\Throwable $e) {
             $isAuthenticated = false;
@@ -61,11 +70,17 @@ class AdminController extends Controller
         if ($isAuthenticated) {
             $request->session()->regenerate();
 
+            $displayRole = $adminRole === 'admin'
+                ? 'Chief Administrator'
+                : (config('staff.roles.' . $adminRole) ?? ucfirst($adminRole));
+
             session([
                 'admin_user' => [
                     'name' => $adminName,
                     'email' => $email,
-                    'role' => 'Chief Administrator',
+                    'role' => $displayRole,
+                    'role_key' => $adminRole,
+                    'permissions' => $adminPermissions,
                     'avatar' => 'frontend/img/team/team_2_1.jpg',
                     'logged_in_at' => now()->format('M d, Y h:i A'),
                 ],

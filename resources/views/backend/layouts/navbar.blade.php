@@ -1,3 +1,9 @@
+@php
+    $navAdmin = session('admin_user', []);
+    $navIsAdmin = ($navAdmin['role_key'] ?? 'admin') === 'admin';
+    $navCanCourses = $navIsAdmin || in_array('courses', (array) ($navAdmin['permissions'] ?? []), true);
+@endphp
+
 <header class="admin-navbar">
     <div class="d-flex align-items-center gap-3">
         <button class="sidebar-toggle-btn" aria-label="Toggle Navigation">
@@ -12,10 +18,12 @@
 
     <div class="navbar-actions">
         <!-- Quick Action Button -->
-        <a href="{{ route('admin.courses') }}" class="btn-adm btn-adm-primary d-none d-sm-inline-flex">
+        @if ($navCanCourses)
+        <a href="{{ route('admin.courses.create') }}" class="btn-adm btn-adm-primary d-none d-sm-inline-flex">
             <i class="fa-solid fa-plus"></i>
             <span>Add Course</span>
         </a>
+        @endif
 
         <!-- Notifications -->
         <a href="#" class="nav-btn-icon" title="Notifications">

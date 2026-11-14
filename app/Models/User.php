@@ -23,6 +23,8 @@ class User extends Authenticatable
         'google_id',
         'phone',
         'role',
+        'permissions',
+        'is_active',
         'target_exam',
         'avatar',
         'password',
@@ -45,10 +47,51 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'permissions' => 'array',
+        'is_active' => 'boolean',
     ];
 
     public function testAttempts()
     {
         return $this->hasMany(TestAttempt::class);
+    }
+
+    public function enrollments()
+    {
+        return $this->hasMany(Enrollment::class);
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    public function isStaff(): bool
+    {
+        return in_array($this->role, ['admin', 'instructor', 'staff'], true);
+    }
+
+    public function hasAccessToCourse($courseId): bool
+    {
+        if ($this->role === 'admin') {
+            return true;
+        }
+
+        return $this->enrollments()
+            ->active()
+            ->where('course_id', $courseId)
+            ->exists();
+    }
+
+    /**
+     * @return array<int, int>
+     */
+    public function enrolledCourseIds(): array
+    {
+        return $this->enrollments()
+            ->active()
+            ->pluck('course_id')
+            ->map(fn ($id) => (int) $id)
+            ->all();
     }
 }

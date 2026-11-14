@@ -15,6 +15,44 @@ class Course extends Model
         return $this->hasMany(LectureVideo::class);
     }
 
+    public function enrollments(): HasMany
+    {
+        return $this->hasMany(Enrollment::class);
+    }
+
+    /**
+     * Course prices are stored as display strings ("Free", "Rs 12,000").
+     * Return the numeric amount in paisa (PKR * 100) for the gateway.
+     */
+    public function priceInPaisa(): int
+    {
+        $raw = trim((string) $this->price);
+
+        if ($raw === '' || stripos($raw, 'free') !== false) {
+            return 0;
+        }
+
+        $numeric = preg_replace('/[^0-9.]/', '', $raw);
+
+        if ($numeric === '' || ! is_numeric($numeric)) {
+            return 0;
+        }
+
+        return (int) round((float) $numeric * 100);
+    }
+
+    public function isFree(): bool
+    {
+        return $this->priceInPaisa() <= 0;
+    }
+
+    public function priceLabel(): string
+    {
+        $raw = trim((string) $this->price);
+
+        return $raw === '' ? 'Free' : $raw;
+    }
+
     protected $fillable = [
         'slug', 'category', 'category_name', 'title', 'price', 'original_price',
         'rating', 'rating_count', 'lessons', 'students', 'duration', 'level',
@@ -42,6 +80,8 @@ class Course extends Model
             'category_name' => $this->category_name,
             'title' => $this->title,
             'price' => $this->price,
+            'price_paisa' => $this->priceInPaisa(),
+            'is_free' => $this->isFree(),
             'original_price' => $this->original_price,
             'rating' => $this->rating,
             'rating_count' => $this->rating_count,

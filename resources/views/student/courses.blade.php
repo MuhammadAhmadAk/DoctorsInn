@@ -70,9 +70,10 @@
     <div class="row gy-4 mb-4">
         @forelse ($courses as $slug => $course)
             @php
-                $progressPercent = $loop->first ? 42 : ($loop->iteration == 2 ? 65 : 20);
-                $totalLessons = count($course['curriculum'] ?? [1,2,3,4,5,6,7,8]);
-                $completedLessons = (int) round(($progressPercent / 100) * $totalLessons);
+                $stats = $courseProgress[$slug] ?? ['percent' => 0, 'completed' => 0, 'total' => 0];
+                $progressPercent = $stats['percent'];
+                $totalLessons = $stats['total'];
+                $completedLessons = $stats['completed'];
             @endphp
             <div class="col-md-6 col-xl-4">
                 <div class="course-portal-card">
@@ -128,8 +129,11 @@
         @empty
             <div class="col-12">
                 <div class="std-card text-center py-5">
-                    <h4 class="fw-bold text-dark">No Enrolled Courses Found</h4>
-                    <p class="text-muted text-sm mb-4">Contact your academic coordinator to activate your enrollment.</p>
+                    <h4 class="fw-bold text-dark">No Enrolled Courses Yet</h4>
+                    <p class="text-muted text-sm mb-4">Enroll in a course to start your preparation. All lectures unlock instantly after payment.</p>
+                    <a href="{{ route('course') }}" class="btn btn-sm btn-primary px-4 py-2 fw-semibold" style="border-radius: 6px;">
+                        Browse Courses <i class="fa-solid fa-arrow-right ms-1 text-xs"></i>
+                    </a>
                 </div>
             </div>
         @endforelse

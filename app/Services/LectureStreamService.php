@@ -5,8 +5,6 @@ namespace App\Services;
 use App\Models\LectureVideo;
 use App\Models\User;
 use Carbon\CarbonInterface;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 
@@ -55,45 +53,31 @@ class LectureStreamService
     }
 
     /**
-     * Enrollment hook. The academy currently uses open access for signed-in
-     * students, but this automatically enforces an `enrollments` table when
-     * one is added later.
+     * Enrollment hook. Admins bypass; students need an active enrollment
+     * (lectures without a course only require any active enrollment).
      */
     protected function userCanAccessCourse(int $userId, ?int $courseId): bool
     {
         $user = User::find($userId);
 
-        $hasEnrollments = false;
-        try {
-            $hasEnrollments = Schema::hasTable('enrollments');
-        } catch (\Throwable $e) {
-            $hasEnrollments = false;
-        }
-
-        // The demo student session may not have a persisted row yet.
         if (! $user) {
-            return ! $hasEnrollments;
+            return false;
         }
 
         if ($user->role === 'admin') {
             return true;
         }
 
-        if (! $courseId) {
-            return true;
-        }
-
-        if (! $hasEnrollments) {
-            return true;
-        }
-
         try {
-            return DB::table('enrollments')
-                ->where('user_id', $userId)
-                ->where('course_id', $courseId)
-                ->exists();
+            $query = $user->enrollments()->active();
+
+            if ($courseId) {
+                $query->where('course_id', $courseId);
+            }
+
+            return $query->exists();
         } catch (\Throwable $e) {
-            return true;
+            return false;
         }
     }
 

@@ -2,593 +2,271 @@
 
 @section('title', 'Staff Access')
 
-@section('extra_css')
-<style>
-    .staff-access {
-        --staff-primary: var(--adm-primary, #5C32FF);
-        --staff-border: var(--adm-border-color, #E2E8F0);
-        color: var(--adm-title-color, #0F172A);
-        font-size: 12px;
-    }
-    .staff-access .page-header {
-        margin-bottom: 10px;
-    }
-    .staff-access .page-title {
-        font-size: 18px;
-    }
-    .staff-access .page-subtitle {
-        font-size: 11.5px;
-    }
-    .staff-access .btn-adm {
-        padding: 6px 10px;
-        font-size: 11px;
-    }
-    .staff-access .preview-note {
-        display: flex;
-        align-items: center;
-        gap: 7px;
-        margin-bottom: 8px;
-        padding: 6px 9px;
-        border: 1px solid #DCE7F8;
-        border-radius: 7px;
-        background: #F7FAFF;
-        color: #52647D;
-        font-size: 10.5px;
-    }
-    .staff-access .access-stat,
-    .staff-access .staff-table-card {
-        border: 1px solid var(--staff-border);
-        border-radius: 8px;
-        background: #FFFFFF;
-        box-shadow: var(--adm-shadow, 0 1px 3px rgba(0, 0, 0, .04));
-    }
-    .staff-access .access-stat {
-        display: flex;
-        min-height: 56px;
-        align-items: center;
-        gap: 8px;
-        padding: 7px 10px;
-    }
-    .staff-access .stat-icon {
-        display: grid;
-        width: 28px;
-        height: 28px;
-        flex: 0 0 28px;
-        place-items: center;
-        border-radius: 7px;
-        background: var(--adm-primary-light, #F1EDFF);
-        color: var(--staff-primary);
-        font-size: 11px;
-    }
-    .staff-access .stat-label {
-        margin-bottom: 2px;
-        color: var(--adm-text-muted, #64748B);
-        font-size: 9.5px;
-        font-weight: 600;
-    }
-    .staff-access .stat-value {
-        color: var(--adm-title-color, #0F172A);
-        font-size: 15px;
-        font-weight: 700;
-        line-height: 1.1;
-    }
-    .staff-access .stat-value small {
-        color: var(--adm-text-muted, #64748B);
-        font-size: 11px;
-        font-weight: 500;
-    }
-    .staff-access .table-toolbar {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 10px;
-        padding: 8px 10px;
-        border-bottom: 1px solid var(--staff-border);
-    }
-    .staff-access .table-heading {
-        margin: 0;
-        color: var(--adm-title-color, #0F172A);
-        font-size: 12.5px;
-        font-weight: 700;
-    }
-    .staff-access .toolbar-controls {
-        display: flex;
-        align-items: center;
-        gap: 7px;
-    }
-    .staff-access .staff-filters {
-        display: flex;
-        gap: 2px;
-        padding: 2px;
-        border: 1px solid var(--staff-border);
-        border-radius: 6px;
-        background: #F8FAFC;
-    }
-    .staff-access .filter-tab {
-        padding: 4px 8px;
-        border: 0;
-        border-radius: 4px;
-        background: transparent;
-        color: var(--adm-text-muted, #64748B);
-        font-size: 10.5px;
-        font-weight: 600;
-    }
-    .staff-access .filter-tab.active {
-        background: #FFFFFF;
-        color: var(--staff-primary);
-        box-shadow: 0 1px 2px rgba(15, 23, 42, .08);
-    }
-    .staff-access .staff-search {
-        width: 165px;
-        height: 29px;
-        padding: 4px 8px;
-        border: 1px solid var(--staff-border);
-        border-radius: 6px;
-        font-size: 10.5px;
-    }
-    .staff-access .table-responsive {
-        max-height: calc(100vh - 290px);
-        min-height: 120px;
-    }
-    .staff-access .staff-table {
-        width: 100%;
-        min-width: 980px;
-        margin: 0;
-        border-collapse: separate;
-        border-spacing: 0;
-        table-layout: fixed;
-    }
-    .staff-access .staff-table th {
-        position: sticky;
-        top: 0;
-        z-index: 2;
-        padding: 7px 7px;
-        border-bottom: 1px solid var(--staff-border);
-        background: #F7F8FC;
-        color: var(--adm-text-muted, #64748B);
-        font-size: 9px;
-        font-weight: 700;
-        letter-spacing: .025em;
-        text-align: left;
-        text-transform: uppercase;
-        white-space: nowrap;
-    }
-    .staff-access .staff-table th:first-child,
-    .staff-access .staff-table td:first-child {
-        position: sticky;
-        left: 0;
-        z-index: 1;
-        background: #FFFFFF;
-    }
-    .staff-access .staff-table th:first-child {
-        z-index: 3;
-        background: #F7F8FC;
-    }
-    .staff-access .staff-table td {
-        padding: 6px 7px;
-        border-bottom: 1px solid #EEF1F5;
-        vertical-align: middle;
-        font-size: 10.5px;
-    }
-    .staff-access .staff-table tbody tr:last-child td {
-        border-bottom: 0;
-    }
-    .staff-access .staff-table tbody tr:hover td {
-        background: #FAFAFD;
-    }
-    .staff-access .staff-table tbody tr:hover td:first-child {
-        background: #FAFAFD;
-    }
-    .staff-access .identity-column {
-        width: 155px;
-        min-width: 155px;
-    }
-    .staff-access .role-column {
-        width: 88px;
-        min-width: 88px;
-    }
-    .staff-access .section-column {
-        width: 138px;
-        min-width: 138px;
-    }
-    .staff-access .staff-identity {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-    .staff-access .staff-avatar {
-        display: grid;
-        width: 29px;
-        height: 29px;
-        flex: 0 0 29px;
-        place-items: center;
-        border-radius: 50%;
-        background: var(--adm-primary-light, #F1EDFF);
-        color: var(--staff-primary);
-        font-size: 9px;
-        font-weight: 700;
-    }
-    .staff-access .staff-name {
-        display: block;
-        color: #1E293B;
-        font-size: 10.5px;
-        font-weight: 700;
-        white-space: nowrap;
-    }
-    .staff-access .staff-id {
-        display: block;
-        margin-top: 1px;
-        color: #8792A2;
-        font-size: 9px;
-    }
-    .staff-access .role-badge {
-        display: inline-flex;
-        padding: 3px 6px;
-        border-radius: 4px;
-        background: var(--adm-primary-light, #F1EDFF);
-        color: var(--staff-primary);
-        font-size: 9px;
-        font-weight: 700;
-        white-space: nowrap;
-    }
-    .staff-access .role-badge.staff {
-        background: var(--adm-success-light, #EAF7F1);
-        color: #16794B;
-    }
-    .staff-access .permission-list {
-        display: flex;
-        flex-wrap: wrap;
-        column-gap: 8px;
-        row-gap: 3px;
-    }
-    .staff-access .permission-check {
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        width: fit-content;
-        margin: 0;
-        color: #475569;
-        font-size: 9px;
-        line-height: 1.1;
-        cursor: pointer;
-        white-space: nowrap;
-    }
-    .staff-access .permission-check input {
-        width: 11px;
-        height: 11px;
-        margin: 0;
-        accent-color: var(--staff-primary);
-        cursor: pointer;
-    }
-    .staff-access .permission-check input:focus-visible,
-    .staff-access .filter-tab:focus-visible {
-        outline: 2px solid rgba(92, 50, 255, .35);
-        outline-offset: 2px;
-    }
-    .staff-access .empty-row {
-        padding: 24px;
-        color: var(--adm-text-muted, #64748B);
-        text-align: center;
-    }
-    .staff-access .staff-modal .modal-content {
-        border: 1px solid var(--staff-border);
-        border-radius: 9px;
-    }
-    .staff-access .staff-modal .modal-header,
-    .staff-access .staff-modal .modal-footer {
-        padding: 10px 14px;
-    }
-    .staff-access .staff-modal .modal-body {
-        padding: 12px 14px;
-    }
-    .staff-access .staff-modal .modal-title {
-        font-size: 13px;
-        font-weight: 700;
-    }
-    .staff-access .staff-modal .form-label {
-        margin-bottom: 3px;
-        color: #475569;
-        font-size: 10.5px;
-        font-weight: 600;
-    }
-    .staff-access .staff-modal .form-control,
-    .staff-access .staff-modal .form-select {
-        min-height: 32px;
-        border-color: #DDE3EA;
-        border-radius: 6px;
-        font-size: 10.5px;
-    }
-    .staff-access .staff-modal .btn {
-        padding: 5px 9px;
-        border-radius: 6px;
-        font-size: 10.5px;
-    }
-    .staff-access .preview-toast {
-        position: fixed;
-        right: 18px;
-        bottom: 18px;
-        z-index: 1090;
-        display: none;
-        padding: 9px 12px;
-        border: 1px solid var(--staff-border);
-        border-radius: 7px;
-        background: #FFFFFF;
-        color: #334155;
-        font-size: 10.5px;
-        box-shadow: var(--adm-shadow, 0 1px 3px rgba(0, 0, 0, .04));
-    }
-    @media (max-width: 767.98px) {
-        .staff-access .table-toolbar,
-        .staff-access .toolbar-controls {
-            align-items: flex-start;
-            flex-direction: column;
-        }
-        .staff-access .toolbar-controls,
-        .staff-access .staff-search {
-            width: 100%;
-        }
-        .staff-access .table-responsive {
-            max-height: none;
-        }
-    }
-</style>
-@endsection
-
 @section('content')
-@php
-    $permissionSections = [
-        ['id' => 'cms', 'name' => 'Website CMS', 'icon' => 'fa-pen-ruler', 'actions' => ['view' => 'View', 'edit' => 'Edit', 'instructors' => 'Instructors', 'approve' => 'Approve']],
-        ['id' => 'courses', 'name' => 'Courses', 'icon' => 'fa-graduation-cap', 'actions' => ['view' => 'View', 'create' => 'Create', 'edit' => 'Edit', 'delete' => 'Delete', 'upload' => 'Upload']],
-        ['id' => 'tests', 'name' => 'Mock Tests', 'icon' => 'fa-clipboard-check', 'actions' => ['view' => 'View', 'create' => 'Create', 'edit' => 'Edit', 'delete' => 'Delete']],
-        ['id' => 'elibrary', 'name' => 'E-Library', 'icon' => 'fa-book-bookmark', 'actions' => ['view' => 'View', 'create' => 'Add', 'edit' => 'Edit', 'delete' => 'Delete']],
-        ['id' => 'blogs', 'name' => 'Blog Posts', 'icon' => 'fa-newspaper', 'actions' => ['view' => 'View', 'create' => 'Create', 'edit' => 'Edit', 'publish' => 'Publish', 'delete' => 'Delete']],
-        ['id' => 'students', 'name' => 'Students', 'icon' => 'fa-user-graduate', 'actions' => ['view' => 'View', 'edit' => 'Enrollment', 'export' => 'Export', 'status' => 'Status']],
-    ];
-
-    $staffMembers = [
-        ['id' => 'MGR-001', 'name' => 'Nadia Farooq', 'initials' => 'NF', 'role' => 'Management', 'permissions' => [
-            'cms' => ['view', 'edit'], 'courses' => ['view', 'create', 'edit', 'upload'], 'tests' => ['view', 'create'], 'students' => ['view', 'export'],
-        ]],
-        ['id' => 'MGR-002', 'name' => 'Tahir Mahmood', 'initials' => 'TM', 'role' => 'Management', 'permissions' => [
-            'courses' => ['view', 'edit'], 'tests' => ['view', 'create', 'edit'], 'elibrary' => ['view', 'create', 'edit'], 'blogs' => ['view', 'create', 'publish'],
-        ]],
-        ['id' => 'STF-001', 'name' => 'Ayesha Khan', 'initials' => 'AK', 'role' => 'Staff', 'permissions' => [
-            'courses' => ['view', 'create', 'upload'],
-        ]],
-        ['id' => 'STF-002', 'name' => 'Bilal Raza', 'initials' => 'BR', 'role' => 'Staff', 'permissions' => [
-            'tests' => ['view', 'create', 'edit', 'delete'],
-        ]],
-        ['id' => 'STF-003', 'name' => 'Sara Ahmed', 'initials' => 'SA', 'role' => 'Staff', 'permissions' => [
-            'elibrary' => ['view', 'create', 'edit'], 'blogs' => ['view', 'create'],
-        ]],
-        ['id' => 'STF-004', 'name' => 'Hamza Ali', 'initials' => 'HA', 'role' => 'Staff', 'permissions' => [
-            'students' => ['view', 'edit', 'export'],
-        ]],
-    ];
-
-    $sectionCount = count($permissionSections);
-    $taskCount = array_sum(array_map(fn ($section) => count($section['actions']), $permissionSections));
-    $managementCount = count(array_filter($staffMembers, fn ($member) => $member['role'] === 'Management'));
-    $employeeCount = count(array_filter($staffMembers, fn ($member) => $member['role'] === 'Staff'));
-@endphp
-
-<div class="staff-access">
-    <div class="page-header">
-        <div>
-            <h1 class="page-title">Staff Access</h1>
-            <p class="page-subtitle">Assign team permissions by section.</p>
-        </div>
-        <div class="page-actions">
-            <button type="button" class="btn-adm btn-adm-outline" id="savePermissions">
-                <i class="fa-solid fa-check"></i> Save Changes
-            </button>
-            <button type="button" class="btn-adm btn-adm-primary" data-bs-toggle="modal" data-bs-target="#addStaffModal">
-                <i class="fa-solid fa-user-plus"></i> Add Staff
-            </button>
-        </div>
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Staff Access</h1>
+        <p class="page-subtitle">Create instructor and staff logins and control which studio sections they can open.</p>
     </div>
-
-    <div class="preview-note" role="note">
-        <i class="fa-solid fa-circle-info"></i>
-        <span>Preview only — permission and staff changes are not saved.</span>
-    </div>
-
-    <div class="row g-2 mb-2">
-        <div class="col-6 col-xl-3">
-            <div class="access-stat">
-                <div class="stat-icon"><i class="fa-solid fa-user-shield"></i></div>
-                <div><div class="stat-label">Super Admin</div><div class="stat-value">1</div></div>
-            </div>
-        </div>
-        <div class="col-6 col-xl-3">
-            <div class="access-stat">
-                <div class="stat-icon"><i class="fa-solid fa-user-tie"></i></div>
-                <div><div class="stat-label">Management</div><div class="stat-value">{{ $managementCount }}</div></div>
-            </div>
-        </div>
-        <div class="col-6 col-xl-3">
-            <div class="access-stat">
-                <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
-                <div><div class="stat-label">Employee Staff</div><div class="stat-value">{{ $employeeCount }}</div></div>
-            </div>
-        </div>
-        <div class="col-6 col-xl-3">
-            <div class="access-stat">
-                <div class="stat-icon"><i class="fa-solid fa-list-check"></i></div>
-                <div><div class="stat-label">Sections / Tasks</div><div class="stat-value">{{ $sectionCount }} <small>/ {{ $taskCount }}</small></div></div>
-            </div>
-        </div>
-    </div>
-
-    <section class="staff-table-card" aria-labelledby="staffTableTitle">
-        <div class="table-toolbar">
-            <h2 class="table-heading" id="staffTableTitle">Team Permissions</h2>
-            <div class="toolbar-controls">
-                <div class="staff-filters" role="group" aria-label="Filter staff by role">
-                    <button class="filter-tab active" type="button" data-role-filter="all" aria-pressed="true">All <span>{{ count($staffMembers) }}</span></button>
-                    <button class="filter-tab" type="button" data-role-filter="Management" aria-pressed="false">Management <span>{{ $managementCount }}</span></button>
-                    <button class="filter-tab" type="button" data-role-filter="Staff" aria-pressed="false">Staff <span>{{ $employeeCount }}</span></button>
-                </div>
-                <input type="search" class="staff-search" id="staffSearch" placeholder="Search name or ID" aria-label="Search staff">
-            </div>
-        </div>
-        <div class="table-responsive">
-            <table class="staff-table">
-                <thead>
-                    <tr>
-                        <th class="identity-column" scope="col">Staff name &amp; ID</th>
-                        <th class="role-column" scope="col">Role</th>
-                        @foreach ($permissionSections as $section)
-                            <th class="section-column" scope="col">
-                                <i class="fa-solid {{ $section['icon'] }} me-1 text-primary"></i>{{ $section['name'] }}
-                            </th>
-                        @endforeach
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($staffMembers as $member)
-                        <tr class="staff-row" data-role="{{ $member['role'] }}" data-search="{{ strtolower($member['name'] . ' ' . $member['id']) }}">
-                            <td>
-                                <div class="staff-identity">
-                                    <span class="staff-avatar">{{ $member['initials'] }}</span>
-                                    <span>
-                                        <span class="staff-name">{{ $member['name'] }}</span>
-                                        <span class="staff-id">{{ $member['id'] }}</span>
-                                    </span>
-                                </div>
-                            </td>
-                            <td><span class="role-badge {{ $member['role'] === 'Staff' ? 'staff' : '' }}">{{ $member['role'] }}</span></td>
-                            @foreach ($permissionSections as $section)
-                                <td>
-                                    <div class="permission-list">
-                                        @foreach ($section['actions'] as $actionKey => $actionLabel)
-                                            <label class="permission-check" title="{{ $section['name'] }}: {{ $actionLabel }}">
-                                                <input
-                                                    type="checkbox"
-                                                    data-section="{{ $section['id'] }}"
-                                                    data-action="{{ $actionKey }}"
-                                                    aria-label="{{ $section['name'] }}: {{ $actionLabel }}"
-                                                    {{ in_array($actionKey, $member['permissions'][$section['id']] ?? [], true) ? 'checked' : '' }}
-                                                >
-                                                <span>{{ $actionLabel }}</span>
-                                            </label>
-                                        @endforeach
-                                    </div>
-                                </td>
-                            @endforeach
-                        </tr>
-                    @endforeach
-                    <tr id="emptyStaffRow" hidden>
-                        <td class="empty-row" colspan="{{ $sectionCount + 2 }}">No staff members match your search.</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </section>
-</div>
-
-<div class="modal fade staff-access staff-modal" id="addStaffModal" tabindex="-1" aria-labelledby="addStaffModalTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <form class="modal-content" id="addStaffForm">
-            <div class="modal-header">
-                <div>
-                    <h2 class="modal-title" id="addStaffModalTitle">Add Staff Member</h2>
-                    <div class="small text-muted">Create a Management or Staff account</div>
-                </div>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="row g-2">
-                    <div class="col-12">
-                        <label class="form-label" for="newStaffName">Full name</label>
-                        <input class="form-control" id="newStaffName" type="text" required>
-                    </div>
-                    <div class="col-sm-6">
-                        <label class="form-label" for="newStaffUsername">Username</label>
-                        <input class="form-control" id="newStaffUsername" type="text" required>
-                    </div>
-                    <div class="col-sm-6">
-                        <label class="form-label" for="newStaffEmail">Work email</label>
-                        <input class="form-control" id="newStaffEmail" type="email" required>
-                    </div>
-                    <div class="col-sm-6">
-                        <label class="form-label" for="newStaffRole">Role</label>
-                        <select class="form-select" id="newStaffRole" required>
-                            <option value="Staff">Employee Staff</option>
-                            <option value="Management">Management / Sub-Admin</option>
-                        </select>
-                    </div>
-                    <div class="col-sm-6">
-                        <label class="form-label" for="newStaffPassword">Temporary password</label>
-                        <input class="form-control" id="newStaffPassword" type="password" required>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Cancel</button>
-                <button type="submit" class="btn btn-primary">Create Staff</button>
-            </div>
+    <div class="page-actions d-flex align-items-center gap-2">
+        <form action="{{ route('admin.staff') }}" method="GET" class="d-flex align-items-center gap-2">
+            <input type="text" name="search" value="{{ $search }}" class="form-control form-control-sm"
+                placeholder="Search name or email…" style="min-width: 200px;">
+            <button type="submit" class="btn-adm btn-adm-outline"><i class="fa-solid fa-magnifying-glass"></i></button>
+            @if ($search !== '')
+                <a href="{{ route('admin.staff') }}" class="btn-adm btn-adm-outline" title="Clear search"><i class="fa-solid fa-xmark"></i></a>
+            @endif
         </form>
+        <button type="button" class="btn-adm btn-adm-primary" data-bs-toggle="modal" data-bs-target="#addStaffModal">
+            <i class="fa-solid fa-user-plus"></i> Add Staff
+        </button>
     </div>
 </div>
 
-<div class="preview-toast" id="staffPreviewToast" role="status" aria-live="polite"></div>
+@foreach (['success' => '#10B981', 'error' => '#EF4444', 'warning' => '#F59E0B'] as $key => $color)
+    @if (session($key))
+        <div class="alert d-flex align-items-center gap-2 py-2 px-3 mb-3 border-0 rounded-3 text-white" style="background: {{ $color }}; font-size: 12.5px;">
+            <i class="fa-solid fa-circle-info"></i>
+            <span>{{ session($key) }}</span>
+        </div>
+    @endif
+@endforeach
+
+@if ($errors->any())
+    <div class="alert alert-danger rounded-3 mb-3" style="font-size: 12.5px;">{{ $errors->first() }}</div>
+@endif
+
+<div class="adm-card">
+    <div class="adm-card-header">
+        <h2 class="adm-card-title">
+            <i class="fa-solid fa-user-shield text-primary"></i>
+            Team Accounts ({{ number_format($staff->total()) }})
+        </h2>
+        <span class="adm-badge adm-badge-success">Live Database</span>
+    </div>
+    <div class="table-responsive">
+        <table class="adm-table">
+            <thead>
+                <tr>
+                    <th>Member</th>
+                    <th>Role</th>
+                    <th>Access</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse ($staff as $member)
+                    @php
+                        $isAdminRole = $member->role === 'admin';
+                        $memberPermissions = (array) ($member->permissions ?? []);
+                    @endphp
+                    <tr>
+                        <td>
+                            <div class="item-thumb-box">
+                                <img src="{{ asset($member->avatar ?: 'frontend/img/team/team_2_1.jpg') }}" alt="{{ $member->name }}">
+                                <div>
+                                    <div class="title">
+                                        {{ $member->name }}
+                                        @if ($member->email === $currentEmail)
+                                            <span class="adm-badge adm-badge-primary ms-1">You</span>
+                                        @endif
+                                    </div>
+                                    <div class="subtitle">{{ $member->email }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="adm-badge {{ $isAdminRole ? 'adm-badge-primary' : 'adm-badge-warning' }}">{{ $roles[$member->role] ?? $member->role }}</span></td>
+                        <td>
+                            @if ($isAdminRole)
+                                <span class="small text-muted">Full access</span>
+                            @elseif (empty($memberPermissions))
+                                <span class="small text-muted">No sections</span>
+                            @else
+                                <div class="d-flex flex-wrap gap-1">
+                                    @foreach ($memberPermissions as $permissionKey)
+                                        @if (isset($permissions[$permissionKey]))
+                                            <span class="adm-badge adm-badge-success">{{ $permissions[$permissionKey] }}</span>
+                                        @endif
+                                    @endforeach
+                                </div>
+                            @endif
+                        </td>
+                        <td>
+                            @if ($member->is_active)
+                                <span class="adm-badge adm-badge-success">Active</span>
+                            @else
+                                <span class="adm-badge adm-badge-danger">Disabled</span>
+                            @endif
+                        </td>
+                        <td>
+                            <div class="d-flex gap-2">
+                                <button type="button" class="btn-adm btn-adm-outline" data-bs-toggle="modal" data-bs-target="#editStaff{{ $member->id }}">
+                                    Edit
+                                </button>
+                                @if ($member->email !== $currentEmail)
+                                    <form action="{{ route('admin.staff.destroy', $member) }}" method="POST" onsubmit="return confirm('Remove {{ addslashes($member->name) }} from the studio?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn-adm btn-adm-outline" style="color: #DC2626; border-color: #FCA5A5;">Remove</button>
+                                    </form>
+                                @endif
+                            </div>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="5" class="text-center text-muted py-4">No staff accounts found.</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+    @if ($staff->hasPages())
+        <div class="p-3 border-top">{{ $staff->links() }}</div>
+    @endif
+</div>
+
+{{-- Add staff --}}
+<div class="modal fade" id="addStaffModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0" style="border-radius: 10px;">
+            <form action="{{ route('admin.staff.store') }}" method="POST">
+                @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold">Add Staff Account</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label class="form-label small fw-semibold">Full Name</label>
+                            <input type="text" name="name" class="form-control form-control-sm" value="{{ old('name') }}" required>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label small fw-semibold">Email</label>
+                            <input type="email" name="email" class="form-control form-control-sm" value="{{ old('email') }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-semibold">Role</label>
+                            <select name="role" class="form-select form-select-sm staff-role-select" data-target="addPermissions" required>
+                                @foreach ($roles as $key => $label)
+                                    <option value="{{ $key }}" @selected(old('role') === $key)>{{ $label }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-semibold">Password</label>
+                            <input type="password" name="password" class="form-control form-control-sm" minlength="8" required>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label small fw-semibold">Section Access</label>
+                            <div id="addPermissions" class="d-flex flex-wrap gap-3 p-3 rounded-3" style="background: #F8FAFC; border: 1px solid #E2E8F0;">
+                                @foreach ($permissions as $key => $label)
+                                    <label class="form-check m-0 d-flex align-items-center gap-2" style="font-size: 12.5px;">
+                                        <input class="form-check-input m-0 staff-permission" type="checkbox" name="permissions[]" value="{{ $key }}">
+                                        <span>{{ $label }}</span>
+                                    </label>
+                                @endforeach
+                            </div>
+                            <div class="small text-muted mt-1">Administrators always have full access.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-adm btn-adm-outline" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn-adm btn-adm-primary">Create Account</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{-- Edit staff --}}
+@foreach ($staff as $member)
+    <div class="modal fade" id="editStaff{{ $member->id }}" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0" style="border-radius: 10px;">
+                <form action="{{ route('admin.staff.update', $member) }}" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <div class="modal-header">
+                        <h5 class="modal-title fw-bold">Edit {{ $member->name }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label small fw-semibold">Full Name</label>
+                                <input type="text" name="name" class="form-control form-control-sm" value="{{ $member->name }}" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label small fw-semibold">Email</label>
+                                <input type="email" name="email" class="form-control form-control-sm" value="{{ $member->email }}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small fw-semibold">Role</label>
+                                <select name="role" class="form-select form-select-sm" required>
+                                    @foreach ($roles as $key => $label)
+                                        <option value="{{ $key }}" @selected($member->role === $key)>{{ $label }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small fw-semibold">New Password <span class="text-muted">(optional)</span></label>
+                                <input type="password" name="password" class="form-control form-control-sm" minlength="8" placeholder="Leave blank to keep">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label small fw-semibold">Section Access</label>
+                                <div class="d-flex flex-wrap gap-3 p-3 rounded-3" style="background: #F8FAFC; border: 1px solid #E2E8F0;">
+                                    @foreach ($permissions as $key => $label)
+                                        <label class="form-check m-0 d-flex align-items-center gap-2" style="font-size: 12.5px;">
+                                            <input class="form-check-input m-0" type="checkbox" name="permissions[]" value="{{ $key }}"
+                                                @checked(in_array($key, (array) ($member->permissions ?? []), true))>
+                                            <span>{{ $label }}</span>
+                                        </label>
+                                    @endforeach
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-check d-flex align-items-center gap-2 m-0" style="font-size: 13px;">
+                                    <input class="form-check-input m-0" type="checkbox" name="is_active" value="1" @checked($member->is_active)>
+                                    <span>Account is active and can sign in</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn-adm btn-adm-outline" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn-adm btn-adm-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+@endforeach
 @endsection
 
 @section('extra_js')
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const toast = document.getElementById('staffPreviewToast');
-        let activeFilter = 'all';
-        let toastTimer;
+    (function () {
+        var defaults = @json($defaults);
 
-        function showPreviewMessage(message) {
-            toast.textContent = message;
-            toast.style.display = 'block';
-            window.clearTimeout(toastTimer);
-            toastTimer = window.setTimeout(function () {
-                toast.style.display = 'none';
-            }, 3000);
-        }
+        document.querySelectorAll('.staff-role-select').forEach(function (select) {
+            select.addEventListener('change', function () {
+                var container = document.getElementById(select.dataset.target);
+                if (!container) return;
 
-        function filterStaff() {
-            const query = document.getElementById('staffSearch').value.trim().toLowerCase();
-            const rows = Array.from(document.querySelectorAll('.staff-row'));
-            let visibleCount = 0;
+                var checkboxes = container.querySelectorAll('.staff-permission');
+                var roleDefaults = defaults[select.value] || [];
+                var isAdmin = select.value === 'admin';
 
-            rows.forEach(function (row) {
-                const matchesRole = activeFilter === 'all' || row.dataset.role === activeFilter;
-                const matchesQuery = row.dataset.search.includes(query);
-                const visible = matchesRole && matchesQuery;
-                row.hidden = !visible;
-                if (visible) visibleCount++;
-            });
-
-            document.getElementById('emptyStaffRow').hidden = visibleCount > 0;
-        }
-
-        document.querySelectorAll('[data-role-filter]').forEach(function (button) {
-            button.addEventListener('click', function () {
-                activeFilter = button.dataset.roleFilter;
-                document.querySelectorAll('[data-role-filter]').forEach(function (tab) {
-                    const selected = tab === button;
-                    tab.classList.toggle('active', selected);
-                    tab.setAttribute('aria-pressed', selected ? 'true' : 'false');
+                checkboxes.forEach(function (box) {
+                    box.checked = isAdmin ? true : roleDefaults.indexOf(box.value) !== -1;
+                    box.disabled = isAdmin;
                 });
-                filterStaff();
             });
         });
-
-        document.getElementById('staffSearch').addEventListener('input', filterStaff);
-        document.getElementById('savePermissions').addEventListener('click', function () {
-            showPreviewMessage('Preview only — permission changes were not saved.');
-        });
-        document.getElementById('addStaffForm').addEventListener('submit', function (event) {
-            event.preventDefault();
-            showPreviewMessage('Preview only — the staff account was not created.');
-        });
-
-        filterStaff();
-    });
+    })();
 </script>
 @endsection

@@ -196,55 +196,19 @@ class RouteController extends Controller
 
     public function Frontend_MyCourses(Request $request, $slug = null)
     {
-        $courses = SiteContentService::getAllCourses();
-        $courseParam = $slug ?: $request->query('course');
-
-        $activeCourse = null;
-        if ($courseParam) {
-            foreach ($courses as $c) {
-                if ($c['slug'] === $courseParam || (string) $c['id'] === (string) $courseParam) {
-                    $activeCourse = $c;
-                    break;
-                }
-            }
+        if (! auth()->check()) {
+            return redirect()->route('login', ['redirect' => route('student.courses')]);
         }
 
-        if (! $activeCourse && ! empty($courses)) {
-            $activeCourse = reset($courses);
-        }
-
-        $activeCourseSlug = $activeCourse['slug'] ?? 'mdcat-reboot-60-day';
-
-        return view('frontend.pages.courses.my-courses', compact('courses', 'activeCourse', 'activeCourseSlug'));
+        return $slug
+            ? redirect()->route('student.classroom', $slug)
+            : redirect()->route('student.classroom');
     }
 
     public function Frontend_Cart()
     {
         // Cart page removed — redirect to courses
         return redirect()->route('course');
-    }
-
-    public function Frontend_Checkout(Request $request)
-    {
-        $courses = SiteContentService::getAllCourses();
-        $slug = $request->query('course');
-
-        $course = null;
-        if ($slug) {
-            foreach ($courses as $c) {
-                if ($c['slug'] === $slug || (string) $c['id'] === (string) $slug) {
-                    $course = $c;
-                    break;
-                }
-            }
-        }
-
-        // If no course found, redirect to courses page
-        if (! $course) {
-            return redirect()->route('course');
-        }
-
-        return view('frontend.pages.courses.checkout', compact('course'));
     }
 
     // User Account
