@@ -136,8 +136,6 @@
                                     <li><a href="{{ route('contact') }}">Contact Us</a></li>
                                 </ul>
                             </nav>
-                            <button type="button" class="th-menu-toggle d-block d-lg-none"><i
-                                     class="fal fa-bars"></i></button>
                         </div>
 
                         <div class="col-auto flex-shrink-0">
@@ -197,6 +195,11 @@
                                         <a href="{{ route('register') }}" class="header-btn-register">Join Now</a>
                                     </div>
                                 @endif
+
+                                <button type="button" class="th-menu-toggle header-menu-toggle d-inline-flex d-lg-none"
+                                    aria-label="Open navigation menu">
+                                    <i class="fal fa-bars"></i>
+                                </button>
                             </div>
                         </div>
 

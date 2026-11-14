@@ -37146,6 +37146,79 @@ textarea.custom-form-control {
     color: #ffffff !important;
 }
 
+/* Compact in-header hamburger, keeps the right cluster aligned */
+.header-menu-toggle {
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
+    padding: 0;
+    border: none;
+    border-radius: 8px;
+    background: #5C32FF;
+    color: #ffffff;
+    font-size: 17px;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.header-menu-toggle:hover,
+.header-menu-toggle:focus-visible {
+    background: #4b26df;
+    color: #ffffff;
+}
+
+@media (min-width: 992px) {
+    .header-menu-toggle {
+        display: none !important;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .header-logo {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    .header-logo a img {
+        height: 44px;
+    }
+
+    .header-profile-wrap {
+        gap: 10px !important;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .header-logo a img {
+        height: 38px;
+    }
+
+    .header-auth-group .header-btn-login {
+        display: none !important;
+    }
+
+    .header-btn-register {
+        padding: 9px 16px !important;
+        font-size: 12.5px !important;
+    }
+
+    .header-menu-toggle {
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+    }
+}
+
+@media (max-width: 359.98px) {
+    .header-btn-register {
+        display: none !important;
+    }
+}
+
 /* Enrolled Badge in Profile page */
 .badge-enrolled-count {
     background: #5C32FF !important;
