@@ -42,6 +42,17 @@ return [
 
     'ffmpeg_threads' => (int) env('FFMPEG_THREADS', 4),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Encoder Preset
+    |--------------------------------------------------------------------------
+    | Global fallback preset. Renditions may override it individually; the
+    | low-resolution mobile rungs use a faster preset because their quality
+    | is already bounded by resolution.
+    */
+
+    'ffmpeg_preset' => env('FFMPEG_PRESET', 'superfast'),
+
     'completion_threshold' => (int) env('LECTURE_COMPLETION_THRESHOLD', 90),
 
     'playback_url_ttl_minutes' => (int) env('LECTURE_PLAYBACK_TTL_MINUTES', 180),
@@ -62,6 +73,7 @@ return [
     'renditions' => [
         [
             'height' => 240,
+            'preset' => 'ultrafast',
             'video_bitrate' => 220000,
             'maxrate' => 260000,
             'bufsize' => 520000,
@@ -71,6 +83,7 @@ return [
         ],
         [
             'height' => 360,
+            'preset' => 'ultrafast',
             'video_bitrate' => 400000,
             'maxrate' => 460000,
             'bufsize' => 920000,
@@ -80,6 +93,7 @@ return [
         ],
         [
             'height' => 480,
+            'preset' => 'superfast',
             'video_bitrate' => 750000,
             'maxrate' => 840000,
             'bufsize' => 1680000,
@@ -89,6 +103,7 @@ return [
         ],
         [
             'height' => 720,
+            'preset' => 'superfast',
             'video_bitrate' => 1500000,
             'maxrate' => 1680000,
             'bufsize' => 3360000,
@@ -98,6 +113,7 @@ return [
         ],
         [
             'height' => 1080,
+            'preset' => 'superfast',
             'video_bitrate' => 3000000,
             'maxrate' => 3360000,
             'bufsize' => 6720000,
