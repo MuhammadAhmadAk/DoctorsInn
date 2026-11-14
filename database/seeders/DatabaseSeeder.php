@@ -39,7 +39,10 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        // 3. Complete Website CMS, Courses, Blogs, Mock Tests, E-Library, Faculty, Testimonials & FAQs
+        // 3. Complete Website CMS settings
         $this->call(SiteCmsSeeder::class);
+
+        // 4. Student testimonials shown on the home page
+        $this->call(TestimonialSeeder::class);
     }
 }
