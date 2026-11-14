@@ -11,13 +11,13 @@
     <div class="page-actions">
         <a href="{{ route('admin.courses') }}" class="btn-adm btn-adm-outline">
             <i class="fa-solid fa-graduation-cap"></i>
-            <span>Manage Courses</span>
+            <span>Courses Studio</span>
         </a>
     </div>
 </div>
 
 @if(session('success'))
-<div class="alert alert-success d-flex align-items-center gap-2 py-2 px-3 mb-3 border-0 rounded-3 text-white" style="background: #10B981; font-size: 12.5px;">
+<div class="alert d-flex align-items-center gap-2 py-2 px-3 mb-3 border-0 rounded-3 text-white" style="background: #10B981; font-size: 12.5px;">
     <i class="fa-solid fa-circle-check"></i>
     <span>{{ session('success') }}</span>
 </div>
@@ -25,118 +25,113 @@
 
 <!-- KPI Stats Row -->
 <div class="row g-3 mb-4">
-    <div class="col-xl-3 col-sm-6">
-        <div class="adm-card p-3 d-flex align-items-center gap-3">
-            <div class="rounded-3 d-flex align-items-center justify-content-center" style="width: 44px; height: 44px; background: rgba(59, 130, 246, 0.1); color: #2563EB; font-size: 18px;">
-                <i class="fa-solid fa-comments"></i>
-            </div>
-            <div>
-                <div class="text-muted font-11 fw-semibold text-uppercase" style="letter-spacing: 0.5px;">Total Reviews</div>
-                <div class="fw-bold text-dark font-20">{{ $totalReviews }}</div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xl-3 col-sm-6">
-        <div class="adm-card p-3 d-flex align-items-center gap-3">
-            <div class="rounded-3 d-flex align-items-center justify-content-center" style="width: 44px; height: 44px; background: rgba(16, 185, 129, 0.1); color: #059669; font-size: 18px;">
-                <i class="fa-solid fa-circle-check"></i>
-            </div>
-            <div>
-                <div class="text-muted font-11 fw-semibold text-uppercase" style="letter-spacing: 0.5px;">Approved Live</div>
-                <div class="fw-bold text-dark font-20">{{ $approvedReviews }}</div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="adm-card h-100">
+            <div class="adm-card-body d-flex align-items-center gap-3">
+                <div class="stat-icon primary"><i class="fa-solid fa-comments"></i></div>
+                <div>
+                    <div class="fw-bold text-dark" style="font-size: 20px;">{{ number_format($totalReviews) }}</div>
+                    <div class="small text-muted">Total Reviews</div>
+                </div>
             </div>
         </div>
     </div>
-    <div class="col-xl-3 col-sm-6">
-        <div class="adm-card p-3 d-flex align-items-center gap-3">
-            <div class="rounded-3 d-flex align-items-center justify-content-center" style="width: 44px; height: 44px; background: rgba(245, 158, 11, 0.1); color: #D97706; font-size: 18px;">
-                <i class="fa-solid fa-star"></i>
-            </div>
-            <div>
-                <div class="text-muted font-11 fw-semibold text-uppercase" style="letter-spacing: 0.5px;">Avg Rating</div>
-                <div class="fw-bold text-dark font-20">{{ number_format($overallAvgRating, 1) }} <span class="text-warning font-14">★</span></div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="adm-card h-100">
+            <div class="adm-card-body d-flex align-items-center gap-3">
+                <div class="stat-icon success"><i class="fa-solid fa-circle-check"></i></div>
+                <div>
+                    <div class="fw-bold text-dark" style="font-size: 20px;">{{ number_format($approvedReviews) }}</div>
+                    <div class="small text-muted">Approved Live</div>
+                </div>
             </div>
         </div>
     </div>
-    <div class="col-xl-3 col-sm-6">
-        <div class="adm-card p-3 d-flex align-items-center gap-3">
-            <div class="rounded-3 d-flex align-items-center justify-content-center" style="width: 44px; height: 44px; background: rgba(139, 92, 246, 0.1); color: #7C3AED; font-size: 18px;">
-                <i class="fa-solid fa-award"></i>
+    <div class="col-sm-6 col-xl-3">
+        <div class="adm-card h-100">
+            <div class="adm-card-body d-flex align-items-center gap-3">
+                <div class="stat-icon warning"><i class="fa-solid fa-star"></i></div>
+                <div>
+                    <div class="fw-bold text-dark" style="font-size: 20px;">{{ number_format($overallAvgRating, 1) }} / 5.0</div>
+                    <div class="small text-muted">Avg Overall Rating</div>
+                </div>
             </div>
-            <div>
-                <div class="text-muted font-11 fw-semibold text-uppercase" style="letter-spacing: 0.5px;">5-Star Reviews</div>
-                <div class="fw-bold text-dark font-20">{{ $fiveStarCount }}</div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="adm-card h-100">
+            <div class="adm-card-body d-flex align-items-center gap-3">
+                <div class="stat-icon info"><i class="fa-solid fa-award"></i></div>
+                <div>
+                    <div class="fw-bold text-dark" style="font-size: 20px;">{{ number_format($fiveStarCount) }}</div>
+                    <div class="small text-muted">5-Star Ratings</div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Courses Breakdown Cards -->
+<!-- Courses Breakdown Row -->
 <div class="adm-card mb-4">
-    <div class="adm-card-header py-2.5 px-3 border-bottom d-flex align-items-center justify-content-between">
-        <div class="fw-bold font-13 text-dark d-flex align-items-center gap-2">
-            <i class="fa-solid fa-layer-group text-primary"></i>
-            <span>Reviews Breakdown By Course</span>
+    <div class="adm-card-body py-3">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-2.5">
+            <div class="fw-semibold text-dark font-12 d-flex align-items-center gap-2">
+                <i class="fa-solid fa-layer-group text-primary"></i>
+                <span>Filter by Course</span>
+            </div>
+            <span class="small text-muted">{{ $courses->count() }} Total Courses</span>
         </div>
-        <span class="font-11 text-muted">{{ $courses->count() }} Total Courses</span>
-    </div>
-    <div class="adm-card-body p-3">
-        <div class="row g-2">
-            <div class="col-auto">
-                <a href="{{ route('admin.reviews') }}" class="btn btn-sm {{ empty($selectedCourseId) ? 'btn-primary' : 'btn-outline-secondary' }} font-12 py-1 px-3 rounded-pill d-inline-flex align-items-center gap-1.5 text-decoration-none">
-                    <span>All Courses</span>
-                    <span class="badge bg-white text-dark rounded-pill font-10 px-1.5">{{ $totalReviews }}</span>
-                </a>
-            </div>
+        <div class="d-flex align-items-center gap-2 flex-wrap">
+            <a href="{{ route('admin.reviews', ['status' => $selectedStatus, 'q' => $searchQuery]) }}"
+               class="btn-adm {{ empty($selectedCourseId) ? 'btn-adm-primary' : 'btn-adm-outline' }} py-1 px-3 font-12 d-inline-flex align-items-center gap-1.5 text-decoration-none">
+                <span>All Courses</span>
+                <span class="adm-badge {{ empty($selectedCourseId) ? 'adm-badge-light text-dark' : 'adm-badge-primary' }} px-1.5 py-0 font-10">
+                    {{ $totalReviews }}
+                </span>
+            </a>
             @foreach($courses as $c)
-            <div class="col-auto">
-                <a href="{{ route('admin.reviews', ['course_id' => $c->id]) }}" class="btn btn-sm {{ (string)$selectedCourseId === (string)$c->id ? 'btn-primary' : 'btn-outline-secondary' }} font-12 py-1 px-3 rounded-pill d-inline-flex align-items-center gap-1.5 text-decoration-none">
-                    <span class="text-truncate" style="max-width: 180px;">{{ $c->title }}</span>
-                    <span class="badge {{ (string)$selectedCourseId === (string)$c->id ? 'bg-white text-primary' : 'bg-light text-dark' }} rounded-pill font-10 px-1.5">
-                        {{ $c->approved_reviews_count ?? 0 }}
-                    </span>
-                    @if(!empty($c->avg_rating))
-                        <span class="text-warning font-10">★ {{ number_format($c->avg_rating, 1) }}</span>
-                    @endif
-                </a>
-            </div>
+            <a href="{{ route('admin.reviews', ['course_id' => $c->id, 'status' => $selectedStatus, 'q' => $searchQuery]) }}"
+               class="btn-adm {{ (string)$selectedCourseId === (string)$c->id ? 'btn-adm-primary' : 'btn-adm-outline' }} py-1 px-3 font-12 d-inline-flex align-items-center gap-1.5 text-decoration-none">
+                <span>{{ $c->title }}</span>
+                <span class="adm-badge {{ (string)$selectedCourseId === (string)$c->id ? 'adm-badge-light text-dark' : 'adm-badge-primary' }} px-1.5 py-0 font-10">
+                    {{ $c->approved_reviews_count ?? 0 }}
+                </span>
+                @if(!empty($c->avg_rating))
+                    <span class="text-warning font-10">★ {{ number_format($c->avg_rating, 1) }}</span>
+                @endif
+            </a>
             @endforeach
         </div>
     </div>
 </div>
 
-<!-- Filters Bar -->
+<!-- Search & Status Filters -->
 <div class="adm-card mb-4">
     <div class="adm-card-body py-3">
         <form method="GET" action="{{ route('admin.reviews') }}" class="row align-items-center g-2">
-            <div class="col-md-4">
+            @if($selectedCourseId)
+                <input type="hidden" name="course_id" value="{{ $selectedCourseId }}">
+            @endif
+            <div class="col-md-5">
                 <div class="nav-search w-100">
                     <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" name="q" value="{{ $searchQuery }}" placeholder="Search by student, email, review...">
+                    <input type="text" name="q" value="{{ $searchQuery }}" placeholder="Search by student name, email, or review text...">
                 </div>
             </div>
             <div class="col-md-3">
-                <select name="course_id" class="form-select form-select-sm font-12" onchange="this.form.submit()">
-                    <option value="">Filter by Course: All</option>
-                    @foreach($courses as $c)
-                        <option value="{{ $c->id }}" {{ (string)$selectedCourseId === (string)$c->id ? 'selected' : '' }}>
-                            {{ $c->title }} ({{ $c->approved_reviews_count ?? 0 }})
-                        </option>
-                    @endforeach
+                <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
+                    <option value="">Status: All Reviews</option>
+                    <option value="approved" @selected($selectedStatus === 'approved')>Approved Only</option>
+                    <option value="rejected" @selected($selectedStatus === 'rejected')>Rejected Only</option>
                 </select>
             </div>
-            <div class="col-md-3">
-                <select name="status" class="form-select form-select-sm font-12" onchange="this.form.submit()">
-                    <option value="">Filter by Status: All</option>
-                    <option value="approved" {{ $selectedStatus === 'approved' ? 'selected' : '' }}>Approved Only</option>
-                    <option value="rejected" {{ $selectedStatus === 'rejected' ? 'selected' : '' }}>Rejected Only</option>
-                </select>
-            </div>
-            <div class="col-md-2 d-flex gap-2">
-                <button type="submit" class="btn-adm btn-adm-primary py-1 px-3 font-12 w-100">Filter</button>
+            <div class="col-md-4 d-flex align-items-center gap-2">
+                <button type="submit" class="btn-adm btn-adm-primary py-1 px-3 font-12">
+                    <i class="fa-solid fa-filter me-1"></i> Filter
+                </button>
                 @if($searchQuery || $selectedCourseId || $selectedStatus)
-                    <a href="{{ route('admin.reviews') }}" class="btn-adm btn-adm-outline py-1 px-2 font-12" title="Clear Filters">
-                        <i class="fa-solid fa-xmark"></i>
+                    <a href="{{ route('admin.reviews') }}" class="btn-adm btn-adm-outline py-1 px-3 font-12" title="Reset all filters">
+                        <i class="fa-solid fa-rotate-left me-1"></i> Reset
                     </a>
                 @endif
             </div>
@@ -148,13 +143,13 @@
 <div class="adm-card">
     <div class="adm-card-header d-flex align-items-center justify-content-between">
         <h2 class="adm-card-title">
-            <i class="fa-solid fa-star text-warning"></i>
+            <i class="fa-solid fa-comments text-primary"></i>
             <span>Student Reviews ({{ $reviews->total() }})</span>
         </h2>
         @if($selectedCourseId)
             @php $filteredCourse = $courses->firstWhere('id', $selectedCourseId); @endphp
             @if($filteredCourse)
-                <span class="adm-badge adm-badge-primary">Filtered: {{ $filteredCourse->title }}</span>
+                <span class="adm-badge adm-badge-primary">Course: {{ $filteredCourse->title }}</span>
             @endif
         @endif
     </div>
@@ -163,46 +158,47 @@
         <div class="text-center py-5">
             <i class="fa-regular fa-comment-dots text-muted font-32 mb-2"></i>
             <div class="fw-bold text-dark font-14">No Reviews Found</div>
-            <p class="text-muted font-12 mb-0">No student reviews match the selected filter criteria.</p>
+            <p class="text-muted font-12 mb-0">No student reviews match the active filter criteria.</p>
         </div>
     @else
         <div class="table-responsive">
             <table class="adm-table">
                 <thead>
                     <tr>
-                        <th style="width: 220px;">Student</th>
-                        <th style="width: 180px;">Course</th>
-                        <th style="width: 140px;">Rating</th>
-                        <th>Review Feedback</th>
-                        <th style="width: 120px;">Date</th>
-                        <th style="width: 100px;">Status</th>
-                        <th style="width: 110px;" class="text-end">Actions</th>
+                        <th style="min-width: 220px;">Student</th>
+                        <th style="min-width: 160px;">Course</th>
+                        <th style="min-width: 120px;">Rating</th>
+                        <th style="min-width: 280px;">Review Feedback</th>
+                        <th style="min-width: 110px;">Date</th>
+                        <th style="min-width: 100px;">Status</th>
+                        <th style="min-width: 90px;" class="text-end">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($reviews as $rev)
                     <tr>
                         <td>
-                            <div class="d-flex align-items-center gap-2">
-                                <div class="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold font-12 flex-shrink-0" style="width: 34px; height: 34px; background: #3B82F6;">
+                            <div class="d-flex align-items-center gap-2.5">
+                                <div class="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold font-12 flex-shrink-0"
+                                     style="width: 34px; height: 34px; background: var(--adm-primary); box-shadow: 0 2px 6px rgba(92, 50, 255, 0.25);">
                                     {{ strtoupper(substr($rev->name, 0, 1)) }}
                                 </div>
                                 <div class="text-truncate">
                                     <div class="fw-bold text-dark font-12 text-truncate">{{ $rev->name }}</div>
-                                    <div class="text-muted font-11 text-truncate">{{ $rev->email ?: ($rev->user?->email ?: 'Student') }}</div>
+                                    <div class="small text-muted text-truncate">{{ $rev->email ?: ($rev->user?->email ?: 'Student') }}</div>
                                 </div>
                             </div>
                         </td>
                         <td>
-                            <span class="badge bg-light text-dark border font-11 fw-semibold py-1 px-2 rounded">
-                                <i class="fa-solid fa-graduation-cap text-primary me-1"></i>
+                            <span class="adm-badge adm-badge-primary font-11">
+                                <i class="fa-solid fa-graduation-cap me-1"></i>
                                 {{ $rev->course?->title ?? 'Unknown Course' }}
                             </span>
                         </td>
                         <td>
                             <div class="d-flex align-items-center gap-1">
                                 <span class="fw-bold text-dark font-12">{{ $rev->rating }}.0</span>
-                                <div class="text-warning font-12">
+                                <div class="text-warning font-11">
                                     @for($i = 1; $i <= 5; $i++)
                                         <i class="fa-solid fa-star {{ $i <= $rev->rating ? 'text-warning' : 'text-muted text-opacity-25' }}"></i>
                                     @endfor
@@ -210,8 +206,8 @@
                             </div>
                         </td>
                         <td>
-                            <div class="font-12 text-dark" style="max-width: 480px; line-height: 1.45;">
-                                "{{ $rev->comment }}"
+                            <div class="font-12 text-dark" style="max-width: 460px; line-height: 1.5;">
+                                {{ $rev->comment }}
                             </div>
                         </td>
                         <td>
@@ -221,22 +217,22 @@
                             @if($rev->status === 'approved')
                                 <span class="adm-badge adm-badge-success">Approved</span>
                             @else
-                                <span class="adm-badge text-danger" style="background: rgba(239, 68, 68, 0.1);">Rejected</span>
+                                <span class="adm-badge adm-badge-danger">Rejected</span>
                             @endif
                         </td>
                         <td class="text-end">
-                            <div class="d-inline-flex align-items-center gap-1">
+                            <div class="table-actions justify-content-end">
                                 <form method="POST" action="{{ route('admin.reviews.toggle', $rev->id) }}" class="d-inline">
                                     @csrf
-                                    <button type="submit" class="action-icon-btn" title="{{ $rev->status === 'approved' ? 'Hide Review' : 'Approve Review' }}">
+                                    <button type="submit" class="action-btn" title="{{ $rev->status === 'approved' ? 'Reject / Hide Review' : 'Approve Review' }}">
                                         <i class="fa-solid {{ $rev->status === 'approved' ? 'fa-eye-slash text-warning' : 'fa-check text-success' }}"></i>
                                     </button>
                                 </form>
-                                <form method="POST" action="{{ route('admin.reviews.delete', $rev->id) }}" class="d-inline" onsubmit="return confirm('Delete this review permanently?');">
+                                <form method="POST" action="{{ route('admin.reviews.delete', $rev->id) }}" class="d-inline" onsubmit="return confirm('Permanently delete this student review?');">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="action-icon-btn danger" title="Delete Review">
-                                        <i class="fa-solid fa-trash"></i>
+                                    <button type="submit" class="action-btn delete" title="Delete Review">
+                                        <i class="fa-solid fa-trash-can"></i>
                                     </button>
                                 </form>
                             </div>
@@ -248,8 +244,8 @@
         </div>
 
         @if($reviews->hasPages())
-        <div class="p-3 border-top d-flex justify-content-between align-items-center">
-            <span class="font-11 text-muted">Showing {{ $reviews->firstItem() }} to {{ $reviews->lastItem() }} of {{ $reviews->total() }} reviews</span>
+        <div class="p-3 border-top d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <span class="small text-muted">Showing {{ $reviews->firstItem() }} to {{ $reviews->lastItem() }} of {{ $reviews->total() }} reviews</span>
             {{ $reviews->links() }}
         </div>
         @endif
