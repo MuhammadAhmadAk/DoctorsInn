@@ -225,8 +225,18 @@
                 <div class="d-flex flex-column">
                     @foreach ($subjectReadiness as $subKey => $subject)
                         @php
-                            $statusClass = $subject['status'] === 'Strong' ? 'badge-status-success' : ($subject['status'] === 'Good' ? 'badge-status-info' : 'badge-status-warning');
-                            $fillClass = $subject['status'] === 'Strong' ? 'fill-success' : ($subject['status'] === 'Good' ? 'fill-info' : 'fill-warning');
+                            $statusClass = match ($subject['status']) {
+                                'Strong' => 'badge-status-success',
+                                'Good' => 'badge-status-info',
+                                'Weak' => 'badge-status-danger',
+                                default => 'badge-status-warning',
+                            };
+                            $fillClass = match ($subject['status']) {
+                                'Strong' => 'fill-success',
+                                'Good' => 'fill-info',
+                                'Weak' => 'fill-danger',
+                                default => 'fill-warning',
+                            };
                             $subColor = $subject['color'] ?? '#5C32FF';
                             $subIcon = $subject['icon'] ?? 'fa-solid fa-book';
                         @endphp
@@ -277,9 +287,15 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($recentTestHistory as $test)
+                            @forelse ($recentTestHistory as $test)
                                 <tr>
-                                    <td class="fw-semibold text-dark py-3">{{ $test['title'] }}</td>
+                                    <td class="fw-semibold text-dark py-3">
+                                        @if (!empty($test['url']))
+                                            <a href="{{ $test['url'] }}" class="text-dark text-decoration-none">{{ $test['title'] }}</a>
+                                        @else
+                                            {{ $test['title'] }}
+                                        @endif
+                                    </td>
                                     <td class="text-muted py-3" style="font-size: 12px;">{{ $test['date'] }}</td>
                                     <td class="py-3">
                                         <span class="fw-bold text-dark">{{ $test['score'] }}</span><span class="text-muted" style="font-size: 12px;">/{{ $test['total'] }}</span>
@@ -293,7 +309,13 @@
                                         @endif
                                     </td>
                                 </tr>
-                            @endforeach
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted py-4" style="font-size: 12.5px;">
+                                        No mock tests attempted yet. <a href="{{ route('student.tests') }}" class="fw-semibold text-decoration-none">Start your first test →</a>
+                                    </td>
+                                </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>

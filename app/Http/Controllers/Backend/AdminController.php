@@ -8,9 +8,12 @@ use App\Models\Course;
 use App\Models\ElibraryResource;
 use App\Models\MockTest;
 use App\Models\SiteContent;
+use App\Models\TestAttempt;
+use App\Models\User;
 use App\Services\SiteContentService;
 use App\Services\Mp4FastStartService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
 class AdminController extends Controller
@@ -97,7 +100,66 @@ class AdminController extends Controller
         $resources = SiteContentService::getAllResources();
         $blogs = SiteContentService::getAllBlogs();
 
-        return view('backend.dashboard', compact('courses', 'tests', 'resources', 'blogs'));
+        $hasAttempts = Schema::hasTable('test_attempts');
+
+        $totalStudents = User::where('role', 'student')->count();
+        $totalAttempts = $hasAttempts ? TestAttempt::count() : 0;
+        $totalDownloads = ElibraryResource::sum('downloads');
+
+        $recentAttempts = $hasAttempts
+            ? TestAttempt::with('user')->orderByDesc('created_at')->limit(4)->get()
+            : collect();
+
+        $examCounts = User::where('role', 'student')
+            ->selectRaw('LOWER(COALESCE(target_exam, ?)) as exam, COUNT(*) as total', ['mdcat'])
+            ->groupBy('exam')
+            ->pluck('total', 'exam')
+            ->toArray();
+
+        $examBuckets = ['mdcat' => 0, 'nums' => 0, 'army' => 0];
+        foreach ($examCounts as $exam => $count) {
+            $key = 'mdcat';
+            if (str_contains((string) $exam, 'nums')) {
+                $key = 'nums';
+            } elseif (str_contains((string) $exam, 'army') || str_contains((string) $exam, 'amc')) {
+                $key = 'army';
+            }
+            $examBuckets[$key] += (int) $count;
+        }
+        $examTotal = array_sum($examBuckets);
+        $examDistribution = [];
+        foreach ($examBuckets as $key => $count) {
+            $examDistribution[$key] = $examTotal > 0 ? (int) round(($count / $examTotal) * 100) : 0;
+        }
+
+        $months = collect();
+        for ($i = 6; $i >= 0; $i--) {
+            $months->push(now()->startOfMonth()->subMonths($i));
+        }
+        $attemptSeries = $months->map(function ($month) use ($hasAttempts) {
+            return $hasAttempts
+                ? TestAttempt::whereBetween('created_at', [$month, $month->copy()->endOfMonth()])->count()
+                : 0;
+        })->all();
+        $studentSeries = $months->map(function ($month) {
+            return User::where('role', 'student')
+                ->whereBetween('created_at', [$month, $month->copy()->endOfMonth()])
+                ->count();
+        })->all();
+
+        $chartData = [
+            'labels' => $months->map(fn ($m) => $m->format('M'))->all(),
+            'attempts' => $attemptSeries,
+            'students' => $studentSeries,
+            'exam_distribution' => array_values($examDistribution),
+            'exam_labels' => ['MDCAT', 'NUMS', 'Army/AMC'],
+        ];
+
+        return view('backend.dashboard', compact(
+            'courses', 'tests', 'resources', 'blogs',
+            'totalStudents', 'totalAttempts', 'totalDownloads',
+            'recentAttempts', 'examDistribution', 'chartData'
+        ));
     }
 
     /**
@@ -437,34 +499,74 @@ class AdminController extends Controller
             'title' => 'required|string|max:255',
             'category' => 'required|string|max:60',
             'subject' => 'nullable|string|max:80',
+            'file' => 'nullable|file|max:20480|mimes:pdf,doc,docx,ppt,pptx,zip',
         ]);
 
         $slug = $request->input('slug') ?: Str::slug($request->title);
 
-        ElibraryResource::updateOrCreate(
-            ['slug' => $slug],
-            [
-                'title' => $request->title,
-                'category' => strtolower($request->category),
-                'exam_category' => strtolower($request->input('exam_category', $request->category)),
-                'category_name' => ucwords(str_replace('-', ' ', $request->category)),
-                'subject' => $request->input('subject', 'All Subjects'),
-                'badge' => $request->input('badge', 'Free PDF'),
-                'pages' => $request->input('pages', '60 Pages'),
-                'size' => $request->input('size', '4.2 MB'),
-                'description' => $request->input('description', 'Official study guide and notes.'),
-                'file_name' => $slug . '.pdf',
-                'is_active' => true,
-            ]
-        );
+        $data = [
+            'title' => $request->title,
+            'category' => strtolower($request->category),
+            'exam_category' => strtolower($request->input('exam_category', $request->category)),
+            'category_name' => ucwords(str_replace('-', ' ', $request->category)),
+            'subject' => $request->input('subject', 'All Subjects'),
+            'badge' => $request->input('badge', 'Free PDF'),
+            'pages' => $request->input('pages', '60 Pages'),
+            'size' => $request->input('size', '4.2 MB'),
+            'description' => $request->input('description', 'Official study guide and notes.'),
+            'file_name' => $slug . '.pdf',
+            'is_active' => true,
+        ];
+
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $dir = public_path('uploads/elibrary');
+            if (! is_dir($dir)) {
+                mkdir($dir, 0775, true);
+            }
+
+            $storedName = $slug . '-' . Str::lower(Str::random(8)) . '.' . strtolower($file->getClientOriginalExtension());
+            $sizeBytes = (int) $file->getSize();
+            $file->move($dir, $storedName);
+
+            $data['file_name'] = $file->getClientOriginalName();
+            $data['file_path'] = 'uploads/elibrary/' . $storedName;
+            $data['size'] = $this->humanFileSize($sizeBytes);
+        }
+
+        ElibraryResource::updateOrCreate(['slug' => $slug], $data);
 
         return redirect()->route('admin.elibrary')->with('success', 'Resource "' . $request->title . '" published!');
     }
 
     public function deleteResource($slug)
     {
-        ElibraryResource::where('slug', $slug)->delete();
+        $resource = ElibraryResource::where('slug', $slug)->first();
+
+        if ($resource) {
+            $path = (string) $resource->file_path;
+            if ($path !== '' && str_starts_with(str_replace('\\', '/', $path), 'uploads/elibrary/')) {
+                $absolute = public_path($path);
+                if (is_file($absolute)) {
+                    @unlink($absolute);
+                }
+            }
+            $resource->delete();
+        }
+
         return redirect()->route('admin.elibrary')->with('success', 'E-Library resource deleted.');
+    }
+
+    protected function humanFileSize(int $bytes): string
+    {
+        if ($bytes < 1024) {
+            return $bytes . ' B';
+        }
+        if ($bytes < 1048576) {
+            return round($bytes / 1024, 1) . ' KB';
+        }
+
+        return round($bytes / 1048576, 1) . ' MB';
     }
 
     /**
@@ -533,9 +635,36 @@ class AdminController extends Controller
     /**
      * Manage Enrolled Students
      */
-    public function students()
+    public function students(Request $request)
     {
-        return view('backend.students.index');
+        $search = trim((string) $request->query('search', ''));
+        $hasAttempts = Schema::hasTable('test_attempts');
+
+        $query = User::query()->where('role', 'student');
+
+        if ($search !== '') {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                    ->orWhere('email', 'like', '%' . $search . '%');
+            });
+        }
+
+        if ($hasAttempts) {
+            $query->withCount('testAttempts')
+                ->withAvg('testAttempts', 'percentage')
+                ->withMax('testAttempts', 'percentage');
+        }
+
+        $students = $query->orderByDesc('created_at')->paginate(15)->withQueryString();
+
+        $totals = [
+            'students' => User::where('role', 'student')->count(),
+            'attempts' => $hasAttempts ? TestAttempt::count() : 0,
+            'avg_score' => $hasAttempts ? round((float) TestAttempt::avg('percentage'), 1) : 0.0,
+            'active_today' => $hasAttempts ? TestAttempt::whereDate('created_at', today())->distinct('user_id')->count('user_id') : 0,
+        ];
+
+        return view('backend.students.index', compact('students', 'totals', 'search'));
     }
 
     /**

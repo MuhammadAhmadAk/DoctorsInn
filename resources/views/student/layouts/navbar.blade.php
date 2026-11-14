@@ -1,3 +1,18 @@
+@php
+    $navbarStreak = 0;
+    $navbarUnread = 0;
+    $navbarUser = auth()->user();
+    if ($navbarUser) {
+        try {
+            $navbarMetrics = app(\App\Services\StudentMetricsService::class);
+            $navbarStreak = $navbarMetrics->stats($navbarUser->id)['study_streak_days'];
+            $navbarUnread = $navbarMetrics->unreadNotifications($navbarUser->id);
+        } catch (\Throwable $e) {
+            $navbarStreak = 0;
+            $navbarUnread = 0;
+        }
+    }
+@endphp
 <header class="student-navbar">
     <!-- Left: Mobile Toggle & Study Streak -->
     <div class="d-flex align-items-center gap-3">
@@ -8,7 +23,7 @@
         <div class="d-none d-sm-flex align-items-center gap-2">
             <span class="navbar-streak-pill">
                 <i class="fa-solid fa-fire text-warning"></i>
-                <span>5-Day Study Streak</span>
+                <span>{{ $navbarStreak }}-Day Study Streak</span>
             </span>
         </div>
     </div>
@@ -36,7 +51,9 @@
         <!-- Notifications -->
         <a href="{{ route('notifications') }}" class="btn btn-sm position-relative rounded-circle border bg-white" title="Notifications" style="width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; border-color: var(--std-border) !important;">
             <i class="fa-regular fa-bell text-secondary" style="font-size: 15px;"></i>
-            <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"></span>
+            @if ($navbarUnread > 0)
+                <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"></span>
+            @endif
         </a>
 
         <!-- Profile Dropdown -->

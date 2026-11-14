@@ -255,7 +255,7 @@ class SiteCmsSeeder extends Seeder
                     'format' => $res['format'] ?? 'PDF',
                     'pages' => $res['pages'] ?? '60 Pages',
                     'size' => $res['size'] ?? '4.0 MB',
-                    'downloads' => $res['downloads'] ?? '2.5k+',
+                    'downloads' => $this->downloadsToInt($res['downloads'] ?? 0),
                     'rating' => $res['rating'] ?? '4.9',
                     'image' => $res['image'] ?? 'frontend/img/course/course1-1.jpg',
                     'description' => $res['description'] ?? '',
@@ -265,6 +265,19 @@ class SiteCmsSeeder extends Seeder
                 ]
             );
         }
+    }
+
+    protected function downloadsToInt(mixed $value): int
+    {
+        preg_match('/([\d.]+)\s*([km]?)/i', (string) $value, $match);
+
+        $multiplier = match (strtolower($match[2] ?? '')) {
+            'm' => 1000000,
+            'k' => 1000,
+            default => 1,
+        };
+
+        return (int) round((float) ($match[1] ?? 0) * $multiplier);
     }
 
     protected function seedInstructors(): void

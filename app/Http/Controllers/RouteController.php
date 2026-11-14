@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ElibraryResource;
+use App\Models\MockTest;
+use App\Models\Notification;
+use App\Models\TestAttempt;
 use App\Services\SiteContentService;
 use Illuminate\Http\Request;
 
@@ -107,24 +111,51 @@ class RouteController extends Controller
         }
 
         $fileName = $found['file_name'] ?? ($found['slug'] . '.pdf');
-        $title = $found['title'] ?? 'DoctorsInn E-Library Resource';
+        $absolute = $this->resolveResourcePath($found['file_path'] ?? '', $found['slug'] ?? $slug);
 
-        // Sample valid PDF stream for instant download
-        $pdfContent = "%PDF-1.4\n" .
-            "1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj\n" .
-            "2 0 obj<</Type/Pages/Kids[3 0 R]/Count 1>>endobj\n" .
-            "3 0 obj<</Type/Page/MediaBox[0 0 612 792]/Parent 2 0 R/Resources<</Font<</F1 5 0 R>>>>/Contents 4 0 R>>endobj\n" .
-            "4 0 obj<</Length 180>>stream\n" .
-            "BT /F1 18 Tf 50 720 Td (DoctorsInn Free Study Material) Tj /F1 12 Tf 50 690 Td (" . addslashes(substr($title, 0, 60)) . ") Tj /F1 10 Tf 50 660 Td (Visit www.doctorsinn.pk for full video lectures and practice tests.) Tj ET\n" .
-            "endstream\nendobj\n" .
-            "5 0 obj<</Type/Font/Subtype/Type1/BaseFont/Helvetica>>endobj\n" .
-            "xref\n0 6\n0000000000 65535 f\n0000000009 00000 n\n0000000056 00000 n\n0000000111 00000 n\n0000000224 00000 n\n0000000455 00000 n\n" .
-            "trailer<</Size 6/Root 1 0 R>>\nstartxref\n526\n%%EOF";
+        if (! $absolute) {
+            return redirect()->route('e-library')
+                ->with('error', 'This resource file is not available yet. Please check back soon.');
+        }
 
-        return response($pdfContent, 200, [
-            'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
-        ]);
+        ElibraryResource::where('slug', $found['slug'])->increment('downloads');
+        SiteContentService::flushCache();
+
+        return response()->download($absolute, $fileName);
+    }
+
+    /**
+     * Resolve an e-library file path inside public/ and reject anything else.
+     */
+    protected function resolveResourcePath(string $filePath, string $slug): ?string
+    {
+        $publicRoot = realpath(public_path());
+        if (! $publicRoot) {
+            return null;
+        }
+
+        $candidates = [];
+
+        if ($filePath !== '') {
+            $candidates[] = preg_match('#^([A-Za-z]:|/)#', $filePath) ? $filePath : public_path($filePath);
+        }
+
+        // Legacy storage location used before the admin upload field existed.
+        $candidates[] = public_path('uploads/elibrary/' . $slug . '.pdf');
+        $candidates[] = public_path('uploads/elibrary/' . $filePath);
+
+        foreach ($candidates as $candidate) {
+            if ($candidate === '' || ! is_file($candidate)) {
+                continue;
+            }
+
+            $real = realpath($candidate);
+            if ($real && str_starts_with(str_replace('\\', '/', $real), str_replace('\\', '/', $publicRoot))) {
+                return $real;
+            }
+        }
+
+        return null;
     }
 
     // Courses
@@ -210,33 +241,12 @@ class RouteController extends Controller
         return view('frontend.pages.courses.checkout', compact('course'));
     }
 
-    // Authentication
-    public function Frontend_ForgotPassword()
-    {
-        return view('frontend.pages.authentication.forgot-password');
-    }
-
-    public function Frontend_VerifyCode()
-    {
-        return view('frontend.pages.authentication.verify-code');
-    }
-
-    public function Frontend_ResetPassword()
-    {
-        return view('frontend.pages.authentication.reset-password');
-    }
-
     // User Account
     public function Frontend_Profile()
     {
         $courses = SiteContentService::getAllCourses();
 
         return view('frontend.pages.authentication.profile', compact('courses'));
-    }
-
-    public function Frontend_Notifications()
-    {
-        return view('frontend.pages.notifications');
     }
 
     // Blogs
@@ -495,13 +505,30 @@ class RouteController extends Controller
         $passingPercentage = $test['passing_percentage'] ?? 70;
         $passed = $percentage >= $passingPercentage;
 
-        $mins = floor($timeSpentSeconds / 60);
-        $secs = $timeSpentSeconds % 60;
-        $formattedTime = sprintf('%02d:%02d mins', $mins, $secs);
+        $subjectStats = [];
+        foreach ($breakdown as $item) {
+            $subject = trim((string) ($item['question']['subject'] ?? 'General')) ?: 'General';
 
-        $resultData = [
-            'test' => $test,
-            'user' => $user,
+            if (! isset($subjectStats[$subject])) {
+                $subjectStats[$subject] = ['attempted' => 0, 'correct' => 0];
+            }
+
+            if (! $item['is_skipped']) {
+                $subjectStats[$subject]['attempted']++;
+            }
+            if ($item['is_correct']) {
+                $subjectStats[$subject]['correct']++;
+            }
+        }
+
+        $attempt = TestAttempt::create([
+            'user_id' => $user->id,
+            // Config-based tests have no DB row, so only link a real mock_tests id.
+            'mock_test_id' => MockTest::where('slug', $test['slug'] ?? $slug)->value('id'),
+            'test_slug' => $test['slug'] ?? $slug,
+            'test_title' => $test['title'] ?? 'Mock Test',
+            'test_category_name' => $test['category_name'] ?? 'MDCAT',
+            'marks_per_question' => (int) $marksPerQ,
             'total_questions' => $totalQuestions,
             'correct_count' => $correctCount,
             'incorrect_count' => $incorrectCount,
@@ -510,10 +537,59 @@ class RouteController extends Controller
             'total_marks' => $totalMarks,
             'percentage' => $percentage,
             'passed' => $passed,
-            'passing_percentage' => $passingPercentage,
-            'time_spent' => $formattedTime,
+            'passing_percentage' => (int) $passingPercentage,
+            'time_spent_seconds' => max(0, $timeSpentSeconds),
             'breakdown' => $breakdown,
-            'submitted_at' => now()->format('d M, Y — h:i A'),
+            'subject_stats' => $subjectStats,
+        ]);
+
+        Notification::create([
+            'user_id' => $user->id,
+            'type' => 'result',
+            'title' => 'Mock test completed: ' . ($test['title'] ?? 'Mock Test'),
+            'message' => "You scored {$score}/{$totalMarks} ({$percentage}%)" . ($passed ? ' — Passed.' : ' — Needs review.'),
+            'url' => route('test.result', $attempt->id),
+        ]);
+
+        return redirect()->route('test.result', $attempt->id);
+    }
+
+    /**
+     * Stored attempt result (survives refreshes and is linked from history).
+     */
+    public function Frontend_TestResult(Request $request, TestAttempt $attempt)
+    {
+        $user = auth()->user();
+
+        if (! $user || (int) $attempt->user_id !== (int) $user->id) {
+            abort(403, 'You are not allowed to view this result.');
+        }
+
+        $mins = intdiv((int) $attempt->time_spent_seconds, 60);
+        $secs = (int) $attempt->time_spent_seconds % 60;
+
+        $test = [
+            'slug' => $attempt->test_slug,
+            'title' => $attempt->test_title,
+            'category_name' => $attempt->test_category_name,
+            'marks_per_question' => (int) $attempt->marks_per_question,
+        ];
+
+        $resultData = [
+            'test' => $test,
+            'user' => ['name' => $user->name],
+            'total_questions' => (int) $attempt->total_questions,
+            'correct_count' => (int) $attempt->correct_count,
+            'incorrect_count' => (int) $attempt->incorrect_count,
+            'skipped_count' => (int) $attempt->skipped_count,
+            'score' => (int) $attempt->score,
+            'total_marks' => (int) $attempt->total_marks,
+            'percentage' => (int) round($attempt->percentage),
+            'passed' => (bool) $attempt->passed,
+            'passing_percentage' => (int) $attempt->passing_percentage,
+            'time_spent' => sprintf('%02d:%02d mins', $mins, $secs),
+            'breakdown' => $attempt->breakdown ?? [],
+            'submitted_at' => $attempt->created_at?->format('d M, Y — h:i A') ?? '',
         ];
 
         return view('frontend.pages.tests.test-result', compact('resultData', 'test'));

@@ -142,10 +142,22 @@
                             <div class="header-profile-wrap">
                                 @if ($currentUser)
                                     {{-- Authenticated Student Profile & Dropdown --}}
+                                    @php
+                                        $headerUnread = 0;
+                                        if (!empty($currentUser->id)) {
+                                            try {
+                                                $headerUnread = app(\App\Services\StudentMetricsService::class)->unreadNotifications((int) $currentUser->id);
+                                            } catch (\Throwable $e) {
+                                                $headerUnread = 0;
+                                            }
+                                        }
+                                    @endphp
                                     <div class="header-profile-controls d-inline-flex align-items-center" style="gap: 10px;">
                                         <a href="{{ route('notifications') }}" class="notification-btn" title="Notifications" style="width: 38px !important; height: 38px !important; min-width: 38px !important; border-radius: 50% !important; background-color: #ffffff !important; border: 1.5px solid #e2e8f0 !important; color: #475569 !important; display: inline-flex !important; align-items: center !important; justify-content: center !important; position: relative !important; text-decoration: none !important; box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;">
                                             <i class="fa-regular fa-bell" style="font-size: 15px !important; color: #475569 !important;"></i>
-                                            <span class="notification-dot" style="position: absolute !important; top: 8px !important; right: 9px !important; width: 7px !important; height: 7px !important; background-color: #ef4444 !important; border-radius: 50% !important; border: 1.5px solid #ffffff !important;"></span>
+                                            @if ($headerUnread > 0)
+                                                <span class="notification-dot" style="position: absolute !important; top: 8px !important; right: 9px !important; width: 7px !important; height: 7px !important; background-color: #ef4444 !important; border-radius: 50% !important; border: 1.5px solid #ffffff !important;"></span>
+                                            @endif
                                         </a>
 
                                         {{-- Clickable Circular Profile Avatar (Strict 38px Pure Circle) --}}

@@ -1,6 +1,6 @@
 @extends('frontend.layouts.auth')
 @section('title', 'Forgot Password | DoctorsInnElite')
-@section('meta_description', 'Reset your DoctorsInnElite account password quickly and securely. Enter your email to receive a password reset link.')
+@section('meta_description', 'Reset your DoctorsInnElite account password quickly and securely. Enter your email to receive a password reset code.')
 @section('meta_keywords', 'DoctorsInnElite forgot password, reset password, account recovery')
 @section('content')
 
@@ -10,15 +10,33 @@
                 <div class="col-xl-6 col-lg-8">
                     <div class="contact-page-form-wrap">
                         <div class="contact-form contact-page-form">
-                            <form action="{{ route('verify-code') }}" method="POST" class="contact-form">
+                            <form action="{{ route('forgot-password.submit') }}" method="POST" class="contact-form">
+                                @csrf
                                 <div class="auth-form-header text-center mb-4">
                                     <h3 class="auth-form-title">Recover Password</h3>
                                     <p class="auth-form-desc">Enter your email address and we'll send you a verification code to reset your password.</p>
                                 </div>
+
+                                @if (session('error'))
+                                    <div class="alert alert-danger py-2 px-3 mb-3" style="font-size: 13px; border-radius: 8px;">
+                                        <i class="fal fa-circle-exclamation me-1"></i>{{ session('error') }}
+                                    </div>
+                                @endif
+                                @if (session('success'))
+                                    <div class="alert alert-success py-2 px-3 mb-3" style="font-size: 13px; border-radius: 8px;">
+                                        <i class="fal fa-circle-check me-1"></i>{{ session('success') }}
+                                    </div>
+                                @endif
+                                @if ($errors->any())
+                                    <div class="alert alert-danger py-2 px-3 mb-3" style="font-size: 13px; border-radius: 8px;">
+                                        {{ $errors->first() }}
+                                    </div>
+                                @endif
+
                                 <div class="row">
                                     <div class="col-12 form-group style-border3">
-                                        <input type="email" name="email" id="email"
-                                            placeholder="Your Email Address" class="form-control" required>
+                                        <input type="email" name="email" id="email" value="{{ old('email', session('password_reset_email')) }}"
+                                            placeholder="Your Email Address" class="form-control" required autocomplete="email">
                                         <i class="fal fa-envelope"></i>
                                     </div>
                                     <div class="form-btn col-12">

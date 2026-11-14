@@ -8,6 +8,10 @@ return new class extends Migration
 {
     public function up(): void
     {
+        if (Schema::hasTable('mock_tests')) {
+            return;
+        }
+
         Schema::create('mock_tests', function (Blueprint $table) {
             $table->id();
             $table->string('slug', 160)->unique();

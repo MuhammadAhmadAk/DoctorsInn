@@ -10,16 +10,43 @@
                 <div class="col-xl-6 col-lg-8">
                     <div class="contact-page-form-wrap">
                         <div class="contact-form contact-page-form">
-                            <form action="{{ route('reset-password') }}" method="GET" class="contact-form">
+                            <form action="{{ route('verify-code.submit') }}" method="POST" class="contact-form">
+                                @csrf
                                 <div class="auth-form-header text-center mb-4">
                                     <h3 class="auth-form-title">Enter Code</h3>
-                                    <p class="auth-form-desc">We have sent a verification code to your email. Please enter
-                                        the 6-digit code below.</p>
+                                    <p class="auth-form-desc">
+                                        We have sent a verification code to <strong>{{ $email ?? session('password_reset_email') }}</strong>.
+                                        Please enter the 6-digit code below.
+                                    </p>
                                 </div>
+
+                                @if (session('error'))
+                                    <div class="alert alert-danger py-2 px-3 mb-3" style="font-size: 13px; border-radius: 8px;">
+                                        <i class="fal fa-circle-exclamation me-1"></i>{{ session('error') }}
+                                    </div>
+                                @endif
+                                @if (session('success'))
+                                    <div class="alert alert-success py-2 px-3 mb-3" style="font-size: 13px; border-radius: 8px;">
+                                        <i class="fal fa-circle-check me-1"></i>{{ session('success') }}
+                                    </div>
+                                @endif
+                                @if (session('dev_code'))
+                                    <div class="alert alert-info py-2 px-3 mb-3" style="font-size: 13px; border-radius: 8px;">
+                                        <i class="fal fa-info-circle me-1"></i>
+                                        Email delivery is not configured on this server. Your code is
+                                        <strong style="letter-spacing: 2px;">{{ session('dev_code') }}</strong>
+                                    </div>
+                                @endif
+                                @if ($errors->any())
+                                    <div class="alert alert-danger py-2 px-3 mb-3" style="font-size: 13px; border-radius: 8px;">
+                                        {{ $errors->first() }}
+                                    </div>
+                                @endif
+
                                 <div class="row">
                                     <div class="col-12 form-group style-border3">
-                                        <input type="number" name="code" id="code"
-                                            placeholder="Enter Verification Code" class="form-control" required>
+                                        <input type="text" name="code" id="code" inputmode="numeric" pattern="[0-9]{6}" maxlength="6"
+                                            placeholder="Enter Verification Code" class="form-control" required autocomplete="one-time-code">
                                         <i class="fal fa-key"></i>
                                     </div>
                                     <div class="form-btn col-12">

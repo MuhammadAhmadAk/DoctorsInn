@@ -32,8 +32,11 @@
         <h2 class="adm-card-title"><i class="fa-solid fa-book-medical text-primary"></i> Add E-Library Resource</h2>
     </div>
     <div class="adm-card-body">
-        <form action="{{ route('admin.elibrary.store') }}" method="POST">
+        <form action="{{ route('admin.elibrary.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
+            @if ($errors->any())
+                <div class="alert alert-danger py-2 px-3 mb-3" style="font-size: 12.5px;">{{ $errors->first() }}</div>
+            @endif
             <div class="row g-3">
                 <div class="col-md-5">
                     <label class="form-label small fw-bold">Resource Title</label>
@@ -56,6 +59,14 @@
                 <div class="col-md-2">
                     <label class="form-label small fw-bold">Size</label>
                     <input type="text" name="size" class="form-control" value="4.2 MB">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label small fw-bold">Resource File <span class="text-muted fw-normal">(PDF/DOC/PPT/ZIP, max 20 MB)</span></label>
+                    <input type="file" name="file" class="form-control" accept=".pdf,.doc,.docx,.ppt,.pptx,.zip">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label small fw-bold">Pages</label>
+                    <input type="text" name="pages" class="form-control" value="60 Pages">
                 </div>
                 <div class="col-12">
                     <label class="form-label small fw-bold">Description</label>
@@ -110,6 +121,9 @@
                     <td>
                         <span class="fw-bold text-dark">{{ $res['size'] ?? ($res['file_size'] ?? '4.2 MB') }}</span>
                         <div class="small text-muted">{{ $res['pages'] ?? '85 Pages' }} • PDF</div>
+                        @if (empty($res['file_path']))
+                            <span class="adm-badge adm-badge-warning" style="font-size: 10.5px;">No file uploaded</span>
+                        @endif
                     </td>
                     <td>
                         <span class="fw-bold text-primary">{{ $res['downloads'] ?? ($res['downloads_count'] ?? '2.5k+') }}</span>

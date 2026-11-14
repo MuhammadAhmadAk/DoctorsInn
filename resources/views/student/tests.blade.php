@@ -77,7 +77,7 @@
                     <i class="fa-solid fa-clipboard-check"></i>
                 </div>
                 <div>
-                    <div class="std-kpi-val">6</div>
+                    <div class="std-kpi-val">{{ $stats['tests_completed'] }}</div>
                     <div class="std-kpi-lbl">Tests Attempted</div>
                 </div>
             </div>
@@ -89,7 +89,7 @@
                     <i class="fa-solid fa-chart-line"></i>
                 </div>
                 <div>
-                    <div class="std-kpi-val">78.5%</div>
+                    <div class="std-kpi-val">{{ $stats['avg_score'] }}%</div>
                     <div class="std-kpi-lbl">Average Score</div>
                 </div>
             </div>
@@ -101,7 +101,7 @@
                     <i class="fa-solid fa-trophy text-warning"></i>
                 </div>
                 <div>
-                    <div class="std-kpi-val">90%</div>
+                    <div class="std-kpi-val">{{ $stats['highest_score'] }}%</div>
                     <div class="std-kpi-lbl">Highest Score</div>
                 </div>
             </div>

@@ -27,10 +27,10 @@
         <div class="stat-card">
             <div class="stat-info">
                 <div class="label">Total Enrolled Students</div>
-                <h3 class="number">1,482</h3>
+                <h3 class="number">{{ number_format($totalStudents) }}</h3>
                 <div class="growth up">
                     <i class="fa-solid fa-arrow-trend-up"></i>
-                    <span>+14.8% vs last month</span>
+                    <span>{{ array_sum($chartData['students']) }} joined in last 7 months</span>
                 </div>
             </div>
             <div class="stat-icon primary">
@@ -61,10 +61,10 @@
         <div class="stat-card">
             <div class="stat-info">
                 <div class="label">Mock Tests Attempted</div>
-                <h3 class="number">8,940</h3>
+                <h3 class="number">{{ number_format($totalAttempts) }}</h3>
                 <div class="growth up">
                     <i class="fa-solid fa-arrow-trend-up"></i>
-                    <span>+32.4% exam surge</span>
+                    <span>{{ array_sum($chartData['attempts']) }} attempts in last 7 months</span>
                 </div>
             </div>
             <div class="stat-icon success">
@@ -78,10 +78,10 @@
         <div class="stat-card">
             <div class="stat-info">
                 <div class="label">E-Library Downloads</div>
-                <h3 class="number">24.6k</h3>
+                <h3 class="number">{{ number_format($totalDownloads) }}</h3>
                 <div class="growth up">
-                    <i class="fa-solid fa-arrow-trend-up"></i>
-                    <span>+18.1% this week</span>
+                    <i class="fa-solid fa-file-pdf"></i>
+                    <span>Tracked across all resources</span>
                 </div>
             </div>
             <div class="stat-icon info">
@@ -127,19 +127,14 @@
                 <div style="height: 180px; width: 100%; position: relative;">
                     <canvas id="examDistChart"></canvas>
                 </div>
+                @php $examColors = ['#5C32FF', '#EFAC06', '#10B981']; @endphp
                 <div class="d-flex justify-content-around w-100 mt-2 text-center">
-                    <div>
-                        <div class="fw-bold" style="color: #5C32FF;">58%</div>
-                        <div class="small text-muted" style="font-size: 11px;">MDCAT</div>
-                    </div>
-                    <div>
-                        <div class="fw-bold" style="color: #EFAC06;">27%</div>
-                        <div class="small text-muted" style="font-size: 11px;">NUMS</div>
-                    </div>
-                    <div>
-                        <div class="fw-bold" style="color: #10B981;">15%</div>
-                        <div class="small text-muted" style="font-size: 11px;">Army / AMC</div>
-                    </div>
+                    @foreach ($chartData['exam_labels'] as $i => $label)
+                        <div>
+                            <div class="fw-bold" style="color: {{ $examColors[$i] ?? '#64748b' }};">{{ $chartData['exam_distribution'][$i] ?? 0 }}%</div>
+                            <div class="small text-muted" style="font-size: 11px;">{{ $label }}</div>
+                        </div>
+                    @endforeach
                 </div>
             </div>
         </div>
@@ -170,94 +165,40 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @forelse ($recentAttempts as $attempt)
                         <tr>
                             <td>
                                 <div class="item-thumb-box">
-                                    <img src="{{ asset('frontend/img/team/team_2_1.jpg') }}" alt="Student">
+                                    <img src="{{ asset($attempt->user->avatar ?? 'frontend/img/testimonial/testi_2_1.png') }}" alt="Student">
                                     <div>
-                                        <div class="title">Usman Tariq</div>
-                                        <div class="subtitle">usman.tariq@gmail.com</div>
+                                        <div class="title">{{ $attempt->user->name ?? 'Student' }}</div>
+                                        <div class="subtitle">{{ $attempt->user->email ?? '—' }}</div>
                                     </div>
                                 </div>
                             </td>
                             <td>
-                                <span class="fw-bold text-dark">MDCAT Grand Mock #1</span>
-                                <div class="small text-muted">200 MCQs • 3.5 hrs</div>
+                                <span class="fw-bold text-dark">{{ Str::limit($attempt->test_title, 28) }}</span>
+                                <div class="small text-muted">{{ $attempt->total_questions }} MCQs • {{ $attempt->created_at?->diffForHumans() }}</div>
                             </td>
-                            <td><span class="fw-bold text-dark">184 / 200</span> (92%)</td>
-                            <td><span class="adm-badge adm-badge-success">Passed</span></td>
+                            <td><span class="fw-bold text-dark">{{ (int) $attempt->score }} / {{ (int) $attempt->total_marks }}</span> ({{ (int) round($attempt->percentage) }}%)</td>
+                            <td>
+                                @if ($attempt->passed)
+                                    <span class="adm-badge adm-badge-success">Passed</span>
+                                @else
+                                    <span class="adm-badge adm-badge-warning">Retake Needed</span>
+                                @endif
+                            </td>
                             <td>
                                 <div class="table-actions">
-                                    <a href="#" class="action-btn" title="View Breakdown"><i class="fa-solid fa-eye"></i></a>
+                                    <a href="{{ route('admin.students', ['search' => $attempt->user->email ?? '']) }}" class="action-btn" title="View Student"><i class="fa-solid fa-eye"></i></a>
                                 </div>
                             </td>
                         </tr>
+                        @empty
                         <tr>
-                            <td>
-                                <div class="item-thumb-box">
-                                    <img src="{{ asset('frontend/img/team/team_2_4.jpg') }}" alt="Student">
-                                    <div>
-                                        <div class="title">Ali Hassan</div>
-                                        <div class="subtitle">ali.hassan@gmail.com</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="fw-bold text-dark">NUMS Biology Special</span>
-                                <div class="small text-muted">80 MCQs • 1.5 hrs</div>
-                            </td>
-                            <td><span class="fw-bold text-dark">71 / 80</span> (88.7%)</td>
-                            <td><span class="adm-badge adm-badge-success">Passed</span></td>
-                            <td>
-                                <div class="table-actions">
-                                    <a href="#" class="action-btn" title="View Breakdown"><i class="fa-solid fa-eye"></i></a>
-                                </div>
-                            </td>
+                            <td colspan="5" class="text-center py-3 text-muted">No mock test submissions yet.</td>
                         </tr>
-                        <tr>
-                            <td>
-                                <div class="item-thumb-box">
-                                    <img src="{{ asset('frontend/img/testimonial/testi_2_1.png') }}" alt="Student">
-                                    <div>
-                                        <div class="title">Fahad Noor</div>
-                                        <div class="subtitle">fahad.noor@yahoo.com</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="fw-bold text-dark">AMC High-Yield Physics</span>
-                                <div class="small text-muted">50 MCQs • 1 hr</div>
-                            </td>
-                            <td><span class="fw-bold text-dark">44 / 50</span> (88%)</td>
-                            <td><span class="adm-badge adm-badge-success">Passed</span></td>
-                            <td>
-                                <div class="table-actions">
-                                    <a href="#" class="action-btn" title="View Breakdown"><i class="fa-solid fa-eye"></i></a>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="item-thumb-box">
-                                    <img src="{{ asset('frontend/img/testimonial/testi_2_2.png') }}" alt="Student">
-                                    <div>
-                                        <div class="title">Zainab Riaz</div>
-                                        <div class="subtitle">zainab.r@gmail.com</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="fw-bold text-dark">MDCAT Full Chemistry</span>
-                                <div class="small text-muted">60 MCQs • 1.2 hrs</div>
-                            </td>
-                            <td><span class="fw-bold text-dark">38 / 60</span> (63.3%)</td>
-                            <td><span class="adm-badge adm-badge-warning">Retake Needed</span></td>
-                            <td>
-                                <div class="table-actions">
-                                    <a href="#" class="action-btn" title="View Breakdown"><i class="fa-solid fa-eye"></i></a>
-                                </div>
-                            </td>
-                        </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
@@ -321,11 +262,11 @@ document.addEventListener('DOMContentLoaded', function () {
     new Chart(ctx1, {
         type: 'line',
         data: {
-            labels: ['May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov'],
+            labels: @json($chartData['labels']),
             datasets: [
                 {
                     label: 'Mock Tests Taken',
-                    data: [1200, 1900, 3100, 5200, 6800, 8100, 8940],
+                    data: @json($chartData['attempts']),
                     borderColor: '#5C32FF',
                     backgroundColor: 'rgba(92, 50, 255, 0.08)',
                     tension: 0.4,
@@ -334,8 +275,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     pointRadius: 4,
                 },
                 {
-                    label: 'Course Enrollments',
-                    data: [350, 480, 690, 940, 1150, 1340, 1482],
+                    label: 'New Students',
+                    data: @json($chartData['students']),
                     borderColor: '#EFAC06',
                     backgroundColor: 'transparent',
                     borderDash: [5, 5],
@@ -363,9 +304,9 @@ document.addEventListener('DOMContentLoaded', function () {
     new Chart(ctx2, {
         type: 'doughnut',
         data: {
-            labels: ['MDCAT', 'NUMS', 'Army/AMC'],
+            labels: @json($chartData['exam_labels']),
             datasets: [{
-                data: [58, 27, 15],
+                data: @json($chartData['exam_distribution']),
                 backgroundColor: ['#5C32FF', '#EFAC06', '#10B981'],
                 borderWidth: 0,
                 hoverOffset: 6

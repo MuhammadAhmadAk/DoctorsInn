@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Backend\AdminController;
 use App\Http\Controllers\Backend\AdminLectureController;
 use App\Http\Controllers\LectureStreamController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\RouteController;
 use Illuminate\Support\Facades\Route;
 
@@ -34,6 +36,7 @@ Route::get('/e-library/download/{slug}', [RouteController::class, 'Frontend_Down
 Route::get('/tests', [RouteController::class, 'Frontend_Tests'])->name('tests');
 Route::get('/test/{slug}', [RouteController::class, 'Frontend_TakeTest'])->name('test.take');
 Route::post('/test/{slug}/submit', [RouteController::class, 'Frontend_SubmitTest'])->name('test.submit');
+Route::get('/test/result/{attempt}', [RouteController::class, 'Frontend_TestResult'])->name('test.result');
 
 // Blog
 Route::get('/blog', [RouteController::class, 'Frontend_Blog'])->name('blog');
@@ -74,9 +77,12 @@ Route::get('/auth/google', [StudentAuthController::class, 'redirectToGoogle'])->
 Route::get('/auth/google/callback', [StudentAuthController::class, 'handleGoogleCallback'])->name('auth.google.callback');
 
 // Password Reset Flow
-Route::get('/forgot-password', [RouteController::class, 'Frontend_ForgotPassword'])->name('forgot-password');
-Route::get('/verify-code', [RouteController::class, 'Frontend_VerifyCode'])->name('verify-code');
-Route::get('/reset-password', [RouteController::class, 'Frontend_ResetPassword'])->name('reset-password');
+Route::get('/forgot-password', [PasswordResetController::class, 'showForgotForm'])->name('forgot-password');
+Route::post('/forgot-password', [PasswordResetController::class, 'sendCode'])->middleware('throttle:5,1')->name('forgot-password.submit');
+Route::get('/verify-code', [PasswordResetController::class, 'showVerifyForm'])->name('verify-code');
+Route::post('/verify-code', [PasswordResetController::class, 'verifyCode'])->middleware('throttle:6,1')->name('verify-code.submit');
+Route::get('/reset-password', [PasswordResetController::class, 'showResetForm'])->name('reset-password');
+Route::post('/reset-password', [PasswordResetController::class, 'resetPassword'])->middleware('throttle:5,1')->name('reset-password.submit');
 
 // User Account & Student LMS Portal
 use App\Http\Controllers\Student\StudentDashboardController;
@@ -112,7 +118,10 @@ Route::get('/dashboard', function () {
 })->name('dashboard');
 
 Route::match(['get', 'post'], '/profile', [RouteController::class, 'Frontend_Profile'])->name('profile');
-Route::get('/notifications', [RouteController::class, 'Frontend_Notifications'])->name('notifications');
+Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications');
+Route::post('/notifications/read-all', [NotificationController::class, 'markAllRead'])->name('notifications.readAll');
+Route::post('/notifications/{notification}/read', [NotificationController::class, 'markRead'])->name('notifications.read');
+Route::delete('/notifications/{notification}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
 
 // Admin Panel Routes
 use App\Http\Controllers\Backend\CmsController;

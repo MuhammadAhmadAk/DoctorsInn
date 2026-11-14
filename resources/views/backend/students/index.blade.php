@@ -6,27 +6,81 @@
 <div class="page-header">
     <div>
         <h1 class="page-title">Enrolled Students & Candidates</h1>
-        <p class="page-subtitle">Track student progress, enrolled batches, mock test scores, and account credentials.</p>
+        <p class="page-subtitle">Track registered students, exam targets, mock test activity, and average scores.</p>
     </div>
     <div class="page-actions">
-        <button class="btn-adm btn-adm-outline">
-            <i class="fa-solid fa-file-excel"></i>
-            <span>Export Roster</span>
-        </button>
-        <button class="btn-adm btn-adm-primary" onclick="alert('Manual Student Enrollment Form opened!')">
-            <i class="fa-solid fa-user-plus"></i>
-            <span>Enroll Student</span>
-        </button>
+        <form action="{{ route('admin.students') }}" method="GET" class="d-flex align-items-center gap-2">
+            <input type="text" name="search" value="{{ $search }}" class="form-control form-control-sm"
+                placeholder="Search name or email…" style="min-width: 220px;">
+            <button type="submit" class="btn-adm btn-adm-outline"><i class="fa-solid fa-magnifying-glass"></i></button>
+            @if ($search !== '')
+                <a href="{{ route('admin.students') }}" class="btn-adm btn-adm-outline" title="Clear search"><i class="fa-solid fa-xmark"></i></a>
+            @endif
+        </form>
     </div>
 </div>
+
+<div class="row g-3 mb-4">
+    <div class="col-sm-6 col-xl-3">
+        <div class="adm-card h-100">
+            <div class="adm-card-body d-flex align-items-center gap-3">
+                <div class="stat-icon info" style="width: 44px; height: 44px; font-size: 18px;"><i class="fa-solid fa-users"></i></div>
+                <div>
+                    <div class="fw-bold text-dark" style="font-size: 20px;">{{ number_format($totals['students']) }}</div>
+                    <div class="small text-muted">Registered Students</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="adm-card h-100">
+            <div class="adm-card-body d-flex align-items-center gap-3">
+                <div class="stat-icon success" style="width: 44px; height: 44px; font-size: 18px;"><i class="fa-solid fa-clipboard-check"></i></div>
+                <div>
+                    <div class="fw-bold text-dark" style="font-size: 20px;">{{ number_format($totals['attempts']) }}</div>
+                    <div class="small text-muted">Mock Test Attempts</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="adm-card h-100">
+            <div class="adm-card-body d-flex align-items-center gap-3">
+                <div class="stat-icon warning" style="width: 44px; height: 44px; font-size: 18px;"><i class="fa-solid fa-chart-line"></i></div>
+                <div>
+                    <div class="fw-bold text-dark" style="font-size: 20px;">{{ $totals['avg_score'] }}%</div>
+                    <div class="small text-muted">Average Test Score</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="adm-card h-100">
+            <div class="adm-card-body d-flex align-items-center gap-3">
+                <div class="stat-icon info" style="width: 44px; height: 44px; font-size: 18px;"><i class="fa-solid fa-bolt"></i></div>
+                <div>
+                    <div class="fw-bold text-dark" style="font-size: 20px;">{{ number_format($totals['active_today']) }}</div>
+                    <div class="small text-muted">Active Today</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if(session('success'))
+<div class="alert alert-success d-flex align-items-center gap-2 py-2 px-3 mb-3 border-0 rounded-3 text-white" style="background: #10B981; font-size: 12.5px;">
+    <i class="fa-solid fa-circle-check"></i>
+    <span>{{ session('success') }}</span>
+</div>
+@endif
 
 <div class="adm-card">
     <div class="adm-card-header">
         <h2 class="adm-card-title">
             <i class="fa-solid fa-users text-primary"></i>
-            Student Directory (1,482 Active)
+            Student Directory ({{ number_format($students->total()) }}{{ $search !== '' ? ' matching "' . $search . '"' : '' }})
         </h2>
-        <span class="adm-badge adm-badge-success">Session 2026</span>
+        <span class="adm-badge adm-badge-success">Live Database</span>
     </div>
     <div class="table-responsive">
         <table class="adm-table">
@@ -34,7 +88,7 @@
                 <tr>
                     <th>Student Name</th>
                     <th>Target Exam</th>
-                    <th>Enrolled Course</th>
+                    <th>Joined</th>
                     <th>Mock Tests Taken</th>
                     <th>Average Score</th>
                     <th>Status</th>
@@ -42,56 +96,74 @@
                 </tr>
             </thead>
             <tbody>
+                @forelse($students as $student)
                 @php
-                $mockStudents = [
-                    ['name' => 'Usman Tariq', 'email' => 'usman.tariq@gmail.com', 'exam' => 'MDCAT 2026', 'course' => 'MDCAT Reboot (60 Days)', 'tests' => 14, 'avg' => '91.2%', 'avatar' => 'team_2_1.jpg'],
-                    ['name' => 'Ali Hassan', 'email' => 'ali.hassan@gmail.com', 'exam' => 'NUMS & AMC', 'course' => 'NUMS Medical Crash Prep', 'tests' => 11, 'avg' => '87.5%', 'avatar' => 'team_2_4.jpg'],
-                    ['name' => 'Fahad Noor', 'email' => 'fahad.noor@yahoo.com', 'exam' => 'MDCAT 2026', 'course' => 'PMC High-Yield Mastery', 'tests' => 9, 'avg' => '84.0%', 'avatar' => 'team_2_1.jpg'],
-                    ['name' => 'Hamza Malik', 'email' => 'hamza.malik@outlook.com', 'exam' => 'Army / AMC', 'course' => 'Army Medical College Elite', 'tests' => 16, 'avg' => '94.0%', 'avatar' => 'team_2_4.jpg'],
-                    ['name' => 'Bilal Ahmed', 'email' => 'bilal.ahmed@gmail.com', 'exam' => 'MDCAT 2026', 'course' => 'MDCAT Comprehensive 2026', 'tests' => 6, 'avg' => '78.5%', 'avatar' => 'team_2_1.jpg'],
-                    ['name' => 'Zain ul Abideen', 'email' => 'zain.abideen@gmail.com', 'exam' => 'MDCAT 2026', 'course' => 'MDCAT Reboot (60 Days)', 'tests' => 12, 'avg' => '89.0%', 'avatar' => 'team_2_4.jpg'],
-                    ['name' => 'Saad Abdullah', 'email' => 'saad.abdullah@gmail.com', 'exam' => 'NUMS & AMC', 'course' => 'NUMS Medical Crash Prep', 'tests' => 10, 'avg' => '82.5%', 'avatar' => 'team_2_1.jpg'],
-                    ['name' => 'Hassan Raza', 'email' => 'hassan.raza@outlook.com', 'exam' => 'MDCAT 2026', 'course' => 'PMC High-Yield Mastery', 'tests' => 15, 'avg' => '90.4%', 'avatar' => 'team_2_4.jpg'],
-                    ['name' => 'Talha Mahmood', 'email' => 'talha.m@gmail.com', 'exam' => 'Army / AMC', 'course' => 'Army Medical College Elite', 'tests' => 8, 'avg' => '79.0%', 'avatar' => 'team_2_1.jpg'],
-                    ['name' => 'Umar Farooq', 'email' => 'umar.farooq@gmail.com', 'exam' => 'MDCAT 2026', 'course' => 'MDCAT Comprehensive 2026', 'tests' => 13, 'avg' => '86.2%', 'avatar' => 'team_2_4.jpg'],
-                    ['name' => 'Daniyal Khan', 'email' => 'daniyal.khan@yahoo.com', 'exam' => 'MDCAT 2026', 'course' => 'MDCAT Reboot (60 Days)', 'tests' => 7, 'avg' => '76.8%', 'avatar' => 'team_2_1.jpg'],
-                    ['name' => 'Salman Qureshi', 'email' => 'salman.q@gmail.com', 'exam' => 'NUMS & AMC', 'course' => 'NUMS Medical Crash Prep', 'tests' => 11, 'avg' => '85.1%', 'avatar' => 'team_2_4.jpg'],
-                ];
+                    $attemptCount = (int) ($student->test_attempts_count ?? 0);
+                    $avgScore = $student->test_attempts_avg_percentage !== null ? round((float) $student->test_attempts_avg_percentage, 1) : null;
+                    $avatar = $student->avatar ?: 'frontend/img/testimonial/testi_2_1.png';
                 @endphp
-
-                @foreach($mockStudents as $st)
                 <tr>
                     <td>
                         <div class="item-thumb-box">
-                            <img src="{{ asset('frontend/img/team/' . $st['avatar']) }}" alt="Avatar">
+                            <img src="{{ asset($avatar) }}" alt="{{ $student->name }}">
                             <div>
-                                <div class="title">{{ $st['name'] }}</div>
-                                <div class="subtitle">{{ $st['email'] }}</div>
+                                <div class="title">{{ $student->name }}</div>
+                                <div class="subtitle">{{ $student->email }}</div>
                             </div>
                         </div>
                     </td>
-                    <td><span class="adm-badge adm-badge-primary">{{ $st['exam'] }}</span></td>
-                    <td><span class="fw-bold text-dark">{{ $st['course'] }}</span></td>
-                    <td><span class="fw-bold text-dark">{{ $st['tests'] }} Tests</span></td>
-                    <td><span class="fw-bold text-success">{{ $st['avg'] }}</span></td>
-                    <td><span class="adm-badge adm-badge-success">Enrolled</span></td>
+                    <td><span class="adm-badge adm-badge-primary">{{ strtoupper($student->target_exam ?: 'MDCAT') }}</span></td>
+                    <td><span class="fw-bold text-dark">{{ $student->created_at?->format('d M Y') ?? '—' }}</span></td>
+                    <td><span class="fw-bold text-dark">{{ $attemptCount }} {{ Str::plural('Test', $attemptCount) }}</span></td>
+                    <td>
+                        @if ($avgScore !== null)
+                            <span class="fw-bold {{ $avgScore >= 70 ? 'text-success' : ($avgScore >= 50 ? 'text-warning' : 'text-danger') }}">{{ $avgScore }}%</span>
+                        @else
+                            <span class="text-muted">—</span>
+                        @endif
+                    </td>
+                    <td>
+                        @if (!empty($student->email_verified_at))
+                            <span class="adm-badge adm-badge-success">Verified</span>
+                        @elseif (!empty($student->google_id))
+                            <span class="adm-badge adm-badge-success">Google</span>
+                        @else
+                            <span class="adm-badge adm-badge-primary">Enrolled</span>
+                        @endif
+                    </td>
                     <td>
                         <div class="table-actions">
-                            <a href="#" class="action-btn" title="View Student Report" onclick="alert('Student Analytics for {{ $st['name'] }}')">
-                                <i class="fa-solid fa-chart-line"></i>
-                            </a>
-                            <a href="#" class="action-btn" title="Send Email" onclick="alert('Message {{ $st['email'] }}')">
+                            <a href="mailto:{{ $student->email }}" class="action-btn" title="Send Email">
                                 <i class="fa-regular fa-envelope"></i>
-                            </a>
-                            <a href="#" class="action-btn" title="Edit Access" onclick="alert('Editing permissions for {{ $st['name'] }}')">
-                                <i class="fa-solid fa-user-pen"></i>
                             </a>
                         </div>
                     </td>
                 </tr>
-                @endforeach
+                @empty
+                <tr>
+                    <td colspan="7" class="text-center text-muted py-4" style="font-size: 13px;">
+                        {{ $search !== '' ? 'No students match your search.' : 'No students have registered yet.' }}
+                    </td>
+                </tr>
+                @endforelse
             </tbody>
         </table>
     </div>
+
+    @if ($students->hasPages())
+        <div class="adm-card-body d-flex align-items-center justify-content-between" style="font-size: 12.5px;">
+            @if ($students->onFirstPage())
+                <span class="text-muted">Previous</span>
+            @else
+                <a href="{{ $students->previousPageUrl() }}" class="text-primary fw-semibold">Previous</a>
+            @endif
+            <span class="text-muted">Page {{ $students->currentPage() }} of {{ $students->lastPage() }}</span>
+            @if ($students->hasMorePages())
+                <a href="{{ $students->nextPageUrl() }}" class="text-primary fw-semibold">Next</a>
+            @else
+                <span class="text-muted">Next</span>
+            @endif
+        </div>
+    @endif
 </div>
 @endsection

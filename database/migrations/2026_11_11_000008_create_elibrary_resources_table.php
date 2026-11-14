@@ -8,6 +8,10 @@ return new class extends Migration
 {
     public function up(): void
     {
+        if (Schema::hasTable('elibrary_resources')) {
+            return;
+        }
+
         Schema::create('elibrary_resources', function (Blueprint $table) {
             $table->id();
             $table->string('slug', 160)->unique();
@@ -20,7 +24,7 @@ return new class extends Migration
             $table->string('format', 20)->default('PDF');
             $table->string('pages', 40)->default('50 Pages');
             $table->string('size', 40)->default('3.5 MB');
-            $table->string('downloads', 30)->default('1.2k+');
+            $table->unsignedInteger('downloads')->default(0);
             $table->string('rating', 12)->default('4.9');
             $table->string('image', 255)->nullable();
             $table->text('description')->nullable();

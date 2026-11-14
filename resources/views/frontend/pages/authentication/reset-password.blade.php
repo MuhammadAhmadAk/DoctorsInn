@@ -10,20 +10,33 @@
                 <div class="col-xl-6 col-lg-8">
                     <div class="contact-page-form-wrap">
                         <div class="contact-form contact-page-form">
-                            <form action="{{ route('login') }}" method="POST" class="contact-form">
+                            <form action="{{ route('reset-password.submit') }}" method="POST" class="contact-form">
+                                @csrf
                                 <div class="auth-form-header text-center mb-4">
                                     <h3 class="auth-form-title">New Password</h3>
                                     <p class="auth-form-desc">Please set a new secure password for your account.</p>
                                 </div>
+
+                                @if (session('error'))
+                                    <div class="alert alert-danger py-2 px-3 mb-3" style="font-size: 13px; border-radius: 8px;">
+                                        <i class="fal fa-circle-exclamation me-1"></i>{{ session('error') }}
+                                    </div>
+                                @endif
+                                @if ($errors->any())
+                                    <div class="alert alert-danger py-2 px-3 mb-3" style="font-size: 13px; border-radius: 8px;">
+                                        {{ $errors->first() }}
+                                    </div>
+                                @endif
+
                                 <div class="row">
                                     <div class="col-12 form-group style-border3">
                                         <input type="password" name="password" id="password"
-                                            placeholder="New Password" class="form-control" required minlength="6">
+                                            placeholder="New Password (min 8 characters)" class="form-control" required minlength="8" autocomplete="new-password">
                                         <i class="fal fa-lock"></i>
                                     </div>
                                     <div class="col-12 form-group style-border3">
-                                        <input type="password" name="confirm_password" id="confirm_password"
-                                            placeholder="Confirm New Password" class="form-control" required minlength="6">
+                                        <input type="password" name="password_confirmation" id="password_confirmation"
+                                            placeholder="Confirm New Password" class="form-control" required minlength="8" autocomplete="new-password">
                                         <i class="fal fa-lock"></i>
                                     </div>
                                     <div class="form-btn col-12">

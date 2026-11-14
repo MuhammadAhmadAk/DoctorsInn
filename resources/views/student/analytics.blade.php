@@ -57,12 +57,16 @@
     <div class="row g-3 mb-4">
         <div class="col-sm-6 col-xl-3">
             <div class="analytics-metric-box">
+                @php
+                    $accuracyBadge = $stats['accuracy_rate'] >= 80 ? ['badge-status-success', 'Excellent'] : ($stats['accuracy_rate'] >= 60 ? ['badge-status-info', 'Good'] : ['badge-status-warning', 'Needs Work']);
+                    $totalAnswered = $stats['correct_mcqs'] + $stats['incorrect_mcqs'] + ($stats['skipped_mcqs'] ?? 0);
+                @endphp
                 <div class="d-flex align-items-center justify-content-between mb-2">
                     <span class="text-xs fw-semibold text-muted">Overall Accuracy</span>
-                    <span class="badge-status badge-status-success">Top 15%</span>
+                    <span class="badge-status {{ $accuracyBadge[0] }}">{{ $accuracyBadge[1] }}</span>
                 </div>
                 <div class="h4 fw-bold text-dark mb-1">{{ $stats['accuracy_rate'] }}%</div>
-                <p class="text-muted text-xs mb-0">{{ $stats['correct_mcqs'] }} of 600 MCQs correct</p>
+                <p class="text-muted text-xs mb-0">{{ $stats['correct_mcqs'] }} of {{ $totalAnswered }} MCQs correct</p>
             </div>
         </div>
 
@@ -73,7 +77,7 @@
                     <span class="badge-status badge-status-primary">Steady</span>
                 </div>
                 <div class="h4 fw-bold text-dark mb-1">{{ $stats['avg_score'] }}%</div>
-                <p class="text-muted text-xs mb-0">Across 6 solved tests</p>
+                <p class="text-muted text-xs mb-0">Across {{ $stats['tests_completed'] }} solved {{ Str::plural('test', $stats['tests_completed']) }}</p>
             </div>
         </div>
 
@@ -81,7 +85,7 @@
             <div class="analytics-metric-box">
                 <div class="d-flex align-items-center justify-content-between mb-2">
                     <span class="text-xs fw-semibold text-muted">Study Hours</span>
-                    <span class="badge-status badge-status-warning">5-Day Streak</span>
+                    <span class="badge-status {{ $stats['study_streak_days'] > 0 ? 'badge-status-warning' : 'badge-status-light' }}">{{ $stats['study_streak_days'] }}-Day Streak</span>
                 </div>
                 <div class="h4 fw-bold text-dark mb-1">{{ $stats['hours_studied'] }} hrs</div>
                 <p class="text-muted text-xs mb-0">Lectures &amp; practice time</p>
@@ -94,8 +98,12 @@
                     <span class="text-xs fw-semibold text-muted">Projected MDCAT</span>
                     <span class="badge-status badge-status-info">Target Ready</span>
                 </div>
-                <div class="h4 fw-bold text-dark mb-1">168 - 176</div>
-                <p class="text-muted text-xs mb-0">Out of 200 (Merit Zone)</p>
+                @php
+                    $projectedLow = (int) max(0, round($stats['avg_score'] * 2) - 4);
+                    $projectedHigh = (int) min(200, round($stats['avg_score'] * 2) + 4);
+                @endphp
+                <div class="h4 fw-bold text-dark mb-1">{{ $projectedLow }} - {{ $projectedHigh }}</div>
+                <p class="text-muted text-xs mb-0">Out of 200 ({{ $stats['avg_score'] >= 85 ? 'Merit Zone' : ($stats['avg_score'] >= 70 ? 'On Track' : 'Building') }})</p>
             </div>
         </div>
     </div>
@@ -115,8 +123,18 @@
 
                 @foreach ($subjectReadiness as $subKey => $subject)
                     @php
-                        $statusClass = $subject['status'] === 'Strong' ? 'badge-status-success' : ($subject['status'] === 'Good' ? 'badge-status-info' : 'badge-status-warning');
-                        $fillClass = $subject['status'] === 'Strong' ? 'fill-success' : ($subject['status'] === 'Good' ? 'fill-info' : 'fill-warning');
+                        $statusClass = match ($subject['status']) {
+                            'Strong' => 'badge-status-success',
+                            'Good' => 'badge-status-info',
+                            'Weak' => 'badge-status-danger',
+                            default => 'badge-status-warning',
+                        };
+                        $fillClass = match ($subject['status']) {
+                            'Strong' => 'fill-success',
+                            'Good' => 'fill-info',
+                            'Weak' => 'fill-danger',
+                            default => 'fill-warning',
+                        };
                     @endphp
                     <div class="subject-stat-card">
                         <div class="d-flex align-items-center justify-content-between mb-1">
@@ -208,9 +226,15 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($recentTestHistory as $test)
+                    @forelse ($recentTestHistory as $test)
                         <tr>
-                            <td class="fw-medium text-dark py-3">{{ $test['title'] }}</td>
+                            <td class="fw-medium text-dark py-3">
+                                @if (!empty($test['url']))
+                                    <a href="{{ $test['url'] }}" class="text-dark text-decoration-none">{{ $test['title'] }}</a>
+                                @else
+                                    {{ $test['title'] }}
+                                @endif
+                            </td>
                             <td class="text-muted text-xs py-3">{{ $test['date'] }}</td>
                             <td class="py-3">
                                 <span class="fw-bold text-dark">{{ $test['score'] }}</span><span class="text-muted text-xs">/{{ $test['total'] }}</span>
@@ -231,12 +255,18 @@
                                 @endif
                             </td>
                             <td class="text-end py-3">
-                                <a href="{{ route('student.tests') }}" class="text-primary text-xs fw-semibold text-decoration-none">
-                                    Retake
+                                <a href="{{ !empty($test['url']) ? $test['url'] : route('student.tests') }}" class="text-primary text-xs fw-semibold text-decoration-none">
+                                    Review
                                 </a>
                             </td>
                         </tr>
-                    @endforeach
+                    @empty
+                        <tr>
+                            <td colspan="6" class="text-center text-muted py-4" style="font-size: 12.5px;">
+                                No attempts yet. <a href="{{ route('student.tests') }}" class="fw-semibold text-decoration-none">Take your first mock test →</a>
+                            </td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>

@@ -15,7 +15,18 @@ class ElibraryResource extends Model
         'description', 'file_name', 'file_path', 'is_active', 'sort_order',
     ];
 
-    protected $casts = ['is_active' => 'boolean'];
+    protected $casts = ['is_active' => 'boolean', 'downloads' => 'integer'];
+
+    public function downloadsLabel(): string
+    {
+        $count = (int) $this->downloads;
+
+        if ($count >= 1000) {
+            return rtrim(rtrim(number_format($count / 1000, 1), '0'), '.') . 'k+';
+        }
+
+        return (string) $count;
+    }
 
     public function toFrontendArray(): array
     {
@@ -31,7 +42,7 @@ class ElibraryResource extends Model
             'format' => $this->format,
             'pages' => $this->pages,
             'size' => $this->size,
-            'downloads' => $this->downloads,
+            'downloads' => $this->downloadsLabel(),
             'rating' => $this->rating,
             'image' => $this->image ?: 'frontend/img/course/course1-1.jpg',
             'description' => $this->description,

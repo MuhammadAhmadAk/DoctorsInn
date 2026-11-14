@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\LectureProgress;
 use App\Models\LectureVideo;
 use App\Services\SiteContentService;
+use App\Services\StudentMetricsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -13,6 +14,10 @@ use Illuminate\Support\Facades\Schema;
 
 class StudentDashboardController extends Controller
 {
+    public function __construct(protected StudentMetricsService $metrics)
+    {
+    }
+
     /**
      * Build the student profile payload from the authenticated user only.
      */
@@ -50,77 +55,16 @@ class StudentDashboardController extends Controller
         $examDate = \Carbon\Carbon::create(2026, 8, 25);
         $daysRemaining = max(1, (int) now()->diffInDays($examDate, false));
 
-        $stats = [
-            'enrolled_batches' => 1,
-            'active_batch_name' => 'MDCAT Reboot: 60-Day Prep Program',
-            'tests_completed' => 6,
-            'avg_score' => 78.5,
-            'syllabus_completed' => 42,
-            'study_streak_days' => 5,
-            'hours_studied' => 28.5,
-        ];
+        $courses = SiteContentService::getAllCourses();
+        $activeCourse = reset($courses) ?: null;
 
-        $subjectReadiness = [
-            'biology' => [
-                'name' => 'Biology',
-                'icon' => 'fa-solid fa-dna',
-                'percentage' => 88,
-                'status' => 'Strong',
-                'color' => '#10b981',
-                'weak_areas' => 'Genetics & Cell Respiration',
-            ],
-            'chemistry' => [
-                'name' => 'Chemistry',
-                'icon' => 'fa-solid fa-flask-vial',
-                'percentage' => 74,
-                'status' => 'Good',
-                'color' => '#3b82f6',
-                'weak_areas' => 'Organic Reaction Mechanisms',
-            ],
-            'physics' => [
-                'name' => 'Physics',
-                'icon' => 'fa-solid fa-atom',
-                'percentage' => 61,
-                'status' => 'Needs Work',
-                'color' => '#f59e0b',
-                'weak_areas' => 'Rotational Motion & Electromagnetism',
-            ],
-            'english_logic' => [
-                'name' => 'English & Logic',
-                'icon' => 'fa-solid fa-brain',
-                'percentage' => 84,
-                'status' => 'Strong',
-                'color' => '#8b5cf6',
-                'weak_areas' => 'Critical Vocabulary Synonyms',
-            ],
-        ];
+        $stats = array_merge($this->metrics->stats($studentData['id']), [
+            'enrolled_batches' => count($courses),
+            'active_batch_name' => $activeCourse['title'] ?? 'No active batch yet',
+        ]);
 
-        $recentTestHistory = [
-            [
-                'title' => 'MDCAT Grand Mock Test 1 — Full Syllabus',
-                'date' => '04 Nov 2026',
-                'score' => 162,
-                'total' => 200,
-                'percentage' => 81,
-                'status' => 'Passed',
-            ],
-            [
-                'title' => 'Biology High-Yield Unit Test: Cell Biology',
-                'date' => '01 Nov 2026',
-                'score' => 45,
-                'total' => 50,
-                'percentage' => 90,
-                'status' => 'Passed',
-            ],
-            [
-                'title' => 'Physics Mechanics & Dynamics Quiz',
-                'date' => '28 Oct 2026',
-                'score' => 31,
-                'total' => 50,
-                'percentage' => 62,
-                'status' => 'Needs Review',
-            ],
-        ];
+        $subjectReadiness = $this->metrics->subjectReadiness($studentData['id']);
+        $recentTestHistory = $this->metrics->recentAttempts($studentData['id'], 3);
 
         $announcements = [
             [
@@ -135,7 +79,6 @@ class StudentDashboardController extends Controller
             ],
         ];
 
-        $courses = SiteContentService::getAllCourses();
         $tests = SiteContentService::getAllTests();
         $resources = SiteContentService::getAllResources();
 
@@ -292,8 +235,10 @@ class StudentDashboardController extends Controller
 
         $tests = SiteContentService::getAllTests();
         $categories = config('tests.categories', []);
+        $stats = $this->metrics->stats($studentData['id']);
+        $recentAttempts = $this->metrics->recentAttempts($studentData['id'], 10);
 
-        return view('student.tests', compact('studentData', 'tests', 'categories'));
+        return view('student.tests', compact('studentData', 'tests', 'categories', 'stats', 'recentAttempts'));
     }
 
     /**
@@ -322,110 +267,10 @@ class StudentDashboardController extends Controller
             return redirect()->route('login');
         }
 
-        $stats = [
-            'tests_completed' => 6,
-            'avg_score' => 78.5,
-            'syllabus_completed' => 42,
-            'study_streak_days' => 5,
-            'hours_studied' => 28.5,
-            'correct_mcqs' => 482,
-            'incorrect_mcqs' => 118,
-            'accuracy_rate' => 80.3,
-        ];
-
-        $subjectReadiness = [
-            'biology' => [
-                'name' => 'Biology',
-                'icon' => 'fa-solid fa-dna',
-                'percentage' => 88,
-                'status' => 'Strong',
-                'color' => '#10b981',
-                'weak_areas' => 'Genetics & Cell Respiration',
-                'attempted' => 260,
-                'correct' => 229,
-            ],
-            'chemistry' => [
-                'name' => 'Chemistry',
-                'icon' => 'fa-solid fa-flask-vial',
-                'percentage' => 74,
-                'status' => 'Good',
-                'color' => '#3b82f6',
-                'weak_areas' => 'Organic Reaction Mechanisms',
-                'attempted' => 180,
-                'correct' => 133,
-            ],
-            'physics' => [
-                'name' => 'Physics',
-                'icon' => 'fa-solid fa-atom',
-                'percentage' => 61,
-                'status' => 'Needs Work',
-                'color' => '#f59e0b',
-                'weak_areas' => 'Rotational Motion & Electromagnetism',
-                'attempted' => 110,
-                'correct' => 67,
-            ],
-            'english_logic' => [
-                'name' => 'English & Logic',
-                'icon' => 'fa-solid fa-brain',
-                'percentage' => 84,
-                'status' => 'Strong',
-                'color' => '#8b5cf6',
-                'weak_areas' => 'Critical Vocabulary Synonyms',
-                'attempted' => 50,
-                'correct' => 42,
-            ],
-        ];
-
-        $recentTestHistory = [
-            [
-                'title' => 'MDCAT Grand Mock Test 1 — Full Syllabus',
-                'date' => '04 Nov 2026',
-                'score' => 162,
-                'total' => 200,
-                'percentage' => 81,
-                'status' => 'Passed',
-            ],
-            [
-                'title' => 'Biology High-Yield Unit Test: Cell Biology',
-                'date' => '01 Nov 2026',
-                'score' => 45,
-                'total' => 50,
-                'percentage' => 90,
-                'status' => 'Passed',
-            ],
-            [
-                'title' => 'Physics Mechanics & Dynamics Quiz',
-                'date' => '28 Oct 2026',
-                'score' => 31,
-                'total' => 50,
-                'percentage' => 62,
-                'status' => 'Needs Review',
-            ],
-        ];
-
-        $actionPlan = [
-            [
-                'subject' => 'Physics',
-                'topic' => 'Electromagnetism & Induced EMF Formulas',
-                'recommendation' => 'Re-watch Lecture #4 and attempt 25 chapter MCQs in Mock Test Center.',
-                'badge' => 'High Priority',
-                'badge_color' => 'danger',
-            ],
-            [
-                'subject' => 'Chemistry',
-                'topic' => 'Organic Substitution vs Elimination Kinetics',
-                'recommendation' => 'Download Chemistry Reaction Mechanism Flashcards from E-Library.',
-                'badge' => 'Moderate',
-                'badge_color' => 'warning',
-            ],
-            [
-                'subject' => 'Biology',
-                'topic' => 'Mendelian Crosses & Sex-Linked Pedigrees',
-                'recommendation' => 'Solid foundation! Complete Genetics practice quiz to secure full marks.',
-                'badge' => 'Refinement',
-                'badge_color' => 'success',
-            ],
-        ];
+        $stats = $this->metrics->stats($studentData['id']);
+        $subjectReadiness = $this->metrics->subjectReadiness($studentData['id']);
+        $recentTestHistory = $this->metrics->recentAttempts($studentData['id'], 5);
+        $actionPlan = $this->metrics->actionPlan($studentData['id']);
 
         return view('student.analytics', compact('studentData', 'stats', 'subjectReadiness', 'recentTestHistory', 'actionPlan'));
     }
