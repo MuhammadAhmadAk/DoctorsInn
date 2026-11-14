@@ -80,9 +80,19 @@
                     <span class="th-text-perspective">Free Study Resources & PDF Downloads</span>
                 </h2>
                 <p class="th_fade_anim max-width-700 mx-auto">
-                    Download official past papers with keys, high-yield chapter notes, chemistry reaction sheets, and shortcut guides. All resources are completely free for all medical aspirants.
+                    Download official past papers with keys, high-yield chapter notes, chemistry reaction sheets, and shortcut guides. All resources are free for registered students — sign in to download.
                 </p>
             </div>
+
+            @guest
+                <div class="test-auth-notice mb-40 text-center th_fade_anim">
+                    <div class="notice-pill d-inline-flex align-items-center gap-2 px-3 py-2">
+                        <i class="fa-solid fa-circle-info text-theme"></i>
+                        <span>Please <strong>Log In</strong> to your student account to download resources.</span>
+                        <a href="{{ route('login', ['redirect' => route('e-library')]) }}" class="text-theme fw-bold text-decoration-underline ms-1">Log In Now &rarr;</a>
+                    </div>
+                </div>
+            @endguest
 
             {{-- Category Filter Tabs (Matching Courses Style) --}}
             <div class="course-tab-wrap text-center mb-45 th_fade_anim" data-delay=".2">

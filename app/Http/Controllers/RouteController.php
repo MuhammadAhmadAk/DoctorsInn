@@ -97,6 +97,11 @@ class RouteController extends Controller
 
     public function Frontend_DownloadResource($slug)
     {
+        if (! auth()->check() && ! session()->has('admin_user')) {
+            return redirect()->route('login', ['redirect' => route('e-library.download', $slug)])
+                ->with('warning', 'Please log in to your student account to download this resource.');
+        }
+
         $resources = SiteContentService::getAllResources();
         $found = null;
         foreach ($resources as $res) {
