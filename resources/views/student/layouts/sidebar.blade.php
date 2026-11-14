@@ -13,8 +13,8 @@
         $studentAvatar = is_array($user) ? ($user['avatar'] ?? 'frontend/img/testimonial/testi_2_1.png') : ($user->avatar ?? 'frontend/img/testimonial/testi_2_1.png');
         $targetExam = strtoupper(is_array($user) ? ($user['target_exam'] ?? 'MDCAT') : ($user->target_exam ?? 'MDCAT'));
         $coursesCount = count($courses ?? \App\Services\SiteContentService::getAllCourses());
-        $testsCount = count(config('tests.tests', []));
-        $libraryCount = count(config('elibrary.resources', []));
+        $testsCount = count(\App\Services\SiteContentService::getAllTests());
+        $libraryCount = count(\App\Services\SiteContentService::getAllResources());
     @endphp
 
     <!-- Student Study Card -->

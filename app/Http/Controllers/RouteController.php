@@ -24,6 +24,7 @@ class RouteController extends Controller
 
         return view('frontend.pages.about', [
             'instructors' => $homeData['instructors'] ?? [],
+            'testimonials' => $homeData['testimonials'] ?? [],
         ]);
     }
 

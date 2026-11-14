@@ -1,11 +1,7 @@
 @php
-    $teamList = !empty($instructors) ? $instructors : [
-        ['name' => 'Dr. Salman Tariq', 'designation' => 'Biology Lead Instructor', 'image' => 'frontend/img/team/team_2_1.jpg', 'rating' => '4.9', 'facebook_url' => 'https://facebook.com/', 'twitter_url' => 'https://twitter.com/', 'linkedin_url' => 'https://linkedin.com/', 'instagram_url' => 'https://instagram.com/'],
-        ['name' => 'Prof. Michel Jemison', 'designation' => 'Chemistry Specialist', 'image' => 'frontend/img/team/team_2_2.jpg', 'rating' => '4.9', 'facebook_url' => 'https://facebook.com/', 'twitter_url' => 'https://twitter.com/', 'linkedin_url' => 'https://linkedin.com/', 'instagram_url' => 'https://instagram.com/'],
-        ['name' => 'Prof. Jacob Jones', 'designation' => 'Physics & Numericals Expert', 'image' => 'frontend/img/team/team_2_3.jpg', 'rating' => '4.9', 'facebook_url' => 'https://facebook.com/', 'twitter_url' => 'https://twitter.com/', 'linkedin_url' => 'https://linkedin.com/', 'instagram_url' => 'https://instagram.com/'],
-        ['name' => 'Dr. Hamza Malik', 'designation' => 'AMC & Logical Mentor', 'image' => 'frontend/img/team/team_2_4.jpg', 'rating' => '4.9', 'facebook_url' => 'https://facebook.com/', 'twitter_url' => 'https://twitter.com/', 'linkedin_url' => 'https://linkedin.com/', 'instagram_url' => 'https://instagram.com/'],
-    ];
+    $teamList = $instructors ?? [];
 @endphp
+@if (!empty($teamList))
 <section class="overflow-hidden bg-color" id="team-sec">
     <div class="team-wrap2 space overflow-hidden">
         <div class="container">
@@ -53,3 +49,4 @@
         </div>
     </div>
 </section>
+@endif

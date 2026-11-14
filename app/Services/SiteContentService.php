@@ -130,11 +130,7 @@ class SiteContentService
                         ->get()
                         ->map(fn ($b) => $b->toFrontendArray())
                         ->toArray()
-                    : array_slice(config('blogs', []), 0, 3);
-
-                if (empty($blogs)) {
-                    $blogs = array_slice(config('blogs', []), 0, 3);
-                }
+                    : [];
 
                 $instructors = Schema::hasTable('instructors')
                     ? Instructor::query()
@@ -170,7 +166,7 @@ class SiteContentService
         } catch (\Throwable $e) {
             return [
                 'courses' => [],
-                'blogs' => array_slice(config('blogs', []), 0, 3),
+                'blogs' => [],
                 'instructors' => [],
                 'testimonials' => [],
                 'homeFaqs' => [],
@@ -209,7 +205,7 @@ class SiteContentService
                 ->get()
                 ->mapWithKeys(fn ($b) => [$b->slug => $b->toFrontendArray()])
                 ->toArray(),
-            fn () => config('blogs', [])
+            fn () => []
         );
     }
 
@@ -225,7 +221,7 @@ class SiteContentService
                 ->get()
                 ->mapWithKeys(fn ($t) => [$t->slug => $t->toFrontendArray()])
                 ->toArray(),
-            fn () => config('tests.tests', [])
+            fn () => []
         );
     }
 
@@ -241,7 +237,7 @@ class SiteContentService
                 ->get()
                 ->map(fn ($r) => $r->toFrontendArray())
                 ->toArray(),
-            fn () => config('elibrary.resources', [])
+            fn () => []
         );
     }
 

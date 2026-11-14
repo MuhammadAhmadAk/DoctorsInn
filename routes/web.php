@@ -42,8 +42,6 @@ Route::get('/test/result/{attempt}', [RouteController::class, 'Frontend_TestResu
 Route::get('/blog', [RouteController::class, 'Frontend_Blog'])->name('blog');
 Route::get('/blog/{slug}', [RouteController::class, 'Frontend_BlogDetails'])->name('blog-details');
 Route::get('/blog-details/{slug?}', function ($slug = null) {
-    $slug = $slug ?? array_key_first(config('blogs', []));
-
     return $slug
         ? redirect()->route('blog-details', $slug, 301)
         : redirect()->route('blog');
@@ -53,8 +51,6 @@ Route::get('/blog-details/{slug?}', function ($slug = null) {
 Route::get('/course', [RouteController::class, 'Frontend_Course'])->name('course');
 Route::get('/courses/{slug}', [RouteController::class, 'Frontend_CourseDetails'])->name('course-details');
 Route::get('/course-details/{slug?}', function ($slug = null) {
-    $slug = $slug ?? array_key_first(config('courses', []));
-
     return $slug
         ? redirect()->route('course-details', $slug, 301)
         : redirect()->route('course');

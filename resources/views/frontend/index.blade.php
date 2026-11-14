@@ -316,6 +316,7 @@
     @include('frontend.components.team-section', ['instructors' => $instructors ?? []])
     @include('frontend.components.course-promo-cards')
 
+    @if (!empty($testimonials))
     <section class="testi-area-2 bg-color space overflow-hidden" id="testi-sec">
         <div class="container">
 
@@ -328,14 +329,7 @@
                 <div class="swiper th-slider has-shadow" id="testiSlide2"
                     data-slider-options='{"breakpoints":{"0":{"slidesPerView":1},"576":{"slidesPerView":"1"},"768":{"slidesPerView":"1"},"992":{"slidesPerView":"2"},"1200":{"slidesPerView":"3"}},"autoHeight": "true"}'>
                     <div class="swiper-wrapper">
-                        @php
-                            $displayTestimonials = !empty($testimonials) ? $testimonials : [
-                                ['headline' => 'AMC Exam Mein Pass Ho Gaya!', 'quote' => 'Every topic ka lecture, notes, aur MCQ practice sab kuch tha. Koi bhi problem hoti toh turant solve ho jati. Only because of this course I passed the AMC test!', 'student_name' => 'Muhammad Abdul Rafay', 'student_batch' => 'AMC — Ansaar Batch | Gujrat', 'avatar' => 'frontend/img/testimonial/testi_2_1.png', 'rating' => '5.0'],
-                                ['headline' => 'Best Choice for PMA Preparation!', 'quote' => 'Lessons were clear, well-structured and easy to follow. I passed all my tests with excellent results. Truly the best choice for PMA prep!', 'student_name' => 'Hammad Gulzar', 'student_batch' => 'PMA — Iqbal Batch | Bahawalpur', 'avatar' => 'frontend/img/testimonial/testi_2_2.png', 'rating' => '5.0'],
-                                ['headline' => 'Anytime Support — Always Available!', 'quote' => 'Lectures include all books and they give their best to make us understand everything. We asked any question anytime and they were always available. Thanks Sir!', 'student_name' => 'Amna', 'student_batch' => 'MDCAT Student', 'avatar' => 'frontend/img/testimonial/testi_2_3.png', 'rating' => '5.0'],
-                            ];
-                        @endphp
-                        @foreach($displayTestimonials as $testi)
+                        @foreach($testimonials as $testi)
                         <div class="swiper-slide th_fade_anim">
                             <div class="testi-card2">
                                 <div class="box-icon"><img src="{{ asset('frontend/img/icon/quote.svg') }}" alt="icon" loading="lazy" decoding="async"></div>
@@ -363,7 +357,9 @@
             </div>
         </div>
     </section>
+    @endif
 
+    @if (!empty($homeFaqs))
     <div class="space overflow-hidden">
         <div class="faq-bg-shape1-1 shape-mockup th_fade_anim" data-speed="0.9" data-left="4%" data-top="10%">
             <img src="{{ asset('frontend/img/icon/wave_shape_2.svg') }}" alt="img" loading="lazy" decoding="async">
@@ -399,14 +395,7 @@
                             <h2 class="sec-title th_fade_anim"><span class="th-text-perspective">{{ $cms['faq_title'] ?? 'Frequently Asked Questions' }}</span></h2>
                         </div>
                         <div class="accordion" id="faqAccordion">
-                            @php
-                                $displayFaqs = !empty($homeFaqs) ? $homeFaqs : [
-                                    ['question' => 'What courses does DoctorsInnElite offer?', 'answer' => 'We offer MDCAT, NUMS, AMC, and AFNS preparation courses including mock tests, full-length papers, and comprehensive test sessions.'],
-                                    ['question' => 'Are the courses available online?', 'answer' => 'Yes! All our courses are 100% online. Study anytime, anywhere at your own pace.'],
-                                    ['question' => 'How do I enroll in a course?', 'answer' => 'Simply create a free account, browse our courses, and click Enroll Now to get started.'],
-                                ];
-                            @endphp
-                            @foreach($displayFaqs as $idx => $faqItem)
+                            @foreach($homeFaqs as $idx => $faqItem)
                             <div class="accordion-card th_fade_anim">
                                 <div class="accordion-header" id="collapse-item-{{ $idx + 1 }}">
                                     <button class="accordion-button {{ $idx === 0 ? '' : 'collapsed' }}" type="button" data-bs-toggle="collapse"
@@ -426,10 +415,15 @@
             </div>
         </div>
     </div>
+    @endif
 
     <!--==============================
     Blog Area
     ==============================-->
+    @php
+        $homeBlogs = array_slice($blogs ?? [], 0, 3);
+    @endphp
+    @if (!empty($homeBlogs))
     <section class="space overflow-hidden bg-color" id="blog-sec">
         <div class="container">
             <div class="title-area text-center">
@@ -440,9 +434,6 @@
                     <span class="th-text-perspective">Our Latest Blogs & Updates</span>
                 </h2>
             </div>
-            @php
-                $homeBlogs = array_slice($blogs ?? config('blogs', []), 0, 3);
-            @endphp
             <div class="row gy-40 justify-content-center">
                 @foreach ($homeBlogs as $blog)
                     <div class="col-lg-4 col-md-6 th_fade_anim" data-delay=".2">
@@ -507,5 +498,6 @@
             </div>
         </div>
     </section>
+    @endif
 
 @endsection
