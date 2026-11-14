@@ -37,10 +37,23 @@ class CleanupOrphanMediaCommand extends Command
                 continue;
             }
 
-            foreach ($curriculum as $chapter) {
-                foreach ($chapter['topics'] ?? [] as $topic) {
-                    if (! empty($topic['lectureId'])) {
-                        $referencedLectureIds[] = (int) $topic['lectureId'];
+            foreach ($curriculum as $item) {
+                // 3-tier structure: Module -> Chapters -> Topics
+                if (! empty($item['chapters']) && is_array($item['chapters'])) {
+                    foreach ($item['chapters'] as $chapter) {
+                        foreach ($chapter['topics'] ?? [] as $topic) {
+                            if (! empty($topic['lectureId'])) {
+                                $referencedLectureIds[] = (int) $topic['lectureId'];
+                            }
+                        }
+                    }
+                }
+                // Legacy 2-tier structure: Chapter -> Topics
+                if (! empty($item['topics']) && is_array($item['topics'])) {
+                    foreach ($item['topics'] as $topic) {
+                        if (! empty($topic['lectureId'])) {
+                            $referencedLectureIds[] = (int) $topic['lectureId'];
+                        }
                     }
                 }
             }
