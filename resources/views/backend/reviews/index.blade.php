@@ -105,31 +105,24 @@
     </div>
 </div>
 
-<!-- Search & Status Filters -->
+<!-- Search & Filters -->
 <div class="adm-card mb-4">
     <div class="adm-card-body py-3">
         <form method="GET" action="{{ route('admin.reviews') }}" class="row align-items-center g-2">
             @if($selectedCourseId)
                 <input type="hidden" name="course_id" value="{{ $selectedCourseId }}">
             @endif
-            <div class="col-md-5">
+            <div class="col-md-8">
                 <div class="nav-search w-100">
                     <i class="fa-solid fa-magnifying-glass"></i>
                     <input type="text" name="q" value="{{ $searchQuery }}" placeholder="Search by student name, email, or review text...">
                 </div>
             </div>
-            <div class="col-md-3">
-                <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
-                    <option value="">Status: All Reviews</option>
-                    <option value="approved" @selected($selectedStatus === 'approved')>Approved Only</option>
-                    <option value="rejected" @selected($selectedStatus === 'rejected')>Rejected Only</option>
-                </select>
-            </div>
             <div class="col-md-4 d-flex align-items-center gap-2">
                 <button type="submit" class="btn-adm btn-adm-primary py-1 px-3 font-12">
                     <i class="fa-solid fa-filter me-1"></i> Filter
                 </button>
-                @if($searchQuery || $selectedCourseId || $selectedStatus)
+                @if($searchQuery || $selectedCourseId)
                     <a href="{{ route('admin.reviews') }}" class="btn-adm btn-adm-outline py-1 px-3 font-12" title="Reset all filters">
                         <i class="fa-solid fa-rotate-left me-1"></i> Reset
                     </a>
@@ -167,11 +160,10 @@
                     <tr>
                         <th style="min-width: 220px;">Student</th>
                         <th style="min-width: 160px;">Course</th>
-                        <th style="min-width: 120px;">Rating</th>
-                        <th style="min-width: 280px;">Review Feedback</th>
-                        <th style="min-width: 110px;">Date</th>
-                        <th style="min-width: 100px;">Status</th>
-                        <th style="min-width: 90px;" class="text-end">Actions</th>
+                        <th style="min-width: 130px;">Rating</th>
+                        <th style="min-width: 320px;">Review Feedback</th>
+                        <th style="min-width: 120px;">Date</th>
+                        <th style="min-width: 80px;" class="text-end">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -206,28 +198,15 @@
                             </div>
                         </td>
                         <td>
-                            <div class="font-12 text-dark" style="max-width: 460px; line-height: 1.5;">
+                            <div class="font-12 text-dark" style="max-width: 520px; line-height: 1.5;">
                                 {{ $rev->comment }}
                             </div>
                         </td>
                         <td>
                             <span class="font-11 text-muted">{{ $rev->created_at ? $rev->created_at->format('M d, Y') : '—' }}</span>
                         </td>
-                        <td>
-                            @if($rev->status === 'approved')
-                                <span class="adm-badge adm-badge-success">Approved</span>
-                            @else
-                                <span class="adm-badge adm-badge-danger">Rejected</span>
-                            @endif
-                        </td>
                         <td class="text-end">
                             <div class="table-actions justify-content-end">
-                                <form method="POST" action="{{ route('admin.reviews.toggle', $rev->id) }}" class="d-inline">
-                                    @csrf
-                                    <button type="submit" class="action-btn" title="{{ $rev->status === 'approved' ? 'Reject / Hide Review' : 'Approve Review' }}">
-                                        <i class="fa-solid {{ $rev->status === 'approved' ? 'fa-eye-slash text-warning' : 'fa-check text-success' }}"></i>
-                                    </button>
-                                </form>
                                 <form method="POST" action="{{ route('admin.reviews.delete', $rev->id) }}" class="d-inline" onsubmit="return confirm('Permanently delete this student review?');">
                                     @csrf
                                     @method('DELETE')
