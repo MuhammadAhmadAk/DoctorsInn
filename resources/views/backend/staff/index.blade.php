@@ -129,26 +129,26 @@
 
 {{-- Add staff --}}
 <div class="modal fade" id="addStaffModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0" style="border-radius: 10px;">
+    <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width: 680px;">
+        <div class="modal-content border-0" style="border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.12);">
             <form action="{{ route('admin.staff.store') }}" method="POST">
                 @csrf
-                <div class="modal-header">
-                    <h5 class="modal-title fw-bold">Add Staff Account</h5>
+                <div class="modal-header py-3 px-4 border-bottom">
+                    <h5 class="modal-title fw-bold font-16 text-dark mb-0">Add Staff Account</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body p-4">
                     <div class="row g-3">
-                        <div class="col-12">
-                            <label class="form-label small fw-semibold">Full Name</label>
-                            <input type="text" name="name" class="form-control form-control-sm" value="{{ old('name') }}" required>
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label small fw-semibold">Email</label>
-                            <input type="email" name="email" class="form-control form-control-sm" value="{{ old('email') }}" required>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-semibold text-dark">Full Name</label>
+                            <input type="text" name="name" class="form-control form-control-sm" value="{{ old('name') }}" placeholder="e.g. Dr. Ayesha Khan" required>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label small fw-semibold">Role</label>
+                            <label class="form-label small fw-semibold text-dark">Email Address</label>
+                            <input type="email" name="email" class="form-control form-control-sm" value="{{ old('email') }}" placeholder="staff@doctorsinnelite.com" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-semibold text-dark">Role</label>
                             <select name="role" class="form-select form-select-sm staff-role-select" data-target="addPermissions" required>
                                 @foreach ($roles as $key => $label)
                                     <option value="{{ $key }}" @selected(old('role') === $key)>{{ $label }}</option>
@@ -156,24 +156,28 @@
                             </select>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label small fw-semibold">Password</label>
-                            <input type="password" name="password" class="form-control form-control-sm" minlength="8" required>
+                            <label class="form-label small fw-semibold text-dark">Password</label>
+                            <input type="password" name="password" class="form-control form-control-sm" minlength="8" placeholder="Minimum 8 characters" required>
                         </div>
                         <div class="col-12">
-                            <label class="form-label small fw-semibold">Section Access</label>
-                            <div id="addPermissions" class="d-flex flex-wrap gap-3 p-3 rounded-3" style="background: #F8FAFC; border: 1px solid #E2E8F0;">
+                            <div class="d-flex align-items-center justify-content-between mb-1.5">
+                                <label class="form-label small fw-semibold text-dark mb-0">Section Access Permissions</label>
+                                <span class="small text-muted font-11">Administrators always have full access</span>
+                            </div>
+                            <div id="addPermissions" class="row g-2 p-2.5 rounded-3" style="background: #F8FAFC; border: 1px solid #E2E8F0;">
                                 @foreach ($permissions as $key => $label)
-                                    <label class="form-check m-0 d-flex align-items-center gap-2" style="font-size: 12.5px;">
-                                        <input class="form-check-input m-0 staff-permission" type="checkbox" name="permissions[]" value="{{ $key }}">
-                                        <span>{{ $label }}</span>
-                                    </label>
+                                    <div class="col-md-4 col-sm-6">
+                                        <label class="form-check m-0 d-flex align-items-center gap-2 py-1" style="font-size: 12.5px; cursor: pointer;">
+                                            <input class="form-check-input m-0 staff-permission" type="checkbox" name="permissions[]" value="{{ $key }}">
+                                            <span>{{ $label }}</span>
+                                        </label>
+                                    </div>
                                 @endforeach
                             </div>
-                            <div class="small text-muted mt-1">Administrators always have full access.</div>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
+                <div class="modal-footer py-2.5 px-4 border-top">
                     <button type="button" class="btn-adm btn-adm-outline" data-bs-dismiss="modal">Cancel</button>
                     <button type="submit" class="btn-adm btn-adm-primary">Create Account</button>
                 </div>
@@ -185,27 +189,27 @@
 {{-- Edit staff --}}
 @foreach ($staff as $member)
     <div class="modal fade" id="editStaff{{ $member->id }}" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0" style="border-radius: 10px;">
+        <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width: 680px;">
+            <div class="modal-content border-0" style="border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.12);">
                 <form action="{{ route('admin.staff.update', $member) }}" method="POST">
                     @csrf
                     @method('PUT')
-                    <div class="modal-header">
-                        <h5 class="modal-title fw-bold">Edit {{ $member->name }}</h5>
+                    <div class="modal-header py-3 px-4 border-bottom">
+                        <h5 class="modal-title fw-bold font-16 text-dark mb-0">Edit {{ $member->name }}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body p-4">
                         <div class="row g-3">
-                            <div class="col-12">
-                                <label class="form-label small fw-semibold">Full Name</label>
+                            <div class="col-md-6">
+                                <label class="form-label small fw-semibold text-dark">Full Name</label>
                                 <input type="text" name="name" class="form-control form-control-sm" value="{{ $member->name }}" required>
                             </div>
-                            <div class="col-12">
-                                <label class="form-label small fw-semibold">Email</label>
+                            <div class="col-md-6">
+                                <label class="form-label small fw-semibold text-dark">Email Address</label>
                                 <input type="email" name="email" class="form-control form-control-sm" value="{{ $member->email }}" required>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label small fw-semibold">Role</label>
+                                <label class="form-label small fw-semibold text-dark">Role</label>
                                 <select name="role" class="form-select form-select-sm" required>
                                     @foreach ($roles as $key => $label)
                                         <option value="{{ $key }}" @selected($member->role === $key)>{{ $label }}</option>
@@ -213,30 +217,32 @@
                                 </select>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label small fw-semibold">New Password <span class="text-muted">(optional)</span></label>
-                                <input type="password" name="password" class="form-control form-control-sm" minlength="8" placeholder="Leave blank to keep">
+                                <label class="form-label small fw-semibold text-dark">New Password <span class="text-muted font-11">(Leave blank to keep)</span></label>
+                                <input type="password" name="password" class="form-control form-control-sm" minlength="8" placeholder="••••••••">
                             </div>
                             <div class="col-12">
-                                <label class="form-label small fw-semibold">Section Access</label>
-                                <div class="d-flex flex-wrap gap-3 p-3 rounded-3" style="background: #F8FAFC; border: 1px solid #E2E8F0;">
+                                <label class="form-label small fw-semibold text-dark mb-1.5">Section Access Permissions</label>
+                                <div class="row g-2 p-2.5 rounded-3" style="background: #F8FAFC; border: 1px solid #E2E8F0;">
                                     @foreach ($permissions as $key => $label)
-                                        <label class="form-check m-0 d-flex align-items-center gap-2" style="font-size: 12.5px;">
-                                            <input class="form-check-input m-0" type="checkbox" name="permissions[]" value="{{ $key }}"
-                                                @checked(in_array($key, (array) ($member->permissions ?? []), true))>
-                                            <span>{{ $label }}</span>
-                                        </label>
+                                        <div class="col-md-4 col-sm-6">
+                                            <label class="form-check m-0 d-flex align-items-center gap-2 py-1" style="font-size: 12.5px; cursor: pointer;">
+                                                <input class="form-check-input m-0" type="checkbox" name="permissions[]" value="{{ $key }}"
+                                                    @checked(in_array($key, (array) ($member->permissions ?? []), true))>
+                                                <span>{{ $label }}</span>
+                                            </label>
+                                        </div>
                                     @endforeach
                                 </div>
                             </div>
                             <div class="col-12">
-                                <label class="form-check d-flex align-items-center gap-2 m-0" style="font-size: 13px;">
+                                <label class="form-check d-flex align-items-center gap-2 m-0" style="font-size: 13px; cursor: pointer;">
                                     <input class="form-check-input m-0" type="checkbox" name="is_active" value="1" @checked($member->is_active)>
-                                    <span>Account is active and can sign in</span>
+                                    <span class="fw-semibold text-dark">Account is active and can sign in</span>
                                 </label>
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer">
+                    <div class="modal-footer py-2.5 px-4 border-top">
                         <button type="button" class="btn-adm btn-adm-outline" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn-adm btn-adm-primary">Save Changes</button>
                     </div>
