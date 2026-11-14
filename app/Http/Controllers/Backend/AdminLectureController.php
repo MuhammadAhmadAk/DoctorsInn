@@ -8,8 +8,11 @@ use App\Models\LectureVideo;
 use App\Services\VideoProcessingService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Symfony\Component\Process\Process;
+use Throwable;
 
 class AdminLectureController extends Controller
 {
@@ -72,7 +75,7 @@ class AdminLectureController extends Controller
 
         return response()->json([
             'message' => $ffmpegReady
-                ? 'Video uploaded. Processing has been queued.'
+                ? 'Video uploaded. Processing has started in the background.'
                 : 'Video uploaded and is ready to play. Install FFmpeg to enable adaptive HLS.',
             'lecture' => $this->serialize($video->fresh()),
             'ffmpeg_available' => $ffmpegReady,
@@ -112,15 +115,21 @@ class AdminLectureController extends Controller
 
         $this->dispatchProcessing($video);
 
-        return response()->json(['message' => 'Processing re-queued.', 'lecture' => $this->serialize($video->fresh())]);
+        return response()->json(['message' => 'Processing restarted.', 'lecture' => $this->serialize($video->fresh())]);
     }
 
     /**
-     * Keep transcoding out of the upload request. On a sync queue the job runs
-     * after the response has been sent instead of blocking the upload.
+     * Transcoding must not depend on a long-running queue worker: shared hosts
+     * kill those daemons and uploads silently stall. Spawn a detached CLI
+     * process for this lecture instead, falling back to the queue only when the
+     * process cannot be started.
      */
     protected function dispatchProcessing(LectureVideo $video): void
     {
+        if ($this->spawnProcessor($video)) {
+            return;
+        }
+
         if (config('queue.default') === 'sync') {
             ProcessLectureVideoJob::dispatch($video)->afterResponse();
 
@@ -128,6 +137,47 @@ class AdminLectureController extends Controller
         }
 
         ProcessLectureVideoJob::dispatch($video);
+    }
+
+    protected function spawnProcessor(LectureVideo $video): bool
+    {
+        $command = sprintf(
+            'cd %s && nohup %s artisan lectures:process %d >> %s 2>&1 < /dev/null &',
+            escapeshellarg(base_path()),
+            escapeshellarg($this->phpBinary()),
+            (int) $video->id,
+            escapeshellarg(storage_path('logs/lecture-' . $video->id . '.log'))
+        );
+
+        try {
+            $process = Process::fromShellCommandline($command, base_path(), null, null, 15);
+            $process->disableOutput();
+            $process->run();
+
+            return $process->isSuccessful();
+        } catch (Throwable $e) {
+            Log::warning('Could not spawn standalone lecture processor', [
+                'lecture_video_id' => $video->id,
+                'error' => $e->getMessage(),
+            ]);
+
+            return false;
+        }
+    }
+
+    protected function phpBinary(): string
+    {
+        if (PHP_SAPI === 'cli' && is_file(PHP_BINARY)) {
+            return PHP_BINARY;
+        }
+
+        foreach ([PHP_BINDIR . '/php', PHP_BINDIR . '/php.exe'] as $candidate) {
+            if (is_file($candidate)) {
+                return $candidate;
+            }
+        }
+
+        return 'php';
     }
 
     protected function serialize(?LectureVideo $video): array
