@@ -10,11 +10,12 @@ Phases 1–3 are done and deployed (security, real DB data, enrollments/payments
 4. [x] **Workerless upload architecture** — detached CLI process runner (`lectures:process {id}`) configured with ultrafast/superfast presets and polling recovery.
 5. [x] **Queue-worker heartbeat cron** — deprecated; no longer required with detached process model.
 
-## Phase 5 — Hygiene
+## Phase 5 — Hygiene (DONE 2026-11-16, committed locally)
 
-1. **Dead code removal** — unused queue/worker remnants, legacy `mock_tests.questions` JSON fallback once every test uses the question bank, obsolete MP4 fast-start path if unused, leftover config files.
-2. **CMS cache TTL** — `SiteContentService` currently relies on flush-on-write; add a TTL/versioned cache so a missed flush cannot serve stale content indefinitely.
-3. **Automated tests** — feature tests for auth gates, enrollment/Safepay state transitions, MCQ scoring, question-bank CRUD. The repo currently has only skeleton PHPUnit tests.
+1. **Dead code removal** — removed the legacy `mock_tests.questions` JSON fallback (dev verified every test uses the question bank), the unused MP4 fast-start service + `admin.courses.uploadVideo` route, and two unreferenced views (`courses/my-courses`, `student/dashboard` under frontend). Queue job kept (still used by `lecture:process`).
+2. **CMS cache TTL** — `SiteContentService` caches now expire after `CMS_CACHE_TTL` seconds (default 3600, min 60) in addition to flush-on-write.
+3. **Automated tests** — `php artisan test` (sqlite in-memory): `AuthGateTest`, `EnrollmentPaymentTest`, `MockTestTest` — 26 tests covering auth gates, admin login throttle, Safepay tracker transitions, free enroll popup, webhook signature, MCQ scoring, question-bank CRUD + permissions.
+4. **Bug fixed by tests** — `Course::priceInPaisa()` read "Rs. 5,000" as 50 paisa (the "Rs." dot was treated as a decimal point); now parses the number only.
 
 ## Go-live checklist (payments + accounts)
 

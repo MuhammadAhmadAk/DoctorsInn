@@ -37,13 +37,12 @@ class Course extends Model
             return 0;
         }
 
-        $numeric = preg_replace('/[^0-9.]/', '', $raw);
-
-        if ($numeric === '' || ! is_numeric($numeric)) {
+        // Match the number itself so a "Rs." prefix dot is not read as a decimal point.
+        if (! preg_match('/\d[\d,]*(?:\.\d+)?/', $raw, $match)) {
             return 0;
         }
 
-        return (int) round((float) $numeric * 100);
+        return (int) round((float) str_replace(',', '', $match[0]) * 100);
     }
 
     public function isFree(): bool

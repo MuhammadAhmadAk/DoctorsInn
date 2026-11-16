@@ -107,4 +107,6 @@ return [
 
     'prefix' => env('CACHE_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_cache_'),
 
+    'cms_ttl_seconds' => (int) env('CMS_CACHE_TTL', 3600),
+
 ];

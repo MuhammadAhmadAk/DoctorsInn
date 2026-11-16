@@ -28,12 +28,14 @@ return new class extends Migration
                 ->update(['downloads' => (int) round($number * $multiplier)]);
         }
 
-        DB::statement('ALTER TABLE elibrary_resources MODIFY downloads INT UNSIGNED NOT NULL DEFAULT 0');
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement('ALTER TABLE elibrary_resources MODIFY downloads INT UNSIGNED NOT NULL DEFAULT 0');
+        }
     }
 
     public function down(): void
     {
-        if (! Schema::hasTable('elibrary_resources')) {
+        if (! Schema::hasTable('elibrary_resources') || DB::getDriverName() !== 'mysql') {
             return;
         }
 

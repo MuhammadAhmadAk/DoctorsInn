@@ -14,11 +14,10 @@ class MockTest extends Model
         'slug', 'title', 'category', 'category_name', 'badge',
         'duration_minutes', 'total_questions', 'marks_per_question',
         'passing_percentage', 'difficulty', 'attempts', 'image',
-        'description', 'questions', 'is_active', 'sort_order',
+        'description', 'is_active', 'sort_order',
     ];
 
     protected $casts = [
-        'questions' => 'array',
         'is_active' => 'boolean',
     ];
 
@@ -50,27 +49,19 @@ class MockTest extends Model
         ];
     }
 
-    /**
-     * Questions come from the normalized question bank; the legacy JSON column
-     * remains a fallback for rows created before the bank existed.
-     */
     protected function frontendQuestions(): array
     {
-        if ($this->relationLoaded('questionBank') && $this->questionBank->isNotEmpty()) {
-            return $this->questionBank
-                ->where('is_active', true)
-                ->values()
-                ->map(fn (MockTestQuestion $q) => [
-                    'id' => $q->id,
-                    'subject' => $q->subject ?: 'General',
-                    'question' => $q->question,
-                    'options' => $q->options ?: [],
-                    'correct' => $q->correct_option,
-                    'explanation' => $q->explanation ?: 'No explanation provided.',
-                ])
-                ->all();
-        }
-
-        return is_array($this->questions) ? $this->questions : [];
+        return $this->questionBank
+            ->where('is_active', true)
+            ->values()
+            ->map(fn (MockTestQuestion $q) => [
+                'id' => $q->id,
+                'subject' => $q->subject ?: 'General',
+                'question' => $q->question,
+                'options' => $q->options ?: [],
+                'correct' => $q->correct_option,
+                'explanation' => $q->explanation ?: 'No explanation provided.',
+            ])
+            ->all();
     }
 }

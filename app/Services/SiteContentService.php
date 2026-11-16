@@ -26,6 +26,15 @@ class SiteContentService
     public const CACHE_FAQS = 'cms_faqs_all_v1';
 
     /**
+     * Writes flush these keys immediately; the TTL only bounds staleness when a
+     * write path (manual SQL, seeders, a missed observer) skips the flush.
+     */
+    public static function cacheTtl(): int
+    {
+        return max(60, (int) config('cache.cms_ttl_seconds', 3600));
+    }
+
+    /**
      * Flush all frontend & homepage CMS caches immediately after Admin edits.
      */
     public static function flushCache(): void
@@ -43,11 +52,6 @@ class SiteContentService
         }
     }
 
-    public static function flush(): void
-    {
-        self::flushCache();
-    }
-
     /**
      * Upload and automatically optimize an image (resized + converted to WebP) under public/uploads/{subfolder}.
      */
@@ -62,7 +66,7 @@ class SiteContentService
     protected static function rememberTableQuery(string $cacheKey, string $table, callable $fetcher, $fallback = [], bool $fallbackIfEmpty = false)
     {
         try {
-            return Cache::rememberForever($cacheKey, function () use ($table, $fetcher, $fallback, $fallbackIfEmpty) {
+            return Cache::remember($cacheKey, self::cacheTtl(), function () use ($table, $fetcher, $fallback, $fallbackIfEmpty) {
                 if (!Schema::hasTable($table)) {
                     return is_callable($fallback) ? $fallback() : $fallback;
                 }
@@ -113,7 +117,7 @@ class SiteContentService
     public static function getHomeData(): array
     {
         try {
-            return Cache::rememberForever(self::CACHE_HOME, function () {
+            return Cache::remember(self::CACHE_HOME, self::cacheTtl(), function () {
                 $courses = Schema::hasTable('courses')
                     ? Course::query()
                         ->select(['id', 'slug', 'category', 'category_name', 'title', 'price', 'original_price', 'rating', 'rating_count', 'lessons', 'students', 'image'])
