@@ -1128,6 +1128,39 @@ body {
         justify-content: center;
         padding: 12px 14px;
     }
+
+    /* Page header stacks above filters so inline min-width inputs can't overflow */
+    .page-header {
+        flex-wrap: wrap;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    .page-header > div:first-child {
+        width: 100%;
+    }
+    .page-actions {
+        width: 100%;
+        flex-wrap: wrap;
+    }
+    .page-actions form {
+        flex: 1 1 100%;
+        flex-wrap: wrap;
+    }
+    .page-actions form .form-control,
+    .page-actions form .form-select {
+        min-width: 0 !important;
+        width: auto;
+        flex: 1 1 140px;
+        border-radius: 8px;
+    }
+    .page-actions .btn-adm {
+        border-radius: 8px;
+    }
+
+    /* Let dense admin tables scroll instead of crushing columns to one word per line */
+    .table-responsive .adm-table {
+        min-width: 720px;
+    }
 }
 
 
