@@ -1129,6 +1129,73 @@ body {
         padding: 12px 14px;
     }
 
+    .admin-content {
+        padding: 16px 14px;
+    }
+
+    /* Profile dropdown is start-aligned by Popper; pin it inside the viewport */
+    .admin-navbar {
+        padding: 0 14px;
+    }
+    .admin-navbar .dropdown-menu {
+        left: auto !important;
+        right: 0 !important;
+        top: calc(100% + 8px) !important;
+        transform: none !important;
+        min-width: 0 !important;
+        width: min(240px, calc(100vw - 28px));
+        font-size: 13.5px;
+    }
+
+    /* Phone type scale — lift the desktop-sized micro labels */
+    .page-title {
+        font-size: 20px;
+    }
+    .page-subtitle {
+        font-size: 13px;
+    }
+    .adm-card-title {
+        font-size: 14.5px;
+    }
+    .adm-table th {
+        font-size: 11.5px;
+    }
+    .adm-table td {
+        font-size: 13px;
+    }
+    .btn-adm {
+        font-size: 12.5px;
+    }
+    .adm-badge {
+        font-size: 11px;
+    }
+    .stat-info .label,
+    .stat-info .growth {
+        font-size: 12px;
+    }
+    .item-thumb-box .title {
+        font-size: 13px;
+    }
+    .item-thumb-box .subtitle {
+        font-size: 12px;
+    }
+    .form-label {
+        font-size: 12.5px !important;
+    }
+    .admin-content .small,
+    .admin-content small {
+        font-size: 12px;
+    }
+    .admin-sidebar .brand-badge {
+        font-size: 10.5px;
+    }
+    .sidebar-link .badge-count {
+        font-size: 11px;
+    }
+    .profile-meta .role {
+        font-size: 11px;
+    }
+
     /* Page header stacks above filters so inline min-width inputs can't overflow */
     .page-header {
         flex-wrap: wrap;
@@ -1155,11 +1222,30 @@ body {
     }
     .page-actions .btn-adm {
         border-radius: 8px;
+        white-space: nowrap;
+    }
+    .adm-card-header .btn-adm {
+        white-space: nowrap;
     }
 
     /* Let dense admin tables scroll instead of crushing columns to one word per line */
     .table-responsive .adm-table {
         min-width: 720px;
+    }
+    .table-responsive .adm-table th:first-child,
+    .table-responsive .adm-table td:first-child {
+        min-width: 230px;
+    }
+}
+
+@media (max-width: 359.98px) {
+    /* Search + status filter: give the input its own row so the submit button
+       stays beside the select instead of dropping onto a line by itself */
+    .page-actions form:has(.form-select) .form-control {
+        flex: 1 1 100%;
+    }
+    .page-actions form .form-select {
+        flex: 1 1 auto;
     }
 }
 
