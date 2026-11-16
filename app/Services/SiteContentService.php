@@ -118,57 +118,47 @@ class SiteContentService
     {
         try {
             return Cache::remember(self::CACHE_HOME, self::cacheTtl(), function () {
-                $courses = Schema::hasTable('courses')
-                    ? Course::query()
-                        ->select(['id', 'slug', 'category', 'category_name', 'title', 'price', 'original_price', 'rating', 'rating_count', 'lessons', 'students', 'image'])
-                        ->where('is_active', true)
-                        ->orderBy('sort_order')
-                        ->orderBy('id')
-                        ->get()
-                        ->mapWithKeys(fn ($c) => [$c->slug => $c->toFrontendArray()])
-                        ->toArray()
-                    : [];
+                $courses = Course::query()
+                    ->select(['id', 'slug', 'category', 'category_name', 'title', 'price', 'original_price', 'rating', 'rating_count', 'lessons', 'students', 'image'])
+                    ->where('is_active', true)
+                    ->orderBy('sort_order')
+                    ->orderBy('id')
+                    ->get()
+                    ->mapWithKeys(fn ($c) => [$c->slug => $c->toFrontendArray()])
+                    ->toArray();
 
-                $blogs = Schema::hasTable('blogs')
-                    ? Blog::query()
-                        ->select(['id', 'slug', 'title', 'category', 'short_description', 'image', 'read_time', 'date_day', 'date_month', 'date_year'])
-                        ->where('is_published', true)
-                        ->orderBy('sort_order')
-                        ->orderByDesc('created_at')
-                        ->limit(3)
-                        ->get()
-                        ->map(fn ($b) => $b->toFrontendArray())
-                        ->toArray()
-                    : [];
+                $blogs = Blog::query()
+                    ->select(['id', 'slug', 'title', 'category', 'short_description', 'image', 'read_time', 'date_day', 'date_month', 'date_year'])
+                    ->where('is_published', true)
+                    ->orderBy('sort_order')
+                    ->orderByDesc('created_at')
+                    ->limit(3)
+                    ->get()
+                    ->map(fn ($b) => $b->toFrontendArray())
+                    ->toArray();
 
-                $instructors = Schema::hasTable('instructors')
-                    ? Instructor::query()
-                        ->select(['id', 'name', 'designation', 'image', 'rating', 'facebook_url', 'twitter_url', 'linkedin_url', 'instagram_url'])
-                        ->where('is_active', true)
-                        ->orderBy('sort_order')
-                        ->get()
-                        ->toArray()
-                    : [];
+                $instructors = Instructor::query()
+                    ->select(['id', 'name', 'designation', 'image', 'rating', 'facebook_url', 'twitter_url', 'linkedin_url', 'instagram_url'])
+                    ->where('is_active', true)
+                    ->orderBy('sort_order')
+                    ->get()
+                    ->toArray();
 
-                $testimonials = Schema::hasTable('testimonials')
-                    ? Testimonial::query()
-                        ->select(['id', 'headline', 'quote', 'student_name', 'student_batch', 'avatar', 'rating'])
-                        ->where('is_active', true)
-                        ->orderBy('sort_order')
-                        ->get()
-                        ->toArray()
-                    : [];
+                $testimonials = Testimonial::query()
+                    ->select(['id', 'headline', 'quote', 'student_name', 'student_batch', 'avatar', 'rating'])
+                    ->where('is_active', true)
+                    ->orderBy('sort_order')
+                    ->get()
+                    ->toArray();
 
-                $homeFaqs = Schema::hasTable('faqs')
-                    ? Faq::query()
-                        ->select(['id', 'question', 'answer'])
-                        ->where('is_active', true)
-                        ->where('show_on_home', true)
-                        ->orderBy('sort_order')
-                        ->limit(6)
-                        ->get()
-                        ->toArray()
-                    : [];
+                $homeFaqs = Faq::query()
+                    ->select(['id', 'question', 'answer'])
+                    ->where('is_active', true)
+                    ->where('show_on_home', true)
+                    ->orderBy('sort_order')
+                    ->limit(6)
+                    ->get()
+                    ->toArray();
 
                 return compact('courses', 'blogs', 'instructors', 'testimonials', 'homeFaqs');
             });

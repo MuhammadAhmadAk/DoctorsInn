@@ -14,9 +14,9 @@
     <link rel="shortcut icon" href="{{ asset('frontend/img/logo/favicon.svg') }}" type="image/x-icon">
 
     <link rel="stylesheet" href="{{ asset('frontend/css/app.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('frontend/css/fontawesome.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('frontend/css/style.css') }}">
-    <link rel="stylesheet" href="{{ asset('frontend/css/fonts.css') }}">
+    <link rel="stylesheet" href="{{ asset('frontend/css/fontawesome.min.css') }}?v=3">
+    <link rel="stylesheet" href="{{ asset('frontend/css/style.css') }}?v={{ filemtime(public_path('frontend/css/style.css')) }}">
+    <link rel="stylesheet" href="{{ asset('frontend/css/fonts.css') }}?v=3">
 
     @yield('extra_css')
 </head>
@@ -57,7 +57,7 @@
     </div>
 
     <script src="{{ asset('frontend/js/vendor/jquery-3.7.1.min.js') }}" defer></script>
-    <script src="{{ asset('frontend/js/app.min.js') }}" defer></script>
+    <script src="{{ asset('frontend/js/app.min.js') }}?v=3" defer></script>
     <script src="{{ asset('frontend/js/main.js') }}" defer></script>
     <script src="{{ asset('frontend/js/preloader.js') }}" defer></script>
 

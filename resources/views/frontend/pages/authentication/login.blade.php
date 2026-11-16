@@ -40,14 +40,14 @@
         object-fit: contain !important;
     }
     .auth-card-title {
-        font-size: 20px;
+        font-size: 22px;
         font-weight: 700;
         color: #050310;
         margin-bottom: 2px;
         text-align: center;
     }
     .auth-card-sub {
-        font-size: 13px;
+        font-size: 14px;
         color: #64748b;
         margin-bottom: 16px;
         text-align: center;
@@ -61,10 +61,10 @@
         height: 42px;
         background: #ffffff;
         border: 1.5px solid #e2e8f0;
-        border-radius: 10px;
+        border-radius: 8px;
         color: #1e293b;
         font-weight: 600;
-        font-size: 13.5px;
+        font-size: 14.5px;
         text-decoration: none;
         transition: all 0.2s ease;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
@@ -79,7 +79,7 @@
         align-items: center;
         margin: 14px 0 16px 0;
         color: #94a3b8;
-        font-size: 11px;
+        font-size: 11.5px;
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.5px;
@@ -99,7 +99,7 @@
     }
     .auth-field-label {
         display: block;
-        font-size: 12.5px;
+        font-size: 13px;
         font-weight: 600;
         color: #1e293b;
         margin-bottom: 4px;
@@ -113,7 +113,7 @@
         padding: 0 38px 0 12px;
         border-radius: 8px;
         border: 1.5px solid #e2e8f0;
-        font-size: 13.5px;
+        font-size: 14.5px;
         color: #0f172a;
         background: #ffffff;
         transition: all 0.2s ease;
@@ -140,7 +140,7 @@
         color: #ffffff;
         border: none;
         font-weight: 700;
-        font-size: 13.5px;
+        font-size: 14.5px;
         letter-spacing: 0.3px;
         display: flex;
         align-items: center;
@@ -154,7 +154,7 @@
         background: #4b26df;
     }
     .auth-footer-text {
-        font-size: 13px;
+        font-size: 13.5px;
         color: #64748b;
         text-align: center;
         margin-top: 14px;
@@ -172,7 +172,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        font-size: 12px;
+        font-size: 13px;
         margin-top: 2px;
         color: #64748b;
     }
@@ -184,7 +184,7 @@
     .auth-alert-box {
         padding: 8px 12px;
         border-radius: 8px;
-        font-size: 12.5px;
+        font-size: 13px;
         margin-bottom: 12px;
         display: flex;
         align-items: center;

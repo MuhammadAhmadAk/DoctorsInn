@@ -40,14 +40,14 @@
         object-fit: contain !important;
     }
     .auth-card-title {
-        font-size: 20px;
+        font-size: 22px;
         font-weight: 700;
         color: #050310;
         margin-bottom: 2px;
         text-align: center;
     }
     .auth-card-sub {
-        font-size: 13px;
+        font-size: 14px;
         color: #64748b;
         margin-bottom: 14px;
         text-align: center;
@@ -64,7 +64,7 @@
         border-radius: 8px;
         color: #1e293b;
         font-weight: 600;
-        font-size: 13.5px;
+        font-size: 14.5px;
         text-decoration: none;
         transition: all 0.2s ease;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
@@ -79,7 +79,7 @@
         align-items: center;
         margin: 12px 0 14px 0;
         color: #94a3b8;
-        font-size: 11px;
+        font-size: 11.5px;
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.5px;
@@ -99,7 +99,7 @@
     }
     .auth-field-label {
         display: block;
-        font-size: 12px;
+        font-size: 13px;
         font-weight: 600;
         color: #1e293b;
         margin-bottom: 3px;
@@ -113,7 +113,7 @@
         padding: 0 34px 0 11px;
         border-radius: 8px;
         border: 1.5px solid #e2e8f0;
-        font-size: 13px;
+        font-size: 14.5px;
         color: #0f172a;
         background: #ffffff;
         transition: all 0.2s ease;
@@ -140,7 +140,7 @@
         color: #ffffff;
         border: none;
         font-weight: 700;
-        font-size: 13.5px;
+        font-size: 14.5px;
         letter-spacing: 0.3px;
         display: flex;
         align-items: center;
@@ -154,7 +154,7 @@
         background: #4b26df;
     }
     .auth-footer-text {
-        font-size: 12.5px;
+        font-size: 13.5px;
         color: #64748b;
         text-align: center;
         margin-top: 12px;
@@ -171,7 +171,7 @@
     .auth-alert-box {
         padding: 6px 10px;
         border-radius: 8px;
-        font-size: 12px;
+        font-size: 13px;
         margin-bottom: 10px;
         display: flex;
         align-items: center;
@@ -232,14 +232,14 @@
 
                 {{-- Row 1: First Name & Last Name --}}
                 <div class="row g-2">
-                    <div class="col-6 auth-field-group">
+                    <div class="col-12 col-sm-6 auth-field-group">
                         <label class="auth-field-label" for="firstname">First Name</label>
                         <div class="auth-input-wrap">
                             <input type="text" name="firstname" id="firstname" placeholder="First Name" value="{{ old('firstname') }}" required>
                             <i class="fal fa-user"></i>
                         </div>
                     </div>
-                    <div class="col-6 auth-field-group">
+                    <div class="col-12 col-sm-6 auth-field-group">
                         <label class="auth-field-label" for="lastname">Last Name</label>
                         <div class="auth-input-wrap">
                             <input type="text" name="lastname" id="lastname" placeholder="Last Name" value="{{ old('lastname') }}" required>
@@ -250,14 +250,14 @@
 
                 {{-- Row 2: Email & Phone Number --}}
                 <div class="row g-2">
-                    <div class="col-6 auth-field-group">
+                    <div class="col-12 col-sm-6 auth-field-group">
                         <label class="auth-field-label" for="email">Email Address</label>
                         <div class="auth-input-wrap">
                             <input type="email" name="email" id="email" placeholder="Email" value="{{ old('email') }}" required>
                             <i class="fal fa-envelope"></i>
                         </div>
                     </div>
-                    <div class="col-6 auth-field-group">
+                    <div class="col-12 col-sm-6 auth-field-group">
                         <label class="auth-field-label" for="phone">WhatsApp / Phone</label>
                         <div class="auth-input-wrap">
                             <input type="text" name="phone" id="phone" placeholder="0300 1234567" value="{{ old('phone') }}" required>
@@ -268,24 +268,24 @@
 
                 {{-- Row 3: Password & Confirm Password --}}
                 <div class="row g-2">
-                    <div class="col-6 auth-field-group">
+                    <div class="col-12 col-sm-6 auth-field-group">
                         <label class="auth-field-label" for="password">Password</label>
                         <div class="auth-input-wrap">
                             <input type="password" name="password" id="password" placeholder="Min 6 chars" required>
                             <i class="fal fa-lock"></i>
                         </div>
                     </div>
-                    <div class="col-6 auth-field-group">
+                    <div class="col-12 col-sm-6 auth-field-group">
                         <label class="auth-field-label" for="confirm_password">Confirm Password</label>
                         <div class="auth-input-wrap">
                             <input type="password" name="confirm_password" id="confirm_password" placeholder="Repeat pass" required>
-                            <i class="fal fa-shield-halved"></i>
+                            <i class="fal fa-shield-check"></i>
                         </div>
                     </div>
                 </div>
 
                 {{-- Terms Checkbox --}}
-                <div class="d-flex align-items-center gap-1 mt-1 mb-2" style="font-size: 11.5px; color: #64748b;">
+                <div class="d-flex align-items-center gap-1 mt-1 mb-2" style="font-size: 12.5px; color: #64748b;">
                     <input type="checkbox" name="privacy" id="privacy" checked required style="accent-color: #5C32FF;">
                     <label for="privacy" class="mb-0 cursor-pointer">
                         I agree to the <a href="{{ route('privacy-policy') }}" target="_blank" style="color: #5C32FF; font-weight: 600; text-decoration: none;">Privacy Policy</a> &amp; <a href="{{ route('terms-conditions') }}" target="_blank" style="color: #5C32FF; font-weight: 600; text-decoration: none;">Terms</a>

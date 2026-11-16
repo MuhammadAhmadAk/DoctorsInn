@@ -191,6 +191,10 @@ class RouteController extends Controller
             $course = reset($courses);
         }
 
+        if (! $course) {
+            abort(404);
+        }
+
         return view('frontend.pages.courses.course-details', compact('course', 'courses'));
     }
 

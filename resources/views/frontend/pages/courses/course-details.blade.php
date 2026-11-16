@@ -701,7 +701,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     </div>
                     <div>
                         <h4 class="mb-0 text-white font-weight-bold" id="waModalStudentName" class="wa-modal-student-title">Student Name</h4>
-                        <small class="text-white-50" class="wa-modal-subtext"><i class="fa-solid fa-shield-halved me-1"></i> Verified WhatsApp Chat Record</small>
+                        <small class="text-white-50" class="wa-modal-subtext"><i class="fa-solid fa-shield-check me-1"></i> Verified WhatsApp Chat Record</small>
                     </div>
                 </div>
                 <button type="button" class="wa-proof-modal-close"  aria-label="Close">

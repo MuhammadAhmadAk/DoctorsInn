@@ -13,8 +13,8 @@
     <!-- CSS Assets -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
     <link rel="stylesheet" href="{{ asset('frontend/css/app.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('frontend/css/fontawesome.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('frontend/css/fonts.css') }}">
+    <link rel="stylesheet" href="{{ asset('frontend/css/fontawesome.min.css') }}?v=3">
+    <link rel="stylesheet" href="{{ asset('frontend/css/fonts.css') }}?v=3">
     <link rel="stylesheet" href="{{ asset('backend/css/admin.css') }}?v={{ time() }}">
 
     <style>

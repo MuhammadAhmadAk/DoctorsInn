@@ -22,7 +22,7 @@
 
     <section class="overflow-hidden th-anim-trigger space overflow-hidden" id="course-sec">
         <div class="course-bg-shape1-1 shape-mockup th_fade_anim" data-speed="0.9" data-left="6%" data-top="20%"><img
-                src="{{ asset('frontend/img/icons/wave_shape_2.svg') }}" alt="img"></div>
+                src="{{ asset('frontend/img/icon/wave_shape_2.svg') }}" alt="img"></div>
         <div class="course-bg-shape1-2 shape-mockup" data-right="6%" data-bottom="20%">
             <div class="thumb th-anim-spin"><img src="{{ asset('frontend/img/shape/course_shape1_2.png') }}" alt="img">
             </div>
@@ -48,7 +48,7 @@
                     ],
                     'army' => [
                         'label' => 'Army / AMC',
-                        'icon' => 'fa-solid fa-shield-halved',
+                        'icon' => 'fa-solid fa-shield-check',
                         'count' => collect($courses)->where('category', 'army')->count(),
                     ],
                 ];

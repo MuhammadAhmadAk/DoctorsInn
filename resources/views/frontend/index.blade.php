@@ -36,7 +36,7 @@
     <div class="overflow-hidden space" id="about-sec">
         <div class="container">
             <div class="row gy-50 align-items-center">
-                <div class="col-xl-6 col-lg-10">
+                <div class="col-xl-6">
                     <div class="img-box2">
                         <div class="img1 th_fade_anim">
                             <div class="thumb"><img class="img-cover"
@@ -150,7 +150,7 @@
                     ],
                     'army' => [
                         'label' => 'Army / AMC',
-                        'icon' => 'fa-solid fa-shield-halved',
+                        'icon' => 'fa-solid fa-shield-check',
                         'courses' => collect($sliderCourses)->where('category', 'army'),
                     ],
                 ];

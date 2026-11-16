@@ -24,14 +24,16 @@
         <link rel="preload" as="image" href="{{ asset('frontend/img/bg/hero-bg2.webp') }}" media="(max-width: 767px)" fetchpriority="high">
     @endif
     <link rel="preload" as="image" href="{{ asset($cms['site_logo'] ?? 'frontend/img/logo/logo.svg') }}">
-    <link rel="preload" as="font" type="font/woff2" href="{{ asset('frontend/fonts/fontawesome/fa-solid-900.woff2') }}" crossorigin>
-    <link rel="preload" as="font" type="font/woff2" href="{{ asset('frontend/fonts/fontawesome/fa-brands-400.woff2') }}" crossorigin>
+    <link rel="preload" as="font" type="font/woff2" href="{{ asset('frontend/fonts/fontawesome/fa-solid-900.woff2') }}?v=3" crossorigin>
+    <link rel="preload" as="font" type="font/woff2" href="{{ asset('frontend/fonts/fontawesome/fa-brands-400.woff2') }}?v=3" crossorigin>
+    <link rel="preload" as="font" type="font/woff2" href="{{ asset('frontend/fonts/Inter/Inter_18pt-Regular.woff2') }}" crossorigin>
+    <link rel="preload" as="font" type="font/woff2" href="{{ asset('frontend/fonts/PlusJakartaSans/PlusJakartaSans-Bold.woff2') }}" crossorigin>
 
     <link rel="stylesheet" href="{{ asset('frontend/css/app.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('frontend/css/fontawesome.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('frontend/css/fontawesome.min.css') }}?v=3">
     <link rel="stylesheet" href="{{ asset('frontend/css/style.css') }}?v={{ file_exists(public_path('frontend/css/style.css')) ? filemtime(public_path('frontend/css/style.css')) : time() }}">
-    <link rel="stylesheet" href="{{ asset('frontend/css/fonts.css') }}" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="{{ asset('frontend/css/fonts.css') }}"></noscript>
+    <link rel="stylesheet" href="{{ asset('frontend/css/fonts.css') }}?v=3" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="{{ asset('frontend/css/fonts.css') }}?v=3"></noscript>
 
     @yield('extra_css')
 </head>
@@ -125,8 +127,8 @@
                             </div>
                         </div>
 
-                        <div class="col-auto">
-                            <nav class="main-menu d-none d-lg-inline-block">
+                        <div class="col-auto d-none d-xl-block">
+                            <nav class="main-menu">
                                 <ul>
                                     <li><a href="{{ route('home') }}">Home</a></li>
                                     <li><a href="{{ route('about') }}">About Us</a></li>
@@ -208,7 +210,7 @@
                                     </div>
                                 @endif
 
-                                <button type="button" class="th-menu-toggle header-menu-toggle d-inline-flex d-lg-none"
+                                <button type="button" class="th-menu-toggle header-menu-toggle d-inline-flex d-xl-none"
                                     aria-label="Open navigation menu">
                                     <i class="fal fa-bars"></i>
                                 </button>

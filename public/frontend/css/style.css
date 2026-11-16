@@ -36203,6 +36203,43 @@ textarea.custom-form-control {
     color: #ffffff !important;
 }
 
+.test-category-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    margin-bottom: 4px;
+    border-radius: 8px;
+    background: #f3f0ff;
+    color: #5C32FF;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+/* Theme redefines .badge as an absolute purple circle; restore Bootstrap-style utility badges */
+.badge.bg-light,
+.badge.bg-success,
+.badge.bg-danger,
+.badge[class*="-subtle"] {
+    position: static;
+    top: auto;
+    right: auto;
+    width: auto;
+    border-radius: 8px;
+    padding: .35em .65em;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+.badge.bg-light { background-color: #f1f5f9; color: #334155; }
+.badge.bg-success { background-color: #10b981; color: #ffffff; }
+.badge.bg-danger { background-color: #ef4444; color: #ffffff; }
+.badge.bg-theme-subtle { background-color: #f3f0ff; color: #5C32FF; }
+.badge.bg-success-subtle { background-color: #ecfdf5; color: #047857; }
+.badge.bg-danger-subtle { background-color: #fef2f2; color: #b91c1c; }
+.badge.bg-secondary-subtle { background-color: #f1f5f9; color: #475569; }
+
 .student-pill {
     background: #f8fafc;
     border: 1px solid #e2e8f0;
@@ -37171,7 +37208,7 @@ textarea.custom-form-control {
     color: #ffffff;
 }
 
-@media (min-width: 992px) {
+@media (min-width: 1200px) {
     .header-menu-toggle {
         display: none !important;
     }
@@ -37211,11 +37248,37 @@ textarea.custom-form-control {
         height: 40px;
         min-width: 40px;
     }
+
+    .header-user-dropdown .dropdown-menu {
+        left: auto !important;
+        right: 0 !important;
+        top: calc(100% + 8px) !important;
+        transform: none !important;
+        min-width: 0 !important;
+        width: 235px;
+    }
+}
+
+@media (max-width: 399.98px) {
+    .header-logo a img {
+        height: 34px;
+    }
+
+    .header-btn-register {
+        padding: 9px 14px !important;
+    }
+}
+
+@media (max-width: 339.98px) {
+    .header-btn-register {
+        display: none !important;
+    }
 }
 
 @media (max-width: 359.98px) {
-    .header-btn-register {
-        display: none !important;
+    .th-header .row > [class*="col-"] {
+        padding-left: 6px !important;
+        padding-right: 6px !important;
     }
 }
 
@@ -37396,8 +37459,16 @@ textarea.custom-form-control {
 }
 
 /* Take Test Page Styles */
+.test-runner-header .col-lg-5 .d-flex > div {
+    min-width: 0;
+}
 .test-header-title-max {
-    max-width: 380px;
+    max-width: 100%;
+}
+@media (min-width: 1200px) {
+    .test-header-title-max {
+        max-width: 380px;
+    }
 }
 .student-name-max {
     max-width: 130px;
@@ -37413,89 +37484,118 @@ textarea.custom-form-control {
 }
 
 /* ========================================================
-   REFINED GLOBAL TYPOGRAPHY SCALE (CLEAN & PROPORTIONAL)
+   FLUID TYPOGRAPHY SCALE (375px -> 1440px, linear clamp)
    ======================================================== */
 body {
-    font-size: 14.5px;
+    font-size: clamp(15px, 14.65px + 0.094vw, 16px);
     line-height: 1.65;
 }
 
 p {
-    font-size: 14.5px;
-    line-height: 1.68;
+    font-size: clamp(15px, 14.65px + 0.094vw, 16px);
+    line-height: 1.7;
 }
 
 .h1, h1 {
-    font-size: 46px;
+    font-size: clamp(30px, 24.37px + 1.502vw, 46px);
     line-height: 1.2;
 }
 
-.h2, h2,
-.sec-title {
-    font-size: 34px;
-    line-height: 1.26;
+.hero-title,
+.hero-style2 .hero-title {
+    font-size: clamp(32px, 25.66px + 1.69vw, 50px) !important;
+    line-height: 1.18 !important;
+}
+
+.h2, h2 {
+    font-size: clamp(26px, 21.77px + 1.127vw, 38px);
+    line-height: 1.25;
+}
+
+.sec-title,
+.breadcumb-title {
+    font-size: clamp(26px, 21.77px + 1.127vw, 38px) !important;
+    line-height: 1.25 !important;
 }
 
 .h3, h3 {
-    font-size: 24px;
+    font-size: clamp(20px, 17.89px + 0.563vw, 26px);
     line-height: 1.32;
 }
 
 .h4, h4 {
-    font-size: 20px;
+    font-size: clamp(18px, 16.59px + 0.376vw, 22px);
     line-height: 1.35;
 }
 
 .h5, h5 {
-    font-size: 17px;
+    font-size: clamp(16px, 15.3px + 0.188vw, 18px);
     line-height: 1.4;
 }
 
 .h6, h6 {
-    font-size: 15px;
+    font-size: clamp(15px, 14.65px + 0.094vw, 16px);
     line-height: 1.45;
 }
 
-/* Hero Typography */
 .hero-title,
 .hero-style2 .hero-title {
-    font-size: 46px !important;
-    line-height: 1.18 !important;
     margin-bottom: 18px !important;
 }
 
 .hero-text,
 .hero-style2 .hero-text {
-    font-size: 15px !important;
+    font-size: clamp(15.5px, 14.97px + 0.141vw, 17px) !important;
     line-height: 1.65 !important;
     margin-bottom: 26px !important;
 }
 
 .hero-style2 .sub-title,
 .sub-title {
-    font-size: 13px !important;
+    font-size: clamp(13px, 12.65px + 0.094vw, 14px) !important;
     letter-spacing: 0.04em !important;
 }
 
-/* Page Breadcrumbs */
-.breadcumb-title {
-    font-size: 38px !important;
-    line-height: 1.2 !important;
-}
-
-/* Cards, Process, Testimonials, CTA & Accordions */
+.box-title,
 .about-info-card .box-title,
 .process-card2 .box-title,
 .testi-card2 .box-title,
 .team-card2 .box-title,
 .course-card .box-title,
-.contact-card .box-title {
-    font-size: 18px !important;
+.contact-card .box-title,
+.testi-card .testi-card_name,
+.testi-card2 .testi-card-profile .testi-card_name {
+    font-size: clamp(17px, 16.3px + 0.188vw, 19px) !important;
     line-height: 1.38 !important;
 }
 
+.box-text {
+    font-size: clamp(14.5px, 14.15px + 0.094vw, 15.5px);
+}
+
+.process-card2 .box-text,
+.counter-card.style8 .box-text {
+    font-size: clamp(14.5px, 14.15px + 0.094vw, 15.5px) !important;
+}
+
+.checklist.style2 li,
+.checklist.checklist-clean li {
+    font-size: clamp(15px, 14.3px + 0.188vw, 17px) !important;
+}
+
+.accordion-card .faq-text,
+.test-step-card .step-text,
+.auth-page-area .auth-form-desc {
+    font-size: clamp(14.5px, 14.15px + 0.094vw, 15.5px) !important;
+}
+
+.contact-form .form-title {
+    font-size: clamp(22px, 19.89px + 0.563vw, 28px) !important;
+    line-height: 1.3 !important;
+}
+
 .cta-card2 .sec-title {
-    font-size: 23px !important;
+    font-size: clamp(20px, 17.89px + 0.563vw, 26px) !important;
     line-height: 1.35 !important;
 }
 
@@ -37504,65 +37604,229 @@ p {
 }
 
 .accordion-card .accordion-button {
-    font-size: 15.5px !important;
+    font-size: clamp(15px, 14.65px + 0.094vw, 16px) !important;
 }
 
 .th-btn {
-    font-size: 13px !important;
+    font-size: clamp(14px, 13.65px + 0.094vw, 15px) !important;
     padding: 14px 26px !important;
 }
 
-/* Footer Typography */
 .footer-wrapper .widget_title {
-    font-size: 18px !important;
+    font-size: clamp(18px, 17.3px + 0.188vw, 20px) !important;
 }
 
 .footer-wrapper .about-text,
 .footer-wrapper .box-text,
 .footer-wrapper .menu a,
 .footer-wrapper .copyright-text {
-    font-size: 14px !important;
+    font-size: clamp(14px, 13.65px + 0.094vw, 15px) !important;
 }
 
-/* Responsive Scale Adjustments */
-@media (max-width: 1199px) {
-    .h1, h1,
-    .hero-title,
-    .hero-style2 .hero-title {
-        font-size: 38px !important;
-    }
-
-    .h2, h2,
-    .sec-title,
-    .breadcumb-title {
-        font-size: 30px !important;
-    }
+.form-control,
+.form-select,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+input[type="number"],
+input[type="search"],
+select,
+textarea {
+    font-size: 15px;
 }
 
-@media (max-width: 767px) {
-    body, p {
-        font-size: 14px;
+/* 16px stops iOS Safari from zooming into focused fields */
+@media (max-width: 767.98px) {
+    .form-control,
+    .form-select,
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="tel"],
+    input[type="number"],
+    input[type="search"],
+    select,
+    textarea {
+        font-size: 16px !important;
     }
 
-    .h1, h1,
-    .hero-title,
-    .hero-style2 .hero-title {
-        font-size: 30px !important;
-        line-height: 1.24 !important;
-    }
-
-    .h2, h2,
-    .sec-title,
-    .breadcumb-title {
-        font-size: 25px !important;
-    }
-
-    .h3, h3 {
-        font-size: 20px;
-    }
-
-    .cta-card2 .sec-title {
-        font-size: 20px !important;
+    .th-btn {
+        padding: 13px 22px !important;
     }
 }
 
+/* ====================================================================
+   RESPONSIVE SECTION LAYOUT
+   ==================================================================== */
+.hero-style2 {
+    padding: 130px 0 110px;
+}
+
+@media (max-width: 1199.98px) {
+    .hero-style2 {
+        padding: 110px 0 90px;
+    }
+
+    .img-box2 {
+        max-width: 660px;
+        margin-inline: auto;
+    }
+
+    .about-wrap2 {
+        margin-left: 0;
+    }
+
+    .process-wrap2 {
+        max-width: 760px;
+        margin-inline: auto;
+    }
+
+    .process-img-box2 {
+        max-width: 660px;
+        margin-inline: auto;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .th-hero-wrapper.hero-2 {
+        background-size: cover;
+        background-position: center bottom;
+    }
+}
+
+/* keeps the buttons clear of the bottom wave dots in the tablet background crop */
+@media (min-width: 576px) and (max-width: 991.98px) {
+    .hero-style2 {
+        padding-bottom: 170px;
+    }
+}
+
+.testi-slider2 .swiper-wrapper {
+    align-items: stretch;
+}
+
+.testi-slider2 .swiper-slide {
+    height: auto;
+}
+
+.testi-card2 {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.testi-card2 .testi-card-profile {
+    margin-top: auto;
+}
+
+.testi-card2:after {
+    border-radius: 8px;
+}
+
+@media (max-width: 767.98px) {
+    .hero-style2 {
+        padding: 72px 0 80px;
+    }
+}
+
+@media (min-width: 420px) and (max-width: 767.98px) {
+    .hero-style2 {
+        padding-bottom: 150px;
+    }
+}
+
+/* inner-page banner: the header is in normal flow, so no offset for it is needed */
+.breadcumb-wrapper .breadcumb-content {
+    padding: 150px 0 150px;
+}
+
+@media (max-width: 1199.98px) {
+    .breadcumb-wrapper .row > [class*="col-"] {
+        width: 100%;
+    }
+
+    .breadcumb-wrapper .breadcumb-content {
+        padding: 100px 0 110px;
+        text-align: center;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .breadcumb-wrapper .breadcumb-content {
+        padding: 80px 0 100px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .breadcumb-wrapper .breadcumb-content {
+        padding: 64px 0 90px;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .course-tab-wrap .course-category-tabs.tab-menu1 {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        width: 100%;
+        border-radius: 8px;
+        padding: 6px;
+        gap: 6px;
+        overflow: visible;
+    }
+
+    .course-tab-wrap .course-category-tabs .tab-btn {
+        justify-content: center;
+        border-radius: 8px;
+        padding: 10px 8px;
+        white-space: normal;
+        min-width: 0;
+        gap: 6px;
+        font-size: clamp(12px, 3.3vw, 14px);
+        line-height: 1.4;
+    }
+
+    .course-category-tabs .tab-badge,
+    .course-category-tabs .tab-btn > i {
+        flex-shrink: 0;
+    }
+
+    .counter-wrap8 {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+    }
+
+    .counter-card.style8 {
+        aspect-ratio: 1 / 1;
+        max-width: 220px;
+        width: 100%;
+        margin-inline: auto;
+        padding: 0 8px;
+        border-width: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .counter-card.style8 .box-number {
+        font-size: clamp(26px, 7vw, 40px);
+    }
+
+    .counter-card.style8 .box-text {
+        font-size: 13px !important;
+        line-height: 1.35;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .counter-wrap2 {
+        max-width: 280px;
+        margin-inline: auto;
+        gap: 22px;
+    }
+
+    .counter-card2 {
+        justify-content: flex-start;
+    }
+}

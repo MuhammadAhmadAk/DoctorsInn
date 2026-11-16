@@ -29,7 +29,7 @@ Phases 1–3 are done and deployed (security, real DB data, enrollments/payments
 
 ## Open design decision (not actioned)
 
-Gated catalog links in the guest header: keep E-Library / Practice Tests visible (hybrid = public browse for SEO, login gate on download/attempt); optionally a small lock or "Student" badge. The user only asked for wording fixes so far — revisit only if he raises visibility again.
+Gated catalog links in the guest header: keep E-Library / Practice Tests visible (hybrid = public browse for SEO, login gate on download/attempt); optionally a small lock or "Student" badge. The user only asked for wording fixes so far — revisit only if they raise visibility again.
 
 ## Deployment rules
 

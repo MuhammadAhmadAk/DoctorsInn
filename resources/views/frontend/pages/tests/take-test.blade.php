@@ -13,7 +13,7 @@
                             <i class="fa-solid fa-arrow-left"></i>
                         </a>
                         <div>
-                            <span class="badge bg-theme-subtle text-theme fw-semibold mb-1">{{ $test['category_name'] }} • {{ $test['total_questions'] }} MCQs</span>
+                            <span class="test-category-badge">{{ $test['category_name'] }} • {{ $test['total_questions'] }} MCQs</span>
                             <h5 class="mb-0 test-header-title text-truncate test-header-title-max">{{ $test['title'] }}</h5>
                         </div>
                     </div>

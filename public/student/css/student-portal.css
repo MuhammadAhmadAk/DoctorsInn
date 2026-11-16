@@ -239,6 +239,7 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    min-width: 0;
     transition: margin-left 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -798,5 +799,16 @@ body {
     }
     .student-navbar {
         padding: 0 14px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .student-navbar .dropdown-menu {
+        left: auto !important;
+        right: 0 !important;
+        top: calc(100% + 6px) !important;
+        transform: none !important;
+        min-width: 0 !important;
+        width: 235px;
     }
 }
