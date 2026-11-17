@@ -22,7 +22,7 @@
                     <p class="auth-visual-text">Enter your email and we'll send you a 6-digit verification code to reset your password safely.</p>
                 </div>
                 <div class="auth-visual-art">
-                    <img src="{{ asset('frontend/img/auth/recovery-illustration.png') }}" alt="" loading="eager" decoding="async">
+                    <img src="{{ asset('frontend/img/auth/recovery-illustration.webp') }}" alt="" loading="eager" decoding="async">
                 </div>
             </aside>
 

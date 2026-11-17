@@ -22,7 +22,7 @@
                     <p class="auth-visual-text">Create a free account to track progress, attempt timed mock tests and download study notes.</p>
                 </div>
                 <div class="auth-visual-art">
-                    <img src="{{ asset('frontend/img/auth/register-illustration.png') }}" alt="" loading="eager" decoding="async">
+                    <img src="{{ asset('frontend/img/auth/register-illustration.webp') }}" alt="" loading="eager" decoding="async">
                 </div>
             </aside>
 

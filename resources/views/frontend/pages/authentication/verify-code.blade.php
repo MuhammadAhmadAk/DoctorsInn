@@ -22,7 +22,7 @@
                     <p class="auth-visual-text">Enter the 6-digit code we emailed you to verify your account and start learning.</p>
                 </div>
                 <div class="auth-visual-art">
-                    <img src="{{ asset('frontend/img/auth/recovery-illustration.png') }}" alt="" loading="eager" decoding="async">
+                    <img src="{{ asset('frontend/img/auth/recovery-illustration.webp') }}" alt="" loading="eager" decoding="async">
                 </div>
             </aside>
 
