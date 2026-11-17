@@ -38087,3 +38087,12 @@ textarea {
         justify-content: center;
     }
 }
+
+/* Promo banners (courses page): keep both cards equal height regardless of copy/image */
+.cta-area-2 .row > [class*="col-"] {
+    display: flex;
+}
+
+.cta-area-2 .cta-card2 {
+    width: 100%;
+}
