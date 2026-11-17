@@ -39,14 +39,14 @@
 
                     {{-- Flash & Error Alerts --}}
                     @if (session('error'))
-                        <div class="auth-alert-box alert-danger bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25">
+                        <div class="auth-alert-box alert-danger">
                             <i class="fa-solid fa-circle-exclamation text-danger"></i>
                             <span>{{ session('error') }}</span>
                         </div>
                     @endif
 
                     @if ($errors->any())
-                        <div class="auth-alert-box alert-danger bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25">
+                        <div class="auth-alert-box alert-danger">
                             <i class="fa-solid fa-circle-exclamation text-danger"></i>
                             <span>{{ $errors->first() }}</span>
                         </div>

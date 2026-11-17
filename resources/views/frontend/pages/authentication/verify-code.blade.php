@@ -2,84 +2,102 @@
 @section('title', 'Verify Your Account | DoctorsInnElite')
 @section('meta_description', 'Enter the verification code sent to your email to verify your DoctorsInnElite account and get started with your MDCAT preparation.')
 @section('meta_keywords', 'verify account DoctorsInnElite, email verification, account confirm')
+
+@section('extra_css')
+    <link rel="stylesheet" href="{{ asset('frontend/css/auth.css') }}?v={{ filemtime(public_path('frontend/css/auth.css')) }}">
+@endsection
+
 @section('content')
 
-    <div class="auth-page-area overflow-hidden contact-area-1 position-relative z-index-common" id="verify-sec">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-xl-6 col-lg-8">
-                    <div class="contact-page-form-wrap">
-                        <div class="contact-form contact-page-form">
-                            <form action="{{ route('verify-code.submit') }}" method="POST" class="contact-form">
-                                @csrf
-                                <div class="auth-form-header text-center mb-4">
-                                    <h3 class="auth-form-title">Enter Code</h3>
-                                    <p class="auth-form-desc">
-                                        We have sent a verification code to <strong>{{ $email ?? session('password_reset_email') }}</strong>.
-                                        Please enter the 6-digit code below.
-                                    </p>
-                                </div>
+    <div class="auth-shell">
+        <div class="auth-card">
 
-                                @if (session('error'))
-                                    <div class="alert alert-danger py-2 px-3 mb-3" style="font-size: 13px; border-radius: 8px;">
-                                        <i class="fal fa-circle-exclamation me-1"></i>{{ session('error') }}
-                                    </div>
-                                @endif
-                                @if (session('success'))
-                                    <div class="alert alert-success py-2 px-3 mb-3" style="font-size: 13px; border-radius: 8px;">
-                                        <i class="fal fa-circle-check me-1"></i>{{ session('success') }}
-                                    </div>
-                                @endif
-                                @if (session('dev_code'))
-                                    <div class="alert alert-info py-2 px-3 mb-3" style="font-size: 13px; border-radius: 8px;">
-                                        <i class="fal fa-info-circle me-1"></i>
-                                        Email delivery is not configured on this server. Your code is
-                                        <strong style="letter-spacing: 2px;">{{ session('dev_code') }}</strong>
-                                    </div>
-                                @endif
-                                @if ($errors->any())
-                                    <div class="alert alert-danger py-2 px-3 mb-3" style="font-size: 13px; border-radius: 8px;">
-                                        {{ $errors->first() }}
-                                    </div>
-                                @endif
+            {{-- Illustration panel --}}
+            <aside class="auth-visual" aria-hidden="true">
+                <a href="{{ route('home') }}" class="auth-visual-logo">
+                    <img src="{{ asset('frontend/img/logo/logo.svg') }}" alt="">
+                </a>
+                <div class="auth-visual-copy">
+                    <h2 class="auth-visual-title">Almost <span>There!</span></h2>
+                    <p class="auth-visual-text">Enter the 6-digit code we emailed you to verify your account and start learning.</p>
+                </div>
+                <div class="auth-visual-art">
+                    <img src="{{ asset('frontend/img/auth/recovery-illustration.png') }}" alt="" loading="eager" decoding="async">
+                </div>
+            </aside>
 
-                                <div class="row">
-                                    <div class="col-12 form-group style-border3">
-                                        <input type="text" name="code" id="code" inputmode="numeric" pattern="[0-9]{6}" maxlength="6"
-                                            placeholder="Enter Verification Code" class="form-control" required autocomplete="one-time-code">
-                                        <i class="fal fa-key"></i>
-                                    </div>
-                                    <div class="form-btn col-12">
-                                        <button type="submit" class="th-btn w-100">VERIFY CODE <svg class="ms-2"
-                                                width="16" height="16" viewbox="0 0 16 16" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <g clip-path="url(#clip0_458_9379)">
-                                                    <path
-                                                        d="M14.0331 2.03512C12.5811 0.471411 1.65895 4.30197 1.66797 5.7005C1.6782 7.28644 5.93336 7.7743 7.11277 8.10524C7.82203 8.30417 8.01197 8.50817 8.1755 9.2519C8.91617 12.6202 9.28803 14.2955 10.1356 14.3329C11.4865 14.3926 15.4502 3.56117 14.0331 2.03512Z"
-                                                        fill="transparent" stroke="currentColor" stroke-width="1.5">
-                                                    </path>
-                                                    <path d="M7.66797 8.33333L10.0013 6" stroke="currentColor"
-                                                        stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                                                    </path>
-                                                </g>
-                                                <defs>
-                                                    <clippath id="clip0_458_9379">
-                                                        <rect width="16" height="16" fill="currentColor"></rect>
-                                                    </clippath>
-                                                </defs>
-                                            </svg></button>
-                                    </div>
-                                    <div class="col-12 text-center mt-3">
-                                        <p class="mb-0">Didn't receive the code? <a href="{{ route('forgot-password') }}"
-                                                class="text-theme fw-semibold">Resend</a></p>
-                                    </div>
-                                </div>
-                                <p class="form-messages mb-0 mt-3"></p>
-                            </form>
+            {{-- Form panel --}}
+            <div class="auth-panel">
+                <div class="auth-panel-inner">
+
+                    <a href="{{ route('home') }}" class="auth-mobile-logo">
+                        <img src="{{ asset('frontend/img/logo/logo.svg') }}" alt="DoctorsInn">
+                    </a>
+
+                    <h1 class="auth-card-title">Enter Code</h1>
+                    <p class="auth-card-sub">
+                        We have sent a verification code to <strong>{{ $email ?? session('password_reset_email') }}</strong>.
+                        Please enter the 6-digit code below.
+                    </p>
+
+                    {{-- Flash & Error Alerts --}}
+                    @if (session('error'))
+                        <div class="auth-alert-box alert-danger">
+                            <i class="fa-solid fa-circle-exclamation text-danger"></i>
+                            <span>{{ session('error') }}</span>
                         </div>
-                    </div>
+                    @endif
+
+                    @if (session('success'))
+                        <div class="auth-alert-box alert-success">
+                            <i class="fa-solid fa-circle-check text-success"></i>
+                            <span>{{ session('success') }}</span>
+                        </div>
+                    @endif
+
+                    @if (session('dev_code'))
+                        <div class="auth-alert-box alert-info">
+                            <i class="fa-solid fa-circle-info text-info"></i>
+                            <span>Email delivery is not configured on this server. Your code is
+                                <strong style="letter-spacing: 2px;">{{ session('dev_code') }}</strong></span>
+                        </div>
+                    @endif
+
+                    @if ($errors->any())
+                        <div class="auth-alert-box alert-danger">
+                            <i class="fa-solid fa-circle-exclamation text-danger"></i>
+                            <span>{{ $errors->first() }}</span>
+                        </div>
+                    @endif
+
+                    <form action="{{ route('verify-code.submit') }}" method="POST">
+                        @csrf
+
+                        <div class="auth-field-group">
+                            <label class="auth-field-label" for="code">Verification Code</label>
+                            <div class="auth-input-wrap">
+                                <input type="text" name="code" id="code" inputmode="numeric" pattern="[0-9]{6}" maxlength="6"
+                                    placeholder="6-digit code" required autocomplete="one-time-code">
+                                <i class="fal fa-key"></i>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="auth-submit-btn">
+                            <span>VERIFY CODE</span>
+                            <i class="fal fa-arrow-right"></i>
+                        </button>
+
+                        <p class="auth-footer-text">
+                            Didn't receive the code?
+                            <a href="{{ route('forgot-password') }}">Resend</a>
+                        </p>
+                    </form>
+
+                    <p class="auth-panel-foot">&copy; {{ date('Y') }} DoctorsInnElite. All rights reserved.</p>
+
                 </div>
             </div>
+
         </div>
     </div>
 
