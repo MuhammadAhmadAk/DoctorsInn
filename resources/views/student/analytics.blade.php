@@ -48,7 +48,7 @@
         <div class="d-flex align-items-center gap-2">
             <a href="{{ route('student.tests') }}" class="btn btn-sm btn-outline-primary fw-semibold px-3 py-2" style="border-radius: 6px;">
                 <span>Solve New Mock Test</span>
-                <i class="fa-solid fa-arrow-right text-xs ms-1"></i>
+                <img src="{{ asset('student/img/icons/arrow-right.png') }}" class="btn-ic ms-1" alt="" width="13" height="13">
             </a>
         </div>
     </div>

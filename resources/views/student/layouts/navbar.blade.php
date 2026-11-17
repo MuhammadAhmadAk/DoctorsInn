@@ -17,12 +17,12 @@
     <!-- Left: Mobile Toggle & Study Streak -->
     <div class="d-flex align-items-center gap-3">
         <button type="button" class="btn btn-sm btn-light d-lg-none p-2 border rounded-3" id="sidebarToggleBtn" aria-label="Toggle Sidebar">
-            <i class="fa-solid fa-bars fs-6"></i>
+            <img src="{{ asset('student/img/icons/menu.png') }}" alt="" width="16" height="16" style="display: block; object-fit: contain;">
         </button>
 
         <div class="d-none d-sm-flex align-items-center gap-2">
             <span class="navbar-streak-pill">
-                <i class="fa-solid fa-fire text-warning"></i>
+                <img src="{{ asset('student/img/icons/fire.png') }}" class="pill-ic" alt="" width="15" height="15">
                 <span>{{ $navbarStreak }}-Day Study Streak</span>
             </span>
         </div>
@@ -35,7 +35,7 @@
             $daysLeft = max(1, (int) now()->diffInDays($examDate, false));
         @endphp
         <div class="navbar-countdown-pill">
-            <i class="fa-regular fa-calendar-check text-primary"></i>
+            <img src="{{ asset('student/img/icons/calendar.png') }}" class="pill-ic" alt="" width="15" height="15">
             <span>MDCAT 2026: <b>{{ $daysLeft }} Days Left</b></span>
         </div>
     </div>
@@ -44,13 +44,13 @@
     <div class="d-flex align-items-center gap-2 gap-sm-3">
         <!-- Quick Resume Classroom Button -->
         <a href="{{ route('student.classroom', 'mdcat-reboot-60-day') }}" class="btn btn-sm btn-primary d-none d-xl-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill fw-semibold" style="font-size: 12.5px;">
-            <i class="fa-solid fa-play" style="font-size: 10px;"></i>
+            <img src="{{ asset('student/img/icons/play-w.png') }}" class="pill-ic" alt="" width="13" height="13">
             <span>Resume Study</span>
         </a>
 
         <!-- Notifications -->
         <a href="{{ route('notifications') }}" class="btn btn-sm position-relative rounded-circle border bg-white" title="Notifications" style="width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; border-color: var(--std-border) !important;">
-            <i class="fa-regular fa-bell text-secondary" style="font-size: 15px;"></i>
+            <img src="{{ asset('student/img/icons/bell.png') }}" alt="" width="17" height="17" style="display: block; object-fit: contain;">
             @if ($navbarUnread > 0)
                 <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"></span>
             @endif
@@ -73,11 +73,11 @@
                     <div class="fw-bold text-dark" style="font-size: 13.5px;">{{ $studentName }}</div>
                     <div class="text-muted text-xs" style="font-size: 11.5px;">{{ $studentEmail }}</div>
                 </li>
-                <li><a class="dropdown-item py-2 px-3 fw-semibold text-secondary" style="font-size: 13px;" href="{{ route('student.dashboard') }}"><i class="fa-solid fa-house-chimney me-2 text-primary"></i> Study Hub</a></li>
-                <li><a class="dropdown-item py-2 px-3 fw-semibold text-secondary" style="font-size: 13px;" href="{{ route('student.settings') }}"><i class="fa-regular fa-circle-user me-2 text-info"></i> Profile &amp; Settings</a></li>
-                <li><a class="dropdown-item py-2 px-3 fw-semibold text-secondary" style="font-size: 13px;" href="{{ route('home') }}"><i class="fa-solid fa-globe me-2 text-success"></i> Main Website</a></li>
+                <li><a class="dropdown-item py-2 px-3 fw-semibold text-secondary" style="font-size: 13px;" href="{{ route('student.dashboard') }}"><img src="{{ asset('student/img/icons/home.png') }}" class="pill-ic me-2" alt="" width="15" height="15"> Study Hub</a></li>
+                <li><a class="dropdown-item py-2 px-3 fw-semibold text-secondary" style="font-size: 13px;" href="{{ route('student.settings') }}"><img src="{{ asset('student/img/icons/profile.png') }}" class="pill-ic me-2" alt="" width="15" height="15"> Profile &amp; Settings</a></li>
+                <li><a class="dropdown-item py-2 px-3 fw-semibold text-secondary" style="font-size: 13px;" href="{{ route('home') }}"><img src="{{ asset('student/img/icons/globe.png') }}" class="pill-ic me-2" alt="" width="15" height="15"> Main Website</a></li>
                 <li><hr class="dropdown-divider my-1"></li>
-                <li><a class="dropdown-item py-2 px-3 fw-semibold text-danger" style="font-size: 13px;" href="{{ route('logout') }}"><i class="fa-solid fa-arrow-right-from-bracket me-2"></i> Logout</a></li>
+                <li><a class="dropdown-item py-2 px-3 fw-semibold text-danger" style="font-size: 13px;" href="{{ route('logout') }}"><img src="{{ asset('student/img/icons/logout.png') }}" class="pill-ic me-2" alt="" width="15" height="15"> Logout</a></li>
             </ul>
         </div>
     </div>

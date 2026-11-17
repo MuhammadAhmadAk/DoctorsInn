@@ -11,7 +11,7 @@
         </div>
         <div class="d-flex align-items-center gap-2">
             <span class="badge-status badge-status-success">
-                <i class="fa-solid fa-check"></i> Enrolled Medical Aspirant
+                <img src="{{ asset('student/img/icons/check-circle.png') }}" class="pill-ic" alt="" width="14" height="14"> Enrolled Medical Aspirant
             </span>
         </div>
     </div>
@@ -27,10 +27,10 @@
                         <span class="badge-status badge-status-primary">{{ $studentData['target_exam'] }} 2026</span>
                     </div>
                     <div class="text-muted text-xs mb-1">
-                        <i class="fa-regular fa-envelope me-1"></i> {{ $studentData['email'] }}
+                        <img src="{{ asset('student/img/icons/mail.png') }}" class="meta-ic me-1" alt="" width="14" height="14"> {{ $studentData['email'] }}
                     </div>
                     <div class="text-muted text-xs">
-                        <i class="fa-regular fa-calendar-check me-1"></i> Enrolled since {{ $studentData['joined_date'] }}
+                        <img src="{{ asset('student/img/icons/calendar.png') }}" class="meta-ic me-1" alt="" width="14" height="14"> Enrolled since {{ $studentData['joined_date'] }}
                     </div>
                 </div>
             </div>
@@ -52,7 +52,7 @@
                         <h3 class="h6 fw-bold text-dark mb-0">Personal Information</h3>
                         <span class="text-muted text-xs">Update your display name, phone, and target exam</span>
                     </div>
-                    <img src="{{ asset('student/img/icons/id-card.png') }}" class="btn-ic" alt="" width="15" height="15">
+                    <img src="{{ asset('student/img/icons/id-card.png') }}" class="btn-ic" alt="" width="17" height="17" style="width: 17px; height: 17px;">
                 </div>
 
                 <form action="{{ route('student.settings.update') }}" method="POST">
@@ -107,7 +107,7 @@
                             <h3 class="h6 fw-bold text-dark mb-0">Security</h3>
                             <span class="text-muted text-xs">Set a password for direct login</span>
                         </div>
-                        <img src="{{ asset('student/img/icons/key.png') }}" class="btn-ic" alt="" width="15" height="15">
+                        <img src="{{ asset('student/img/icons/key.png') }}" class="btn-ic" alt="" width="17" height="17" style="width: 17px; height: 17px;">
                     </div>
 
                     <form action="{{ route('student.settings.update') }}" method="POST">

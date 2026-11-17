@@ -52,7 +52,7 @@
         </div>
         <div class="d-flex align-items-center gap-2">
             <span class="badge-status badge-status-success">
-                <i class="fa-solid fa-check"></i> PMDC 2026 Engine Active
+                <img src="{{ asset('student/img/icons/check-circle.png') }}" class="pill-ic" alt="" width="14" height="14"> PMDC 2026 Engine Active
             </span>
         </div>
     </div>
@@ -159,16 +159,16 @@
 
                     {{-- Meta Badges --}}
                     <div class="d-flex align-items-center justify-content-between border-top border-bottom py-2 mb-3 text-xs text-muted">
-                        <span><i class="fa-regular fa-clock me-1 text-primary"></i> {{ $duration }} Mins</span>
-                        <span><i class="fa-solid fa-list-ol me-1 text-primary"></i> {{ $questions }} MCQs</span>
-                        <span><i class="fa-solid fa-users me-1"></i> {{ $test['attempts'] ?? '1.2k+' }}</span>
+                        <span><img src="{{ asset('student/img/icons/clock.png') }}" class="meta-ic me-1" alt="" width="14" height="14"> {{ $duration }} Mins</span>
+                        <span><img src="{{ asset('student/img/icons/checklist.png') }}" class="meta-ic me-1" alt="" width="14" height="14"> {{ $questions }} MCQs</span>
+                        <span><img src="{{ asset('student/img/icons/users.png') }}" class="meta-ic me-1" alt="" width="14" height="14"> {{ $test['attempts'] ?? '1.2k+' }}</span>
                     </div>
 
                     {{-- Action CTA --}}
                     <div class="mt-auto">
                         <a href="{{ route('test.take', $slug) }}" class="btn btn-sm btn-primary w-100 py-2 fw-semibold d-inline-flex align-items-center justify-content-center gap-2" style="border-radius: 6px;">
                             <span>Start Online Test</span>
-                            <i class="fa-solid fa-arrow-right text-xs"></i>
+                            <img src="{{ asset('student/img/icons/arrow-right-w.png') }}" class="btn-ic" alt="" width="13" height="13">
                         </a>
                     </div>
                 </div>

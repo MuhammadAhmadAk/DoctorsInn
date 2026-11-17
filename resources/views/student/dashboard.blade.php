@@ -184,7 +184,7 @@
                     <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
                         <h1 class="h5 fw-bold text-dark mb-0" style="letter-spacing: -0.015em;">Welcome back, {{ $studentData['name'] }}! 👋</h1>
                         <span class="badge-status badge-status-primary">
-                            <i class="fa-solid fa-stethoscope"></i> {{ $studentData['target_exam'] }} 2026
+                            <img src="{{ asset('student/img/icons/stethoscope.png') }}" class="meta-ic me-1" alt="" width="14" height="14"> {{ $studentData['target_exam'] }} 2026
                         </span>
                     </div>
                     <p class="text-muted mb-0" style="font-size: 13px;">Every lecture &amp; MCQ brings you closer to your medical college dream. Keep going!</p>
@@ -255,7 +255,7 @@
     <div class="resume-course-card">
         <div class="d-flex align-items-center gap-3 flex-grow-1" style="min-width: 240px;">
             <div class="resume-play-badge d-none d-sm-flex">
-                <i class="fa-solid fa-play"></i>
+                <img src="{{ asset('student/img/icons/play.png') }}" class="list-ic" alt="" width="20" height="20">
             </div>
             <div class="flex-grow-1">
                 <div class="d-flex align-items-center gap-2 mb-1">
@@ -272,7 +272,7 @@
         <div>
             <a href="{{ route('student.classroom', 'mdcat-reboot-60-day') }}" class="btn btn-primary px-4 py-2 fw-semibold rounded-pill d-inline-flex align-items-center gap-2" style="font-size: 13.5px;">
                 <span>Resume Lecture</span>
-                <i class="fa-solid fa-arrow-right" style="font-size: 12px;"></i>
+                <img src="{{ asset('student/img/icons/arrow-right-w.png') }}" class="btn-ic" alt="" width="14" height="14">
             </a>
         </div>
     </div>
@@ -290,7 +290,7 @@
                         <span class="text-muted" style="font-size: 12px;">Based on your practice MCQs &amp; mock exams</span>
                     </div>
                     <span class="badge-status badge-status-success">
-                        <i class="fa-solid fa-circle-check"></i> On Track
+                        <img src="{{ asset('student/img/icons/check-circle.png') }}" class="pill-ic" alt="" width="14" height="14"> On Track
                     </span>
                 </div>
 
@@ -310,13 +310,17 @@
                                 default => 'fill-warning',
                             };
                             $subColor = $subject['color'] ?? '#5C32FF';
-                            $subIcon = $subject['icon'] ?? 'fa-solid fa-book';
+                            $subKeyLower = strtolower((string) $subKey);
+                            $subPng = str_contains($subKeyLower, 'bio') ? 'dna'
+                                : (str_contains($subKeyLower, 'chem') ? 'flask'
+                                : (str_contains($subKeyLower, 'phy') ? 'bolt'
+                                : ((str_contains($subKeyLower, 'eng') || str_contains($subKeyLower, 'logic')) ? 'brain' : 'open-book')));
                         @endphp
                         <div class="subject-row">
                             <div class="d-flex align-items-center justify-content-between mb-2">
                                 <div class="d-flex align-items-center gap-2">
-                                    <span class="subject-icon-pill" style="background: {{ $subColor }}1A; color: {{ $subColor }};">
-                                        <i class="{{ $subIcon }}"></i>
+                                    <span class="subject-icon-pill" style="background: {{ $subColor }}1A;">
+                                        <img src="{{ asset('student/img/icons/' . $subPng . '.png') }}" class="sub-ic" alt="" width="18" height="18">
                                     </span>
                                     <span class="fw-bold text-dark" style="font-size: 13.5px;">{{ $subject['name'] }}</span>
                                 </div>
@@ -429,8 +433,8 @@
                     @foreach (array_slice($resources, 0, 4) as $res)
                         <div class="vault-file-row d-flex align-items-center justify-content-between gap-2">
                             <div class="d-flex align-items-center gap-3 overflow-hidden">
-                                <div class="d-flex align-items-center justify-content-center rounded-3 flex-shrink-0" style="width: 36px; height: 36px; background: #FEF2F2; color: #EF4444;">
-                                    <i class="fa-regular fa-file-pdf fs-6"></i>
+                                <div class="d-flex align-items-center justify-content-center rounded-3 flex-shrink-0" style="width: 36px; height: 36px; background: #FEF2F2;">
+                                    <img src="{{ asset('student/img/icons/pdf.png') }}" class="list-ic" alt="" width="20" height="20">
                                 </div>
                                 <div class="overflow-hidden">
                                     <div class="fw-semibold text-dark text-truncate" style="font-size: 13px;">{{ $res['title'] }}</div>
@@ -438,7 +442,7 @@
                                 </div>
                             </div>
                             <a href="{{ route('e-library.download', $res['slug']) }}" class="btn btn-sm btn-light border py-1 px-2 rounded-3 flex-shrink-0 text-primary" title="Download PDF">
-                                <i class="fa-solid fa-download" style="font-size: 12px;"></i>
+                                <img src="{{ asset('student/img/icons/cloud-download.png') }}" class="btn-ic" alt="" width="14" height="14">
                             </a>
                         </div>
                     @endforeach
@@ -457,7 +461,7 @@
                 <div class="modal-content">
                     <div class="modal-body p-4 p-sm-5 text-center">
                         <div class="enroll-check">
-                            <i class="fa-solid fa-check"></i>
+                            <img src="{{ asset('student/img/icons/check-circle.png') }}" alt="" width="26" height="26" style="display: block; object-fit: contain;">
                         </div>
 
                         <h2 class="enroll-title" id="enrollmentSuccessTitle">Enrollment confirmed</h2>
@@ -474,14 +478,14 @@
                                 <img src="{{ asset($enrolled['image']) }}" alt="{{ $enrolled['title'] }}" class="enroll-course-thumb">
                             @else
                                 <div class="enroll-course-icon">
-                                    <i class="fa-solid fa-graduation-cap"></i>
+                                    <img src="{{ asset('student/img/icons/cap.png') }}" alt="" width="26" height="26" style="display: block; object-fit: contain;">
                                 </div>
                             @endif
                             <div>
                                 <div class="enroll-course-title">{{ $enrolled['title'] }}</div>
                                 <div class="enroll-course-meta">
                                     <span class="badge-status badge-status-success">
-                                        <i class="fa-solid fa-circle-check"></i> Access active
+                                        <img src="{{ asset('student/img/icons/check-circle.png') }}" class="pill-ic" alt="" width="14" height="14"> Access active
                                     </span>
                                     @if (! empty($enrolled['lessons']))
                                         <span>{{ $enrolled['lessons'] }}</span>
@@ -495,7 +499,7 @@
 
                         <div class="enroll-actions d-grid gap-2 mt-4">
                             <a href="{{ route('student.classroom', $enrolled['slug']) }}" class="btn btn-primary py-2 fw-semibold">
-                                <i class="fa-solid fa-play me-2" style="font-size: 11px;"></i>Start Learning
+                                <img src="{{ asset('student/img/icons/play-w.png') }}" class="btn-ic me-2" alt="" width="12" height="12">Start Learning
                             </a>
                             <button type="button" class="btn btn-link text-muted text-decoration-none py-1" data-bs-dismiss="modal">
                                 Stay on dashboard

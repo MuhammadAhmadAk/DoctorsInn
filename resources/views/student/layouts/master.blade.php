@@ -39,14 +39,14 @@
                 {{-- Flash Notifications --}}
                 @if (session('success'))
                     <div class="alert alert-success d-flex align-items-center mb-4 py-2 px-3 rounded-3" role="alert" style="font-size: 13.5px; border-left: 4px solid #10b981;">
-                        <i class="fa-solid fa-circle-check me-2 fs-5 text-success"></i>
+                        <img src="{{ asset('student/img/icons/check-circle.png') }}" class="pill-ic me-2" alt="" width="16" height="16">
                         <div>{{ session('success') }}</div>
                     </div>
                 @endif
 
                 @if (session('warning'))
                     <div class="alert alert-warning d-flex align-items-center mb-4 py-2 px-3 rounded-3" role="alert" style="font-size: 13.5px; border-left: 4px solid #f59e0b;">
-                        <i class="fa-solid fa-triangle-exclamation me-2 fs-5 text-warning"></i>
+                        <img src="{{ asset('student/img/icons/warning.png') }}" class="pill-ic me-2" alt="" width="16" height="16">
                         <div>{{ session('warning') }}</div>
                     </div>
                 @endif

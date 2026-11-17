@@ -60,7 +60,7 @@
         </div>
         <div class="d-flex align-items-center gap-2">
             <a href="{{ route('student.classroom') }}" class="btn btn-sm btn-primary d-inline-flex align-items-center gap-2 px-3 py-2 fw-semibold" style="border-radius: 6px;">
-                <i class="fa-solid fa-play text-xs"></i>
+                <img src="{{ asset('student/img/icons/play-w.png') }}" class="btn-ic" alt="" width="12" height="12">
                 <span>Resume Active Classroom</span>
             </a>
         </div>
@@ -88,7 +88,7 @@
                     {{-- Card Body --}}
                     <div class="course-card-body">
                         <div class="d-flex align-items-center justify-content-between text-xs text-muted mb-2">
-                            <span><i class="fa-solid fa-stethoscope me-1 text-primary"></i> {{ $course['category'] ?? 'Medical Entry' }}</span>
+                            <span><img src="{{ asset('student/img/icons/stethoscope.png') }}" class="meta-ic me-1" alt="" width="14" height="14"> {{ $course['category'] ?? 'Medical Entry' }}</span>
                             <span>{{ $course['duration'] ?? '8 Weeks' }}</span>
                         </div>
 
@@ -116,10 +116,10 @@
                             <div class="d-flex align-items-center gap-2">
                                 <a href="{{ route('student.classroom', $slug) }}" class="btn btn-sm btn-primary w-100 py-2 fw-semibold d-inline-flex align-items-center justify-content-center gap-2" style="border-radius: 6px;">
                                     <span>Enter Classroom</span>
-                                    <i class="fa-solid fa-arrow-right text-xs"></i>
+                                    <img src="{{ asset('student/img/icons/arrow-right-w.png') }}" class="btn-ic" alt="" width="13" height="13">
                                 </a>
                                 <a href="{{ route('course-details', $slug) }}" target="_blank" class="btn btn-sm btn-light border py-2 px-3 text-muted" title="View Outline" style="border-radius: 6px;">
-                                    <i class="fa-solid fa-circle-info"></i>
+                                    <img src="{{ asset('student/img/icons/info.png') }}" class="btn-ic" alt="" width="15" height="15">
                                 </a>
                             </div>
                         </div>
@@ -132,7 +132,7 @@
                     <h4 class="fw-bold text-dark">No Enrolled Courses Yet</h4>
                     <p class="text-muted text-sm mb-4">Enroll in a course to start your preparation. All lectures unlock instantly after payment.</p>
                     <a href="{{ route('course') }}" class="btn btn-sm btn-primary px-4 py-2 fw-semibold" style="border-radius: 6px;">
-                        Browse Courses <i class="fa-solid fa-arrow-right ms-1 text-xs"></i>
+                        Browse Courses <img src="{{ asset('student/img/icons/arrow-right-w.png') }}" class="btn-ic ms-1" alt="" width="13" height="13">
                     </a>
                 </div>
             </div>

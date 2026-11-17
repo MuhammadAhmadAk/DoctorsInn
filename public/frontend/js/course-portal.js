@@ -72,13 +72,18 @@ function getActiveCourseId() {
     return keys.length > 0 ? (courseId && db[courseId] ? courseId : (db["mdcat-reboot-60-day"] ? "mdcat-reboot-60-day" : keys[0])) : "";
 }
 
-function getModuleIcon(name = "") {
+// 3D PNG icon helper (matches the student portal icon set)
+const diIconBase = () => ((window.APP_BASE_URL || '').replace(/\/+$/, '')) + '/student/img/icons/';
+function diIcon(name, cls = '', size = 18) {
+    return `<img src="${diIconBase()}${name}.png" class="${cls}" alt="" width="${size}" height="${size}">`;
+}
+function getModulePng(name = "") {
     const lower = name.toLowerCase();
-    if (lower.includes("bio")) return "fa-solid fa-dna";
-    if (lower.includes("chem")) return "fa-solid fa-flask-vial";
-    if (lower.includes("phy")) return "fa-solid fa-bolt";
-    if (lower.includes("eng") || lower.includes("logic")) return "fa-solid fa-brain";
-    return "fa-solid fa-layer-group";
+    if (lower.includes("bio")) return "dna";
+    if (lower.includes("chem")) return "flask";
+    if (lower.includes("phy")) return "bolt";
+    if (lower.includes("eng") || lower.includes("logic")) return "brain";
+    return "layers";
 }
 
 /**
@@ -93,7 +98,6 @@ function normalizeCourseContent(course) {
         return course.modules.map((mod, modIdx) => {
             const modId = mod.id || `module-${modIdx + 1}`;
             const modName = mod.name || `Module ${modIdx + 1}`;
-            const modIcon = mod.icon || getModuleIcon(modName);
 
             // If module already has structured chapters
             if (Array.isArray(mod.chapters) && mod.chapters.length > 0) {
@@ -137,7 +141,6 @@ function normalizeCourseContent(course) {
                 return {
                     id: modId,
                     name: modName,
-                    icon: modIcon,
                     description: mod.description || "",
                     chapters: chapters
                 };
@@ -222,7 +225,6 @@ function normalizeCourseContent(course) {
             return {
                 id: modId,
                 name: modName,
-                icon: modIcon,
                 description: mod.description || "",
                 chapters: [
                     {
@@ -538,35 +540,27 @@ function renderCurriculumSidebar() {
                 const completedClass = isCompleted ? "completed" : "";
                 const activeClass = topic.id === activeTopicId ? "active" : "";
 
-                let iconClass = "fa-solid fa-play";
-                let iconColorClass = "text-muted";
+                let iconName = "play";
 
                 if (topic.isQuiz) {
-                    if (topic.quizType === "chapter") {
-                        iconClass = "fa-solid fa-trophy";
-                        iconColorClass = "icon-assessment";
-                    } else {
-                        iconClass = "fa-solid fa-clipboard-question";
-                        iconColorClass = "icon-quiz";
-                    }
+                    iconName = topic.quizType === "chapter" ? "trophy" : "file-question";
                 } else if (topic.type === "reading" || topic.type === "text") {
-                    iconClass = "fa-regular fa-file-lines";
-                    iconColorClass = "text-muted";
+                    iconName = "document";
                 }
 
                 topicsHtml += `
                     <div class="topic-row ${activeClass} ${completedClass}" id="item-${topic.id}" data-topic-id="${topic.id}" data-lesson-id="${topic.id}">
                         <div class="topic-row-start">
-                            <span class="topic-type-icon ${iconColorClass}">
-                                <i class="${iconClass}"></i>
+                            <span class="topic-type-icon">
+                                ${diIcon(iconName, 'topic-type-ic', 14)}
                             </span>
                             <span class="topic-title" title="${topic.title}">${topic.title}</span>
                         </div>
                         <div class="topic-row-end">
                             <span class="topic-duration">${topic.duration}</span>
                             <span class="topic-check">
-                                <i class="fa-solid fa-circle-check checkmark"></i>
-                                <i class="fa-regular fa-circle bullet"></i>
+                                ${diIcon('check-circle', 'checkmark', 14)}
+                                <span class="bullet"></span>
                             </span>
                         </div>
                     </div>
@@ -599,7 +593,7 @@ function renderCurriculumSidebar() {
                     <button class="accordion-button module-accordion-btn ${modCollapsedClass}" type="button" data-bs-toggle="collapse" data-bs-target="#${modCollapseId}" aria-expanded="${modIsExpanded}" aria-controls="${modCollapseId}">
                         <div class="d-flex align-items-center justify-content-between flex-grow-1 min-w-0 pe-2">
                             <div class="d-flex align-items-center min-w-0">
-                                <i class="${mod.icon} text-primary me-2 flex-shrink-0"></i>
+                                ${diIcon(getModulePng(mod.name), 'tree-ic')}
                                 <span class="module-title fw-bold text-truncate">${mod.name}</span>
                             </div>
                             <span class="text-muted text-xs ms-2 flex-shrink-0" style="font-size: 10.5px;">${mod.chapters.length} Ch</span>
@@ -826,7 +820,7 @@ function selectActiveTopic(topicId) {
                 <h5 class="fw-bold text-dark mb-2">${activeTopic.title}</h5>
                 <p class="mb-2">This topic contains high-yield PMDC syllabus core points, conceptual diagrams, and mnemonics.</p>
                 <div class="alert alert-info py-2 px-3 text-xs mb-0">
-                    <i class="fa-solid fa-circle-info me-1"></i> Video lecture and interactive checkpoints are accessible in the outline.
+                    ${diIcon('info', 'meta-ic me-1', 14)} Video lecture and interactive checkpoints are accessible in the outline.
                 </div>
             </div>
         `;
@@ -905,15 +899,15 @@ function renderResourcesList(activeTopic, course) {
                 <div class="resource-study-box d-flex align-items-center justify-content-between p-3 mb-2 rounded-3 border bg-light">
                     <div class="d-flex align-items-center gap-3">
                         <div class="rounded-3 p-2 bg-white border d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                            <i class="fa-solid fa-file-pdf text-danger fs-5"></i>
+                            ${diIcon('pdf', 'res-ic', 20)}
                         </div>
                         <div>
                             <span class="fw-bold d-block text-dark text-sm">${res.name}</span>
-                            <span class="text-xs text-muted"><i class="fa-regular fa-download me-1"></i> Verified MDCAT Study Resource &bull; PDF Document</span>
+                            <span class="text-xs text-muted">${diIcon('cloud-download', 'meta-ic me-1', 13)} Verified MDCAT Study Resource &bull; PDF Document</span>
                         </div>
                     </div>
                     <button type="button" data-resource-download="${res.name}" class="btn btn-sm btn-primary py-2 px-3 fw-semibold">
-                        <i class="fa-regular fa-arrow-down-to-line me-1"></i> Download PDF
+                        ${diIcon('download-w', 'btn-ic me-1', 12)} Download PDF
                     </button>
                 </div>
             `;
@@ -922,8 +916,8 @@ function renderResourcesList(activeTopic, course) {
     } else {
         resourcesContainer.innerHTML = `
             <div class="text-center py-4 text-muted text-sm">
-                <i class="fa-regular fa-folder-open mb-2 d-block fs-3"></i>
-                No additional resources attached for this topic.
+                ${diIcon('folder', 'empty-ic', 32)}
+                <div>No additional resources attached for this topic.</div>
             </div>
         `;
     }
@@ -972,11 +966,11 @@ function initQuizStudio(topic) {
         if (topic.quizType === "chapter") {
             typeBadge.className = "badge bg-purple text-white fw-bold text-xs px-2.5 py-1";
             typeBadge.style.backgroundColor = "#7c3aed";
-            typeBadge.innerHTML = `<i class="fa-solid fa-award me-1"></i> Chapter Assessment`;
+            typeBadge.innerHTML = `${diIcon('trophy', 'meta-ic me-1', 12)} Chapter Assessment`;
         } else {
             typeBadge.className = "badge bg-warning text-dark fw-bold text-xs px-2.5 py-1";
             typeBadge.style.backgroundColor = "";
-            typeBadge.innerHTML = `<i class="fa-solid fa-clipboard-question me-1"></i> Topic Quiz`;
+            typeBadge.innerHTML = `${diIcon('file-question', 'meta-ic me-1', 12)} Topic Quiz`;
         }
     }
 
@@ -1174,13 +1168,13 @@ function loadQuizQuestion(qIdx) {
     if (checkBtn) {
         if (checkedStatus[qIdx]) {
             checkBtn.disabled = true;
-            checkBtn.innerHTML = `<i class="fa-solid fa-check-double me-1"></i> Checked`;
+            checkBtn.innerHTML = `${diIcon('check-circle', 'btn-ic me-1', 13)} Checked`;
         } else if (userSelections[qIdx] !== null) {
             checkBtn.disabled = false;
-            checkBtn.innerHTML = `<i class="fa-solid fa-circle-check me-1"></i> Check Answer`;
+            checkBtn.innerHTML = `${diIcon('check-circle', 'btn-ic me-1', 13)} Check Answer`;
         } else {
             checkBtn.disabled = true;
-            checkBtn.innerHTML = `<i class="fa-solid fa-circle-check me-1"></i> Check Answer`;
+            checkBtn.innerHTML = `${diIcon('check-circle', 'btn-ic me-1', 13)} Check Answer`;
         }
     }
 
@@ -1344,10 +1338,10 @@ function updateCompleteButtonUi(isCompleted) {
     const btn = document.getElementById("complete-lesson-btn");
     if (!btn) return;
     if (isCompleted) {
-        btn.innerHTML = `<i class="fa-solid fa-circle-check me-1.5"></i> Completed`;
+        btn.innerHTML = `${diIcon('check-w', 'btn-ic me-1.5', 13)} Completed`;
         btn.className = "btn btn-sm btn-success text-white border-0 fw-semibold px-3 py-1.5 rounded-pill";
     } else {
-        btn.innerHTML = `<i class="fa-regular fa-circle-check me-1.5"></i> Mark Complete`;
+        btn.innerHTML = `${diIcon('check-circle', 'btn-ic me-1.5', 13)} Mark Complete`;
         btn.className = "btn btn-sm btn-outline-primary fw-semibold px-3 py-1.5 rounded-pill";
     }
 }
@@ -1402,11 +1396,11 @@ function renderQaFeed() {
                     <div class="d-flex align-items-center gap-2">
                         <img src="${getInstructorImage()}" alt="instructor" class="rounded-circle border" style="width: 38px; height: 38px; object-fit: cover;">
                         <div>
-                            <span class="fw-bold text-dark text-sm d-inline-flex align-items-center">DoctorsInn Faculty <span class="badge bg-primary text-white text-xs px-2 py-0.5 ms-2 rounded-pill"><i class="fa-solid fa-thumbtack me-1"></i> Pinned Announcement</span></span>
+                            <span class="fw-bold text-dark text-sm d-inline-flex align-items-center">DoctorsInn Faculty <span class="badge bg-primary text-white text-xs px-2 py-0.5 ms-2 rounded-pill">${diIcon('flag-w', 'meta-ic me-1', 11)} Pinned Announcement</span></span>
                             <span class="text-xs text-muted d-block">Lead Medical Faculty</span>
                         </div>
                     </div>
-                    <span class="text-xs text-muted font-semibold"><i class="fa-solid fa-shield-check text-primary me-1"></i> Verified</span>
+                    <span class="text-xs text-muted font-semibold">${diIcon('check-circle', 'meta-ic me-1', 12)} Verified</span>
                 </div>
                 <p class="mb-0 text-sm text-dark">${course.pinnedMessage}</p>
             </div>
@@ -1418,8 +1412,8 @@ function renderQaFeed() {
     if (threads.length === 0 && (!course || !course.pinnedMessage)) {
         feedContainer.innerHTML = `
             <div class="text-center py-4 text-muted text-sm">
-                <i class="fa-regular fa-comments mb-2 d-block fs-3"></i>
-                No questions asked yet. Be the first to ask!
+                ${diIcon('chat', 'empty-ic', 32)}
+                <div>No questions asked yet. Be the first to ask!</div>
             </div>
         `;
         return;

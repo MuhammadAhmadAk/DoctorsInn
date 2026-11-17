@@ -92,7 +92,7 @@
         </div>
         <div class="d-flex align-items-center gap-2">
             <span class="badge-status badge-status-primary">
-                <i class="fa-solid fa-cloud-arrow-down"></i> Free Student Downloads
+                <img src="{{ asset('student/img/icons/cloud-download.png') }}" class="pill-ic" alt="" width="14" height="14"> Free Student Downloads
             </span>
         </div>
     </div>
@@ -103,7 +103,7 @@
             <div class="col-lg-5">
                 <div class="input-group">
                     <span class="input-group-text bg-white border-end-0 text-muted" style="border-radius: 6px 0 0 6px;">
-                        <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                        <img src="{{ asset('student/img/icons/search.png') }}" alt="" width="14" height="14" style="display:block;object-fit:contain;">
                     </span>
                     <input type="text" id="elibSearchInput" class="form-control border-start-0" placeholder="Search notes, past papers, subjects..." style="border-radius: 0 6px 6px 0; font-size: 13px;">
                 </div>
@@ -149,7 +149,7 @@
                     {{-- Body --}}
                     <div class="elib-card-body">
                         <div class="d-flex align-items-center justify-content-between text-xs text-muted mb-2">
-                            <span><i class="fa-solid fa-book-open text-primary me-1"></i> {{ $res['subject'] ?? 'General' }}</span>
+                            <span><img src="{{ asset('student/img/icons/open-book.png') }}" class="meta-ic me-1" alt="" width="14" height="14"> {{ $res['subject'] ?? 'General' }}</span>
                             <span>{{ $res['downloads'] ?? '5k+' }} downloads</span>
                         </div>
 
@@ -163,15 +163,15 @@
 
                         {{-- Metadata Row --}}
                         <div class="d-flex align-items-center justify-content-between border-top border-bottom py-2 mb-3 text-xs text-muted">
-                            <span><i class="fa-regular fa-file-lines me-1"></i> {{ $res['pages'] ?? '40+ Pages' }}</span>
-                            <span><i class="fa-solid fa-hard-drive me-1"></i> {{ $res['size'] ?? '5 MB' }}</span>
-                            <span>⭐ {{ $res['rating'] ?? '4.9' }}</span>
+                            <span><img src="{{ asset('student/img/icons/document.png') }}" class="meta-ic me-1" alt="" width="14" height="14"> {{ $res['pages'] ?? '40+ Pages' }}</span>
+                            <span><img src="{{ asset('student/img/icons/hdd.png') }}" class="meta-ic me-1" alt="" width="14" height="14"> {{ $res['size'] ?? '5 MB' }}</span>
+                            <span><img src="{{ asset('student/img/icons/star.png') }}" class="meta-ic me-1" alt="" width="14" height="14"> {{ $res['rating'] ?? '4.9' }}</span>
                         </div>
 
                         {{-- Action Button --}}
                         <div class="mt-auto">
                             <a href="{{ route('e-library.download', $res['slug']) }}" target="_blank" class="btn btn-sm btn-primary w-100 py-2 fw-semibold d-inline-flex align-items-center justify-content-center gap-2" style="border-radius: 6px;">
-                                <i class="fa-solid fa-arrow-down-to-bracket text-xs"></i>
+                                <img src="{{ asset('student/img/icons/download-w.png') }}" class="btn-ic" alt="" width="13" height="13">
                                 <span>Download PDF</span>
                             </a>
                         </div>

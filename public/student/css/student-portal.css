@@ -421,6 +421,73 @@ body {
     height: 15px;
     object-fit: contain;
     flex-shrink: 0;
+    vertical-align: -2px;
+}
+.meta-ic {
+    width: 14px;
+    height: 14px;
+    object-fit: contain;
+    vertical-align: -2px;
+}
+.pill-ic {
+    width: 15px;
+    height: 15px;
+    object-fit: contain;
+    vertical-align: -2px;
+    flex-shrink: 0;
+}
+.sub-ic {
+    display: block;
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+}
+.list-ic {
+    display: block;
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+}
+.tree-ic {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+    flex-shrink: 0;
+    margin-right: 8px;
+}
+.res-ic {
+    display: block;
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+}
+.tab-ic {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+.empty-ic {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    margin-bottom: 8px;
+}
+.banner-ic {
+    display: block;
+    width: 46px;
+    height: 46px;
+    object-fit: contain;
+}
+.di-flipx {
+    transform: scaleX(-1);
+}
+.di-spin {
+    animation: diSpin 1.6s linear infinite;
+}
+@keyframes diSpin {
+    to { transform: rotate(360deg); }
 }
 .std-kpi-val {
     font-size: 19px;

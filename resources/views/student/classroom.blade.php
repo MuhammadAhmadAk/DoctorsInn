@@ -174,19 +174,16 @@
     }
     .topic-type-icon {
         width: 16px;
-        text-align: center;
-        font-size: 11px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         flex-shrink: 0;
-        color: #94a3b8;
     }
-    .topic-row.active .topic-type-icon, .topic-study-item.active .topic-type-icon {
-        color: var(--std-primary);
-    }
-    .topic-type-icon.icon-quiz {
-        color: #d97706;
-    }
-    .topic-type-icon.icon-assessment {
-        color: #7c3aed;
+    .topic-type-ic {
+        display: block;
+        width: 14px;
+        height: 14px;
+        object-fit: contain;
     }
     .topic-title {
         overflow: hidden;
@@ -208,13 +205,16 @@
     }
     .topic-check .checkmark {
         display: none;
-        color: #10b981;
-        font-size: 11.5px;
+        width: 14px;
+        height: 14px;
+        object-fit: contain;
     }
     .topic-check .bullet {
         display: inline-block;
-        color: #cbd5e1;
-        font-size: 10px;
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: #cbd5e1;
     }
     .topic-row.completed .topic-check .checkmark, .topic-study-item.completed .topic-check .checkmark {
         display: inline-block;
@@ -716,7 +716,7 @@
         <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
             <div class="d-flex align-items-center gap-2 flex-grow-1" style="max-width: 480px;">
                 <a href="{{ route('student.courses') }}" class="btn btn-sm btn-light border py-1.5 px-2.5 rounded-2 text-secondary flex-shrink-0" title="Back to Courses">
-                    <i class="fa-solid fa-arrow-left"></i>
+                    <img src="{{ asset('student/img/icons/arrow-left.png') }}" class="btn-ic" alt="Back" width="14" height="14">
                 </a>
                 <select id="enrolledCourseSelect"
                     class="form-select form-select-sm rounded-3 fw-bold text-dark"
@@ -780,8 +780,8 @@
                                 </select>
                             </label>
                             <div class="lecture-nav-btns">
-                                <button type="button" id="lecture-prev-btn" title="Previous topic" aria-label="Previous topic"><i class="fa-solid fa-backward-step"></i></button>
-                                <button type="button" id="lecture-next-btn" title="Next topic" aria-label="Next topic"><i class="fa-solid fa-forward-step"></i></button>
+                                <button type="button" id="lecture-prev-btn" title="Previous topic" aria-label="Previous topic"><img src="{{ asset('student/img/icons/arrow-left.png') }}" alt="" width="14" height="14" style="display:block;object-fit:contain;"></button>
+                                <button type="button" id="lecture-next-btn" title="Next topic" aria-label="Next topic"><img src="{{ asset('student/img/icons/arrow-right.png') }}" alt="" width="14" height="14" style="display:block;object-fit:contain;"></button>
                             </div>
                         </div>
                     </div>
@@ -792,20 +792,20 @@
                             <span data-loading-text>Preparing secure stream…</span>
                         </div>
                         <div id="lecture-player-processing" class="lecture-overlay lecture-processing d-none">
-                            <i class="fa-solid fa-gear fa-spin"></i>
+                            <img src="{{ asset('student/img/icons/gear.png') }}" class="di-spin" alt="" width="24" height="24" style="display:block;object-fit:contain;">
                             <p id="lecture-processing-text">This lecture is being processed…</p>
                             <div class="lecture-processing-track"><span id="lecture-processing-bar"></span></div>
                         </div>
                         <div id="lecture-player-error" class="lecture-overlay lecture-error d-none">
-                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            <img src="{{ asset('student/img/icons/warning.png') }}" alt="" width="26" height="26" style="display:block;object-fit:contain;">
                             <p id="lecture-error-text">Playback failed.</p>
-                            <button type="button" class="btn btn-sm btn-light" id="lecture-retry-btn"><i class="fa-solid fa-rotate-right me-1"></i> Retry Playback</button>
+                            <button type="button" class="btn btn-sm btn-light" id="lecture-retry-btn"><img src="{{ asset('student/img/icons/retry.png') }}" class="btn-ic me-1" alt="" width="12" height="12"> Retry Playback</button>
                         </div>
                     </div>
                     <div class="lecture-player-footer">
                         <div class="lecture-skip-group">
-                            <button type="button" data-lecture-skip="-10" title="Back 10 seconds"><i class="fa-solid fa-rotate-left"></i><span>10s</span></button>
-                            <button type="button" data-lecture-skip="10" title="Forward 10 seconds"><span>10s</span><i class="fa-solid fa-rotate-right"></i></button>
+                            <button type="button" data-lecture-skip="-10" title="Back 10 seconds"><img src="{{ asset('student/img/icons/retry.png') }}" class="btn-ic di-flipx" alt="" width="12" height="12"><span>10s</span></button>
+                            <button type="button" data-lecture-skip="10" title="Forward 10 seconds"><span>10s</span><img src="{{ asset('student/img/icons/retry.png') }}" class="btn-ic" alt="" width="12" height="12"></button>
                         </div>
                         <div class="lecture-progress-meta">
                             <span class="lecture-percent"><span id="lecture-percent-label">0% watched</span></span>
@@ -829,7 +829,7 @@
                      ========================================================= --}}
                 <div id="text-lesson-banner" class="text-lesson-banner mb-4 d-none">
                     <div class="py-5 px-4 rounded-4 text-center bg-light border">
-                        <i class="fa-solid fa-book-open-reader text-primary mb-3 fs-1"></i>
+                        <img src="{{ asset('student/img/icons/open-book.png') }}" class="banner-ic mx-auto mb-3" alt="" width="46" height="46">
                         <h4 class="h5 fw-bold text-dark mb-2" id="text-banner-title">High-Yield Topic Notes</h4>
                         <p class="text-muted text-sm mb-0">Study the comprehensive syllabus breakdown, mnemonics, and PMDC key points below.</p>
                     </div>
@@ -844,7 +844,7 @@
                         <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-2">
                             <span class="text-white-50 text-xs" id="quiz-breadcrumb">Module 1: Biology &bull; Chapter 1 &bull; Quiz</span>
                             <div class="quiz-timer-pill" id="quiz-timer-pill">
-                                <i class="fa-regular fa-clock"></i>
+                                <img src="{{ asset('student/img/icons/clock-w.png') }}" alt="" width="13" height="13" style="display:block;object-fit:contain;">
                                 <span id="quiz-timer-display">08:00</span>
                             </div>
                         </div>
@@ -855,7 +855,7 @@
                     {{-- Quiz View A: Start / Overview Screen --}}
                     <div id="quiz-start-screen" class="p-4 text-center">
                         <div class="p-4 bg-light rounded-4 border mb-4 text-start">
-                            <h5 class="fw-bold text-dark mb-2"><i class="fa-solid fa-circle-info text-primary me-2"></i> Quiz Guidelines &amp; Marking Scheme</h5>
+                            <h5 class="fw-bold text-dark mb-2"><img src="{{ asset('student/img/icons/info.png') }}" class="btn-ic me-2" alt="" width="15" height="15"> Quiz Guidelines &amp; Marking Scheme</h5>
                             <ul class="text-sm text-secondary mb-0 ps-3">
                                 <li class="mb-1"><strong>Format:</strong> Single Best Answer Multiple Choice Questions (PMDC Standard).</li>
                                 <li class="mb-1"><strong>Instant Feedback:</strong> You can check explanations after each question to reinforce concepts.</li>
@@ -892,7 +892,7 @@
                         </div>
 
                         <button class="btn btn-primary px-4 py-2.5 fw-bold d-inline-flex align-items-center gap-2 rounded-3" id="start-quiz-btn" style="font-size: 14.5px;">
-                            <i class="fa-solid fa-play"></i>
+                            <img src="{{ asset('student/img/icons/play-w.png') }}" class="btn-ic" alt="" width="13" height="13">
                             <span>Start Quiz Now</span>
                         </button>
                     </div>
@@ -922,7 +922,7 @@
                         {{-- Explanation Card (revealed after Check Answer) --}}
                         <div class="quiz-explanation-box d-none" id="quiz-explanation-box">
                             <div class="d-flex align-items-center gap-2 fw-bold text-primary mb-1">
-                                <i class="fa-solid fa-lightbulb"></i>
+                                <img src="{{ asset('student/img/icons/bulb.png') }}" class="tab-ic" alt="" width="16" height="16">
                                 <span>High-Yield PMDC Solution &amp; Reference</span>
                             </div>
                             <div class="text-secondary" id="quiz-explanation-text"></div>
@@ -932,18 +932,18 @@
                         <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 pt-3 mt-4 border-top">
                             <div>
                                 <button class="btn btn-sm btn-outline-secondary px-3 py-2 fw-semibold rounded-2" id="quiz-prev-btn" disabled>
-                                    <i class="fa-solid fa-arrow-left me-1"></i> Previous
+                                    <img src="{{ asset('student/img/icons/arrow-left.png') }}" class="btn-ic me-1" alt="" width="12" height="12"> Previous
                                 </button>
                             </div>
                             <div class="d-flex align-items-center gap-2">
                                 <button class="btn btn-sm btn-outline-primary px-3 py-2 fw-semibold rounded-2" id="quiz-check-btn">
-                                    <i class="fa-solid fa-circle-check me-1"></i> Check Answer
+                                    <img src="{{ asset('student/img/icons/check-circle.png') }}" class="btn-ic me-1" alt="" width="13" height="13"> Check Answer
                                 </button>
                                 <button class="btn btn-sm btn-primary px-3 py-2 fw-semibold rounded-2" id="quiz-next-btn">
-                                    <span>Next Question</span> <i class="fa-solid fa-arrow-right ms-1"></i>
+                                    <span>Next Question</span> <img src="{{ asset('student/img/icons/arrow-right-w.png') }}" class="btn-ic ms-1" alt="" width="12" height="12">
                                 </button>
                                 <button class="btn btn-sm btn-success px-3 py-2 fw-semibold rounded-2 d-none" id="quiz-finish-btn">
-                                    <i class="fa-solid fa-flag-checkered me-1"></i> Submit Quiz
+                                    <img src="{{ asset('student/img/icons/flag-w.png') }}" class="btn-ic me-1" alt="" width="12" height="12"> Submit Quiz
                                 </button>
                             </div>
                         </div>
@@ -982,10 +982,10 @@
 
                         <div class="d-flex align-items-center justify-content-center flex-wrap gap-2">
                             <button class="btn btn-outline-secondary px-3 py-2 fw-semibold rounded-3 text-sm" id="quiz-retake-btn">
-                                <i class="fa-solid fa-rotate-right me-1"></i> Retake Practice Quiz
+                                <img src="{{ asset('student/img/icons/retry.png') }}" class="btn-ic me-1" alt="" width="12" height="12"> Retake Practice Quiz
                             </button>
                             <button class="btn btn-primary px-4 py-2 fw-semibold rounded-3 text-sm" id="quiz-proceed-btn">
-                                <span>Continue to Next Item</span> <i class="fa-solid fa-arrow-right ms-1"></i>
+                                <span>Continue to Next Item</span> <img src="{{ asset('student/img/icons/arrow-right-w.png') }}" class="btn-ic ms-1" alt="" width="12" height="12">
                             </button>
                         </div>
                     </div>
@@ -1003,12 +1003,12 @@
                         </div>
                         <h2 class="h5 fw-bold text-dark mb-1" id="active-topic-title">Select a Topic</h2>
                         <div class="text-muted" style="font-size: 11.5px;">
-                            <i class="fa-regular fa-clock me-1 text-primary"></i> <span id="active-topic-duration">0 min</span>
+                            <img src="{{ asset('student/img/icons/clock.png') }}" class="meta-ic me-1" alt="" width="13" height="13"> <span id="active-topic-duration">0 min</span>
                         </div>
                     </div>
                     <div>
                         <button class="btn btn-sm btn-outline-primary d-inline-flex align-items-center gap-2 px-3 py-1.5 fw-semibold rounded-pill" id="complete-lesson-btn" style="font-size: 12.5px;">
-                            <i class="fa-regular fa-circle-check"></i>
+                            <img src="{{ asset('student/img/icons/check-circle.png') }}" class="btn-ic" alt="" width="13" height="13">
                             <span>Mark Complete</span>
                         </button>
                     </div>
@@ -1021,22 +1021,22 @@
                     <ul class="nav classroom-tab-nav mb-4" id="studyTabs" role="tablist">
                         <li class="nav-item" role="presentation">
                             <button class="nav-link active" id="read-tab" data-bs-toggle="tab" data-bs-target="#read-pane" type="button" role="tab">
-                                <i class="fa-solid fa-book-open-reader me-2"></i>Topic Notes
+                                <img src="{{ asset('student/img/icons/open-book.png') }}" class="tab-ic me-2" alt="" width="16" height="16">Topic Notes
                             </button>
                         </li>
                         <li class="nav-item" role="presentation">
                             <button class="nav-link" id="notes-tab" data-bs-toggle="tab" data-bs-target="#notes-pane" type="button" role="tab">
-                                <i class="fa-solid fa-note-sticky me-2"></i>My Private Notes
+                                <img src="{{ asset('student/img/icons/note.png') }}" class="tab-ic me-2" alt="" width="16" height="16">My Private Notes
                             </button>
                         </li>
                         <li class="nav-item" role="presentation">
                             <button class="nav-link" id="resources-tab" data-bs-toggle="tab" data-bs-target="#resources-pane" type="button" role="tab">
-                                <i class="fa-solid fa-file-pdf me-2"></i>PDF Handouts
+                                <img src="{{ asset('student/img/icons/pdf.png') }}" class="tab-ic me-2" alt="" width="16" height="16">PDF Handouts
                             </button>
                         </li>
                         <li class="nav-item" role="presentation">
                             <button class="nav-link" id="qa-tab" data-bs-toggle="tab" data-bs-target="#qa-pane" type="button" role="tab">
-                                <i class="fa-solid fa-comments me-2"></i>Doubt Forum
+                                <img src="{{ asset('student/img/icons/chat.png') }}" class="tab-ic me-2" alt="" width="16" height="16">Doubt Forum
                             </button>
                         </li>
                     </ul>
@@ -1053,7 +1053,7 @@
                             <div class="up-next-banner d-flex align-items-center justify-content-between flex-wrap gap-3" id="up-next-banner">
                                 <div class="d-flex align-items-center gap-3">
                                     <div class="rounded-circle bg-primary bg-opacity-10 text-primary p-3 d-flex align-items-center justify-content-center" style="width: 44px; height: 44px;">
-                                        <i class="fa-solid fa-forward-step fs-5"></i>
+                                        <img src="{{ asset('student/img/icons/arrow-right.png') }}" alt="" width="18" height="18" style="display:block;object-fit:contain;">
                                     </div>
                                     <div>
                                         <span class="text-xs fw-bold text-uppercase text-primary d-block">Up Next in Chapter</span>
@@ -1061,7 +1061,7 @@
                                     </div>
                                 </div>
                                 <button class="btn btn-sm btn-primary px-3 py-2 fw-semibold rounded-2" id="up-next-btn">
-                                    <span>Proceed Next</span> <i class="fa-solid fa-arrow-right ms-1"></i>
+                                    <span>Proceed Next</span> <img src="{{ asset('student/img/icons/arrow-right-w.png') }}" class="btn-ic ms-1" alt="" width="12" height="12">
                                 </button>
                             </div>
                         </div>
@@ -1070,13 +1070,13 @@
                         <div class="tab-pane fade" id="notes-pane" role="tabpanel">
                             <div class="d-flex align-items-center justify-content-between mb-2">
                                 <h5 class="fw-bold text-dark mb-0" style="font-size: 15px;">Personal Study Notes</h5>
-                                <span class="text-xs text-success d-none" id="notes-save-status"><i class="fa-solid fa-check me-1"></i> Saved automatically!</span>
+                                <span class="text-xs text-success d-none" id="notes-save-status"><img src="{{ asset('student/img/icons/check-circle.png') }}" class="meta-ic me-1" alt="" width="12" height="12"> Saved automatically!</span>
                             </div>
                             <p class="text-muted text-xs mb-3">Save your mnemonics, numerical shortcuts, or doubt points. Stored securely on your device.</p>
                             <textarea id="lesson-notes-textarea" class="form-control rounded-3 p-3 mb-3" rows="7" placeholder="Type your personal notes for this topic here..." style="font-size: 13.5px;"></textarea>
                             <div class="text-end">
                                 <button class="btn btn-sm btn-primary px-3 py-2 fw-semibold" id="save-notes-btn">
-                                    <i class="fa-regular fa-floppy-disk me-1"></i> Save Notes
+                                    <img src="{{ asset('student/img/icons/save-w.png') }}" class="btn-ic me-1" alt="" width="12" height="12"> Save Notes
                                 </button>
                             </div>
                         </div>
@@ -1104,7 +1104,7 @@
                                     <div class="d-flex align-items-center justify-content-between">
                                         <span class="text-muted text-xs">Response time: usually under 2 hours</span>
                                         <button type="submit" class="btn btn-sm btn-primary px-3 py-2 fw-semibold">
-                                            <i class="fa-regular fa-paper-plane me-1"></i> Post Question
+                                            <img src="{{ asset('student/img/icons/send-w.png') }}" class="btn-ic me-1" alt="" width="12" height="12"> Post Question
                                         </button>
                                     </div>
                                 </form>
