@@ -204,8 +204,8 @@
     <div class="row g-3 mb-4">
         <div class="col-xl-3 col-sm-6">
             <div class="std-kpi">
-                <div class="std-kpi-icon kpi-purple">
-                    <i class="fa-solid fa-graduation-cap"></i>
+                <div class="std-kpi-icon">
+                    <x-student.icon name="cap" />
                 </div>
                 <div>
                     <div class="std-kpi-val">{{ $stats['enrolled_batches'] }} Batch</div>
@@ -216,8 +216,8 @@
 
         <div class="col-xl-3 col-sm-6">
             <div class="std-kpi">
-                <div class="std-kpi-icon kpi-emerald">
-                    <i class="fa-solid fa-clipboard-check"></i>
+                <div class="std-kpi-icon">
+                    <x-student.icon name="clipboard-check" />
                 </div>
                 <div>
                     <div class="std-kpi-val">{{ $stats['tests_completed'] }} Tests</div>
@@ -228,8 +228,8 @@
 
         <div class="col-xl-3 col-sm-6">
             <div class="std-kpi">
-                <div class="std-kpi-icon kpi-sky">
-                    <i class="fa-solid fa-award"></i>
+                <div class="std-kpi-icon">
+                    <x-student.icon name="award" />
                 </div>
                 <div>
                     <div class="std-kpi-val">{{ $stats['avg_score'] }}%</div>
@@ -240,8 +240,8 @@
 
         <div class="col-xl-3 col-sm-6">
             <div class="std-kpi">
-                <div class="std-kpi-icon kpi-amber">
-                    <i class="fa-solid fa-fire"></i>
+                <div class="std-kpi-icon">
+                    <x-student.icon name="fire" />
                 </div>
                 <div>
                     <div class="std-kpi-val">{{ $stats['study_streak_days'] }} Days</div>

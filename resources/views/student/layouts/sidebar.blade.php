@@ -32,14 +32,14 @@
 
         <li>
             <a href="{{ route('student.dashboard') }}" class="sidebar-link {{ request()->routeIs('student.dashboard') ? 'active' : '' }}">
-                <i class="fa-solid fa-house-chimney"></i>
+                <x-student.icon name="home" />
                 <span>Study Hub</span>
             </a>
         </li>
 
         <li>
             <a href="{{ route('student.courses') }}" class="sidebar-link {{ request()->routeIs('student.courses*') || request()->routeIs('student.classroom*') ? 'active' : '' }}">
-                <i class="fa-solid fa-circle-play"></i>
+                <x-student.icon name="courses" />
                 <span>Enroll Courses</span>
                 <span class="badge-counter">{{ $coursesCount }}</span>
             </a>
@@ -47,7 +47,7 @@
 
         <li>
             <a href="{{ route('student.tests') }}" class="sidebar-link {{ request()->routeIs('student.tests*') ? 'active' : '' }}">
-                <i class="fa-solid fa-file-pen"></i>
+                <x-student.icon name="mocks" />
                 <span>Practice &amp; Mocks</span>
                 <span class="badge-counter">{{ $testsCount }}</span>
             </a>
@@ -55,7 +55,7 @@
 
         <li>
             <a href="{{ route('student.elibrary') }}" class="sidebar-link {{ request()->routeIs('student.elibrary*') ? 'active' : '' }}">
-                <i class="fa-solid fa-book-open"></i>
+                <x-student.icon name="library" />
                 <span>Notes &amp; E-Library</span>
                 <span class="badge-counter">{{ $libraryCount }}</span>
             </a>
@@ -63,7 +63,7 @@
 
         <li>
             <a href="{{ route('student.analytics') }}" class="sidebar-link {{ request()->routeIs('student.analytics*') ? 'active' : '' }}">
-                <i class="fa-solid fa-chart-simple"></i>
+                <x-student.icon name="progress" />
                 <span>My Progress</span>
             </a>
         </li>
@@ -72,7 +72,7 @@
 
         <li>
             <a href="{{ route('student.settings') }}" class="sidebar-link {{ request()->routeIs('student.settings*') ? 'active' : '' }}">
-                <i class="fa-regular fa-circle-user"></i>
+                <x-student.icon name="profile" />
                 <span>Profile &amp; Settings</span>
             </a>
         </li>
@@ -86,14 +86,14 @@
 
         <li>
             <a href="{{ route('home') }}" class="sidebar-link">
-                <i class="fa-solid fa-globe"></i>
+                <x-student.icon name="globe" />
                 <span>Back to Website</span>
             </a>
         </li>
 
         <li class="mt-auto pt-3" style="border-top: 1px solid var(--std-border-subtle);">
             <a href="{{ route('logout') }}" class="sidebar-link text-danger">
-                <i class="fa-solid fa-arrow-right-from-bracket text-danger"></i>
+                <x-student.icon name="logout" class="text-danger" />
                 <span>Logout</span>
             </a>
         </li>
