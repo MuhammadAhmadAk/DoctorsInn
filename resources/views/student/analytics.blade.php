@@ -62,7 +62,10 @@
                     $totalAnswered = $stats['correct_mcqs'] + $stats['incorrect_mcqs'] + ($stats['skipped_mcqs'] ?? 0);
                 @endphp
                 <div class="d-flex align-items-center justify-content-between mb-2">
-                    <span class="text-xs fw-semibold text-muted">Overall Accuracy</span>
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="metric-ic"><img src="{{ asset('student/img/icons/gauge.png') }}" alt="" width="20" height="20"></span>
+                        <span class="text-xs fw-semibold text-muted">Overall Accuracy</span>
+                    </div>
                     <span class="badge-status {{ $accuracyBadge[0] }}">{{ $accuracyBadge[1] }}</span>
                 </div>
                 <div class="h4 fw-bold text-dark mb-1">{{ $stats['accuracy_rate'] }}%</div>
@@ -73,7 +76,10 @@
         <div class="col-sm-6 col-xl-3">
             <div class="analytics-metric-box">
                 <div class="d-flex align-items-center justify-content-between mb-2">
-                    <span class="text-xs fw-semibold text-muted">Average Score</span>
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="metric-ic"><img src="{{ asset('student/img/icons/progress.png') }}" alt="" width="20" height="20"></span>
+                        <span class="text-xs fw-semibold text-muted">Average Score</span>
+                    </div>
                     <span class="badge-status badge-status-primary">Steady</span>
                 </div>
                 <div class="h4 fw-bold text-dark mb-1">{{ $stats['avg_score'] }}%</div>
@@ -84,7 +90,10 @@
         <div class="col-sm-6 col-xl-3">
             <div class="analytics-metric-box">
                 <div class="d-flex align-items-center justify-content-between mb-2">
-                    <span class="text-xs fw-semibold text-muted">Study Hours</span>
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="metric-ic"><img src="{{ asset('student/img/icons/stopwatch.png') }}" alt="" width="20" height="20"></span>
+                        <span class="text-xs fw-semibold text-muted">Study Hours</span>
+                    </div>
                     <span class="badge-status {{ $stats['study_streak_days'] > 0 ? 'badge-status-warning' : 'badge-status-light' }}">{{ $stats['study_streak_days'] }}-Day Streak</span>
                 </div>
                 <div class="h4 fw-bold text-dark mb-1">{{ $stats['hours_studied'] }} hrs</div>
@@ -95,7 +104,10 @@
         <div class="col-sm-6 col-xl-3">
             <div class="analytics-metric-box">
                 <div class="d-flex align-items-center justify-content-between mb-2">
-                    <span class="text-xs fw-semibold text-muted">Projected MDCAT</span>
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="metric-ic"><img src="{{ asset('student/img/icons/target.png') }}" alt="" width="20" height="20"></span>
+                        <span class="text-xs fw-semibold text-muted">Projected MDCAT</span>
+                    </div>
                     <span class="badge-status badge-status-info">Target Ready</span>
                 </div>
                 @php

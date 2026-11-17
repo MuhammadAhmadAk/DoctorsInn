@@ -392,6 +392,36 @@ body {
     height: 22px;
     object-fit: contain;
 }
+
+/* 3D PNG icon helpers for feature tiles, metric boxes and buttons */
+.tile-ic {
+    display: block;
+    width: 26px;
+    height: 26px;
+    object-fit: contain;
+}
+.metric-ic {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    background: var(--std-primary-light);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.metric-ic img {
+    display: block;
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+}
+.btn-ic {
+    width: 15px;
+    height: 15px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
 .std-kpi-val {
     font-size: 19px;
     font-weight: 800;
@@ -805,5 +835,43 @@ body {
         transform: none !important;
         min-width: 0 !important;
         width: 235px;
+    }
+}
+
+/* Short viewports (small laptops, zoomed browsers, open dev-tools):
+   compact the sidebar so the menu never needs its hidden scrollbar */
+@media (max-height: 640px) {
+    .student-sidebar .sidebar-brand {
+        padding: 9px 14px;
+    }
+    .student-sidebar .sidebar-profile-card {
+        margin: 7px 12px 2px;
+        padding: 7px 10px;
+        gap: 8px;
+    }
+    .student-sidebar .sidebar-profile-card img {
+        width: 32px;
+        height: 32px;
+    }
+    .student-sidebar .sidebar-menu {
+        padding: 4px 10px 8px;
+        gap: 1px;
+    }
+    .student-sidebar .menu-label {
+        padding: 6px 8px 2px;
+    }
+    .student-sidebar .sidebar-link {
+        padding: 6px 9px;
+    }
+    .student-sidebar .nav-ic-wrap {
+        width: 20px;
+        height: 20px;
+    }
+    .student-sidebar .nav-ic {
+        width: 18px;
+        height: 18px;
+    }
+    .student-sidebar .sidebar-menu > li.mt-auto {
+        padding-top: 7px !important;
     }
 }

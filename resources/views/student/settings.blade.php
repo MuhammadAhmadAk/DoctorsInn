@@ -35,8 +35,8 @@
                 </div>
             </div>
             <div class="col-md-4 text-md-end">
-                <a href="https://wa.me/923001234567?text=Hello%20DoctorsInn%2C%20I%20am%20contacting%20regarding%20my%20student%20profile." target="_blank" class="btn btn-sm btn-outline-success fw-semibold px-3 py-2 text-xs" style="border-radius: 6px;">
-                    <i class="fa-brands fa-whatsapp me-1"></i> Coordinator Desk
+                <a href="https://wa.me/923001234567?text=Hello%20DoctorsInn%2C%20I%20am%20contacting%20regarding%20my%20student%20profile." target="_blank" class="btn btn-sm btn-outline-success fw-semibold px-3 py-2 text-xs d-inline-flex align-items-center gap-1" style="border-radius: 6px;">
+                    <img src="{{ asset('student/img/icons/whatsapp.png') }}" class="btn-ic" alt="" width="15" height="15"> Coordinator Desk
                 </a>
             </div>
         </div>
@@ -52,7 +52,7 @@
                         <h3 class="h6 fw-bold text-dark mb-0">Personal Information</h3>
                         <span class="text-muted text-xs">Update your display name, phone, and target exam</span>
                     </div>
-                    <i class="fa-regular fa-id-card text-muted"></i>
+                    <img src="{{ asset('student/img/icons/id-card.png') }}" class="btn-ic" alt="" width="15" height="15">
                 </div>
 
                 <form action="{{ route('student.settings.update') }}" method="POST">
@@ -107,7 +107,7 @@
                             <h3 class="h6 fw-bold text-dark mb-0">Security</h3>
                             <span class="text-muted text-xs">Set a password for direct login</span>
                         </div>
-                        <i class="fa-solid fa-key text-muted"></i>
+                        <img src="{{ asset('student/img/icons/key.png') }}" class="btn-ic" alt="" width="15" height="15">
                     </div>
 
                     <form action="{{ route('student.settings.update') }}" method="POST">
@@ -135,8 +135,8 @@
                 {{-- Academic Help Desk Box (Clean) --}}
                 <div class="std-card p-4">
                     <div class="d-flex align-items-center gap-3 mb-2">
-                        <div style="width: 38px; height: 38px; border-radius: 8px; background: #F1F5F9; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--std-text-title);">
-                            <i class="fa-solid fa-headset fs-6"></i>
+                        <div style="width: 38px; height: 38px; border-radius: 8px; background: #F1F5F9; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                            <img src="{{ asset('student/img/icons/headset.png') }}" class="tile-ic" alt="" width="26" height="26">
                         </div>
                         <div>
                             <h4 class="fw-bold text-dark mb-0" style="font-size: 14px;">Academic Coordinator Desk</h4>
@@ -147,7 +147,7 @@
                         Need assistance with test timings, batch schedules, or lecture playback? Contact your coordinator.
                     </p>
                     <a href="https://wa.me/923001234567?text=Hello%20DoctorsInn%20Academic%20Desk%2C%20I%20need%20student%20assistance." target="_blank" class="btn btn-sm btn-outline-success w-100 py-2 fw-semibold d-flex align-items-center justify-content-center gap-2" style="border-radius: 6px;">
-                        <i class="fa-brands fa-whatsapp fs-6"></i>
+                        <img src="{{ asset('student/img/icons/whatsapp.png') }}" class="btn-ic" alt="" width="15" height="15">
                         <span>WhatsApp (+92 300 1234567)</span>
                     </a>
                 </div>

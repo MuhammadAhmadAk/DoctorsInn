@@ -144,8 +144,8 @@
         <div class="row align-items-center gy-3">
             <div class="col-lg-8">
                 <div class="d-flex align-items-center gap-3">
-                    <div style="width: 44px; height: 44px; border-radius: 8px; background: #F1F5F9; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--std-text-title);">
-                        <i class="fa-solid fa-user-doctor fs-5"></i>
+                    <div style="width: 44px; height: 44px; border-radius: 8px; background: #F1F5F9; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <img src="{{ asset('student/img/icons/stethoscope.png') }}" class="tile-ic" alt="" width="26" height="26">
                     </div>
                     <div>
                         <h3 class="h6 fw-bold text-dark mb-1">Need Timetable Planning or Subject Prioritization?</h3>
@@ -154,8 +154,8 @@
                 </div>
             </div>
             <div class="col-lg-4 text-lg-end">
-                <a href="https://wa.me/923001234567?text=Hello%20DoctorsInn%2C%20I%20need%20academic%20mentorship." target="_blank" class="btn btn-sm btn-outline-success fw-semibold px-3 py-2" style="border-radius: 6px;">
-                    <i class="fa-brands fa-whatsapp me-1"></i> Contact Mentor Desk
+                <a href="https://wa.me/923001234567?text=Hello%20DoctorsInn%2C%20I%20need%20academic%20mentorship." target="_blank" class="btn btn-sm btn-outline-success fw-semibold px-3 py-2 d-inline-flex align-items-center gap-1" style="border-radius: 6px;">
+                    <img src="{{ asset('student/img/icons/whatsapp.png') }}" class="btn-ic" alt="" width="15" height="15"> Contact Mentor Desk
                 </a>
             </div>
         </div>

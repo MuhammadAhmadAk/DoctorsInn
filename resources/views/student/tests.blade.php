@@ -62,7 +62,7 @@
         <div class="col-sm-6 col-xl-3">
             <div class="std-kpi">
                 <div class="std-kpi-icon">
-                    <i class="fa-solid fa-layer-group"></i>
+                    <img src="{{ asset('student/img/icons/layers.png') }}" class="kpi-ic" alt="" width="22" height="22">
                 </div>
                 <div>
                     <div class="std-kpi-val">{{ count($tests) }}</div>
@@ -74,7 +74,7 @@
         <div class="col-sm-6 col-xl-3">
             <div class="std-kpi">
                 <div class="std-kpi-icon">
-                    <i class="fa-solid fa-clipboard-check"></i>
+                    <img src="{{ asset('student/img/icons/clipboard-check.png') }}" class="kpi-ic" alt="" width="22" height="22">
                 </div>
                 <div>
                     <div class="std-kpi-val">{{ $stats['tests_completed'] }}</div>
@@ -86,7 +86,7 @@
         <div class="col-sm-6 col-xl-3">
             <div class="std-kpi">
                 <div class="std-kpi-icon">
-                    <i class="fa-solid fa-chart-line"></i>
+                    <img src="{{ asset('student/img/icons/progress.png') }}" class="kpi-ic" alt="" width="22" height="22">
                 </div>
                 <div>
                     <div class="std-kpi-val">{{ $stats['avg_score'] }}%</div>
@@ -98,7 +98,7 @@
         <div class="col-sm-6 col-xl-3">
             <div class="std-kpi">
                 <div class="std-kpi-icon">
-                    <i class="fa-solid fa-trophy text-warning"></i>
+                    <img src="{{ asset('student/img/icons/trophy.png') }}" class="kpi-ic" alt="" width="22" height="22">
                 </div>
                 <div>
                     <div class="std-kpi-val">{{ $stats['highest_score'] }}%</div>
@@ -188,8 +188,8 @@
         <div class="row align-items-center gy-3">
             <div class="col-lg-8">
                 <div class="d-flex align-items-center gap-3">
-                    <div style="width: 44px; height: 44px; border-radius: 8px; background: #F1F5F9; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--std-text-title);">
-                        <i class="fa-solid fa-lightbulb fs-5"></i>
+                    <div style="width: 44px; height: 44px; border-radius: 8px; background: #F1F5F9; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <img src="{{ asset('student/img/icons/bulb.png') }}" class="tile-ic" alt="" width="26" height="26">
                     </div>
                     <div>
                         <h3 class="h6 fw-bold text-dark mb-1">MDCAT Speed Strategy: 45-Second Allocation</h3>

@@ -78,7 +78,7 @@
         </li>
 
         <li>
-            <a href="https://wa.me/923001234567?text=Hello%20DoctorsInn%2C%20I%20am%20a%20student%20and%20need%20academic%20assistance." target="_blank" class="sidebar-link" style="color: #059669;">
+            <a href="https://wa.me/923001234567?text=Hello%20DoctorsInn%2C%20I%20am%20a%20student%20and%20need%20academic%20assistance." target="_blank" class="sidebar-link">
                 <span class="nav-ic-wrap"><img src="{{ asset('student/img/icons/whatsapp.png') }}" class="nav-ic" alt="" width="20" height="20"></span>
                 <span>Ask a Mentor</span>
             </a>
