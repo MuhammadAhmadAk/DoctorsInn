@@ -8,10 +8,20 @@
                 <i class="fa-solid fa-award" aria-hidden="true"></i>{{ $courseItem['success_badge'] }}
             </span>
         @endif
+        @php
+            $priceRaw = trim((string) ($courseItem['price'] ?? 'Free'));
+            $priceDigits = preg_replace('/[^0-9]/', '', $priceRaw);
+            $isFreePrice = $priceDigits === '' || $priceDigits === '0' || stripos($priceRaw, 'free') !== false;
+            $priceLabel = $isFreePrice ? 'Free' : 'Rs. ' . number_format((int) $priceDigits);
+
+            $origRaw = trim((string) ($courseItem['original_price'] ?? ''));
+            $origDigits = preg_replace('/[^0-9]/', '', $origRaw);
+            $origLabel = ($origDigits !== '' && $origDigits !== '0') ? 'Rs. ' . number_format((int) $origDigits) : '';
+        @endphp
         <span class="box-price">
-            {{ $courseItem['price'] }}
-            @if (!empty($courseItem['original_price']))
-                <del class="text-muted ms-1 small legacy-inline-c3b97501f8">{{ $courseItem['original_price'] }}</del>
+            {{ $priceLabel }}
+            @if ($origLabel !== '')
+                <del class="text-muted ms-1 small legacy-inline-c3b97501f8">{{ $origLabel }}</del>
             @endif
         </span>
     </div>
