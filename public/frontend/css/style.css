@@ -38204,6 +38204,65 @@ textarea {
     .th-course-row.columns-3 .th-course-single {
         width: 25%;
     }
+
+    /* inner-page banner still uses its fixed 150px/150px desktop padding at this width */
+    .breadcumb-wrapper .breadcumb-content {
+        padding: 110px 0 110px;
+    }
+
+    /* 4-up cards are ~250px wide here, so desktop card metrics (24px padding,
+       220px image, 20px title) no longer fit */
+    .th-course-single .course-card {
+        padding: 18px;
+    }
+
+    .th-course-single .course-card .box-img {
+        margin-bottom: 20px;
+    }
+
+    .th-course-single .course-card .box-img img {
+        height: 170px;
+    }
+
+    .th-course-single .course-card .box-title {
+        font-size: 17px !important;
+        min-height: 48px !important;
+        max-height: 48px !important;
+    }
+
+    .course-card .box-content {
+        padding: 14px;
+        gap: 10px;
+    }
+
+    .course-card .course-info {
+        gap: 8px;
+    }
+
+    .course-card .course-info .box-icon {
+        font-size: 18px;
+    }
+
+    .course-card .box-rating {
+        flex-wrap: wrap;
+        row-gap: 2px;
+    }
+
+    /* owner row + CTA no longer fit on one line at this card width; stack
+       them deliberately (same pattern as the mobile card) */
+    .th-course-single .course-card .btn-wrap {
+        flex-wrap: wrap;
+        row-gap: 10px;
+    }
+
+    .th-course-single .course-card .btn-wrap .th-btn {
+        width: 100% !important;
+        justify-content: center;
+    }
+
+    .test-step-card {
+        padding: 32px 24px;
+    }
 }
 
 @media (min-width: 992px) and (max-width: 1199.98px) {
