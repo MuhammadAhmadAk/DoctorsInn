@@ -22,7 +22,7 @@
                     <p class="auth-visual-text">Choose a strong password to keep your MDCAT preparation progress safe.</p>
                 </div>
                 <div class="auth-visual-art">
-                    <img src="{{ asset('frontend/img/auth/recovery-illustration.webp') }}" alt="" loading="eager" decoding="async">
+                    <img src="{{ asset('frontend/img/auth/recovery-illustration.webp') . '?v=' . filemtime(public_path('frontend/img/auth/recovery-illustration.webp')) }}" alt="" loading="eager" decoding="async">
                 </div>
             </aside>
 

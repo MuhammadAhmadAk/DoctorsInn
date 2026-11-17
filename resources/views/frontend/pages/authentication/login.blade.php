@@ -22,7 +22,7 @@
                     <p class="auth-visual-text">Learn with expert-led courses, realistic mock tests and free e-library resources — all in one place.</p>
                 </div>
                 <div class="auth-visual-art">
-                    <img src="{{ asset('frontend/img/auth/login-illustration.webp') }}" alt="" loading="eager" decoding="async">
+                    <img src="{{ asset('frontend/img/auth/login-illustration.webp') . '?v=' . filemtime(public_path('frontend/img/auth/login-illustration.webp')) }}" alt="" loading="eager" decoding="async">
                 </div>
             </aside>
 
