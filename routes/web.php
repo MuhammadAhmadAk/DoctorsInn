@@ -32,6 +32,7 @@ Route::get('/', [RouteController::class, 'Frontend_Home'])->name('home');
 Route::get('/about', [RouteController::class, 'Frontend_About'])->name('about');
 Route::get('/faq', [RouteController::class, 'Frontend_Faq'])->name('faq');
 Route::get('/contact', [RouteController::class, 'Frontend_Contact'])->name('contact');
+Route::post('/contact', [RouteController::class, 'Frontend_ContactSubmit'])->name('contact.send')->middleware('throttle:5,1');
 Route::get('/privacy-policy', [RouteController::class, 'Frontend_PrivacyPolicy'])->name('privacy-policy');
 Route::get('/terms-conditions', [RouteController::class, 'Frontend_TermsConditions'])->name('terms-conditions');
 Route::get('/error', [RouteController::class, 'Frontend_Error'])->name('error');

@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ContactInquiryMail;
 use App\Models\ElibraryResource;
 use App\Models\MockTest;
 use App\Models\Notification;
 use App\Models\TestAttempt;
 use App\Services\SiteContentService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Validation\Rule;
 
 class RouteController extends Controller
 {
@@ -38,6 +42,52 @@ class RouteController extends Controller
     public function Frontend_Contact()
     {
         return view('frontend.pages.contact');
+    }
+
+    public function Frontend_ContactSubmit(Request $request)
+    {
+        if ($request->filled('website')) {
+            return back()->with('contact_success', 'Thanks! Your message has been sent — we usually reply within one business day.');
+        }
+
+        $validated = $request->validate([
+            'first_name' => ['required', 'string', 'max:60'],
+            'last_name' => ['required', 'string', 'max:60'],
+            'email' => ['required', 'email', 'max:120'],
+            'phone' => ['nullable', 'string', 'max:25'],
+            'subject' => ['nullable', Rule::in([
+                'Course & admissions',
+                'Mock tests & results',
+                'Payments & billing',
+                'Technical support',
+                'General enquiry',
+            ])],
+            'message' => ['required', 'string', 'max:3000'],
+            'consent' => ['accepted'],
+        ], [
+            'consent.accepted' => 'Please accept the privacy policy to continue.',
+        ]);
+
+        $name = trim(preg_replace('/[\r\n]+/', ' ', $validated['first_name'] . ' ' . $validated['last_name']));
+        $to = SiteContentService::getSettings()['contact_email_1'] ?? 'info@doctorsinnelite.com';
+
+        try {
+            Mail::to($to)->send(new ContactInquiryMail(
+                $name,
+                $validated['email'],
+                $validated['phone'] ?: null,
+                $validated['subject'] ?: null,
+                $validated['message'],
+            ));
+        } catch (\Throwable $e) {
+            Log::error('Contact form delivery failed', ['exception' => $e]);
+
+            return back()
+                ->withInput()
+                ->with('contact_error', "Sorry, your message couldn't be sent right now. Please email us directly at {$to}.");
+        }
+
+        return back()->with('contact_success', 'Thanks! Your message has been sent — we usually reply within one business day.');
     }
 
     public function Frontend_PrivacyPolicy()

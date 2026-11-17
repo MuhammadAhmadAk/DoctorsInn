@@ -1,0 +1,354 @@
+/* ==========================================================================
+   DoctorsInn — Contact page (clean two-column layout)
+   ========================================================================== */
+
+.di-contact {
+    --dic-purple: #5C32FF;
+    --dic-purple-dark: #4A25E6;
+    --dic-title: #050310;
+    --dic-text: rgba(5, 3, 16, 0.72);
+    --dic-muted: #6E6E7C;
+    --dic-border: #E9E9F1;
+    --dic-input-border: #E2E3EA;
+    --dic-card: #F7F7FA;
+    --dic-danger: #B42318;
+}
+
+/* ---------- Left column ---------- */
+.di-contact-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 14px;
+    border: 1px solid rgba(92, 50, 255, 0.18);
+    border-radius: 8px;
+    background: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--dic-title);
+}
+
+.di-contact-badge i {
+    color: var(--dic-purple);
+    font-size: 14px;
+}
+
+.di-contact-title {
+    margin: 22px 0 0;
+    font-family: var(--title-font);
+    font-size: clamp(32px, 3.6vw, 50px);
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    font-weight: 700;
+    color: var(--dic-title);
+}
+
+.di-contact-lead {
+    margin: 18px 0 0;
+    max-width: 46ch;
+    font-size: 15.5px;
+    line-height: 1.7;
+    color: var(--dic-text);
+}
+
+.di-contact-list {
+    list-style: none;
+    margin: 34px 0 0;
+    padding: 0;
+    display: grid;
+    gap: 18px;
+}
+
+.di-contact-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+}
+
+.di-contact-icon {
+    flex: 0 0 44px;
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(92, 50, 255, 0.08);
+    color: var(--dic-purple);
+    font-size: 17px;
+}
+
+.di-contact-label {
+    display: block;
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--dic-muted);
+}
+
+.di-contact-value {
+    display: inline-block;
+    margin-top: 3px;
+    font-size: 15.5px;
+    font-weight: 600;
+    line-height: 1.5;
+    color: var(--dic-title);
+    word-break: break-word;
+}
+
+a.di-contact-value {
+    transition: color 0.18s ease;
+}
+
+a.di-contact-value:hover {
+    color: var(--dic-purple);
+}
+
+/* ---------- Form card ---------- */
+.di-contact-card {
+    background: var(--dic-card);
+    border: 1px solid var(--dic-border);
+    border-radius: 8px;
+    padding: 34px 34px 32px;
+    scroll-margin-top: 120px;
+}
+
+.di-form-title {
+    margin: 0;
+    font-family: var(--title-font);
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--dic-title);
+}
+
+.di-form-sub {
+    margin: 6px 0 24px;
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: var(--dic-text);
+}
+
+.di-label {
+    display: block;
+    margin-bottom: 7px;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--dic-title);
+}
+
+.di-req {
+    color: var(--dic-danger);
+}
+
+.di-input {
+    width: 100%;
+    height: 46px;
+    padding: 0 14px;
+    border: 1px solid var(--dic-input-border);
+    border-radius: 8px;
+    background: #fff;
+    font-family: var(--body-font);
+    font-size: 14.5px;
+    color: var(--dic-title);
+    transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.di-input::placeholder {
+    color: #8A8A96;
+}
+
+.di-input:focus {
+    outline: none;
+    border-color: var(--dic-purple);
+    box-shadow: 0 0 0 3px rgba(92, 50, 255, 0.12);
+}
+
+.di-input.is-invalid {
+    border-color: var(--dic-danger);
+}
+
+textarea.di-input {
+    height: auto;
+    min-height: 120px;
+    padding: 12px 14px;
+    resize: vertical;
+}
+
+select.di-input {
+    appearance: none;
+    -webkit-appearance: none;
+    padding-right: 38px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5 6 6.5l5-5' stroke='%238B8B99' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+}
+
+select.di-input:invalid {
+    color: #9A9AA6;
+}
+
+.di-field-error {
+    margin: 6px 0 0;
+    font-size: 12.5px;
+    color: var(--dic-danger);
+}
+
+.di-consent {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 0;
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--dic-text);
+}
+
+.di-consent input {
+    flex: 0 0 16px;
+    width: 16px;
+    height: 16px;
+    margin-top: 2px;
+    accent-color: var(--dic-purple);
+    cursor: pointer;
+}
+
+.di-consent a {
+    color: var(--dic-purple);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.di-submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    height: 48px;
+    padding: 0 26px;
+    border: 0;
+    border-radius: 8px;
+    background: var(--dic-purple);
+    color: #fff;
+    font-family: var(--body-font);
+    font-size: 14.5px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    box-shadow: 0 8px 20px rgba(92, 50, 255, 0.22);
+    transition: background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+    cursor: pointer;
+}
+
+.di-submit:hover {
+    background: var(--dic-purple-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 10px 24px rgba(92, 50, 255, 0.28);
+}
+
+.di-submit:focus-visible {
+    outline: 3px solid rgba(92, 50, 255, 0.25);
+    outline-offset: 2px;
+}
+
+/* ---------- Alerts ---------- */
+.di-contact-alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 22px;
+    padding: 13px 16px;
+    border-radius: 8px;
+    font-size: 13.5px;
+    line-height: 1.55;
+}
+
+.di-contact-alert i {
+    margin-top: 2px;
+    font-size: 15px;
+}
+
+.di-contact-alert.is-success {
+    background: #ECFDF3;
+    border: 1px solid #C6F2D6;
+    color: #0F7B3D;
+}
+
+.di-contact-alert.is-error {
+    background: #FEF1F1;
+    border: 1px solid #F6D3D4;
+    color: var(--dic-danger);
+}
+
+/* Honeypot — hidden from humans and assistive tech */
+.di-hp {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+/* ---------- Map ---------- */
+.di-contact-map {
+    margin-top: 64px;
+    border: 1px solid var(--dic-border);
+    border-radius: 8px;
+    overflow: hidden;
+    background: #fff;
+}
+
+.di-contact-map iframe {
+    display: block;
+    width: 100%;
+    height: 380px;
+    border: 0;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1199.98px) {
+    .di-contact-card {
+        padding: 30px;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .di-contact-card {
+        margin-top: 8px;
+        padding: 26px 24px;
+    }
+
+    .di-contact-title {
+        font-size: 34px;
+    }
+
+    .di-contact-map {
+        margin-top: 48px;
+    }
+
+    .di-contact-map iframe {
+        height: 320px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .di-contact-card {
+        padding: 22px 18px;
+    }
+
+    .di-contact-title {
+        font-size: 30px;
+    }
+
+    .di-contact-list {
+        margin-top: 28px;
+        gap: 15px;
+    }
+
+    .di-submit {
+        width: 100%;
+    }
+
+    .di-contact-map iframe {
+        height: 260px;
+    }
+}
