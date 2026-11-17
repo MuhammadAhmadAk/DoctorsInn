@@ -119,7 +119,7 @@ class SiteContentService
         try {
             return Cache::remember(self::CACHE_HOME, self::cacheTtl(), function () {
                 $courses = Course::query()
-                    ->select(['id', 'slug', 'category', 'category_name', 'title', 'price', 'original_price', 'rating', 'rating_count', 'lessons', 'students', 'image'])
+                    ->select(['id', 'slug', 'category', 'category_name', 'title', 'price', 'original_price', 'rating', 'rating_count', 'lessons', 'students', 'instructor', 'image', 'instructor_image'])
                     ->where('is_active', true)
                     ->orderBy('sort_order')
                     ->orderBy('id')

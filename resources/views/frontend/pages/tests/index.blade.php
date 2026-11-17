@@ -97,7 +97,8 @@
                                         Rated <strong class="rating">5.0</strong> out of 5
                                     </span>
                                 </div>
-                                <span class="ms-2">⭐ 5.0 ({{ $testItem['attempts'] ?? '1k+' }} attempts)</span>
+                                <span class="rating-score">5.0</span>
+                                <span class="rating-count">({{ $testItem['attempts'] ?? '1k+' }} {{ ($testItem['attempts'] ?? '1k+') == 1 ? 'attempt' : 'attempts' }})</span>
                             </div>
 
                             <div class="box-content">

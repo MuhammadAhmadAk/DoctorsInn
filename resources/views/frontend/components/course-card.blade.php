@@ -19,12 +19,14 @@
         <a href="{{ route('course-details', $courseItem['slug']) }}">{{ $courseItem['title'] }}</a>
     </h3>
     <div class="box-rating">
+        @php $reviewCount = $courseItem['rating_count'] ?? '1k+'; @endphp
         <div class="star-rating" role="img" aria-label="Rated {{ $courseItem['rating'] }} out of 5">
             <span class="star-rating-full">
                 Rated <strong class="rating">{{ $courseItem['rating'] }}</strong> out of 5
             </span>
         </div>
-        <span class="ms-2">⭐ {{ $courseItem['rating'] }} ({{ $courseItem['rating_count'] ?? '1k+' }})</span>
+        <span class="rating-score">{{ $courseItem['rating'] }}</span>
+        <span class="rating-count">({{ $reviewCount }} {{ $reviewCount == 1 ? 'review' : 'reviews' }})</span>
     </div>
     <div class="box-content">
         <div class="course-info">

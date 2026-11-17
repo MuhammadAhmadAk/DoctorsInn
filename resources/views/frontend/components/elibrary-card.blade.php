@@ -23,7 +23,8 @@
                 Rated <strong class="rating">{{ $resource['rating'] }}</strong> out of 5
             </span>
         </div>
-        <span class="ms-2">⭐ {{ $resource['rating'] }} ({{ $resource['downloads'] }} downloads)</span>
+        <span class="rating-score">{{ $resource['rating'] }}</span>
+        <span class="rating-count">({{ $resource['downloads'] }} {{ $resource['downloads'] == 1 ? 'download' : 'downloads' }})</span>
     </div>
 
     <div class="box-content">
