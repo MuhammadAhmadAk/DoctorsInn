@@ -2,7 +2,8 @@
    DoctorsInn — Contact page (clean two-column layout)
    ========================================================================== */
 
-.di-contact {
+.di-contact,
+.di-faq {
     --dic-purple: #5C32FF;
     --dic-purple-dark: #4A25E6;
     --dic-title: #050310;
@@ -12,6 +13,10 @@
     --dic-input-border: #E2E3EA;
     --dic-card: #F7F7FA;
     --dic-danger: #B42318;
+}
+
+.di-contact {
+    padding-bottom: 90px;
 }
 
 /* ---------- Left column ---------- */
@@ -288,20 +293,131 @@ select.di-input:invalid {
     overflow: hidden;
 }
 
-/* ---------- Map ---------- */
-.di-contact-map {
-    margin-top: 64px;
-    border: 1px solid var(--dic-border);
-    border-radius: 8px;
-    overflow: hidden;
-    background: #fff;
+/* ---------- FAQ ---------- */
+.di-faq {
+    padding: 90px 0;
+    background: #F7F7FA;
+    border-top: 1px solid var(--dic-border);
 }
 
-.di-contact-map iframe {
-    display: block;
-    width: 100%;
-    height: 380px;
-    border: 0;
+.di-faq-title {
+    margin: 0;
+    max-width: 12ch;
+    font-family: var(--title-font);
+    font-size: clamp(30px, 3.4vw, 44px);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    font-weight: 700;
+    color: var(--dic-title);
+}
+
+.di-faq-lead {
+    margin: 16px 0 0;
+    max-width: 40ch;
+    font-size: 14.5px;
+    line-height: 1.7;
+    color: var(--dic-text);
+}
+
+.di-faq-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 46px;
+    margin-top: 26px;
+    padding: 0 22px;
+    border-radius: 8px;
+    background: var(--dic-title);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background 0.18s ease;
+}
+
+.di-faq-btn:hover {
+    background: #1D1B2F;
+    color: #fff;
+}
+
+.di-faq-btn svg {
+    transition: transform 0.18s ease;
+}
+
+.di-faq-btn:hover svg {
+    transform: translate(1px, -1px);
+}
+
+.di-faq-list {
+    display: grid;
+    gap: 12px;
+}
+
+.di-faq-item {
+    background: #fff;
+    border: 1px solid var(--dic-border);
+    border-radius: 8px;
+    padding: 0 20px;
+}
+
+.di-faq-item summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 18px 0;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.45;
+    color: var(--dic-title);
+    cursor: pointer;
+    list-style: none;
+}
+
+.di-faq-item summary::-webkit-details-marker {
+    display: none;
+}
+
+.di-faq-icon {
+    position: relative;
+    flex: 0 0 16px;
+    width: 16px;
+    height: 16px;
+    color: var(--dic-title);
+}
+
+.di-faq-icon::before,
+.di-faq-icon::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    background: currentColor;
+    border-radius: 1px;
+    transform: translate(-50%, -50%);
+}
+
+.di-faq-icon::before {
+    width: 13px;
+    height: 1.6px;
+}
+
+.di-faq-icon::after {
+    width: 1.6px;
+    height: 13px;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.di-faq-item[open] .di-faq-icon::after {
+    transform: translate(-50%, -50%) rotate(90deg);
+    opacity: 0;
+}
+
+.di-faq-item p {
+    margin: 0;
+    padding: 0 32px 18px 0;
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--dic-text);
 }
 
 /* ---------- Responsive ---------- */
@@ -321,12 +437,17 @@ select.di-input:invalid {
         font-size: 34px;
     }
 
-    .di-contact-map {
-        margin-top: 48px;
+    .di-faq {
+        padding: 64px 0;
     }
 
-    .di-contact-map iframe {
-        height: 320px;
+    .di-faq-title {
+        max-width: none;
+        font-size: 34px;
+    }
+
+    .di-contact {
+        padding-bottom: 64px;
     }
 }
 
@@ -348,7 +469,29 @@ select.di-input:invalid {
         width: 100%;
     }
 
-    .di-contact-map iframe {
-        height: 260px;
+    .di-contact {
+        padding-bottom: 48px;
+    }
+
+    .di-faq {
+        padding: 48px 0;
+    }
+
+    .di-faq-title {
+        font-size: 29px;
+    }
+
+    .di-faq-item {
+        padding: 0 16px;
+    }
+
+    .di-faq-item summary {
+        padding: 15px 0;
+        font-size: 14.5px;
+    }
+
+    .di-faq-item p {
+        padding-right: 26px;
+        padding-bottom: 15px;
     }
 }

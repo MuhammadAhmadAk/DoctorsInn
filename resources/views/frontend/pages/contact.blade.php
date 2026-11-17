@@ -65,13 +65,6 @@
                                     target="_blank" rel="noopener">Chat with our team</a>
                             </div>
                         </li>
-                        <li>
-                            <span class="di-contact-icon"><i class="fal fa-map-location-dot"></i></span>
-                            <div>
-                                <span class="di-contact-label">Visit us</span>
-                                <span class="di-contact-value">{{ $cms['contact_address'] ?? 'DoctorsInn Main Campus, Lahore, Pakistan' }}</span>
-                            </div>
-                        </li>
                     </ul>
                 </div>
 
@@ -205,14 +198,79 @@
                 </div>
 
             </div>
+        </div>
+    </section>
 
-            @php
-                $mapQuery = urlencode($cms['contact_address'] ?? 'DoctorsInn Main Campus, Lahore, Pakistan');
-            @endphp
-            <div class="di-contact-map">
-                <iframe src="https://maps.google.com/maps?q={{ $mapQuery }}&z=14&output=embed"
-                    title="DoctorsInn location map" loading="lazy" allowfullscreen
-                    referrerpolicy="no-referrer-when-downgrade"></iframe>
+    <section class="di-faq">
+        <div class="container">
+            <div class="row gy-5">
+
+                {{-- Left: FAQ intro --}}
+                <div class="col-lg-5">
+                    <h2 class="di-faq-title">Frequently asked questions</h2>
+                    <p class="di-faq-lead">
+                        Got questions about courses, payments or MDCAT preparation? Here are the answers
+                        students ask us most.
+                    </p>
+                    <a class="di-faq-btn" href="{{ route('faq') }}">
+                        Browse all FAQs
+                        <svg width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path d="M3 10L10 3M10 3H4.5M10 3V8.5" stroke="currentColor" stroke-width="1.5"
+                                stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                    </a>
+                </div>
+
+                {{-- Right: accordion --}}
+                <div class="col-lg-7">
+                    <div class="di-faq-list">
+                        <details class="di-faq-item" open>
+                            <summary>
+                                How do I enroll in a course?
+                                <span class="di-faq-icon" aria-hidden="true"></span>
+                            </summary>
+                            <p>Create your free account, open any course and click Enroll. Once checkout is complete,
+                                the course appears in your student dashboard right away.</p>
+                        </details>
+
+                        <details class="di-faq-item">
+                            <summary>
+                                Which payment methods are supported?
+                                <span class="di-faq-icon" aria-hidden="true"></span>
+                            </summary>
+                            <p>Payments are handled through our secure online checkout. If a transaction fails,
+                                send us your order details and we will resolve it quickly.</p>
+                        </details>
+
+                        <details class="di-faq-item">
+                            <summary>
+                                How long do I have access to a course?
+                                <span class="di-faq-icon" aria-hidden="true"></span>
+                            </summary>
+                            <p>Once enrolled, the course stays in your account so you can revisit lectures, notes and
+                                practice tests whenever you need them.</p>
+                        </details>
+
+                        <details class="di-faq-item">
+                            <summary>
+                                Are mock tests and practice MCQs included?
+                                <span class="di-faq-icon" aria-hidden="true"></span>
+                            </summary>
+                            <p>Yes. Full-length MDCAT mock tests with instant scoring and detailed explanations are part
+                                of the preparation experience.</p>
+                        </details>
+
+                        <details class="di-faq-item">
+                            <summary>
+                                I forgot my password. What should I do?
+                                <span class="di-faq-icon" aria-hidden="true"></span>
+                            </summary>
+                            <p>Open the login page and click “Forgot password”. We will email you a 6-digit reset code
+                                that expires in 15 minutes.</p>
+                        </details>
+                    </div>
+                </div>
+
             </div>
         </div>
     </section>
