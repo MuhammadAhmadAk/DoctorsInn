@@ -38270,3 +38270,28 @@ textarea {
         height: 48px;
     }
 }
+
+/* ====================================================================
+   SPARSE LISTS & SLIDERS
+   JS adds .is-sparse when a row/slider shows fewer cards than the
+   current per-view count; cards then take the 3-up width and center.
+   ==================================================================== */
+.th-course-row.columns-3.is-sparse {
+    justify-content: center;
+}
+
+.course-slider2.is-sparse .swiper-wrapper {
+    justify-content: center;
+}
+
+/* spaceBetween leaves a trailing margin on the last slide, which pushes
+   the centered block left; drop it so the leftover gaps stay equal */
+.course-slider2.is-sparse .swiper-slide:last-child {
+    margin-right: 0 !important;
+}
+
+@media (min-width: 1200px) and (max-width: 1439.98px) {
+    .th-course-row.columns-3.is-sparse .th-course-single {
+        width: 33.3333%;
+    }
+}

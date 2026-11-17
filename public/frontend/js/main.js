@@ -57,6 +57,75 @@ document.addEventListener('DOMContentLoaded', function () {
     window.activateCourseCategoryTab = activateCourseCategoryTab;
 });
 
+/* --- Module: sparse-layout.js --- */
+/**
+ * Sparse layouts - when a slider or grid has fewer cards than the current
+ * per-view count, drop to the 3-up card width and center the row so single
+ * or double cards do not sit as narrow slivers on the left.
+ */
+document.addEventListener('DOMContentLoaded', function () {
+    function baseSlidesPerView(el) {
+        if (!el._baseBps) {
+            el._baseBps = {};
+            const bps = (el.swiper && el.swiper.originalParams && el.swiper.originalParams.breakpoints) || {};
+            Object.keys(bps).forEach(function (key) {
+                el._baseBps[key] = parseInt(bps[key].slidesPerView, 10) || 1;
+            });
+        }
+        let best = 0;
+        Object.keys(el._baseBps).forEach(function (key) {
+            const width = parseInt(key, 10) || 0;
+            if (window.innerWidth >= width && width > best) best = width;
+        });
+        return el._baseBps[best] || 1;
+    }
+
+    function tuneSparseSlider(el) {
+        const sw = el.swiper;
+        if (!sw) return;
+        if (!el._sparseHooked) {
+            el._sparseHooked = true;
+            // stay sparse when Swiper re-applies breakpoint options on resize
+            sw.on('breakpoint', function () { tuneSparseSlider(el); });
+        }
+        const count = parseInt(el.getAttribute('data-slide-count'), 10) || 0;
+        const base = baseSlidesPerView(el);
+        const sparse = count > 0 && count < base;
+        el.classList.toggle('is-sparse', sparse);
+        const want = sparse ? Math.min(base, 3) : base;
+        if ((parseInt(sw.params.slidesPerView, 10) || 1) !== want) {
+            sw.params.slidesPerView = want;
+            sw.update();
+        }
+    }
+
+    function tuneSparseRows() {
+        document.querySelectorAll('.th-course-row.columns-3').forEach(function (row) {
+            const cards = Array.prototype.filter.call(row.children, function (el) {
+                return el.classList.contains('th-course-single');
+            });
+            if (!cards.length) return;
+            const visible = cards.filter(function (el) {
+                return window.getComputedStyle(el).display !== 'none';
+            }).length;
+            row.classList.toggle('is-sparse', visible > 0 && visible < 4);
+        });
+    }
+
+    function refreshSparseLayout() {
+        document.querySelectorAll('.course-slider2[data-slide-count]').forEach(tuneSparseSlider);
+        tuneSparseRows();
+    }
+
+    window.refreshSparseLayout = refreshSparseLayout;
+
+    window.addEventListener('load', refreshSparseLayout);
+    window.addEventListener('resize', function () {
+        window.requestAnimationFrame(refreshSparseLayout);
+    });
+    setTimeout(refreshSparseLayout, 100);
+});
+
 /* --- Module: course-details.js --- */
 /**
  * Course Details - WhatsApp Proof Gallery Modal
@@ -218,6 +287,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     item.style.display = 'none';
                 }
             });
+            if (window.refreshSparseLayout) window.refreshSparseLayout();
         });
     });
 });
@@ -280,6 +350,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 searchClear.classList.add('d-none');
             }
         }
+
+        if (window.refreshSparseLayout) window.refreshSparseLayout();
     }
 
     filterBtns.forEach(btn => {
@@ -348,6 +420,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     item.classList.add('d-none');
                 }
             });
+            if (window.refreshSparseLayout) window.refreshSparseLayout();
         });
     });
 });

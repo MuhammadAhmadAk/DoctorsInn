@@ -179,6 +179,7 @@
                          >
                         <div class="slider-area">
                             <div class="swiper th-slider course-slider2 has-shadow" id="courselider-{{ $catKey }}"
+                                data-slide-count="{{ $catData['courses']->count() }}"
                                 data-slider-options='{"observer": true, "observeParents": true, "autoHeight": "true", "breakpoints": {"0": {"slidesPerView": 1}, "576": {"slidesPerView": "1"}, "768": {"slidesPerView": "2"}, "992": {"slidesPerView": "2"}, "1200": {"slidesPerView": "4"}, "1440": {"slidesPerView": "3"}}}'>
                                 <div class="swiper-wrapper">
                                     @forelse ($catData['courses'] as $courseItem)

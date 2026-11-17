@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector('.th-pagination .next-btn')?.classList.toggle('disabled', page === totalPages);
 
         if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
+        if (window.refreshSparseLayout) window.refreshSparseLayout();
     }
 
     function scrollToCourses() {
