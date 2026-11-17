@@ -32,14 +32,14 @@
 
         <li>
             <a href="{{ route('student.dashboard') }}" class="sidebar-link {{ request()->routeIs('student.dashboard') ? 'active' : '' }}">
-                <x-student.icon name="home" />
+                <span class="nav-ic-wrap"><img src="{{ asset('student/img/icons/home.png') }}" class="nav-ic" alt="" width="20" height="20"></span>
                 <span>Study Hub</span>
             </a>
         </li>
 
         <li>
             <a href="{{ route('student.courses') }}" class="sidebar-link {{ request()->routeIs('student.courses*') || request()->routeIs('student.classroom*') ? 'active' : '' }}">
-                <x-student.icon name="courses" />
+                <span class="nav-ic-wrap"><img src="{{ asset('student/img/icons/courses.png') }}" class="nav-ic" alt="" width="20" height="20"></span>
                 <span>Enroll Courses</span>
                 <span class="badge-counter">{{ $coursesCount }}</span>
             </a>
@@ -47,7 +47,7 @@
 
         <li>
             <a href="{{ route('student.tests') }}" class="sidebar-link {{ request()->routeIs('student.tests*') ? 'active' : '' }}">
-                <x-student.icon name="mocks" />
+                <span class="nav-ic-wrap"><img src="{{ asset('student/img/icons/mocks.png') }}" class="nav-ic" alt="" width="20" height="20"></span>
                 <span>Practice &amp; Mocks</span>
                 <span class="badge-counter">{{ $testsCount }}</span>
             </a>
@@ -55,7 +55,7 @@
 
         <li>
             <a href="{{ route('student.elibrary') }}" class="sidebar-link {{ request()->routeIs('student.elibrary*') ? 'active' : '' }}">
-                <x-student.icon name="library" />
+                <span class="nav-ic-wrap"><img src="{{ asset('student/img/icons/library.png') }}" class="nav-ic" alt="" width="20" height="20"></span>
                 <span>Notes &amp; E-Library</span>
                 <span class="badge-counter">{{ $libraryCount }}</span>
             </a>
@@ -63,7 +63,7 @@
 
         <li>
             <a href="{{ route('student.analytics') }}" class="sidebar-link {{ request()->routeIs('student.analytics*') ? 'active' : '' }}">
-                <x-student.icon name="progress" />
+                <span class="nav-ic-wrap"><img src="{{ asset('student/img/icons/progress.png') }}" class="nav-ic" alt="" width="20" height="20"></span>
                 <span>My Progress</span>
             </a>
         </li>
@@ -72,28 +72,28 @@
 
         <li>
             <a href="{{ route('student.settings') }}" class="sidebar-link {{ request()->routeIs('student.settings*') ? 'active' : '' }}">
-                <x-student.icon name="profile" />
+                <span class="nav-ic-wrap"><img src="{{ asset('student/img/icons/profile.png') }}" class="nav-ic" alt="" width="20" height="20"></span>
                 <span>Profile &amp; Settings</span>
             </a>
         </li>
 
         <li>
             <a href="https://wa.me/923001234567?text=Hello%20DoctorsInn%2C%20I%20am%20a%20student%20and%20need%20academic%20assistance." target="_blank" class="sidebar-link" style="color: #059669;">
-                <i class="fa-brands fa-whatsapp" style="color: #10B981;"></i>
+                <span class="nav-ic-wrap"><img src="{{ asset('student/img/icons/whatsapp.png') }}" class="nav-ic" alt="" width="20" height="20"></span>
                 <span>Ask a Mentor</span>
             </a>
         </li>
 
         <li>
             <a href="{{ route('home') }}" class="sidebar-link">
-                <x-student.icon name="globe" />
+                <span class="nav-ic-wrap"><img src="{{ asset('student/img/icons/globe.png') }}" class="nav-ic" alt="" width="20" height="20"></span>
                 <span>Back to Website</span>
             </a>
         </li>
 
         <li class="mt-auto pt-3" style="border-top: 1px solid var(--std-border-subtle);">
             <a href="{{ route('logout') }}" class="sidebar-link text-danger">
-                <x-student.icon name="logout" class="text-danger" />
+                <span class="nav-ic-wrap"><img src="{{ asset('student/img/icons/logout.png') }}" class="nav-ic" alt="" width="20" height="20"></span>
                 <span>Logout</span>
             </a>
         </li>

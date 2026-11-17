@@ -205,7 +205,7 @@
         <div class="col-xl-3 col-sm-6">
             <div class="std-kpi">
                 <div class="std-kpi-icon">
-                    <x-student.icon name="cap" />
+                    <img src="{{ asset('student/img/icons/cap.png') }}" class="kpi-ic" alt="" width="22" height="22">
                 </div>
                 <div>
                     <div class="std-kpi-val">{{ $stats['enrolled_batches'] }} Batch</div>
@@ -217,7 +217,7 @@
         <div class="col-xl-3 col-sm-6">
             <div class="std-kpi">
                 <div class="std-kpi-icon">
-                    <x-student.icon name="clipboard-check" />
+                    <img src="{{ asset('student/img/icons/clipboard-check.png') }}" class="kpi-ic" alt="" width="22" height="22">
                 </div>
                 <div>
                     <div class="std-kpi-val">{{ $stats['tests_completed'] }} Tests</div>
@@ -229,7 +229,7 @@
         <div class="col-xl-3 col-sm-6">
             <div class="std-kpi">
                 <div class="std-kpi-icon">
-                    <x-student.icon name="award" />
+                    <img src="{{ asset('student/img/icons/award.png') }}" class="kpi-ic" alt="" width="22" height="22">
                 </div>
                 <div>
                     <div class="std-kpi-val">{{ $stats['avg_score'] }}%</div>
@@ -241,7 +241,7 @@
         <div class="col-xl-3 col-sm-6">
             <div class="std-kpi">
                 <div class="std-kpi-icon">
-                    <x-student.icon name="fire" />
+                    <img src="{{ asset('student/img/icons/fire.png') }}" class="kpi-ic" alt="" width="22" height="22">
                 </div>
                 <div>
                     <div class="std-kpi-val">{{ $stats['study_streak_days'] }} Days</div>
