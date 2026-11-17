@@ -37600,7 +37600,8 @@ p {
 }
 
 .counter-card2 .box-title {
-    font-size: 15px !important;
+    font-size: clamp(16px, 14.6px + 0.219vw, 18px) !important;
+    max-width: 138px;
 }
 
 .accordion-card .accordion-button {
@@ -38176,5 +38177,33 @@ textarea {
 @media (max-width: 767.98px) {
     .footer-wrapper .footer-widget {
         margin-bottom: 20px;
+    }
+}
+
+/* ====================================================================
+   LAPTOP COMPACT SCALE (1200px - 1439px)
+   Laptops (often at 125-150% OS/browser zoom) land here; the 1440+
+   desktop scale (100px sections, 60px logo) reads oversized, so drop
+   one step until the full desktop tier.
+   ==================================================================== */
+@media (min-width: 1200px) and (max-width: 1439.98px) {
+    :root {
+        --section-pt: 80px;
+        --section-pb: 80px;
+    }
+
+    .header-logo a img {
+        height: 48px;
+    }
+
+    .counter-card2 .box-icon {
+        width: 64px;
+        height: 64px;
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    .header-logo a img {
+        height: 48px;
     }
 }
