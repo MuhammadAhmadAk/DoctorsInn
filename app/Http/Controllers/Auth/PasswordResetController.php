@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Mail\PasswordResetCodeMail;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -159,15 +160,7 @@ class PasswordResetController extends Controller
     protected function sendResetMail(User $user, string $code): bool
     {
         try {
-            Mail::raw(
-                "Hello {$user->name},\n\n"
-                . "Your DoctorsInn password reset code is: {$code}\n\n"
-                . 'This code expires in ' . self::CODE_TTL_MINUTES . " minutes.\n"
-                . "If you did not request this, you can safely ignore this email.",
-                function ($message) use ($user) {
-                    $message->to($user->email)->subject('DoctorsInn — Password Reset Code');
-                }
-            );
+            Mail::to($user->email)->send(new PasswordResetCodeMail($user, $code));
         } catch (\Throwable $e) {
             report($e);
 
