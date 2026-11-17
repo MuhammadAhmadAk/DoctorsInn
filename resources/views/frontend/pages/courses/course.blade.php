@@ -77,7 +77,7 @@
         </div>
     </section>
 
-    <section class="space bg-theme overflow-hidden" data-bg-src="{{ asset('frontend/img/bg/cta-bg5-1.png') }}">
+    <section class="space bg-theme overflow-hidden cta-banner" data-bg-src="{{ asset('frontend/img/bg/cta-bg5-1.png') }}">
         <div class="container">
             <div class="row gy-40 justify-content-between align-items-center">
                 <div class="col-xxl-6 col-xl-7 col-lg-7">

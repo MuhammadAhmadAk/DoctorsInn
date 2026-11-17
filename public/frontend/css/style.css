@@ -38295,3 +38295,83 @@ textarea {
         width: 33.3333%;
     }
 }
+
+/* ====================================================================
+   COMPACT CTA BANNER (e-library / course listing CTA above footer)
+   Keeps the full-bleed banner from eating half the viewport height.
+   ==================================================================== */
+.cta-banner {
+    --section-pt: 56px;
+    --section-pb: 56px;
+}
+
+.cta-banner .row {
+    --bs-gutter-y: 24px;
+}
+
+.cta-banner .title-area {
+    margin-bottom: 0;
+}
+
+.cta-banner .sub-title {
+    font-size: 14px;
+    line-height: 20px;
+    margin-bottom: 10px;
+}
+
+.cta-banner .sec-title {
+    font-size: clamp(24px, 2.4vw, 30px) !important;
+    line-height: 1.25;
+    margin-bottom: 10px;
+    text-wrap: balance;
+}
+
+.cta-banner p {
+    font-size: 15px;
+    line-height: 1.65;
+    margin-top: 14px !important;
+}
+
+@media (min-width: 992px) {
+    .cta-banner p {
+        max-width: 620px;
+    }
+}
+
+.cta-banner .th-btn {
+    min-height: 50px;
+    padding: 18px 32px;
+}
+
+@media (min-width: 1200px) and (max-width: 1439.98px) {
+    .cta-banner {
+        --section-pt: 44px;
+        --section-pb: 44px;
+    }
+
+    .cta-banner .sec-title {
+        font-size: 27px !important;
+    }
+}
+
+@media (max-width: 1199.98px) {
+    .cta-banner {
+        --section-pt: 40px;
+        --section-pb: 40px;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .cta-banner {
+        --section-pt: 36px;
+        --section-pb: 36px;
+    }
+
+    .cta-banner .sec-title {
+        font-size: 23px !important;
+    }
+
+    .cta-banner p {
+        font-size: 14.5px;
+    }
+}
