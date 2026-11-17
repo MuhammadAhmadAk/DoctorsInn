@@ -61,7 +61,7 @@
             $user = auth()->user() ?? session('user');
             $studentName = is_array($user) ? ($user['name'] ?? 'Student') : ($user->name ?? 'Student');
             $studentEmail = is_array($user) ? ($user['email'] ?? 'student@doctorsinn.pk') : ($user->email ?? 'student@doctorsinn.pk');
-            $studentAvatar = is_array($user) ? ($user['avatar'] ?? 'frontend/img/testimonial/testi_2_1.png') : ($user->avatar ?? 'frontend/img/testimonial/testi_2_1.png');
+            $studentAvatar = is_array($user) ? ($user['avatar'] ?? 'student/img/icons/avatar.png') : ($user->avatar ?? 'student/img/icons/avatar.png');
         @endphp
         <div class="dropdown">
             <button class="navbar-user-btn dropdown-toggle" type="button" id="userMenuBtn" data-bs-toggle="dropdown" aria-expanded="false">

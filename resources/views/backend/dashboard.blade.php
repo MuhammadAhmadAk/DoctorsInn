@@ -169,7 +169,7 @@
                         <tr>
                             <td>
                                 <div class="item-thumb-box">
-                                    <img src="{{ asset($attempt->user->avatar ?? 'frontend/img/testimonial/testi_2_1.png') }}" alt="Student">
+                                    <img src="{{ asset($attempt->user->avatar ?: 'student/img/icons/avatar.png') }}" alt="Student">
                                     <div>
                                         <div class="title">{{ $attempt->user->name ?? 'Student' }}</div>
                                         <div class="subtitle">{{ $attempt->user->email ?? '—' }}</div>

@@ -100,7 +100,7 @@
                 @php
                     $attemptCount = (int) ($student->test_attempts_count ?? 0);
                     $avgScore = $student->test_attempts_avg_percentage !== null ? round((float) $student->test_attempts_avg_percentage, 1) : null;
-                    $avatar = $student->avatar ?: 'frontend/img/testimonial/testi_2_1.png';
+                    $avatar = $student->avatar ?: 'student/img/icons/avatar.png';
                 @endphp
                 <tr>
                     <td>

@@ -2,7 +2,7 @@
     $currentUser = auth()->user() ?? session('user');
     $currentUserName = is_array($currentUser) ? ($currentUser['name'] ?? 'Student') : ($currentUser->name ?? 'Student');
     $currentUserEmail = is_array($currentUser) ? ($currentUser['email'] ?? '') : ($currentUser->email ?? '');
-    $currentUserAvatar = is_array($currentUser) ? ($currentUser['avatar'] ?? 'frontend/img/testimonial/testi_2_1.png') : ($currentUser->avatar ?? 'frontend/img/testimonial/testi_2_1.png');
+    $currentUserAvatar = is_array($currentUser) ? (($currentUser['avatar'] ?? '') ?: 'student/img/icons/avatar.png') : (($currentUser->avatar ?? '') ?: 'student/img/icons/avatar.png');
 @endphp
 <!doctype html>
 <html class="no-js" lang="zxx" dir="ltr">

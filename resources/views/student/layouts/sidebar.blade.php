@@ -10,7 +10,7 @@
     @php
         $user = auth()->user() ?? session('user');
         $studentName = is_array($user) ? ($user['name'] ?? 'MDCAT Aspirant') : ($user->name ?? 'MDCAT Aspirant');
-        $studentAvatar = is_array($user) ? ($user['avatar'] ?? 'frontend/img/testimonial/testi_2_1.png') : ($user->avatar ?? 'frontend/img/testimonial/testi_2_1.png');
+        $studentAvatar = is_array($user) ? ($user['avatar'] ?? 'student/img/icons/avatar.png') : ($user->avatar ?? 'student/img/icons/avatar.png');
         $targetExam = strtoupper(is_array($user) ? ($user['target_exam'] ?? 'MDCAT') : ($user->target_exam ?? 'MDCAT'));
         $coursesCount = count($courses ?? \App\Services\SiteContentService::getAllCourses());
         $testsCount = count(\App\Services\SiteContentService::getAllTests());
