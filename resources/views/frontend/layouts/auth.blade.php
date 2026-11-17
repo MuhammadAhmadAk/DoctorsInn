@@ -21,11 +21,7 @@
     @yield('extra_css')
 </head>
 
-<body class="th-magic-cursor">
-
-    <div id="magic-cursor" class="cursor-black-bg">
-        <div id="ball"></div>
-    </div>
+<body>
 
     <div class="page-preloader" id="page-preloader" role="status" aria-label="Page is loading">
         <div class="loading-container" aria-hidden="true">
