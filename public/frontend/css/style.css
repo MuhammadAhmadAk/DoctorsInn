@@ -38200,6 +38200,10 @@ textarea {
         width: 64px;
         height: 64px;
     }
+
+    .th-course-row.columns-3 .th-course-single {
+        width: 25%;
+    }
 }
 
 @media (min-width: 992px) and (max-width: 1199.98px) {
