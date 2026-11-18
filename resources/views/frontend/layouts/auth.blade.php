@@ -54,7 +54,7 @@
 
     <script src="{{ asset('frontend/js/vendor/jquery-3.7.1.min.js') }}" defer></script>
     <script src="{{ asset('frontend/js/app.min.js') }}?v=3" defer></script>
-    <script src="{{ asset('frontend/js/main.js') }}" defer></script>
+    <script src="{{ asset('frontend/js/main.js') }}?v={{ file_exists(public_path('frontend/js/main.js')) ? filemtime(public_path('frontend/js/main.js')) : time() }}" defer></script>
     <script src="{{ asset('frontend/js/preloader.js') }}" defer></script>
 
     @yield('extra_js')

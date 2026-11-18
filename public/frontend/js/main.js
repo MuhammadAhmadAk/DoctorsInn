@@ -491,14 +491,14 @@ document.addEventListener('DOMContentLoaded', function () {
         if (targetIndex < 1 || targetIndex > totalQuestions) return;
 
         // Hide previous question
-        const currentCard = document.querySelector(`.q-card-item[data-qindex="${currentQuestion}"]`);
+        const currentCard = document.querySelector(`.question-block[data-index="${currentQuestion}"]`);
         if (currentCard) {
             currentCard.classList.remove('active');
             currentCard.classList.add('d-none');
         }
 
         // Show target question
-        const targetCard = document.querySelector(`.q-card-item[data-qindex="${targetIndex}"]`);
+        const targetCard = document.querySelector(`.question-block[data-index="${targetIndex}"]`);
         if (targetCard) {
             targetCard.classList.remove('d-none');
             targetCard.classList.add('active');
@@ -514,8 +514,8 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         // Update palette active states
-        document.querySelectorAll('.palette-bubble').forEach(b => {
-            const bIdx = parseInt(b.getAttribute('data-qindex'), 10);
+        document.querySelectorAll('.palette-btn').forEach(b => {
+            const bIdx = parseInt(b.getAttribute('data-target'), 10);
             if (bIdx === currentQuestion) {
                 b.classList.add('current');
             } else {
@@ -524,16 +524,16 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         // Smooth scroll to top of questions area on mobile
-        const questionArea = document.querySelector('.exam-question-area');
+        const questionArea = document.querySelector('.questions-container');
         if (questionArea && window.innerWidth < 992) {
             questionArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
     }
 
     // Palette Click Navigation
-    document.querySelectorAll('.palette-bubble').forEach(b => {
+    document.querySelectorAll('.palette-btn').forEach(b => {
         b.addEventListener('click', function () {
-            const targetIdx = parseInt(this.getAttribute('data-qindex'), 10);
+            const targetIdx = parseInt(this.getAttribute('data-target'), 10);
             goToQuestion(targetIdx);
         });
     });
@@ -557,14 +557,14 @@ document.addEventListener('DOMContentLoaded', function () {
         const answeredQIds = new Set();
 
         // Reset all bubbles answered class
-        document.querySelectorAll('.palette-bubble').forEach(b => b.classList.remove('answered'));
+        document.querySelectorAll('.palette-btn').forEach(b => b.classList.remove('answered'));
 
         checkedRadios.forEach(radio => {
             const qId = radio.getAttribute('name').replace('answers[', '').replace(']', '');
             const qIndex = radio.getAttribute('data-qindex');
             answeredQIds.add(qId);
 
-            const bubble = document.querySelector(`.palette-bubble[data-qindex="${qIndex}"]`);
+            const bubble = document.querySelector(`.palette-btn[data-target="${qIndex}"]`);
             if (bubble) bubble.classList.add('answered');
         });
 
@@ -573,7 +573,8 @@ document.addEventListener('DOMContentLoaded', function () {
         const isAllAnswered = answeredQIds.size === totalQuestions;
         const submitTriggers = [
             document.getElementById('btnSubmitExamTrigger'),
-            document.getElementById('btnFinishSidebarTrigger')
+            document.getElementById('btnFinishSidebarTrigger'),
+            document.getElementById('btnFinishExamTrigger')
         ];
 
         submitTriggers.forEach(btn => {
@@ -680,6 +681,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const sidebarTriggerBtn = document.getElementById('btnFinishSidebarTrigger');
     if (sidebarTriggerBtn) {
         sidebarTriggerBtn.addEventListener('click', openConfirmModal);
+    }
+
+    const finishExamBtn = document.getElementById('btnFinishExamTrigger');
+    if (finishExamBtn) {
+        finishExamBtn.addEventListener('click', openConfirmModal);
     }
 
     const cancelModalBtn = document.getElementById('cancelModalBtn');
