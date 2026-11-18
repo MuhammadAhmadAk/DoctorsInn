@@ -436,7 +436,7 @@
                             <article class="course-success-card h-100">
                                 <div class="course-success-card-content">
                                     <div class="course-success-header">
-                                        <img class="course-success-avatar" src="{{ asset($story['profile_image']) }}"
+                                        <img class="course-success-avatar" src="{{ asset($story['profile_image'] ?? $story['proof_image'] ?? 'frontend/img/proof/proof-1.png') }}"
                                             alt="{{ $story['name'] }}" loading="lazy" decoding="async">
                                         <div class="course-success-identity">
                                             <h3>{{ $story['name'] }}</h3>
@@ -444,7 +444,7 @@
                                                 {{ $story['college'] }}</p>
                                         </div>
                                     </div>
-                                    <span class="course-success-course">{{ $story['course_label'] }}</span>
+                                    <span class="course-success-course">{{ $story['course_label'] ?? $story['course_title'] ?? '' }}</span>
                                     <div class="course-success-selection">
                                         <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
                                         Selected in: {{ $story['selection'] }}
