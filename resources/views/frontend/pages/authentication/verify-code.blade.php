@@ -55,6 +55,13 @@
                         </div>
                     @endif
 
+                    @if (session('password_reset_google'))
+                        <div class="auth-alert-box alert-info">
+                            <i class="fa-solid fa-circle-info text-info"></i>
+                            <span>Your account uses Google Sign-In. Enter the code below to set a password — after that you can sign in with either Google or your email.</span>
+                        </div>
+                    @endif
+
                     @if (session('dev_code'))
                         <div class="auth-alert-box alert-info">
                             <i class="fa-solid fa-circle-info text-info"></i>

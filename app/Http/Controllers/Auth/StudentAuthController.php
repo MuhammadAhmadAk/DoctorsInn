@@ -66,6 +66,12 @@ class StudentAuthController extends Controller
             return redirect()->route('home')->with('success', 'Welcome back, ' . $user->name . '!');
         }
 
+        if ($user && $user->google_id && empty($user->password)) {
+            return back()
+                ->withInput($request->only('email'))
+                ->with('error', 'This account uses Google Sign-In. Continue with Google below, or use "Forgot Password" to create a password for email sign-in.');
+        }
+
         return back()
             ->withInput($request->only('email'))
             ->with('error', 'Invalid email or password. Please verify your credentials or register a free account.');

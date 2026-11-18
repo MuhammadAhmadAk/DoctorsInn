@@ -52,6 +52,13 @@
                         </div>
                     @endif
 
+                    @if (session('password_reset_google'))
+                        <div class="auth-alert-box alert-info">
+                            <i class="fa-solid fa-circle-info text-info"></i>
+                            <span>Your account also uses Google Sign-In. The password you set here will work for email sign-in, and Continue with Google will keep working too.</span>
+                        </div>
+                    @endif
+
                     <form action="{{ route('reset-password.submit') }}" method="POST">
                         @csrf
 

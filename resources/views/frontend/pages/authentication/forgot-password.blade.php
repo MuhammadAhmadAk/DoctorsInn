@@ -35,7 +35,7 @@
                     </a>
 
                     <h1 class="auth-card-title">Recover Password</h1>
-                    <p class="auth-card-sub">Enter your email address and we'll send you a verification code to reset your password.</p>
+                    <p class="auth-card-sub">Enter your email address and we'll send you a verification code to reset your password. If you signed up with Google, you can set a password here too — it stays linked to the same account.</p>
 
                     {{-- Flash & Error Alerts --}}
                     @if (session('error'))

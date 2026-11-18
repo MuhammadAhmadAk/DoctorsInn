@@ -48,6 +48,7 @@ class PasswordResetController extends Controller
         $delivered = $this->sendResetMail($user, $code);
 
         $request->session()->put('password_reset_email', $email);
+        $request->session()->put('password_reset_google', $user->google_id && empty($user->password));
         $request->session()->forget('password_reset_verified');
 
         $redirect = redirect()->route('verify-code')
@@ -151,7 +152,7 @@ class PasswordResetController extends Controller
         $user->save();
 
         DB::table('password_reset_tokens')->where('email', $email)->delete();
-        $request->session()->forget(['password_reset_email', 'password_reset_verified']);
+        $request->session()->forget(['password_reset_email', 'password_reset_verified', 'password_reset_google']);
 
         return redirect()->route('login')
             ->with('success', 'Your password has been updated. Please sign in with your new password.');
